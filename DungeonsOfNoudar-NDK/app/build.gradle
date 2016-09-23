@@ -1,0 +1,61 @@
+apply plugin: 'com.android.model.application'
+
+model {
+    android {
+        compileSdkVersion = 22
+        buildToolsVersion = "23.0.2"
+
+        defaultConfig.with {
+            applicationId = "br.odb.noudar"
+            minSdkVersion.apiLevel = 22
+            targetSdkVersion.apiLevel = 22
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+    }
+
+    android.ndk {
+        moduleName = "NdkGlue"
+        toolchain = "clang"
+        cppFlags.addAll( ["-std=gnu++14", "-g", "-fno-inline"] )
+        ldLibs.addAll( ["log", "GLESv2", "android", "jnigraphics"] )
+        stl = "c++_static"
+
+        cppFlags.add( "-I${file("../common_includes")}".toString() )
+        cppFlags.add( "-I${file("../common_includes/glm")}".toString() )
+    }
+
+    android.buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles.add( file('proguard-rules.txt' ) )
+        }
+    }
+
+    android.productFlavors {
+        create("arm7") {
+            ndk.abiFilters.add( "armeabi-v7a" )
+        }
+        create("arm8") {
+            ndk.abiFilters.add( "arm64-v8a" )
+        }
+        create("x86-32") {
+            ndk.abiFilters.add( "x86" )
+        }
+        // for detailed abiFilter descriptions, refer to "Supported ABIs" @
+        // https://developer.android.com/ndk/guides/abis.html#sa
+
+        // build one including all cpu architectures
+        create("all")
+    }
+}
+
+dependencies {
+
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile project(':base')
+    compile project(':common')
+    compile project(':audio')
+
+    compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
+}
