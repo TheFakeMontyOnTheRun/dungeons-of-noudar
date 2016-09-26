@@ -2,32 +2,27 @@
 // Created by monty on 30/07/16.
 //
 
-#include <stdint.h>
-#include <algorithm>
-#include <jni.h>
-#include <utility>
-#include <android/bitmap.h>
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <android/log.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <string>
-#include <vector>
-#include <array>
-#include <map>
+#include <glm/glm.hpp>
+
 #include <memory>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include <iostream>
+#include <array>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <map>
+#include <vector>
+#include "gles2-renderer/NativeBitmap.h"
+#include "gles2-renderer/Texture.h"
+#include "gles2-renderer/Material.h"
+#include "gles2-renderer/Trig.h"
+#include "gles2-renderer/TrigBatch.h"
+#include "gles2-renderer/MeshObject.h"
+#include "gles2-renderer/MaterialList.h"
+#include "gles2-renderer/Scene.h"
 
-#include "NativeBitmap.h"
-#include "Texture.h"
-#include "GLES2Renderer.h"
-#include "NdkGlue.h"
-
+#include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 
 namespace odb {

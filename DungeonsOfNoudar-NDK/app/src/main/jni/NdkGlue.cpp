@@ -15,38 +15,55 @@
  */
 
 // OpenGL ES 2.0 code
-#include <stdint.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #include <jni.h>
+#include <android/log.h>
 #include <android/bitmap.h>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
-#include <android/log.h>
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <string>
+#include <memory>
 #include <vector>
+#include <iostream>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+#include <unordered_set>
+#include <map>
+#include <cstdint>
+#include <string>
 #include <tuple>
 #include <utility>
 #include <array>
-#include <memory>
 #include <stdio.h>
-#include <map>
-#include <stdlib.h>
-#include <math.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <cmath>
 
-#include "NativeBitmap.h"
-#include "Texture.h"
-#include "GLES2Renderer.h"
+#include "gles2-renderer/NativeBitmap.h"
+#include "gles2-renderer/Texture.h"
+#include "gles2-renderer/Material.h"
+#include "gles2-renderer/Trig.h"
+#include "gles2-renderer/TrigBatch.h"
+#include "gles2-renderer/MeshObject.h"
+#include "gles2-renderer/MaterialList.h"
+#include "gles2-renderer/Scene.h"
+#include "gles2-renderer/WavefrontOBJReader.h"
+#include "DungeonGLES2Renderer.h"
+
 #include "NdkGlue.h"
+
 #include "LightningStrategy.h"
 #include "android_asset_operations.h"
 
-
 std::string gVertexShader;
 std::string gFragmentShader;
-std::shared_ptr<odb::GLES2Renderer> gles2Lesson = nullptr;
+
+std::string wavefrontCubeMesh;
+std::string wavefrontCubeMaterials;
+
+std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::map< int, glm::vec2> mPositions;
 
@@ -61,35 +78,68 @@ odb::AnimationList animationList;
 long animationTime = 0;
 bool hasCache = false;
 odb::LightMap lightMapCache;
+std::shared_ptr<odb::Scene> scene;
 
 void loadShaders(JNIEnv *env, jobject &obj) {
     AAssetManager *asset_manager = AAssetManager_fromJava(env, obj);
     FILE *fd;
+
     fd = android_fopen("vertex.glsl", "r", asset_manager);
     gVertexShader = readToString(fd);
     fclose(fd);
+
     fd = android_fopen("fragment.glsl", "r", asset_manager);
     gFragmentShader = readToString(fd);
     fclose(fd);
+
+	fd = android_fopen("cubonormal.obj", "r", asset_manager);
+	wavefrontCubeMesh = readToString(fd);
+	fclose(fd);
+
+	fd = android_fopen("cubonormal.mtl", "r", asset_manager);
+	wavefrontCubeMaterials = readToString(fd);
+	fclose(fd);
 }
 
 bool setupGraphics(int w, int h) {
-    gles2Lesson = std::make_shared<odb::GLES2Renderer>();
-	gles2Lesson->setTexture(textures);
+
+	scene = readScene( wavefrontCubeMesh, wavefrontCubeMaterials );
+
+    gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
+
+	auto it = scene->materialList.materials.begin();
+
+	while ( it != scene->materialList.materials.end() ) {
+		std::shared_ptr<odb::Material> material = it->second;
+//		textures.push_back( material->mBitmap );
+		it = std::next( it );
+	}
+
+	gles2Renderer->setTexture(textures);
 	animationTime = 0;
-    return gles2Lesson->init(w, h, gVertexShader.c_str(), gFragmentShader.c_str());
+    return gles2Renderer->init(w, h, gVertexShader.c_str(), gFragmentShader.c_str());
 }
 
 void renderFrame(long delta) {
-    if (gles2Lesson != nullptr && textures.size() > 0 ) {
-	    gles2Lesson->updateFadeState(delta);
-	    gles2Lesson->render(map, snapshot, splat, lightMap, ids, animationList, animationTime );
-	    gles2Lesson->updateCamera( delta );
+    if (gles2Renderer != nullptr && textures.size() > 0 ) {
+	    gles2Renderer->updateFadeState(delta);
+	    gles2Renderer->render(map, snapshot, splat, lightMap, ids, animationList, animationTime );
+	    gles2Renderer->updateCamera( delta );
+
+
+	    if ( scene != nullptr ) {
+		    auto it = scene->meshObjects.begin();
+		    while ( it != scene->meshObjects.end() ) {
+			    std::shared_ptr<odb::MeshObject> mesh = it->second;
+			    gles2Renderer->drawTrigBatch( mesh->trigBatches[0] );
+			    it = std::next( it );
+		    }
+	    }
     }
 }
 
 void shutdown() {
-	gles2Lesson->shutdown();
+	gles2Renderer->shutdown();
 	animationList.clear();
 	mPositions.clear();
 	animationTime = 0;
@@ -102,7 +152,7 @@ void shutdown() {
 		}
 	}
 
-	gles2Lesson = nullptr;
+	gles2Renderer = nullptr;
 }
 
 extern "C" {
@@ -235,8 +285,8 @@ Java_br_odb_GL2JNILib_setTextures(JNIEnv *env, jclass type, jobjectArray bitmaps
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setCameraPosition(JNIEnv *env, jclass type, jfloat x, jfloat y) {
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->setCameraPosition( x, y );
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->setCameraPosition( x, y );
 	}
 }
 
@@ -287,63 +337,63 @@ Java_br_odb_GL2JNILib_setMapWithSplatsAndActors(JNIEnv *env, jclass type, jintAr
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setCurrentCursorPosition(JNIEnv *env, jclass type, jfloat x, jfloat y) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->setCursorAt( x, y );
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->setCursorAt( x, y );
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_toggleCloseupCamera(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->toggleCloseUpCamera();
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->toggleCloseUpCamera();
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setClearColour(JNIEnv *env, jclass type, jfloat r, jfloat g, jfloat b) {
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->setClearColour( r, g, b );
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->setClearColour( r, g, b );
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_fadeIn(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->startFadingIn();
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->startFadingIn();
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_fadeOut(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->startFadingOut();
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->startFadingOut();
 	}
 }
 
 JNIEXPORT jboolean JNICALL
 Java_br_odb_GL2JNILib_isAnimating(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		return gles2Lesson->isAnimating();
+	if (gles2Renderer != nullptr) {
+		return gles2Renderer->isAnimating();
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_rotateLeft(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->rotateLeft();
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->rotateLeft();
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_rotateRight(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->rotateRight();
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->rotateRight();
 	}
 }
 
@@ -367,7 +417,7 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setActorIdPositions(JNIEnv *env, jclass type, jintArray ids_) {
 	jint *idsLocal = env->GetIntArrayElements(ids_, NULL);
 
-	if (gles2Lesson == nullptr) {
+	if (gles2Renderer == nullptr) {
 		return;
 	}
 
@@ -392,24 +442,24 @@ Java_br_odb_GL2JNILib_setActorIdPositions(JNIEnv *env, jclass type, jintArray id
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_setFloorNumber(JNIEnv *env, jclass type, jlong floor) {
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->setFloorNumber( floor );
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->setFloorNumber( floor );
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_onReleasedLongPressingMove(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->onReleasedLongPressingMove();
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->onReleasedLongPressingMove();
 	}
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_onLongPressingMove(JNIEnv *env, jclass type) {
 
-	if (gles2Lesson != nullptr) {
-		gles2Lesson->onLongPressingMove();
+	if (gles2Renderer != nullptr) {
+		gles2Renderer->onLongPressingMove();
 	}
 }
 
@@ -417,8 +467,8 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setEyeMatrix(JNIEnv *env, jclass type, jfloatArray eyeView_) {
 	jfloat *eyeView = env->GetFloatArrayElements(eyeView_, NULL);
 
-    if (gles2Lesson != nullptr) {
-        gles2Lesson->setEyeView( eyeView );
+    if (gles2Renderer != nullptr) {
+        gles2Renderer->setEyeView( eyeView );
     }
 
 	env->ReleaseFloatArrayElements(eyeView_, eyeView, 0);
@@ -445,8 +495,8 @@ Java_br_odb_GL2JNILib_setPerspectiveMatrix(JNIEnv *env, jclass type,
                                            jfloatArray perspectiveMatrix_) {
     jfloat *perspectiveMatrix = env->GetFloatArrayElements(perspectiveMatrix_, NULL);
 
-    if (gles2Lesson != nullptr) {
-        gles2Lesson->setPerspectiveMatrix( perspectiveMatrix );
+    if (gles2Renderer != nullptr) {
+        gles2Renderer->setPerspectiveMatrix( perspectiveMatrix );
     }
 
     env->ReleaseFloatArrayElements(perspectiveMatrix_, perspectiveMatrix, 0);
@@ -455,15 +505,15 @@ Java_br_odb_GL2JNILib_setPerspectiveMatrix(JNIEnv *env, jclass type,
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setXZAngle(JNIEnv *env, jclass type, jfloat xz) {
 
-    if (gles2Lesson != nullptr) {
-        gles2Lesson->setAngleXZ( xz );
+    if (gles2Renderer != nullptr) {
+        gles2Renderer->setAngleXZ( xz );
     }
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setYZAngle(JNIEnv *env, jclass type, jfloat yz) {
 
-    if (gles2Lesson != nullptr) {
-        gles2Lesson->setAngleYZ( yz );
+    if (gles2Renderer != nullptr) {
+        gles2Renderer->setAngleYZ( yz );
     }
 }
