@@ -1,0 +1,3 @@
+[submodule "DungeonsOfNoudar-NDK/app/src/main/jni/gles2-renderer"]
+	path = DungeonsOfNoudar-NDK/app/src/main/jni/gles2-renderer
+	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git
