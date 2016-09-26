@@ -1,3 +1,6 @@
 [submodule "DungeonsOfNoudar-NDK/app/src/main/jni/gles2-renderer"]
 	path = DungeonsOfNoudar-NDK/app/src/main/jni/gles2-renderer
 	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git
+[submodule "DungeonsOfNoudar-NDK/common_includes/glm-head"]
+	path = DungeonsOfNoudar-NDK/common_includes/glm-head
+	url = https://github.com/g-truc/glm.git
