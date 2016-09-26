@@ -21,7 +21,7 @@ model {
         stl = "c++_static"
 
         cppFlags.add( "-I${file("../common_includes")}".toString() )
-        cppFlags.add( "-I${file("../common_includes/glm")}".toString() )
+        cppFlags.add( "-I${file("../common_includes/glm-head")}".toString() )
     }
 
     android.buildTypes {
