@@ -103,7 +103,12 @@ void loadShaders(JNIEnv *env, jobject &obj) {
 
 bool setupGraphics(int w, int h) {
 
-	scene = readScene( wavefrontCubeMesh, wavefrontCubeMaterials );
+	std::stringstream meshData;
+	std::stringstream materialData;
+
+	meshData << wavefrontCubeMesh;
+	materialData << wavefrontCubeMaterials;
+	scene = readScene( meshData, materialData );
 
     gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
 
