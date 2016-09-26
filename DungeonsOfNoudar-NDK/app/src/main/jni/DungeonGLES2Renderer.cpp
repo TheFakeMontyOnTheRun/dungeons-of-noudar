@@ -3,30 +3,35 @@
 //
 
 
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <GLES2/gl2.h>
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include <glm/gtc/type_ptr.hpp>
-
-#include <map>
-#include <string>
-#include <memory>
-#include <array>
-#include <vector>
 #include <android/log.h>
+#include <memory>
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <unordered_set>
+#include <map>
+#include <array>
 
-#include "NativeBitmap.h"
-#include "Texture.h"
-
-#include "GLES2Renderer.h"
+#include "gles2-renderer/NativeBitmap.h"
+#include "gles2-renderer/Texture.h"
+#include "gles2-renderer/Material.h"
+#include "gles2-renderer/Trig.h"
+#include "gles2-renderer/TrigBatch.h"
+#include "gles2-renderer/MeshObject.h"
+#include "gles2-renderer/MaterialList.h"
+#include "gles2-renderer/Scene.h"
+#include "DungeonGLES2Renderer.h"
 #include "NdkGlue.h"
+
+#include <glm/gtc/type_ptr.hpp>
 
 namespace odb {
 	const static bool kShouldDestroyThingsManually = false;
 
-	const float GLES2Renderer::billboardVertices[]{
+	const float DungeonGLES2Renderer::billboardVertices[]{
 			-1.0f, 1.0f, 0.0f, 0.0f, .0f,
 			1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
 			1.0f, -1.0f, 0.0f, 1.0f, 1.0f,
@@ -34,14 +39,14 @@ namespace odb {
 	};
 
 
-	const float GLES2Renderer::cornerLeftFarVertices[]{
+	const float DungeonGLES2Renderer::cornerLeftFarVertices[]{
 			-1.0f, 1.0f, -1.0f, 0.0f, .0f,
 			1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
 			1.0f, -1.0f, 1.0f, 1.0f, 1.0f,
 			-1.0f, -1.0f, -1.0f, 0.0f, 1.0f,
 	};
 
-	const float GLES2Renderer::cornerLeftNearVertices[]{
+	const float DungeonGLES2Renderer::cornerLeftNearVertices[]{
 			-1.0f, 1.0f, 1.0f, 0.0f, .0f,
 			1.0f, 1.0f, -1.0f, 1.0f, 0.0f,
 			1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
@@ -49,21 +54,21 @@ namespace odb {
 	};
 
 
-	const float GLES2Renderer::floorVertices[]{
+	const float DungeonGLES2Renderer::floorVertices[]{
 			-1.0f, 0.0f, -1.0f, 0.0f, .0f,
 			1.0f, 0.0f, -1.0f, 1.0f, 0.0f,
 			1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 			-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
 	};
 
-	const float GLES2Renderer::skyVertices[]{
+	const float DungeonGLES2Renderer::skyVertices[]{
 			-kSkyTextureLength -20.0f, 10.0f, -200.0f, 0.0f, .0f,
 			-20.0f, 10.0f, -200.0f, 10.0f, 0.0f,
 			-20.0f, 10.0f, 200.0f, 10.0f, 10.0f,
 			-kSkyTextureLength-20.0f, 10.0f, 200.0f, 0.0f, 10.0f,
 	};
 
-	const float GLES2Renderer::cubeVertices[]{
+	const float DungeonGLES2Renderer::cubeVertices[]{
 //    4________5
 //    /|       /|
 //   / |      / |
@@ -94,34 +99,34 @@ namespace odb {
 			-1.0f, -1.0f, -1.0f, 1.0f, 1.0f   //15 (7)
 	};
 
-	const unsigned short GLES2Renderer::billboardIndices[]{
+	const unsigned short DungeonGLES2Renderer::billboardIndices[]{
 			0, 1, 2,
 			0, 2, 3
 	};
 
-	const unsigned short GLES2Renderer::cornerLeftFarIndices[]{
+	const unsigned short DungeonGLES2Renderer::cornerLeftFarIndices[]{
 			0, 1, 2,
 			0, 2, 3
 	};
 
-	const unsigned short GLES2Renderer::cornerLeftNearIndices[]{
-			0, 1, 2,
-			0, 2, 3
-	};
-
-
-	const unsigned short GLES2Renderer::floorIndices[]{
-			0, 1, 2,
-			0, 2, 3
-	};
-
-	const unsigned short GLES2Renderer::skyIndices[]{
+	const unsigned short DungeonGLES2Renderer::cornerLeftNearIndices[]{
 			0, 1, 2,
 			0, 2, 3
 	};
 
 
-	const unsigned short GLES2Renderer::cubeIndices[]{
+	const unsigned short DungeonGLES2Renderer::floorIndices[]{
+			0, 1, 2,
+			0, 2, 3
+	};
+
+	const unsigned short DungeonGLES2Renderer::skyIndices[]{
+			0, 1, 2,
+			0, 2, 3
+	};
+
+
+	const unsigned short DungeonGLES2Renderer::cubeIndices[]{
 			0, 1, 2,
 			0, 2, 3,
 
@@ -168,7 +173,7 @@ namespace odb {
 		}
 	}
 
-	GLuint GLES2Renderer::loadShader(GLenum shaderType, const char *pSource) {
+	GLuint DungeonGLES2Renderer::loadShader(GLenum shaderType, const char *pSource) {
 		auto shader = glCreateShader(shaderType);
 		if (shader) {
 			glShaderSource(shader, 1, &pSource, NULL);
@@ -193,7 +198,7 @@ namespace odb {
 		return shader;
 	}
 
-	GLuint GLES2Renderer::createProgram(const char *pVertexSource, const char *pFragmentSource) {
+	GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource, const char *pFragmentSource) {
 		auto vertexShader = loadShader(GL_VERTEX_SHADER, pVertexSource);
 		if (!vertexShader) {
 			return 0;
@@ -231,14 +236,14 @@ namespace odb {
 		return program;
 	}
 
-	void GLES2Renderer::printVerboseDriverInformation() {
+	void DungeonGLES2Renderer::printVerboseDriverInformation() {
 		printGLString("Version", GL_VERSION);
 		printGLString("Vendor", GL_VENDOR);
 		printGLString("Renderer", GL_RENDERER);
 		printGLString("Extensions", GL_EXTENSIONS);
 	}
 
-	GLES2Renderer::GLES2Renderer() {
+	DungeonGLES2Renderer::DungeonGLES2Renderer() {
 //start off as identity - late we will init it with proper values.
 		cubeTransformMatrix = glm::mat4(1.0f);
 		projectionMatrix = glm::mat4(1.0f);
@@ -248,7 +253,7 @@ namespace odb {
 		gProgram = 0;
 	}
 
-	GLES2Renderer::~GLES2Renderer() {
+	DungeonGLES2Renderer::~DungeonGLES2Renderer() {
 		LOGI("Destroying the renderer");
 
 		if (kShouldDestroyThingsManually) {
@@ -260,7 +265,7 @@ namespace odb {
 
 	}
 
-	bool GLES2Renderer::init(float w, float h, const std::string &vertexShader,
+	bool DungeonGLES2Renderer::init(float w, float h, const std::string &vertexShader,
 	                         const std::string &fragmentShader) {
 
 		printVerboseDriverInformation();
@@ -293,14 +298,14 @@ namespace odb {
 		return true;
 	}
 
-	glm::mat4 GLES2Renderer::getCubeTransform(glm::vec3 translation) {
+	glm::mat4 DungeonGLES2Renderer::getCubeTransform(glm::vec3 translation) {
 		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
 		return translated;
 	}
 
-	void GLES2Renderer::resetTransformMatrices() {
+	void DungeonGLES2Renderer::resetTransformMatrices() {
 		glm::mat4 viewMatrix;
 
 		switch (mCameraMode ) {
@@ -332,7 +337,7 @@ namespace odb {
 		glUniformMatrix4fv(uView, 1, false, &viewMatrix[0][0]);
 	}
 
-	void GLES2Renderer::fetchShaderLocations() {
+	void DungeonGLES2Renderer::fetchShaderLocations() {
 
 		vertexAttributePosition = glGetAttribLocation(gProgram, "aPosition");
 		modelMatrixAttributePosition = glGetUniformLocation(gProgram, "uModel");
@@ -344,7 +349,7 @@ namespace odb {
 		fadeUniform = glGetUniformLocation(gProgram, "uFade");
 	}
 
-	void GLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount,
+	void DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount,
 	                                 const glm::mat4 &transform) {
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
@@ -369,7 +374,7 @@ namespace odb {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void GLES2Renderer::deleteVBOs() {
+	void DungeonGLES2Renderer::deleteVBOs() {
 		glDeleteBuffers(1, &vboCubeVertexDataIndex);
 		glDeleteBuffers(1, &vboCubeVertexIndicesIndex);
 
@@ -389,7 +394,7 @@ namespace odb {
 		glDeleteBuffers(1, &vboCornerLeftNearVertexIndicesIndex);
 	}
 
-	void GLES2Renderer::createVBOs() {
+	void DungeonGLES2Renderer::createVBOs() {
 		//walls
 		glGenBuffers(1, &vboCubeVertexDataIndex);
 		glBindBuffer(GL_ARRAY_BUFFER, vboCubeVertexDataIndex);
@@ -461,7 +466,7 @@ namespace odb {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	void GLES2Renderer::clearBuffers() {
+	void DungeonGLES2Renderer::clearBuffers() {
 		if ( mCameraMode == kFirstPerson ) {
 			glClearColor( 0.5f, 0.5f, 0.5f, 1.0f);
 		} else {
@@ -473,16 +478,16 @@ namespace odb {
 		checkGlError("glClear");
 	}
 
-	void GLES2Renderer::setPerspective() {
+	void DungeonGLES2Renderer::setPerspective() {
 		glUniformMatrix4fv(projectionMatrixAttributePosition, 1, false, &projectionMatrix[0][0]);
 	}
 
-	void GLES2Renderer::prepareShaderProgram() {
+	void DungeonGLES2Renderer::prepareShaderProgram() {
 		glUseProgram(gProgram);
 		checkGlError("glUseProgram");
 	}
 
-	void GLES2Renderer::render(IntGameMap map, IntGameMap actors, IntGameMap splats,
+	void DungeonGLES2Renderer::render(IntGameMap map, IntGameMap actors, IntGameMap splats,
 	                           LightMap lightMap, IntField ids, AnimationList movingCharacters,
 	                           long animationTime) {
 		clearBuffers();
@@ -497,7 +502,7 @@ namespace odb {
 		consumeRenderingBatches(animationTime);
 	}
 
-	void GLES2Renderer::updateFadeState(long ms) {
+	void DungeonGLES2Renderer::updateFadeState(long ms) {
 		if (mFadeState == kFadingIn) {
 			mFadeColour.a -= (ms / 1000.0f);
 			mFadeColour.r = mFadeColour.g = mFadeColour.b = 1.0f - mFadeColour.a;
@@ -518,32 +523,32 @@ namespace odb {
 		}
 	}
 
-	void GLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
+	void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
 		mBitmaps.clear();
 		mBitmaps.insert(mBitmaps.end(), textures.begin(), textures.end());
 	}
 
-	void GLES2Renderer::shutdown() {
+	void DungeonGLES2Renderer::shutdown() {
 		LOGI("Shutdown!\n");
 	}
 
-	void GLES2Renderer::setCameraPosition(float x, float y) {
+	void DungeonGLES2Renderer::setCameraPosition(float x, float y) {
 		this->mCameraTarget = glm::vec2{x, y};
 	}
 
-	void GLES2Renderer::setCursorAt(float x, float y) {
+	void DungeonGLES2Renderer::setCursorAt(float x, float y) {
 		this->cursorPosition = glm::vec2{x, y};
 	}
 
-	void GLES2Renderer::toggleCloseUpCamera() {
+	void DungeonGLES2Renderer::toggleCloseUpCamera() {
 		mCameraMode = static_cast<ECameraMode>(( static_cast<int>(mCameraMode) + 1 ) % ECameraMode::kTotal);
 	}
 
-	void GLES2Renderer::setClearColour(float r, float g, float b) {
+	void DungeonGLES2Renderer::setClearColour(float r, float g, float b) {
 		this->mClearColour = glm::vec3(r, g, b);
 	}
 
-	void GLES2Renderer::startFadingIn() {
+	void DungeonGLES2Renderer::startFadingIn() {
 		if (mFadeState == kFadingIn) {
 			return;
 		}
@@ -552,7 +557,7 @@ namespace odb {
 		mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
-	void GLES2Renderer::startFadingOut() {
+	void DungeonGLES2Renderer::startFadingOut() {
 		if (mFadeState == kFadingOut) {
 			return;
 		}
@@ -561,7 +566,7 @@ namespace odb {
 		mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 0.1f);
 	}
 
-	void GLES2Renderer::updateCamera(long ms) {
+	void DungeonGLES2Renderer::updateCamera(long ms) {
 		cameraPosition.x += ms * (mCameraTarget.x - cameraPosition.x) / 1000.0f;
 		cameraPosition.y += ms * (mCameraTarget.y - cameraPosition.y) / 1000.0f;
 
@@ -573,7 +578,7 @@ namespace odb {
 		}
 	}
 
-	void GLES2Renderer::consumeRenderingBatches(long animationTime) {
+	void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
 		glm::vec3 pos;
 		Shade shade;
 
@@ -643,7 +648,7 @@ namespace odb {
 		}
 	}
 
-	void GLES2Renderer::produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats,
+	void DungeonGLES2Renderer::produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats,
 	                                            LightMap lightMap, IntField ids,
 	                                            AnimationList movingCharacters, long animationTime) {
 
@@ -821,19 +826,19 @@ namespace odb {
 		}
 	}
 
-	void GLES2Renderer::invalidateCachedBatches() {
+	void DungeonGLES2Renderer::invalidateCachedBatches() {
 		batches.clear();
 	}
 
-	void GLES2Renderer::rotateLeft() {
+	void DungeonGLES2Renderer::rotateLeft() {
 		this->mRotationTarget -= 90;
 	}
 
-	void GLES2Renderer::rotateRight() {
+	void DungeonGLES2Renderer::rotateRight() {
 		this->mRotationTarget += 90;
 	}
 
-	glm::mat4 GLES2Renderer::getBillboardTransform(glm::vec3 translation) {
+	glm::mat4 DungeonGLES2Renderer::getBillboardTransform(glm::vec3 translation) {
 		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
@@ -844,22 +849,22 @@ namespace odb {
 		}
 	}
 
-	glm::mat4 GLES2Renderer::getFloorTransform(glm::vec3 translation) {
+	glm::mat4 DungeonGLES2Renderer::getFloorTransform(glm::vec3 translation) {
 		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
 		return translated;
 	}
 
-	bool GLES2Renderer::isAnimating() {
+	bool DungeonGLES2Renderer::isAnimating() {
 		return mRotationTarget != mCameraRotation;
 	}
 
-	void GLES2Renderer::setFloorNumber(long floor) {
+	void DungeonGLES2Renderer::setFloorNumber(long floor) {
 		mFloorNumber = floor;
 	}
 
-	glm::mat4 GLES2Renderer::getSkyTransform(long animationTime ) {
+	glm::mat4 DungeonGLES2Renderer::getSkyTransform(long animationTime ) {
 		glm::mat4 identity = glm::mat4(1.0f);
 
 		long offset = animationTime;
@@ -869,45 +874,64 @@ namespace odb {
 		return glm::translate( identity, glm::vec3(finalOffset, 0.0f, 0.0f  ));
 	}
 
-	void GLES2Renderer::onLongPressingMove() {
+	void DungeonGLES2Renderer::onLongPressingMove() {
 		this->mLongPressing = true;
 	}
 
-	void GLES2Renderer::onReleasedLongPressingMove() {
+	void DungeonGLES2Renderer::onReleasedLongPressingMove() {
 		this->mLongPressing = false;
 	}
 
-	bool GLES2Renderer::isLongPressing() {
+	bool DungeonGLES2Renderer::isLongPressing() {
 		return mLongPressing;
 	}
 
-	glm::mat4 GLES2Renderer::getCornerLeftFarTransform(glm::vec3 translation) {
+	glm::mat4 DungeonGLES2Renderer::getCornerLeftFarTransform(glm::vec3 translation) {
 		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
 		return translated;
 	}
 
-	glm::mat4 GLES2Renderer::getCornerLeftNearTransform(glm::vec3 translation) {
+	glm::mat4 DungeonGLES2Renderer::getCornerLeftNearTransform(glm::vec3 translation) {
 		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
 		return translated;
 	}
 
-	void GLES2Renderer::setEyeView(float *eyeView) {
+	void DungeonGLES2Renderer::setEyeView(float *eyeView) {
 		mEyeView = eyeView;
 	}
 
-	void GLES2Renderer::setPerspectiveMatrix(float *perspectiveMatrix) {
+	void DungeonGLES2Renderer::setPerspectiveMatrix(float *perspectiveMatrix) {
 		projectionMatrix = glm::make_mat4( perspectiveMatrix );
 	}
 
-    void GLES2Renderer::setAngleXZ(float xz) {
+    void DungeonGLES2Renderer::setAngleXZ(float xz) {
         mAngleXZ = xz;
     }
 
-    void GLES2Renderer::setAngleYZ(float yz) {
+    void DungeonGLES2Renderer::setAngleYZ(float yz) {
         mAngleYZ = yz;
     }
+
+	void DungeonGLES2Renderer::drawTrigBatch( odb::TrigBatch &batch ) {
+
+		glm::vec3 pos = glm::vec3(-10 + (2 * 2), -4.0f, -10 + (-5 * 2));
+		glm::mat4 trans = getCubeTransform( pos );
+
+		glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::CubeColours]->mTextureId);
+
+		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &trans[0][0]);
+		checkGlError("before drawing");
+
+		glEnableVertexAttribArray(vertexAttributePosition);
+		glEnableVertexAttribArray(textureCoordinatesAttributePosition);
+
+		batch.draw(vertexAttributePosition, textureCoordinatesAttributePosition);
+
+		glDisableVertexAttribArray(vertexAttributePosition);
+		glDisableVertexAttribArray(textureCoordinatesAttributePosition);
+	}
 }

@@ -76,6 +76,8 @@ namespace odb {
 		CornerLeftFar,
 		CornerLeftNear,
 		Skybox,
+		CubeColours,
+		CubeNormals,
 	};
 
 	using IntGameMap = std::array<std::array<ETextures , 20>, 20>;
@@ -87,7 +89,7 @@ namespace odb {
 
 	static const long kAnimationLength = 750;
 
-	class GLES2Renderer {
+	class DungeonGLES2Renderer {
 
 		void fetchShaderLocations();
 
@@ -175,13 +177,13 @@ namespace odb {
 		void produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats, LightMap lightmap, IntField ids, AnimationList movingCharacters, long animationTime);
 		std::map< ETextures, std::vector< CRenderingBatchElement>> batches;
 		ECameraMode mCameraMode = ECameraMode::kFirstPerson;
-        float* mEyeView;
+        float* mEyeView = nullptr;
 		float mAngleXZ;
 		float mAngleYZ;
 	public:
-		GLES2Renderer();
+		DungeonGLES2Renderer();
 
-		~GLES2Renderer();
+		~DungeonGLES2Renderer();
 
 		bool init(float w, float h, const std::string &vertexShader,
 		          const std::string &fragmentShader);
@@ -203,6 +205,8 @@ namespace odb {
 		void startFadingIn();
 
 		void startFadingOut();
+
+		void drawTrigBatch( odb::TrigBatch &batch );
 
 		void updateCamera( long ms );
 
