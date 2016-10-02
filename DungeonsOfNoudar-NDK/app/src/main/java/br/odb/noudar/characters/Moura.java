@@ -1,11 +1,16 @@
-package br.odb.noudar;
+package br.odb.noudar.characters;
 
 import br.odb.droidlib.Vector2;
+import br.odb.noudar.GameLevel;
+import br.odb.noudar.GameLevelLoader;
+import br.odb.noudar.GameViewGLES2;
+import br.odb.noudar.Knight;
+import br.odb.noudar.Monster;
 
 /**
  * @author monty
  */
-class Moura extends Monster {
+public class Moura extends Monster {
 
     public Moura() {
         super(8, 3);
@@ -39,7 +44,7 @@ class Moura extends Monster {
 
     @Override
     public String getChar() {
-        return String.valueOf(KnightsConstants.SPAWNPOINT_MOURA);
+        return String.valueOf(GameLevelLoader.FileMarkers.SPAWNPOINT_MOURA);
     }
 
     @Override

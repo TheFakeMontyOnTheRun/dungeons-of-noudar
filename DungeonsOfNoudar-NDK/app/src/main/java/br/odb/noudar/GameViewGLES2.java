@@ -10,13 +10,10 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewManager;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.vr.sdk.base.Eye;
 import com.google.vr.sdk.base.GvrView;
@@ -25,11 +22,7 @@ import com.google.vr.sdk.base.Viewport;
 
 import java.io.IOException;
 
-import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.opengles.GL10;
 
 import br.odb.GL2JNILib;
 import br.odb.OnSwipeTouchListener;
@@ -37,13 +30,17 @@ import br.odb.droidlib.Renderable;
 import br.odb.droidlib.Tile;
 import br.odb.droidlib.Vector2;
 import br.odb.menu.GameActivity;
+import br.odb.noudar.characters.Actor;
+import br.odb.noudar.characters.Crusader;
 
 /**
  * @author monty
  */
 public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 
-    @Override
+	public static final int TICK_INTERVAL = 500;
+
+	@Override
 	public void onNewFrame(HeadTransform headTransform) {
         long delta = tick();
         GL2JNILib.tick(delta);
@@ -57,7 +54,7 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
         float xz = extractAngleXZFromHeadtransform(headTransform);
         float yz = extractAngleYZFromHeadtransform(headTransform);
 
-	    if ( !mHaveController ) {
+	    if ( !mHaveController &&  getStereoModeEnabled() ) {
 		    rotation = (int) ((360 - xz) / 90);
 	    }
 
@@ -88,35 +85,24 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 
 	@Override
 	public void onFinishFrame(Viewport viewport) {
-
 	}
 
 	@Override
 	public void onSurfaceChanged(int width, int height) {
-		Log.d("Monty", "surface changed");
 		GL2JNILib.init(width, height);
-		float hue = ((255.0f / GameLevelLoader.NUMBER_OF_LEVELS) * currentLevelNumber )/ 255.0f;
-		GL2JNILib.setClearColour( hue, 1.0f - (hue), 1.0f - hue);
 	}
 
 	@Override
 	public void onSurfaceCreated(EGLConfig eglConfig) {
-
 	}
 
 	@Override
 	public void onRendererShutdown() {
-
 	}
 
 	public interface GameRenderer {
-		void fadeIn();
 		void fadeOut();
 		void setNeedsUpdate();
-		void displayKnightIsDeadMessage();
-		void displayLevelAdvanceMessage();
-		void displayKnightEnteredDoorMessage();
-		void displayGreetingMessage();
 		void cameraRotateLeft();
 		void cameraRotateRight();
 	}
@@ -125,14 +111,8 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 	public static final int ID_NO_ACTOR = 0;
 
 	public enum KB {
-		UP, RIGHT, DOWN, LEFT, CYCLE_CURRENT_KNIGHT, ROTATE_LEFT, ROTATE_RIGHT
+		UP, RIGHT, DOWN, LEFT, ROTATE_LEFT, ROTATE_RIGHT
 	}
-
-	enum ECameraMode {
-		kGlobalCamera,
-		kChaseOverview,
-		kFirstPerson,
-	};
 
 	public enum ETextures {
 		None,
@@ -156,22 +136,8 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		Lady0,
 		Lady1,
 		Lady2,
-		Bull0,
-		Bull1,
-		Bull2,
-		Falcon0,
-		Falcon1,
-		Falcon2,
-		Turtle0,
-		Turtle1,
-		Turtle2,
+		Crusader,
 		Shadow,
-		CursorGood0,
-		CursorGood1,
-		CursorGood2,
-		CursorBad0,
-		CursorBad1,
-		CursorBad2,
 		Ceiling,
 		CeilingDoor,
 		CeilingBegin,
@@ -182,14 +148,12 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		CeilingBars,
 		CornerLeftFar,
 		CornerLeftNear,
-		Skybox
+		Skybox,
+		CubeColours,
+		CubeNormals,
 	};
 
 	GameRenderer gameRenderer = new GameRenderer() {
-		@Override
-		public void fadeIn() {
-			GL2JNILib.fadeIn();
-		}
 
 		@Override
 		public void fadeOut() {
@@ -199,27 +163,6 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		@Override
 		public void setNeedsUpdate() {
 			GameViewGLES2.this.setNeedsUpdate();
-		}
-
-		@Override
-		public void displayKnightIsDeadMessage() {
-			Toast.makeText(getContext(), R.string.knight_dead,
-					Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void displayLevelAdvanceMessage() {
-			Toast.makeText(getContext(), R.string.level_greeting_others, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void displayKnightEnteredDoorMessage() {
-			Toast.makeText(getContext(), R.string.knight_escaped, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void displayGreetingMessage() {
-			Toast.makeText(getContext(), R.string.level_greeting_0, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -245,15 +188,11 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 			if ( event.getAction() == KeyEvent.ACTION_DOWN ) {
 
 				if (keyCode == KeyEvent.KEYCODE_COMMA || keyCode == KeyEvent.KEYCODE_BUTTON_L1) {
-					if ( mCurrentCameraMode == ECameraMode.kFirstPerson ) {
-						key = transformMovementToCameraRotation(GameViewGLES2.KB.LEFT);
-					}
+					key = transformMovementToCameraRotation(GameViewGLES2.KB.LEFT);
 				}
 
 				if (keyCode == KeyEvent.KEYCODE_PERIOD || keyCode == KeyEvent.KEYCODE_BUTTON_R1) {
-					if ( mCurrentCameraMode == ECameraMode.kFirstPerson ) {
-						key = transformMovementToCameraRotation(GameViewGLES2.KB.RIGHT);
-					}
+					key = transformMovementToCameraRotation(GameViewGLES2.KB.RIGHT);
 				}
 
 				if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
@@ -270,23 +209,13 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 				if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
 					key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
 				}
+
 				if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
-					if ( mCurrentCameraMode == ECameraMode.kFirstPerson ) {
-						key = KB.ROTATE_LEFT;
-					} else {
-						key = KB.LEFT;
-					}
-				}
-				if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-					if ( mCurrentCameraMode == ECameraMode.kFirstPerson ) {
-						key = KB.ROTATE_RIGHT;
-					} else {
-						key = KB.RIGHT;
-					}
+					key = KB.ROTATE_LEFT;
 				}
 
-				if (keyCode == KeyEvent.KEYCODE_X || keyCode == KeyEvent.KEYCODE_BUTTON_X) {
-					key = KB.CYCLE_CURRENT_KNIGHT;
+				if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+					key = KB.ROTATE_RIGHT;
 				}
 			} else {
 				GL2JNILib.onReleasedLongPressingMove();
@@ -296,10 +225,9 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		}
 	};
 
-	final public Object renderingLock = new Object();
+	final private Object renderingLock = new Object();
 	private boolean needsUpdate = true;
 	private volatile boolean running = true;
-	private boolean birdView;
 	private Vector2 cameraPosition;
 	private long timeUntilTick;
 	private long t0;
@@ -307,10 +235,10 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
     private float[] forwardVector = new float[3];
 
 	//snapshot
-	private final int[] map = new int[20 * 20];
-	private final int[] ids = new int[20 * 20];
-	private final int[] snapshot = new int[20 * 20];
-	private final int[] splats = new int[20 * 20];
+	private final int[] map = new int[GameLevel.MAP_SIZE * GameLevel.MAP_SIZE];
+	private final int[] ids = new int[GameLevel.MAP_SIZE * GameLevel.MAP_SIZE];
+	private final int[] snapshot = new int[GameLevel.MAP_SIZE * GameLevel.MAP_SIZE];
+	private final int[] splats = new int[GameLevel.MAP_SIZE * GameLevel.MAP_SIZE];
 	private final Vector2 v = new Vector2();
 
 	//game logic stuff - that shouldn't really be here.
@@ -320,7 +248,6 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 	boolean mHaveController;
 	private int currentLevelNumber;
 	int rotation = 0;
-	ECameraMode mCurrentCameraMode = ECameraMode.kFirstPerson;
 
 	private long tick() {
 
@@ -335,18 +262,19 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 			if ( key != null ) {
 				handleCommand(key);
 				key = null;
+				setNeedsUpdate();
 			}
 
-			currentLevel.updateSplats(500 - timeUntilTick);
+			currentLevel.updateSplats(TICK_INTERVAL - timeUntilTick);
 			needsUpdate = needsUpdate || currentLevel.needsUpdate() || ( key != null );
-			timeUntilTick = 500;
+			timeUntilTick = TICK_INTERVAL;
 			t0 = System.currentTimeMillis();
 		}
 
 		return delta;
 	}
 
-    private void init( Context context ) {
+    private void init() {
         setRenderer(this);
 	    setFocusable(true);
         t0 = System.currentTimeMillis();
@@ -354,24 +282,24 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 
     public GameViewGLES2(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
 
     public GameViewGLES2(Context context, AttributeSet attrs) {
 		super(context, attrs);
-        init(context);
+        init();
 	}
 
 	private void updateNativeSnapshot() {
 		int position;
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-		for (int y = 0; y < 20; ++y) {
-			for (int x = 0; x < 20; ++x) {
+		for (int y = 0; y < GameLevel.MAP_SIZE; ++y) {
+			for (int x = 0; x < GameLevel.MAP_SIZE; ++x) {
 				v.x = x;
 				v.y = y;
-				position = (y * 20) + x;
+				position = (y * GameLevel.MAP_SIZE) + x;
 
 				Tile tile = this.currentLevel.getTile(v);
 
@@ -379,17 +307,13 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 				map[position] = tile.getMapTextureIndex().ordinal();
 				splats[position] = SPLAT_NONE;
 				ids[ position ] = ID_NO_ACTOR;
+				snapshot[position] = ETextures.None.ordinal();
 
 				Renderable occupant = tile.getOccupant();
 
-				if (  occupant instanceof Actor ) {
+				if (  occupant instanceof Actor) {
 					ids[ position ] = ((Actor)occupant).mId;
-				}
-
-				if ( ETextures.Boss0.ordinal() <= index.ordinal() && index.ordinal() < ETextures.Shadow.ordinal()) {
 					snapshot[position] = index.ordinal();
-				} else {
-					snapshot[position] = ETextures.None.ordinal();
 				}
 			}
 		}
@@ -397,7 +321,7 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		for ( Vector2 pos : currentLevel.mSplats.keySet() ) {
 			Splat splat = currentLevel.mSplats.get(pos);
 
-			position = (int) ((pos.y * 20) + pos.x);
+			position = (int) ((pos.y * GameLevel.MAP_SIZE) + pos.x);
 			int frame = splat.getSplatFrame();
 
 			if ( frame > splats[position ] ) {
@@ -407,11 +331,8 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		GL2JNILib.setFloorNumber( currentLevelNumber );
 		GL2JNILib.setMapWithSplatsAndActors(map, snapshot, splats);
 		GL2JNILib.setActorIdPositions( ids );
-		GL2JNILib.setCurrentCursorPosition( cameraPosition.x, cameraPosition.y);
 		GL2JNILib.setCameraPosition(cameraPosition.x, cameraPosition.y);
 	}
-
-
 
 	public void init(Context context, GameActivity.GameDelegate delegate, int level, boolean haveController) {
 		cameraPosition = new Vector2();
@@ -422,7 +343,6 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		this.gameDelegate = delegate;
 		buildPresentation(context.getResources(), level);
 		this.currentLevelNumber = level;
-		gameDelegate.onGameStarted();
 
 		if ( haveController ) {
 			setOnKeyListener( keyListener );
@@ -439,29 +359,17 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 			setOnTouchListener( new OnSwipeTouchListener(getContext()){
 
 				@Override
-				public void onDoubleTap() {
-					super.onDoubleTap();
-					key = KB.CYCLE_CURRENT_KNIGHT;
-				}
-
-				@Override
 				public void onSwipeLeft() {
 					super.onSwipeLeft();
-					if ( mCurrentCameraMode == ECameraMode.kFirstPerson ) {
-						key = KB.ROTATE_LEFT;
-					} else {
-						key = KB.LEFT;
-					}
+
+					key = KB.ROTATE_LEFT;
 				}
 
 				@Override
 				public void onSwipeRight() {
 					super.onSwipeRight();
-					if ( mCurrentCameraMode == ECameraMode.kFirstPerson ) {
-						key = KB.ROTATE_RIGHT;
-					} else {
-						key = KB.RIGHT;
-					}
+
+					key = KB.ROTATE_RIGHT;
 				}
 
 				@Override
@@ -492,31 +400,25 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		}
 	}
 
-	public synchronized void setNeedsUpdate() {
+	private synchronized void setNeedsUpdate() {
 		needsUpdate = true;
 	}
-
-	public void toggleCamera() {
-		birdView = !birdView;
-		GL2JNILib.toggleCloseupCamera();
-	}
-
-	public boolean isOnBirdView() {
-		return birdView;
-	}
-
 
 	public void fadeOut() {
 		gameRenderer.fadeOut();
 	}
 
 	public void onDestroy() {
-		GL2JNILib.onDestroy();
+		synchronized (renderingLock) {
+			GL2JNILib.onDestroy();
+		}
 	}
 
 	public void onCreate(AssetManager assets) {
-		GL2JNILib.onCreate(assets);
-		loadTextures( assets );
+		synchronized ( renderingLock ) {
+			GL2JNILib.onCreate(assets);
+			loadTextures( assets );
+		}
 	}
 
 	public void setTextures(Bitmap[] bitmaps) {
@@ -551,22 +453,8 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 					"lady0.png",
 					"lady1.png",
 					"lady2.png",
-					"bull0.png",
-					"bull1.png",
-					"bull2.png",
-					"falcon0.png",
-					"falcon1.png",
-					"falcon2.png",
-					"turtle0.png",
-					"turtle1.png",
-					"turtle2.png",
+					"grass.png", //crusader
 					(isDungeonSurfaceLevel ? "stoneshadow.png" : "shadow.png"),
-					(isDungeonSurfaceLevel ? "stonecursorgood.png" : "cursorgood0.png"),
-					"cursorgood1.png",
-					"cursorgood2.png",
-					(isDungeonSurfaceLevel ? "stonecursorbad.png" : "cursorbad0.png"),
-					"cursorbad1.png",
-					"cursorbad2.png",
 					(isDungeonSurfaceLevel ? "stoneceiling.png" : "ceiling.png"),
 					"ceilingdoor.png",
 					"ceilingbegin.png",
@@ -578,6 +466,8 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 					"bricks.png",
 					"bricks.png",
 					"clouds.png",
+					"monty.png",
+					"cubenormals.png",
 			});
 			setTextures(bitmaps);
 		} catch (IOException e) {
@@ -596,10 +486,6 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		return toReturn;
 	}
 
-	public ViewManager getParentViewManager() {
-		return (ViewManager) getParent();
-	}
-
 	public void stopRunning() {
 		this.running = false;
 	}
@@ -610,43 +496,25 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		setIsPlaying( true );
 		setFocusable(true);
 		requestFocus();
+
+		setNeedsUpdate();
 	}
 
 	public void setIsPlaying(boolean isPlaying) {
 		this.running = isPlaying;
 	}
 
-	public void displayLevelAdvanceMessage() {
-		gameRenderer.displayLevelAdvanceMessage();
-	}
-
-	public void displayGreetingMessage() {
-		gameRenderer.displayGreetingMessage();
-	}
-
-	private void displayKnightIsDeadMessage() {
-		gameRenderer.displayKnightIsDeadMessage();
-	}
-
 	public KB transformMovementToCameraRotation(KB direction) {
 
-		if ( mCurrentCameraMode != ECameraMode.kFirstPerson ) {
-			return  direction;
-		}
-
-		int index = (rotation + direction.ordinal())%4;
+		int index = (rotation + direction.ordinal()) % GameLevel.Direction.values().length;
 		while ( index < 0 ) {
-			index += 4;
+			index += GameLevel.Direction.values().length;
 		}
 
 		return KB.values()[ index ];
 	}
 
 // game logic - that shouldn't really be here.
-
-	public int getExitedKnights() {
-		return currentLevel.getTotalExitedKnights();
-	}
 
 	public synchronized void handleCommand(final KB key) {
 
@@ -670,21 +538,12 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer  {
 		});
 	}
 
-	public GameLevel getCurrentLevel() {
-		return currentLevel;
-	}
-
-	public boolean isFirstPerson() {
-		return mCurrentCameraMode == ECameraMode.kFirstPerson;
-	}
-
-	public GameActivity.Direction transformMovementToCameraRotation(GameActivity.Direction direction) {
-
+	public GameLevel.Direction transformMovementToCameraRotation(GameLevel.Direction direction) {
 		int indexDirection = direction.ordinal();
 		KB directionKey = KB.values()[ indexDirection ];
 		KB transformedKey =  transformMovementToCameraRotation(  directionKey );
 
-		return GameActivity.Direction.values()[ transformedKey.ordinal() ];
+		return GameLevel.Direction.values()[ transformedKey.ordinal() ];
 	}
 
 	public GameRenderer getRenderingDelegate() {

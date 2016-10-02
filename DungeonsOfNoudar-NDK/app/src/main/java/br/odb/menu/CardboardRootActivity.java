@@ -27,7 +27,6 @@ public class CardboardRootActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
 	    playNextLevel( 0 );
@@ -49,7 +48,6 @@ public class CardboardRootActivity extends Activity {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
 		if (requestCode == PLAY_GAME_REQUEST_CODE && data != null) {
 			Bundle bundle = data.getExtras();
 			GameOutcome outcome = GameOutcome.values()[bundle.getInt(MAPKEY_SUCCESSFUL_LEVEL_COMPLETION)];
@@ -59,18 +57,6 @@ public class CardboardRootActivity extends Activity {
 	}
 
 	private void playNextLevel(int levelToPlay) {
-
-		int score = 0;
-		GameSession session = GameConfigurations.getInstance().getCurrentGameSession();
-		if ( session != null ) {
-			score = session.getScore();
-		}
-
-		if ( levelToPlay == 0 ) {
-			score = 0;
-		}
-
-		GameConfigurations.getInstance().startNewSession(score);
 		Intent intent = new Intent(getBaseContext(), GameActivity.class);
 		intent.putExtra(MAPKEY_LEVEL_TO_PLAY, levelToPlay);
 		intent.putExtra(USE_VR, Boolean.TRUE);

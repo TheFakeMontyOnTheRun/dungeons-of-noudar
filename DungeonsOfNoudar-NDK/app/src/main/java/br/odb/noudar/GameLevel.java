@@ -9,8 +9,32 @@ import java.util.Map;
 import br.odb.droidlib.Tile;
 import br.odb.droidlib.Vector2;
 import br.odb.menu.GameActivity;
+import br.odb.noudar.characters.Actor;
+import br.odb.noudar.characters.Baphomet;
+import br.odb.noudar.characters.Crusader;
+import br.odb.noudar.characters.Cuco;
+import br.odb.noudar.characters.Moura;
 
 public class GameLevel implements Serializable {
+
+
+	public enum Direction {
+		N(0, -1),
+		E(1, 0),
+		S(0, 1),
+		W(-1, 0);
+
+		private final Vector2 offsetVector = new Vector2(0, 0);
+
+		Direction(int x, int y) {
+			offsetVector.x = x;
+			offsetVector.y = y;
+		}
+
+		public Vector2 getOffsetVector() {
+			return offsetVector;
+		}
+	}
 
 	public static final int MAP_SIZE = 20;
 	final private Tile[][] tileMap = new Tile[MAP_SIZE][MAP_SIZE];
@@ -38,7 +62,7 @@ public class GameLevel implements Serializable {
 		this.mGameRenderer = gameRenderer;
 		this.mGameDelegate = gameDelegate;
 		this.mLevelNumber = levelNumber;
-		this.aliveKnightsInCurrentLevel = 3;
+		this.aliveKnightsInCurrentLevel = 1;
 		buildTilemap(map);
 	}
 
@@ -52,47 +76,47 @@ public class GameLevel implements Serializable {
 
 				switch (mapRow[column]) {
 
-					case KnightsConstants.BARS:
+					case GameLevelLoader.FileMarkers.BARS:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.Bars);
 						tile.setKind(mapRow[column]);
 						tile.setBlock(true);
 						break;
 
-					case KnightsConstants.ARCH:
+					case GameLevelLoader.FileMarkers.ARCH:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.Arch);
 						tile.setBlock(false);
 						break;
 
-					case KnightsConstants.BRICKS_BLOOD:
+					case GameLevelLoader.FileMarkers.BRICKS_BLOOD:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.BricksBlood);
 						tile.setBlock(true);
 						break;
 
-					case KnightsConstants.BRICKS_CANDLES:
+					case GameLevelLoader.FileMarkers.BRICKS_CANDLES:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.BricksCandles);
 						tile.setBlock(true);
 						break;
 
-					case KnightsConstants.BRICKS:
+					case GameLevelLoader.FileMarkers.BRICKS:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.Bricks);
 						tile.setBlock(true);
 						break;
 
-					case KnightsConstants.CORNER_LEFT_FAR:
+					case GameLevelLoader.FileMarkers.CORNER_LEFT_FAR:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.CornerLeftFar);
 						tile.setBlock(true);
 						break;
 
-					case KnightsConstants.CORNER_LEFT_NEAR:
+					case GameLevelLoader.FileMarkers.CORNER_LEFT_NEAR:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.CornerLeftNear);
 						tile.setBlock(true);
 						break;
 
-					case KnightsConstants.DOOR:
+					case GameLevelLoader.FileMarkers.DOOR:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.Exit);
 						tile.setBlock(false);
 						break;
-					case KnightsConstants.BEGIN:
+					case GameLevelLoader.FileMarkers.BEGIN:
 						tile = new Tile(mapRow[column], GameViewGLES2.ETextures.Begin);
 						tile.setBlock(true);
 						break;
@@ -105,31 +129,26 @@ public class GameLevel implements Serializable {
 
 				switch (kind) {
 
-					case KnightsConstants.SPAWNPOINT_BAPHOMET:
+					case GameLevelLoader.FileMarkers.SPAWNPOINT_BAPHOMET:
 						addEntity(new Baphomet(), column, row);
 						break;
-					case KnightsConstants.SPAWNPOINT_BULL:
-						addEntity(new BullKnight(), column, row);
+					case GameLevelLoader.FileMarkers.SPAWNPOINT_CRUSADER:
+						addEntity(new Crusader(), column, row);
 						break;
-					case KnightsConstants.SPAWNPOINT_TURTLE:
-						addEntity(new TurtleKnight(), column, row);
-						break;
-					case KnightsConstants.SPAWNPOINT_EAGLE:
-						addEntity(new EagleKnight(), column, row);
-						break;
-					case KnightsConstants.SPAWNPOINT_CUCO:
+					case GameLevelLoader.FileMarkers.SPAWNPOINT_CUCO:
 						addEntity(new Cuco(), column, row);
 						break;
-					case KnightsConstants.SPAWNPOINT_MOURA:
+					case GameLevelLoader.FileMarkers.SPAWNPOINT_MOURA:
 						addEntity(new Moura(), column, row);
 						break;
-					case KnightsConstants.SPAWNPOINT_DEVIL:
+					case GameLevelLoader.FileMarkers.SPAWNPOINT_DEVIL:
 						addEntity(new Demon(), column, row);
 						break;
 				}
 			}
 		}
 
+		selectDefaultKnight();
 		updateCounters();
 	}
 
@@ -210,7 +229,7 @@ public class GameLevel implements Serializable {
 		}
 
 		if ((actor instanceof Monster)
-				&& ( tileMap[row][column].getKind() == KnightsConstants.BEGIN || tileMap[row][column].getKind() == KnightsConstants.DOOR ) ) {
+				&& ( tileMap[row][column].getKind() == GameLevelLoader.FileMarkers.BEGIN || tileMap[row][column].getKind() == GameLevelLoader.FileMarkers.DOOR ) ) {
 			return false;
 		}
 
@@ -286,13 +305,13 @@ public class GameLevel implements Serializable {
 		return tileMap[y][x].isBlock();
 	}
 
-	public boolean canMove(Actor actor, GameActivity.Direction direction) {
+	public boolean canMove(Actor actor, Direction direction) {
 		Vector2 position = actor.getPosition().add(direction.getOffsetVector());
 
 		return !isBlockAt((int) position.x, (int) position.y);
 	}
 
-	public boolean canAttack(Actor actor, GameActivity.Direction direction) {
+	public boolean canAttack(Actor actor, Direction direction) {
 		Vector2 position = actor.getPosition().add(direction.getOffsetVector());
 		return getActorAt((int) position.x, (int) position.y) instanceof Monster;
 	}
@@ -329,19 +348,6 @@ public class GameLevel implements Serializable {
 
 	public void setSelectedPlayer(Knight knight) {
 		this.selectedPlayer = knight;
-	}
-
-	public void cycleSelectNextKnight() {
-		int index = 0;
-		Knight[] knights = getKnights();
-
-		for (Knight k : knights) {
-			if (selectedPlayer == k) {
-				selectedPlayer = knights[((index + 1) % (knights.length))];
-			} else {
-				++index;
-			}
-		}
 	}
 
 	public void updateCounters() {
@@ -388,19 +394,10 @@ public class GameLevel implements Serializable {
 					break;
 				case ROTATE_LEFT:
 					mGameRenderer.cameraRotateLeft();
-					mGameDelegate.onKnightChanged();
 					return;
 				case ROTATE_RIGHT:
 					mGameRenderer.cameraRotateRight();
-					mGameDelegate.onKnightChanged();
 					return;
-
-				case CYCLE_CURRENT_KNIGHT:
-					cycleSelectNextKnight();
-					mGameDelegate.onKnightChanged();
-					mGameRenderer.setNeedsUpdate();
-					return;
-
 			}
 
 			if (!validPositionFor(getSelectedPlayer())) {
@@ -416,7 +413,7 @@ public class GameLevel implements Serializable {
 				loco.setOccupant(getSelectedPlayer());
 			}
 
-			if ( getSelectedPlayer() != null && getSelectedPlayer().isAlive() && loco.getKind() == KnightsConstants.DOOR) {
+			if ( getSelectedPlayer() != null && getSelectedPlayer().isAlive() && loco.getKind() == GameLevelLoader.FileMarkers.DOOR) {
 				selectedPlayerHasExited();
 			}
 
@@ -430,20 +427,17 @@ public class GameLevel implements Serializable {
 
 			updateCounters();
 			mGameRenderer.setNeedsUpdate();
-			mGameDelegate.onTurnEnded();
 		}
 
 
 	private void selectedPlayerHasExited() {
 		getSelectedPlayer().setAsExited();
 
-		if ( getTotalAvailableKnights() > 1 ) {
-			mGameRenderer.displayKnightEnteredDoorMessage();
-		}
-
 		if ( getTotalAvailableKnights() > 0) {
 			selectDefaultKnight();
 		}
+
+		mGameDelegate.onKnightExited();
 	}
 
 	private void selectedPlayerHasDied() {
@@ -452,8 +446,6 @@ public class GameLevel implements Serializable {
 			mGameRenderer.fadeOut();
 			mGameDelegate.onGameOver();
 		} else {
-			mGameRenderer.displayKnightIsDeadMessage();
-
 			if ( getTotalAvailableKnights() > 0) {
 				selectDefaultKnight();
 			}

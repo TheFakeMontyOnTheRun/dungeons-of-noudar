@@ -2,7 +2,7 @@ package br.odb.droidlib;
 
 import java.io.Serializable;
 
-import br.odb.noudar.Actor;
+import br.odb.noudar.characters.Actor;
 import br.odb.noudar.GameViewGLES2;
 import br.odb.noudar.Knight;
 

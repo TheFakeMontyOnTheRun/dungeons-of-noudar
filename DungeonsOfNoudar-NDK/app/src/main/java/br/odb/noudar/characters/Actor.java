@@ -1,4 +1,4 @@
-package br.odb.noudar;
+package br.odb.noudar.characters;
 
 import java.io.Serializable;
 
@@ -14,18 +14,18 @@ public abstract class Actor implements Renderable, Serializable {
 	final public int mId;
 	final private Sprite visual;
 
-	Vector2 previousPosition;
+	protected Vector2 previousPosition;
 	final private Vector2 position;
 
-	int healthPoints;
+	protected int healthPoints;
 	final private int attackPoints;
 
 	private boolean hasMovedSinceLastTurn = false;
 
-	void notifyEndOfTurn() {
+	public void notifyEndOfTurn() {
 	}
 
-	int getStateFrame() {
+	protected int getStateFrame() {
 		return visual.getCurrentFrame();
 	}
 
@@ -44,7 +44,7 @@ public abstract class Actor implements Renderable, Serializable {
 		return (healthPoints > 0);
 	}
 
-	Actor(int healthPoints, int attackPoints ) {
+	protected Actor(int healthPoints, int attackPoints) {
 		super();
 		mId = GL2JNILib.getNextId();
 		position = new Vector2();
@@ -106,7 +106,7 @@ public abstract class Actor implements Renderable, Serializable {
 		visual.setFrame(1);
 	}
 
-	void setAsDead() {
+	public void setAsDead() {
 		visual.setFrame(2);
 	}
 }

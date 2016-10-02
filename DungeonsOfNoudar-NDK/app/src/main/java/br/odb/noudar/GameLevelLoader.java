@@ -8,8 +8,23 @@ import java.util.Scanner;
 import br.odb.menu.GameActivity;
 
 public class GameLevelLoader {
-
-    public static final int NUMBER_OF_LEVELS = 6;
+	public interface FileMarkers {
+		public static final short BRICKS = 1;
+		public static final short SPAWNPOINT_CRUSADER = 4;
+		public static final short SPAWNPOINT_CUCO = 5;
+		public static final short SPAWNPOINT_MOURA = 6;
+		public static final short SPAWNPOINT_DEVIL = 7;
+		public static final short SPAWNPOINT_BAPHOMET = 8;
+		public static final short DOOR = 9;
+		public static final short BEGIN = '*' - '0';
+		public static final short BRICKS_BLOOD = 'X' - '0';
+		public static final short BRICKS_CANDLES = '|' - '0';
+		public static final short BARS = '#' - '0';
+		public static final short ARCH = '~' - '0';
+		public static final short CORNER_LEFT_NEAR = '/' - '0';
+		public static final short CORNER_LEFT_FAR = '\\' - '0';
+	}
+    public static final int NUMBER_OF_LEVELS = 4;
 
     public static GameLevel loadLevel(int currentLevel, Resources res, GameActivity.GameDelegate delegate, GameViewGLES2.GameRenderer renderer) {
 

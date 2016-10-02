@@ -4,22 +4,21 @@
 package br.odb.noudar;
 
 import br.odb.droidlib.Tile;
+import br.odb.noudar.characters.Actor;
 
 /**
  * @author monty
  */
-abstract class Monster extends Actor {
-    Monster(int healthPoints, int attackPoints) {
+public abstract class Monster extends Actor {
+
+    protected Monster(int healthPoints, int attackPoints) {
         super(healthPoints, attackPoints);
     }
 
-
-    void updateTarget(GameLevel level) {
-
+    protected void updateTarget(GameLevel level) {
     }
 
-
-    boolean dealWith(GameLevel level, int relX, int relY) {
+    protected boolean dealWith(GameLevel level, int relX, int relY) {
 
         boolean moved = false;
 

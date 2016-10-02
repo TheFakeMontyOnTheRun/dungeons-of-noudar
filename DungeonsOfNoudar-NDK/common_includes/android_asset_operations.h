@@ -1,5 +1,8 @@
 #include <cerrno>
 
+#ifndef ANDROID_ASSETS_H
+#define ANDROID_ASSETS_H
+
 static int android_read(void *cookie, char *buf, int size) {
     return AAsset_read((AAsset *) cookie, buf, size);
 }
@@ -45,4 +48,4 @@ std::string readToString(FILE *fileDescriptor) {
 
     return total;
 }
-
+#endif

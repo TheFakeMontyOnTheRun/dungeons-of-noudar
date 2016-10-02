@@ -2,7 +2,6 @@
 // Created by monty on 23/11/15.
 //
 
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLES2/gl2.h>
@@ -62,10 +61,10 @@ namespace odb {
 	};
 
 	const float DungeonGLES2Renderer::skyVertices[]{
-			-kSkyTextureLength -20.0f, 10.0f, -200.0f, 0.0f, .0f,
+			-kSkyTextureLength - 20.0f, 10.0f, -200.0f, 0.0f, .0f,
 			-20.0f, 10.0f, -200.0f, 10.0f, 0.0f,
 			-20.0f, 10.0f, 200.0f, 10.0f, 10.0f,
-			-kSkyTextureLength-20.0f, 10.0f, 200.0f, 0.0f, 10.0f,
+			-kSkyTextureLength - 20.0f, 10.0f, 200.0f, 0.0f, 10.0f,
 	};
 
 	const float DungeonGLES2Renderer::cubeVertices[]{
@@ -155,8 +154,8 @@ namespace odb {
 		             GL_UNSIGNED_BYTE, bitmap->getPixelData());
 
 		// Set the filtering mode - surprisingly, this is needed.
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 		return textureId;
 	}
@@ -198,7 +197,8 @@ namespace odb {
 		return shader;
 	}
 
-	GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource, const char *pFragmentSource) {
+	GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource,
+	                                           const char *pFragmentSource) {
 		auto vertexShader = loadShader(GL_VERTEX_SHADER, pVertexSource);
 		if (!vertexShader) {
 			return 0;
@@ -266,7 +266,7 @@ namespace odb {
 	}
 
 	bool DungeonGLES2Renderer::init(float w, float h, const std::string &vertexShader,
-	                         const std::string &fragmentShader) {
+	                                const std::string &fragmentShader) {
 
 		printVerboseDriverInformation();
 
@@ -308,31 +308,30 @@ namespace odb {
 	void DungeonGLES2Renderer::resetTransformMatrices() {
 		glm::mat4 viewMatrix;
 
-		switch (mCameraMode ) {
-			case kFirstPerson: {
-				glm::vec3 pos = mCurrentCharacterPosition;
-				glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-				glm::vec3 pos_front;
-                glm::mat4 eyeMatrixOriginal = mEyeView != nullptr? glm::make_mat4( mEyeView) : glm::mat4(1.0f);
-                glm::mat4 eyeMatrix = glm::mat4(1.0f);
+		glm::vec3 pos = mCurrentCharacterPosition;
+		glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+		glm::vec3 pos_front;
+		glm::mat4 eyeMatrixOriginal =
+				mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
+		glm::mat4 eyeMatrix = glm::mat4(1.0f);
 
-                eyeMatrix[ 3 ][ 0 ] = eyeMatrixOriginal[ 3 ][ 0 ];
-                eyeMatrix[ 3 ][ 1 ] = eyeMatrixOriginal[ 3 ][ 1 ];
-                eyeMatrix[ 3 ][ 2 ] = eyeMatrixOriginal[ 3 ][ 2 ];
+		eyeMatrix[3][0] = eyeMatrixOriginal[3][0];
+		eyeMatrix[3][1] = eyeMatrixOriginal[3][1];
+		eyeMatrix[3][2] = eyeMatrixOriginal[3][2];
 
-                float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
-                float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
+		float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
+		float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
 
-                mCameraDirection = glm::rotate( glm::rotate( glm::mat4(1.0f), angleInRadiansXZ, glm::vec3( 0.0f, 1.0f, 0.0f) ), angleInRadiansYZ, glm::vec3( 1.0f, 0.0f, 0.0f ) ) * pos_front4;
-                pos_front = mCameraDirection;
+		mCameraDirection = glm::rotate(
+				glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
+				angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
+		pos_front = mCameraDirection;
 
-				viewMatrix = glm::lookAt(
-						pos,
-						pos_front + pos,
-						glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
-            }
-				break;
-		}
+		viewMatrix = glm::lookAt(
+				pos,
+				pos_front + pos,
+				glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
+
 
 		glUniformMatrix4fv(uView, 1, false, &viewMatrix[0][0]);
 	}
@@ -349,8 +348,9 @@ namespace odb {
 		fadeUniform = glGetUniformLocation(gProgram, "uFade");
 	}
 
-	void DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount,
-	                                 const glm::mat4 &transform) {
+	void DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo,
+	                                        int vertexCount,
+	                                        const glm::mat4 &transform) {
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
 		glEnableVertexAttribArray(vertexAttributePosition);
@@ -456,7 +456,8 @@ namespace odb {
 		//corner left near
 		glGenBuffers(1, &vboCornerLeftNearVertexDataIndex);
 		glBindBuffer(GL_ARRAY_BUFFER, vboCornerLeftNearVertexDataIndex);
-		glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, cornerLeftNearVertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, cornerLeftNearVertices,
+		             GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		glGenBuffers(1, &vboCornerLeftNearVertexIndicesIndex);
@@ -467,11 +468,7 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::clearBuffers() {
-		if ( mCameraMode == kFirstPerson ) {
-			glClearColor( 0.5f, 0.5f, 0.5f, 1.0f);
-		} else {
-			glClearColor(mClearColour.r, mClearColour.g, mClearColour.b, 1.0f);
-		}
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClearDepthf(1.0f);
 		checkGlError("glClearColor");
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -488,8 +485,9 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::render(IntGameMap map, IntGameMap actors, IntGameMap splats,
-	                           LightMap lightMap, IntField ids, AnimationList movingCharacters,
-	                           long animationTime) {
+	                                  LightMap lightMap, IntField ids,
+	                                  AnimationList movingCharacters,
+	                                  long animationTime) {
 		clearBuffers();
 		prepareShaderProgram();
 		setPerspective();
@@ -536,18 +534,6 @@ namespace odb {
 		this->mCameraTarget = glm::vec2{x, y};
 	}
 
-	void DungeonGLES2Renderer::setCursorAt(float x, float y) {
-		this->cursorPosition = glm::vec2{x, y};
-	}
-
-	void DungeonGLES2Renderer::toggleCloseUpCamera() {
-		mCameraMode = static_cast<ECameraMode>(( static_cast<int>(mCameraMode) + 1 ) % ECameraMode::kTotal);
-	}
-
-	void DungeonGLES2Renderer::setClearColour(float r, float g, float b) {
-		this->mClearColour = glm::vec3(r, g, b);
-	}
-
 	void DungeonGLES2Renderer::startFadingIn() {
 		if (mFadeState == kFadingIn) {
 			return;
@@ -570,11 +556,10 @@ namespace odb {
 		cameraPosition.x += ms * (mCameraTarget.x - cameraPosition.x) / 1000.0f;
 		cameraPosition.y += ms * (mCameraTarget.y - cameraPosition.y) / 1000.0f;
 
-
-		if (  mRotationTarget > mCameraRotation  ) {
-			mCameraRotation+=5;
-		} else if (  mRotationTarget < mCameraRotation  ) {
-			mCameraRotation-=5;
+		if (mRotationTarget > mCameraRotation) {
+			mCameraRotation += 5;
+		} else if (mRotationTarget < mCameraRotation) {
+			mCameraRotation -= 5;
 		}
 	}
 
@@ -634,13 +619,13 @@ namespace odb {
 					drawGeometry(vboSkyVertexDataIndex,
 					             vboSkyVertexIndicesIndex,
 					             6,
-					             getSkyTransform( animationTime)
+					             getSkyTransform(animationTime)
 					);
 
 					drawGeometry(vboSkyVertexDataIndex,
 					             vboSkyVertexIndicesIndex,
 					             6,
-					             getSkyTransform( animationTime + kSkyTextureLength * 1000)
+					             getSkyTransform(animationTime + kSkyTextureLength * 1000)
 					);
 
 				}
@@ -648,9 +633,11 @@ namespace odb {
 		}
 	}
 
-	void DungeonGLES2Renderer::produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats,
-	                                            LightMap lightMap, IntField ids,
-	                                            AnimationList movingCharacters, long animationTime) {
+	void DungeonGLES2Renderer::produceRenderingBatches(IntGameMap map, IntGameMap actors,
+	                                                   IntGameMap splats,
+	                                                   LightMap lightMap, IntField ids,
+	                                                   AnimationList movingCharacters,
+	                                                   long animationTime) {
 
 		ETextures chosenTexture;
 		glm::vec3 pos;
@@ -658,8 +645,9 @@ namespace odb {
 
 		batches.clear();
 
-		if ( mCameraMode == ECameraMode::kFirstPerson && mFloorNumber == 0 ) {
-			batches[ETextures::Skybox].emplace_back(glm::vec3(0.0f, 0.0f, 0.0f), EGeometryType::kSkyBox,
+		if (mFloorNumber == 0) {
+			batches[ETextures::Skybox].emplace_back(glm::vec3(0.0f, 0.0f, 0.0f),
+			                                        EGeometryType::kSkyBox,
 			                                        1.0f);
 		}
 
@@ -670,31 +658,15 @@ namespace odb {
 				int tile = map[19 - z][x];
 				int actor = actors[19 - z][x];
 				int splatFrame = splats[19 - z][x];
-				bool isCursorPoint = ((x == static_cast<int>(this->cursorPosition.x)) &&
-				                      ((19 - z) == static_cast<int>(this->cursorPosition.y)));
 
 				Shade shade = (0.25f * std::min(255, lightMap[19 - z][x]) / 255.0f) + 0.75f;
 
-				if (isCursorPoint) {
-					if ( mCameraMode == ECameraMode::kFirstPerson ) {
-						chosenTexture = ETextures::Grass;
-					} else {
-						chosenTexture = ETextures::CursorGood0;
-					}
+				if (ETextures::Boss0 <= actor && actor <= ETextures::Lady2) {
+					chosenTexture = ETextures::Shadow;
 				} else {
-					if (ETextures::Boss0 <= actor && actor < ETextures::Bull0) {
-						if ( mCameraMode == ECameraMode::kFirstPerson ) {
-							chosenTexture = ETextures::Shadow;
-						} else {
-							chosenTexture = ETextures::CursorBad0;
-						}
-
-					} else if (ETextures::Bull0 <= actor && actor < ETextures::Shadow) {
-						chosenTexture = ETextures::Shadow;
-					} else {
-						chosenTexture = ETextures::Grass;
-					};
+					chosenTexture = ETextures::Grass;
 				};
+
 
 				pos = glm::vec3(-10 + (x * 2), -5.0f, -10 + (-z * 2));
 				batches[chosenTexture].emplace_back(pos, EGeometryType::kFloor, shade);
@@ -703,26 +675,29 @@ namespace odb {
 				//walls
 				if (tile == ETextures::CornerLeftFar) {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(tile)].emplace_back(pos, EGeometryType::kLeftFarCorner,
+					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					                                                    EGeometryType::kLeftFarCorner,
 					                                                    shade);
 
-					if ( mCameraMode == ECameraMode::kFirstPerson ) {
-						pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-						batches[static_cast<ETextures >(tile)].emplace_back(pos, EGeometryType::kLeftFarCorner,
-						                                                    shade);
-					}
+					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
+					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					                                                    EGeometryType::kLeftFarCorner,
+					                                                    shade);
+
 				}
 
 				if (tile == ETextures::CornerLeftNear) {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(tile)].emplace_back(pos, EGeometryType::kLeftNearCorner,
+					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					                                                    EGeometryType::kLeftNearCorner,
 					                                                    shade);
 
-					if ( mCameraMode == ECameraMode::kFirstPerson ) {
-						pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-						batches[static_cast<ETextures >(tile)].emplace_back(pos, EGeometryType::kLeftNearCorner,
-						                                                    shade);
-					}
+
+					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
+					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					                                                    EGeometryType::kLeftNearCorner,
+					                                                    shade);
+
 				}
 
 				if (ETextures::Bricks <= tile && tile <= ETextures::BricksCandles) {
@@ -746,18 +721,15 @@ namespace odb {
 						textureForCeling = ETextures::Ceiling;
 					}
 
-					if ( mCameraMode != ECameraMode::kFirstPerson || textureForCeling != ETextures::Ceiling ) {
-						pos = glm::vec3(-10 + (x * 2), -3.0f, -10 + (-z * 2));
-						batches[textureForCeling].emplace_back(pos, EGeometryType::kFloor, shade);
-					}
-
-					if ( mCameraMode == ECameraMode::kFirstPerson && (tile != ETextures::Exit) ) {
+					if (tile != ETextures::Exit) {
 						pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-						batches[ (tile == ETextures::Begin) ? ETextures::CeilingEnd : ETextures::Bricks ].emplace_back(pos, EGeometryType::kWalls,
-						                                        shade);
+						batches[(tile == ETextures::Begin) ? ETextures::CeilingEnd
+						                                   : ETextures::Bricks].emplace_back(pos,
+						                                                                     EGeometryType::kWalls,
+						                                                                     shade);
 					}
 				} else {
-					if ( mCameraMode == ECameraMode::kFirstPerson && mFloorNumber > 0 ) {
+					if (mFloorNumber > 0) {
 						pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
 						batches[Grass].emplace_back(pos, EGeometryType::kFloor, shade);
 					}
@@ -777,11 +749,11 @@ namespace odb {
 						float step = (((float) ((animationTime - std::get<2>(animation)))) /
 						              ((float) kAnimationLength));
 
-						if( !mLongPressing ) {
-							if ( step < 0.5f ) {
-								step = ((2.0f*step)*(2.0f*step))/2.0f;
+						if (!mLongPressing) {
+							if (step < 0.5f) {
+								step = ((2.0f * step) * (2.0f * step)) / 2.0f;
 							} else {
-								step = (sqrt( (step* 2.0f) - 1.0f )  / 2.0f) + 0.5f;
+								step = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
 							}
 						}
 
@@ -795,24 +767,18 @@ namespace odb {
 
 					pos = glm::vec3(-10 + (fx * 2), -4.0f, -10 + (-fz * 2));
 
-					if (mCameraMode == ECameraMode::kFirstPerson) {
 
-						if ( !isCursorPoint) {
-							batches[static_cast<ETextures >(actor)].emplace_back(pos,
-							                                                     EGeometryType::kBillboard,
-							                                                     shade);
-						} else {
-							mCurrentCharacterPosition = pos;
-						}
-					} else {
+					if (actor != ETextures::Crusader) {
 						batches[static_cast<ETextures >(actor)].emplace_back(pos,
 						                                                     EGeometryType::kBillboard,
 						                                                     shade);
+					} else {
+						mCurrentCharacterPosition = pos;
 					}
 				}
 
 
-				if ( mCameraMode != ECameraMode::kFirstPerson || !isCursorPoint ) {
+				if (actor != ETextures::Crusader) {
 					if (splatFrame > -1) {
 						pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 						batches[static_cast<ETextures >(splatFrame +
@@ -842,11 +808,10 @@ namespace odb {
 		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
-		if ( mCameraMode == ECameraMode::kFirstPerson ) {
-			return glm::rotate( translated, (360 - (mCameraRotation) + mAngleXZ ) * (3.141592f / 180.0f), glm::vec3(0.0f, 1.0f, 0.0f) );
-		} else {
-			return translated;
-		}
+
+		return glm::rotate(translated,
+		                   (360 - (mCameraRotation) + mAngleXZ) * (3.141592f / 180.0f),
+		                   glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	glm::mat4 DungeonGLES2Renderer::getFloorTransform(glm::vec3 translation) {
@@ -864,14 +829,14 @@ namespace odb {
 		mFloorNumber = floor;
 	}
 
-	glm::mat4 DungeonGLES2Renderer::getSkyTransform(long animationTime ) {
+	glm::mat4 DungeonGLES2Renderer::getSkyTransform(long animationTime) {
 		glm::mat4 identity = glm::mat4(1.0f);
 
 		long offset = animationTime;
-		int integerPart = offset % ( (kSkyTextureLength * 2) * 1000);
+		int integerPart = offset % ((kSkyTextureLength * 2) * 1000);
 		float finalOffset = integerPart / 1000.0f;
 
-		return glm::translate( identity, glm::vec3(finalOffset, 0.0f, 0.0f  ));
+		return glm::translate(identity, glm::vec3(finalOffset, 0.0f, 0.0f));
 	}
 
 	void DungeonGLES2Renderer::onLongPressingMove() {
@@ -905,21 +870,21 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::setPerspectiveMatrix(float *perspectiveMatrix) {
-		projectionMatrix = glm::make_mat4( perspectiveMatrix );
+		projectionMatrix = glm::make_mat4(perspectiveMatrix);
 	}
 
-    void DungeonGLES2Renderer::setAngleXZ(float xz) {
-        mAngleXZ = xz;
-    }
+	void DungeonGLES2Renderer::setAngleXZ(float xz) {
+		mAngleXZ = xz;
+	}
 
-    void DungeonGLES2Renderer::setAngleYZ(float yz) {
-        mAngleYZ = yz;
-    }
+	void DungeonGLES2Renderer::setAngleYZ(float yz) {
+		mAngleYZ = yz;
+	}
 
-	void DungeonGLES2Renderer::drawTrigBatch( odb::TrigBatch &batch ) {
+	void DungeonGLES2Renderer::drawTrigBatch(odb::TrigBatch &batch) {
 
 		glm::vec3 pos = glm::vec3(-10 + (2 * 2), -4.0f, -10 + (-5 * 2));
-		glm::mat4 trans = getCubeTransform( pos );
+		glm::mat4 trans = getCubeTransform(pos);
 
 		glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::CubeColours]->mTextureId);
 
@@ -934,4 +899,5 @@ namespace odb {
 		glDisableVertexAttribArray(vertexAttributePosition);
 		glDisableVertexAttribArray(textureCoordinatesAttributePosition);
 	}
+
 }

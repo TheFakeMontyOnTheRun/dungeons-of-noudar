@@ -56,22 +56,7 @@ public class KnightsOfAlentejoSplashActivity extends Activity {
 		    }
 	    });
 
-        findViewById(R.id.btnCredits).setOnClickListener(new OnClickListener() {
-	        @Override
-	        public void onClick(View v) {
-		        showCredits();
-	        }
-        });
-        findViewById(R.id.btnHowToPlay).setOnClickListener(new OnClickListener() {
-	        @Override
-	        public void onClick(View v) {
-		        showHowToPlay();
-	        }
-        });
-
 	    ((Button)findViewById(R.id.btStart)).setTypeface( font );
-	    ((Button)findViewById(R.id.btnCredits)).setTypeface( font );
-	    ((Button)findViewById(R.id.btnHowToPlay)).setTypeface( font );
 
 	    mSoundManager.playMusic( R.raw.canto_rg );
     }
@@ -101,31 +86,7 @@ public class KnightsOfAlentejoSplashActivity extends Activity {
 		}
 	}
 
-	private void showHowToPlay() {
-		Intent intent = new Intent(this, ShowHowToPlayActivity.class);
-		startActivity(intent);
-		overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
-	}
-
-	private void showCredits() {
-		Intent intent = new Intent(this, ShowCreditsActivity.class);
-		startActivity(intent);
-		overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
-	}
-
 	private void playNextLevel(int levelToPlay) {
-
-		int score = 0;
-		GameSession session = GameConfigurations.getInstance().getCurrentGameSession();
-		if ( session != null ) {
-			score = session.getScore();
-		}
-
-		if ( levelToPlay == 0 ) {
-			score = 0;
-		}
-
-		GameConfigurations.getInstance().startNewSession(score);
 		Intent intent = new Intent(getBaseContext(), GameActivity.class);
 		intent.putExtra(MAPKEY_LEVEL_TO_PLAY, levelToPlay);
 		intent.putExtra(GameActivity.USE_VR, playInVR);
@@ -134,17 +95,12 @@ public class KnightsOfAlentejoSplashActivity extends Activity {
 	}
 
     private void showGameOver() {
-        Intent intent = new Intent(this, ShowOutcomeActivity.class);
-        intent.putExtra(MAPKEY_SUCCESSFUL_LEVEL_OUTCOME, GameOutcome.DEFEAT.toString());
-        this.startActivity(intent);
-	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+	    playNextLevel(5
+	    );
     }
 
     private void showGameEnding() {
-        Intent intent = new Intent(this, ShowOutcomeActivity.class);
-        intent.putExtra(MAPKEY_SUCCESSFUL_LEVEL_OUTCOME, GameOutcome.VICTORY.toString());
-        this.startActivity(intent);
-	    overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
+	    playNextLevel(6);
     }
 
 	@Override

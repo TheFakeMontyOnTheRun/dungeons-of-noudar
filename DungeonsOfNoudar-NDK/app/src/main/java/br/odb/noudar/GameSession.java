@@ -4,6 +4,7 @@
 package br.odb.noudar;
 
 import android.content.res.Resources;
+import android.os.Bundle;
 
 import br.odb.menu.GameActivity;
 
@@ -12,43 +13,34 @@ import br.odb.menu.GameActivity;
  */
 public class GameSession {
 
-    private int mCurrentLevel;
-    private int mScore;
-	private GameLevel mRestoredLevel = null;
+	private GameLevel currentLevel;
 
 	public GameSession() {
-        mCurrentLevel = 0;
-	    mScore = 0;
     }
 
     public GameLevel obtainCurrentLevel(Resources res, int level, GameActivity.GameDelegate delegate, GameViewGLES2.GameRenderer renderer) {
 
-        mCurrentLevel = level;
-	    GameLevel toReturn;
-
-	    if ( mRestoredLevel != null && mRestoredLevel.getLevelNumber() == level ) {
-		    toReturn = mRestoredLevel;
-		    mRestoredLevel = null;
-	    } else {
-		    toReturn = GameLevelLoader.loadLevel(mCurrentLevel, res, delegate, renderer);
+	    if ( currentLevel == null || currentLevel.getLevelNumber() != level ) {
+		    currentLevel = GameLevelLoader.loadLevel(level, res, delegate, renderer);
 	    }
 
-        return toReturn;
+        return currentLevel;
     }
 
-    public int getScore() {
-        return mScore;
-    }
-
-    public void resetScore() {
-        this.mScore = 0;
-    }
-
-	public void addtoScore( int extra ) {
-		mScore += extra;
+	private boolean hasSavedGameSession(Bundle savedInstanceState) {
+		return savedInstanceState != null && savedInstanceState.getSerializable("Level") != null;
 	}
 
-	public void restoreFromLevel(GameLevel level) {
-		mRestoredLevel = level;
+	public void restoreFromLevel(Bundle savedInstanceState, GameActivity.GameDelegate gameDelegate, GameViewGLES2.GameRenderer gameRenderer) {
+
+		if ( hasSavedGameSession( savedInstanceState ) ) {
+			GameLevel level = (GameLevel) savedInstanceState.getSerializable("Level");
+			level.setDelegates( gameDelegate, gameRenderer );
+			currentLevel = level;
+		}
+	}
+
+	public void saveLevelTo(Bundle outState) {
+		outState.putSerializable("Level", currentLevel);
 	}
 }

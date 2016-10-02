@@ -11,22 +11,13 @@ public class GameConfigurations {
         return instance;
     }
 
-    private GameSession currentGameSession;
+    private GameSession currentGameSession = new GameSession();
     private static GameConfigurations instance = null;
 
 	private GameConfigurations() {
-		GameSession session = getCurrentGameSession();
-		if ( session != null ) {
-			session.resetScore();
-		}
 	}
 
     public GameSession getCurrentGameSession() {
         return currentGameSession;
-    }
-
-    public void startNewSession( int commulatedScore) {
-        currentGameSession = new GameSession();
-        currentGameSession.addtoScore(commulatedScore);
     }
 }

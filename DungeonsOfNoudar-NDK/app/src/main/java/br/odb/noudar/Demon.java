@@ -43,7 +43,7 @@ class Demon extends Monster {
 
     @Override
     public String getChar() {
-        return String.valueOf(KnightsConstants.SPAWNPOINT_DEVIL);
+        return String.valueOf(GameLevelLoader.FileMarkers.SPAWNPOINT_DEVIL);
     }
 
     @Override

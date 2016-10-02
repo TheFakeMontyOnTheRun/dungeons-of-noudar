@@ -1,8 +1,13 @@
-package br.odb.noudar;
+package br.odb.noudar.characters;
 
 import br.odb.droidlib.Vector2;
+import br.odb.noudar.GameLevel;
+import br.odb.noudar.GameLevelLoader;
+import br.odb.noudar.GameViewGLES2;
+import br.odb.noudar.Knight;
+import br.odb.noudar.Monster;
 
-class Baphomet extends Monster {
+public class Baphomet extends Monster {
 
     public Baphomet() {
         super(100, 1);
@@ -37,7 +42,7 @@ class Baphomet extends Monster {
 
     @Override
     public String getChar() {
-        return String.valueOf(KnightsConstants.SPAWNPOINT_BAPHOMET);
+        return String.valueOf(GameLevelLoader.FileMarkers.SPAWNPOINT_BAPHOMET);
     }
 
     @Override
