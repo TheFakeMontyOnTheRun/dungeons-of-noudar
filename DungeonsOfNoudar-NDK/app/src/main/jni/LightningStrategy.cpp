@@ -22,6 +22,10 @@
 #include "gles2-renderer/MaterialList.h"
 #include "gles2-renderer/Scene.h"
 
+#include "gles2-renderer/PETEntry.h"
+#include "gles2-renderer/PETTable.h"
+#include "gles2-renderer/GEOMap.h"
+
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 

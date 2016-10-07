@@ -19,7 +19,10 @@ namespace odb {
 		kLeftFarCorner,
 		kLeftNearCorner,
 		kBillboard,
-		kSkyBox
+		kSkyBox,
+		kXYWall,
+		kYZWall,
+		kXZWall,
 	};
 
 	enum ETextures {
@@ -57,8 +60,6 @@ namespace odb {
 		CornerLeftFar,
 		CornerLeftNear,
 		Skybox,
-		CubeColours,
-		CubeNormals,
 	};
 
 	using IntGameMap = std::array<std::array<ETextures, 20>, 20>;
@@ -66,7 +67,8 @@ namespace odb {
 	using LightMap = IntField;
 	using Shade = float;
 	using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
-	using CRenderingBatchElement = std::tuple<glm::vec3, EGeometryType, Shade>;
+	using CRenderingBatchElement = std::tuple<glm::mat4, EGeometryType, Shade>;
+	using TextureId = int;
 
 	static const long kAnimationLength = 750;
 
@@ -119,6 +121,15 @@ namespace odb {
 		GLuint vboBillboardVertexDataIndex;
 		GLuint vboBillboardVertexIndicesIndex;
 
+		GLuint vboXZWallVertexDataIndex;
+		GLuint vboXZWallVertexIndicesIndex;
+
+		GLuint vboXYWallVertexDataIndex;
+		GLuint vboXYWallVertexIndicesIndex;
+
+		GLuint vboYZWallVertexDataIndex;
+		GLuint vboYZWallVertexIndicesIndex;
+
 		GLuint vboCornerLeftFarVertexDataIndex;
 		GLuint vboCornerLeftFarVertexIndicesIndex;
 
@@ -158,17 +169,33 @@ namespace odb {
 
 		glm::mat4 getCubeTransform(glm::vec3 translation);
 
+		glm::mat4 getXYWallTransform(glm::vec3 translation, float y0, float t1);
+		glm::mat4 getYZWallTransform(glm::vec3 translation, float y0, float t1);
+
 		void consumeRenderingBatches(long animationTime);
 
 		void produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats,
 		                             LightMap lightmap, IntField ids,
 		                             AnimationList movingCharacters, long animationTime);
 
+
+
 		std::map<ETextures, std::vector<CRenderingBatchElement>> batches;
+
+		std::map<TextureId, ETextures> mElementMap;
+
 		float *mEyeView = nullptr;
 		float mAngleXZ;
 		float mAngleYZ;
+
+		glm::vec3 transformToMapPosition(  const glm::vec3& pos );
 	public:
+		void produceRenderingBatches(const GEOMap& geoMap, const PETTable& petTable, IntGameMap map, IntGameMap actors,
+		                             IntGameMap splats,
+		                             LightMap lightMap, IntField ids,
+		                             AnimationList movingCharacters,
+		                             long animationTime);
+
 		DungeonGLES2Renderer();
 
 		~DungeonGLES2Renderer();
@@ -204,6 +231,17 @@ namespace odb {
 
 		static const float cornerLeftNearVertices[20];
 		static const unsigned short cornerLeftNearIndices[6];
+
+
+		static const float XZWallVertices[20];
+		static const unsigned short XZWallIndices[6];
+
+		static const float XYWallVertices[20];
+		static const unsigned short XYWallIndices[6];
+
+		static const float YZWallVertices[20];
+		static const unsigned short YZWallIndices[6];
+
 
 
 		static const float floorVertices[20];

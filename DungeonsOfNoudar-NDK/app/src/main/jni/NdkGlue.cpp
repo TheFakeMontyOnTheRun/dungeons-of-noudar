@@ -72,15 +72,24 @@ JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setEyeMatrix(JNIEnv *env, jclass type, jfloatArray eyeView_);
 
 JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setCameraPosition(JNIEnv *env, jclass type, jfloat x, jfloat y);
-
-JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setTextures(JNIEnv *env, jclass type, jobjectArray bitmaps);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setClearColour(JNIEnv *env, jclass type, jfloat r, jfloat g,
 		                                     jfloat b);
 
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveUp(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveDown(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveLeft(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveRight(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_rotateLeft(JNIEnv *env, jclass type);
@@ -115,8 +124,6 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
                                                   jint width, jint height);
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type);
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_setFloorNumber(JNIEnv *env, jclass type, jlong floor);
-
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setMapWithSplatsAndActors(JNIEnv *env, jclass type, jintArray map_,
 		                                                jintArray actors_, jintArray splats_);
@@ -135,7 +142,32 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 
 	fd = android_fopen("fragment.glsl", "r", asset_manager);
 	std::string gFragmentShader = readToString(fd);
+	fclose(fd);
 
+//	fd = android_fopen("textured.obj", "r", asset_manager);
+//	wavefrontCubeMesh = readToString(fd);
+//	fclose(fd);
+//
+//	fd = android_fopen("textured.mtl", "r", asset_manager);
+//	wavefrontCubeMaterials = readToString(fd);
+//	fclose(fd);
+//
+//
+//	fd = android_fopen("geo-on-disk.geo", "r", asset_manager);
+//	std::string geoFile = readToString(fd);
+//	fclose(fd);
+//
+//	fd = android_fopen("pet-on-disk.pet", "r", asset_manager);
+//	std::string petFile = readToString(fd);
+//	fclose(fd);
+//
+//	loadMapData( geoFile, petFile );
+
+	fd = android_fopen("map_tiles0.txt", "r", asset_manager);
+	std::string data = readToString(fd);
+	fclose(fd);
+
+	readMap( data );
 
 	loadShaders(gVertexShader, gFragmentShader);
 }
@@ -156,25 +188,6 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jobject obj)
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setTextures(JNIEnv *env, jclass type, jobjectArray bitmaps) {
 	loadTexturesFromBitmaps(env, bitmaps, env->GetArrayLength(bitmaps));
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setCameraPosition(JNIEnv *env, jclass type, jfloat x, jfloat y) {
-	setCameraPosition( x, y );
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setMapWithSplatsAndActors(JNIEnv *env, jclass type, jintArray map_,
-                                                jintArray actors_, jintArray splats_) {
-	jint *level = env->GetIntArrayElements(map_, NULL);
-	jint *actors = env->GetIntArrayElements(actors_, NULL);
-	jint *splats = env->GetIntArrayElements(splats_, NULL);
-
-	updateLevelSnapshot(level, actors, splats);
-
-	env->ReleaseIntArrayElements(map_, level, 0);
-	env->ReleaseIntArrayElements(actors_, actors, 0);
-	env->ReleaseIntArrayElements(splats_, splats, 0);
 }
 
 JNIEXPORT void JNICALL
@@ -200,20 +213,6 @@ Java_br_odb_GL2JNILib_rotateLeft(JNIEnv *env, jclass type) {
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_rotateRight(JNIEnv *env, jclass type) {
 	rotateCameraRight();
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setActorIdPositions(JNIEnv *env, jclass type, jintArray ids_) {
-
-	jint *idsLocal = env->GetIntArrayElements(ids_, NULL);
-
-	updateCharacterMovements(idsLocal);
-
-	env->ReleaseIntArrayElements(ids_, idsLocal, 0);
-}
-
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_setFloorNumber(JNIEnv *env, jclass type, jlong floor) {
-	setFloorNumber( floor );
 }
 
 JNIEXPORT void JNICALL
@@ -262,4 +261,28 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setYZAngle(JNIEnv *env, jclass type, jfloat yz) {
 
 	setAngleYZ( yz );
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveUp(JNIEnv *env, jclass type) {
+
+	moveUp();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveDown(JNIEnv *env, jclass type) {
+
+	moveDown();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveLeft(JNIEnv *env, jclass type) {
+
+	moveLeft();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_moveRight(JNIEnv *env, jclass type) {
+
+	moveRight();
 }

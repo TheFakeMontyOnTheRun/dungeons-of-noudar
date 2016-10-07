@@ -18,6 +18,7 @@
 #include <array>
 #include <stdio.h>
 #include <cmath>
+#include <mutex>
 
 #include "gles2-renderer/NativeBitmap.h"
 #include "gles2-renderer/Texture.h"
@@ -29,13 +30,26 @@
 #include "gles2-renderer/Scene.h"
 #include "gles2-renderer/WavefrontOBJReader.h"
 #include "gles2-renderer/Logger.h"
-#include "DungeonGLES2Renderer.h"
-#include "LightningStrategy.h"
-#include "GameNativeAPI.h"
 
 #include "gles2-renderer/PETEntry.h"
 #include "gles2-renderer/PETTable.h"
 #include "gles2-renderer/GEOMap.h"
+
+#include "DungeonGLES2Renderer.h"
+#include "LightningStrategy.h"
+#include "GameNativeAPI.h"
+
+#include "Vec2i.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CMap.h"
+#include "IRenderer.h"
+#include "CFalconKnight.h"
+#include "CBullKnight.h"
+#include "CTurtleKnight.h"
+#include "CGame.h"
+
+#include "NoudarGLES2Bridge.h"
 
 std::string gVertexShader;
 std::string gFragmentShader;
@@ -55,12 +69,16 @@ odb::IntField ids;
 odb::LightMap lightMap;
 odb::AnimationList animationList;
 long animationTime = 0;
+std::mutex mutex;
 bool hasCache = false;
 odb::LightMap lightMapCache;
 //std::shared_ptr<odb::Scene> scene;
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
-std::shared_ptr<odb::PETTable> petTable = std::make_shared<odb::PETTable>();
-std::shared_ptr<odb::GEOMap> geoMap = std::make_shared<odb::GEOMap>();
+//std::shared_ptr<odb::PETTable> petTable = std::make_shared<odb::PETTable>();
+//std::shared_ptr<odb::GEOMap> geoMap = std::make_shared<odb::GEOMap>();
+
+std::shared_ptr<Knights::CGame> game;
+std::shared_ptr<odb::NoudarGLES2Bridge> render;
 
 void loadShaders( std::string vertexShader, std::string fragmentShader ) {
 	gVertexShader = vertexShader;
@@ -87,12 +105,17 @@ bool setupGraphics(int w, int h, std::vector<std::shared_ptr<odb::NativeBitmap>>
 
 	gles2Renderer->setTexture(textures);
 	animationTime = 0;
+
+
+
 	return gles2Renderer->init(w, h, gVertexShader.c_str(), gFragmentShader.c_str());
 }
 
 void renderFrame(long delta) {
 	if (gles2Renderer != nullptr && textures.size() > 0) {
+
 		gles2Renderer->updateFadeState(delta);
+//		gles2Renderer->produceRenderingBatches( *geoMap, *petTable, map, snapshot, splat, lightMap, ids, animationList, animationTime );
 		gles2Renderer->render(map, snapshot, splat, lightMap, ids, animationList, animationTime);
 		gles2Renderer->updateCamera(delta);
 
@@ -231,14 +254,26 @@ bool isAnimating() {
 }
 
 void rotateCameraLeft() {
-	if (gles2Renderer != nullptr) {
+
+	std::lock_guard<std::mutex> lock(mutex);
+
+	if (gles2Renderer != nullptr&& !isAnimating() ) {
 		gles2Renderer->rotateLeft();
+		render->setNextCommand('i');
+		game->tick();
+		render->setNextCommand('.');
 	}
 }
 
 void rotateCameraRight() {
-	if (gles2Renderer != nullptr) {
+
+	std::lock_guard<std::mutex> lock(mutex);
+
+	if (gles2Renderer != nullptr&& !isAnimating() ) {
 		gles2Renderer->rotateRight();
+		render->setNextCommand('p');
+		game->tick();
+		render->setNextCommand('.');
 	}
 }
 
@@ -293,6 +328,83 @@ void loadMapData( std::string geoFile, std::string petFile ) {
 	geoStream << geoFile;
 	petStream << petFile;
 
-	geoMap = std::make_shared<odb::GEOMap>( geoStream );
-	petTable = std::make_shared<odb::PETTable>(petStream);
+//	geoMap = std::make_shared<odb::GEOMap>( geoStream );
+//	petTable = std::make_shared<odb::PETTable>(petStream);
+}
+
+void readMap( std::string data ) {
+	render = std::make_shared<odb::NoudarGLES2Bridge>();
+
+	std::string::size_type n = 0;
+	while ( ( n = data.find( "\n", n ) ) != std::string::npos )
+	{
+		data.replace( n, 1, "" );
+		++n;
+	}
+
+	game = std::make_shared<Knights::CGame>( data, render );
+	setFloorNumber(0);
+	if ( game != nullptr ) {
+		game->tick();
+	}
+}
+
+void moveUp() {
+
+	std::lock_guard<std::mutex> lock(mutex);
+
+	if ( game != nullptr && !isAnimating() ) {
+		render->setNextCommand('o');
+		game->tick();
+		render->setNextCommand('.');
+	}
+}
+
+void moveDown() {
+
+	std::lock_guard<std::mutex> lock(mutex);
+
+	if ( game != nullptr && !isAnimating() ) {
+		render->setNextCommand('p');
+		game->tick();
+		render->setNextCommand('p');
+		game->tick();
+		render->setNextCommand('o');
+		game->tick();
+		render->setNextCommand('i');
+		game->tick();
+		render->setNextCommand('i');
+		game->tick();
+		render->setNextCommand('.');
+	}
+}
+
+void moveLeft() {
+
+	std::lock_guard<std::mutex> lock(mutex);
+
+	if ( game != nullptr && !isAnimating() ) {
+		render->setNextCommand('i');
+		game->tick();
+		render->setNextCommand('o');
+		game->tick();
+		render->setNextCommand('p');
+		game->tick();
+		render->setNextCommand('.');
+	}
+}
+
+void moveRight() {
+
+	std::lock_guard<std::mutex> lock(mutex);
+
+	if ( game != nullptr && !isAnimating() ) {
+		render->setNextCommand('p');
+		game->tick();
+		render->setNextCommand('o');
+		game->tick();
+		render->setNextCommand('i');
+		game->tick();
+		render->setNextCommand('.');
+	}
 }

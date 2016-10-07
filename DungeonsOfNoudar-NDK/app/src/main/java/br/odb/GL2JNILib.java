@@ -4,15 +4,6 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 
 public class GL2JNILib {
-
-	private static int currentId = 0;
-
-	public static int getNextId() {
-		currentId++;
-
-		return currentId;
-	}
-
 	static {
 		System.loadLibrary("NdkGlue");
 	}
@@ -27,21 +18,11 @@ public class GL2JNILib {
 
 	public static native void setTextures(Bitmap[] bitmaps);
 
-	public static native void setMapWithSplatsAndActors( int[] map, int[] actors, int[] splats);
-
-	public static native void setActorIdPositions( int[] ids);
-
-	public static native void setCameraPosition(float x, float y);
-
-	public static native void fadeOut();
-
 	public static native void rotateLeft();
 
 	public static native void rotateRight();
 
 	public static native boolean isAnimating();
-
-	public static native void setFloorNumber( long floor );
 
 	public static native void tick( long delta );
 
@@ -56,4 +37,12 @@ public class GL2JNILib {
 	public static native void setXZAngle(float xz);
 
 	public static native void setYZAngle(float yz);
+
+	public static native void moveUp();
+
+	public static native void moveDown();
+
+	public static native void moveLeft();
+
+	public static native void moveRight();
 }

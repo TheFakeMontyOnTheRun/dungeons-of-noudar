@@ -49,4 +49,14 @@ void setAngleYZ( float YZAngle );
 
 void loadMapData( std::string geoFile, std::string petFile );
 
+void readMap( std::string data );
+
+void moveUp();
+
+void moveDown();
+
+void moveLeft();
+
+void moveRight();
+
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

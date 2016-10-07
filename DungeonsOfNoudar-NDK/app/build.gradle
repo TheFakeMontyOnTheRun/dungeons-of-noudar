@@ -22,6 +22,7 @@ model {
 
         cppFlags.add( "-I${file("../common_includes")}".toString() )
         cppFlags.add( "-I${file("../common_includes/glm-head")}".toString() )
+        cppFlags.add( "-I${file("src/main/jni/noudar-core/include")}".toString() )
     }
 
     android.buildTypes {

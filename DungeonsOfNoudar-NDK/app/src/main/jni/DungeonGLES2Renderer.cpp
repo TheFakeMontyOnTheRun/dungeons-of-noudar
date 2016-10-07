@@ -22,6 +22,11 @@
 #include "gles2-renderer/MeshObject.h"
 #include "gles2-renderer/MaterialList.h"
 #include "gles2-renderer/Scene.h"
+
+#include "gles2-renderer/PETEntry.h"
+#include "gles2-renderer/PETTable.h"
+#include "gles2-renderer/GEOMap.h"
+
 #include "DungeonGLES2Renderer.h"
 #include "NdkGlue.h"
 
@@ -58,6 +63,27 @@ namespace odb {
 			1.0f, 0.0f, -1.0f, 1.0f, 0.0f,
 			1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 			-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+	};
+
+	const float DungeonGLES2Renderer::XZWallVertices[]{
+			-1.0f, 0.0f, -1.0f, 0.0f, .0f,
+			1.0f, 0.0f, -1.0f, 1.0f, 0.0f,
+			1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+			-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+	};
+
+	const float DungeonGLES2Renderer::XYWallVertices[]{
+			-1.0f, 1.0f, -1.0f, 0.0f, .0f,
+			1.0f, 1.0f, -1.0f, 1.0f, 0.0f,
+			1.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+			-1.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+	};
+
+	const float DungeonGLES2Renderer::YZWallVertices[]{
+			-1.0f, 1.0f, -1.0f, 0.0f, .0f,
+			-1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+			-1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+			-1.0f, 0.0f, -1.0f, 0.0f, 1.0f,
 	};
 
 	const float DungeonGLES2Renderer::skyVertices[]{
@@ -113,8 +139,23 @@ namespace odb {
 			0, 2, 3
 	};
 
-
 	const unsigned short DungeonGLES2Renderer::floorIndices[]{
+			0, 1, 2,
+			0, 2, 3
+	};
+
+	const unsigned short DungeonGLES2Renderer::XZWallIndices[]{
+			0, 1, 2,
+			0, 2, 3
+	};
+
+
+	const unsigned short DungeonGLES2Renderer::XYWallIndices[]{
+			0, 1, 2,
+			0, 2, 3
+	};
+
+	const unsigned short DungeonGLES2Renderer::YZWallIndices[]{
 			0, 1, 2,
 			0, 2, 3
 	};
@@ -392,6 +433,17 @@ namespace odb {
 
 		glDeleteBuffers(1, &vboCornerLeftNearVertexDataIndex);
 		glDeleteBuffers(1, &vboCornerLeftNearVertexIndicesIndex);
+
+
+		glDeleteBuffers(1, &vboXZWallVertexDataIndex);
+		glDeleteBuffers(1, &vboXZWallVertexIndicesIndex);
+
+		glDeleteBuffers(1, &vboXYWallVertexDataIndex);
+		glDeleteBuffers(1, &vboXYWallVertexIndicesIndex);
+
+		glDeleteBuffers(1, &vboYZWallVertexDataIndex);
+		glDeleteBuffers(1, &vboYZWallVertexIndicesIndex);
+
 	}
 
 	void DungeonGLES2Renderer::createVBOs() {
@@ -465,6 +517,46 @@ namespace odb {
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), cornerLeftNearIndices,
 		             GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+
+
+
+		//XY Wall
+		glGenBuffers(1, &vboXYWallVertexDataIndex);
+		glBindBuffer(GL_ARRAY_BUFFER, vboXYWallVertexDataIndex);
+		glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, XYWallVertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glGenBuffers(1, &vboXYWallVertexIndicesIndex);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboXYWallVertexIndicesIndex);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), XYWallIndices,
+		             GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		//XZ Wall
+		glGenBuffers(1, &vboXZWallVertexDataIndex);
+		glBindBuffer(GL_ARRAY_BUFFER, vboXZWallVertexDataIndex);
+		glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, XZWallVertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glGenBuffers(1, &vboXZWallVertexIndicesIndex);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboXZWallVertexIndicesIndex);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), XZWallIndices,
+		             GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+		//YZ Wall
+		glGenBuffers(1, &vboYZWallVertexDataIndex);
+		glBindBuffer(GL_ARRAY_BUFFER, vboYZWallVertexDataIndex);
+		glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, YZWallVertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glGenBuffers(1, &vboYZWallVertexIndicesIndex);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboYZWallVertexIndicesIndex);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), YZWallIndices,
+		             GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	void DungeonGLES2Renderer::clearBuffers() {
@@ -524,6 +616,24 @@ namespace odb {
 	void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
 		mBitmaps.clear();
 		mBitmaps.insert(mBitmaps.end(), textures.begin(), textures.end());
+
+		mElementMap[ '.' ] = ETextures::Grass;
+		mElementMap[ '1' ] = ETextures::Bricks;
+		mElementMap[ '#' ] = ETextures::Bars;
+		mElementMap[ '~' ] = ETextures::Arch;
+		mElementMap[ '|' ] = ETextures::BricksCandles;
+		mElementMap[ 'X' ] = ETextures::BricksBlood;
+		mElementMap[ '\\' ] = ETextures::Bricks;
+		mElementMap[ '/' ] = ETextures::Bricks;
+
+		mElementMap[ '@' ] = ETextures::Cuco0;
+
+		mElementMap[ ' ' ] = ETextures::Skybox;
+
+		mElementMap[ '^' ] = ETextures::Crusader;
+		mElementMap[ '>' ] = ETextures::Crusader;
+		mElementMap[ '<' ] = ETextures::Crusader;
+		mElementMap[ 'V' ] = ETextures::Crusader;
 	}
 
 	void DungeonGLES2Renderer::shutdown() {
@@ -564,7 +674,7 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
-		glm::vec3 pos;
+		glm::mat4 transform;
 		Shade shade;
 
 		for (auto &batch : batches) {
@@ -572,7 +682,7 @@ namespace odb {
 			glBindTexture(GL_TEXTURE_2D, mTextures[batch.first]->mTextureId);
 
 			for (auto &element : batch.second) {
-				pos = std::get<0>(element);
+				transform = std::get<0>(element);
 				shade = std::get<2>(element);
 				EGeometryType type = std::get<1>(element);
 
@@ -581,21 +691,20 @@ namespace odb {
 				if (EGeometryType::kFloor == type) {
 					drawGeometry(vboFloorVertexDataIndex,
 					             vboFloorVertexIndicesIndex,
-					             6,
-					             getFloorTransform(pos)
+					             6, transform
 					);
 				} else if (EGeometryType::kWalls == type) {
 					drawGeometry(vboCubeVertexDataIndex,
 					             vboCubeVertexIndicesIndex,
 					             24,
-					             getCubeTransform(pos)
+					             transform
 					);
 				} else if (EGeometryType::kBillboard == type) {
 
 					drawGeometry(vboBillboardVertexDataIndex,
 					             vboBillboardVertexIndicesIndex,
 					             6,
-					             getBillboardTransform(pos)
+					             transform
 					);
 
 				} else if (EGeometryType::kLeftNearCorner == type) {
@@ -603,7 +712,7 @@ namespace odb {
 					drawGeometry(vboCornerLeftNearVertexDataIndex,
 					             vboCornerLeftNearVertexIndicesIndex,
 					             6,
-					             getCornerLeftNearTransform(pos)
+					             transform
 					);
 
 				} else if (EGeometryType::kLeftFarCorner == type) {
@@ -611,9 +720,32 @@ namespace odb {
 					drawGeometry(vboCornerLeftFarVertexDataIndex,
 					             vboCornerLeftFarVertexIndicesIndex,
 					             6,
-					             getCornerLeftFarTransform(pos)
+					             transform
 					);
 
+				} else if (EGeometryType::kXZWall == type) {
+
+					drawGeometry(vboXZWallVertexDataIndex,
+					             vboXZWallVertexIndicesIndex,
+					             6,
+					             transform
+					);
+
+				} else if (EGeometryType::kXYWall == type) {
+
+					drawGeometry(vboXYWallVertexDataIndex,
+					             vboXYWallVertexIndicesIndex,
+					             6,
+					             transform
+					);
+
+				} else if (EGeometryType::kYZWall == type) {
+
+					drawGeometry(vboYZWallVertexDataIndex,
+					             vboYZWallVertexIndicesIndex,
+					             6,
+					             transform
+					);
 
 				} else if (EGeometryType::kSkyBox == type) {
 					drawGeometry(vboSkyVertexDataIndex,
@@ -646,7 +778,7 @@ namespace odb {
 		batches.clear();
 
 		if (mFloorNumber == 0) {
-			batches[ETextures::Skybox].emplace_back(glm::vec3(0.0f, 0.0f, 0.0f),
+			batches[ETextures::Skybox].emplace_back( getSkyTransform(0),
 			                                        EGeometryType::kSkyBox,
 			                                        1.0f);
 		}
@@ -661,82 +793,77 @@ namespace odb {
 
 				Shade shade = (0.25f * std::min(255, lightMap[19 - z][x]) / 255.0f) + 0.75f;
 
-				if (ETextures::Boss0 <= actor && actor <= ETextures::Lady2) {
+				if ( actor == '@' ) {
 					chosenTexture = ETextures::Shadow;
 				} else {
-					chosenTexture = ETextures::Grass;
-				};
-
+					chosenTexture = mElementMap[ '.' ];
+				}
 
 				pos = glm::vec3(-10 + (x * 2), -5.0f, -10 + (-z * 2));
-				batches[chosenTexture].emplace_back(pos, EGeometryType::kFloor, shade);
+				batches[chosenTexture].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
 
 
 				//walls
-				if (tile == ETextures::CornerLeftFar) {
+				if (tile == '\\') {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftFarTransform(pos),
 					                                                    EGeometryType::kLeftFarCorner,
 					                                                    shade);
 
 					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftFarTransform(pos),
 					                                                    EGeometryType::kLeftFarCorner,
 					                                                    shade);
 
-				}
-
-				if (tile == ETextures::CornerLeftNear) {
+				} else if (tile == '/' ) {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
 					                                                    EGeometryType::kLeftNearCorner,
 					                                                    shade);
 
 
 					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(tile)].emplace_back(pos,
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
 					                                                    EGeometryType::kLeftNearCorner,
 					                                                    shade);
 
-				}
-
-				if (ETextures::Bricks <= tile && tile <= ETextures::BricksCandles) {
+				} else if (tile != '.') {
 
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(tile)].emplace_back(pos, EGeometryType::kWalls,
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCubeTransform(pos), EGeometryType::kWalls,
 					                                                    shade);
 
 					//top of walls cube
 					ETextures textureForCeling = ETextures::Ceiling;
 
-					if (tile == ETextures::Begin) {
+					if (tile == 'B') {
 						textureForCeling = ETextures::CeilingBegin;
-					} else if (tile == ETextures::Exit) {
+					} else if (tile == 'E') {
 						textureForCeling = ETextures::CeilingEnd;
-					} else if (tile == ETextures::Arch) {
+					} else if (tile == '~') {
 						textureForCeling = ETextures::CeilingDoor;
-					} else if (tile == ETextures::Bars) {
+					} else if (tile == '#') {
 						textureForCeling = ETextures::CeilingBars;
 					} else {
 						textureForCeling = ETextures::Ceiling;
 					}
 
-					if (tile != ETextures::Exit) {
+					if (tile != 'E') {
 						pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-						batches[(tile == ETextures::Begin) ? ETextures::CeilingEnd
-						                                   : ETextures::Bricks].emplace_back(pos,
+						batches[(tile == 'b') ? ETextures::CeilingEnd
+						                                   : mElementMap[ '1' ]].emplace_back(getCubeTransform(pos),
 						                                                                     EGeometryType::kWalls,
 						                                                                     shade);
 					}
 				} else {
 					if (mFloorNumber > 0) {
 						pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
-						batches[Grass].emplace_back(pos, EGeometryType::kFloor, shade);
+						batches[Grass].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
 					}
 				}
 
 				//characters
-				if (ETextures::Boss0 <= actor && actor < ETextures::Shadow) {
+				if (actor != 0) {
 
 					int id = ids[19 - z][x];
 					float fx, fz;
@@ -768,8 +895,8 @@ namespace odb {
 					pos = glm::vec3(-10 + (fx * 2), -4.0f, -10 + (-fz * 2));
 
 
-					if (actor != ETextures::Crusader) {
-						batches[static_cast<ETextures >(actor)].emplace_back(pos,
+					if (actor == '@' ) {
+						batches[static_cast<ETextures >(mElementMap[ actor ])].emplace_back(getBillboardTransform(pos),
 						                                                     EGeometryType::kBillboard,
 						                                                     shade);
 					} else {
@@ -778,15 +905,15 @@ namespace odb {
 				}
 
 
-				if (actor != ETextures::Crusader) {
-					if (splatFrame > -1) {
-						pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-						batches[static_cast<ETextures >(splatFrame +
-						                                ETextures::Splat0)].emplace_back(pos,
-						                                                                 EGeometryType::kBillboard,
-						                                                                 shade);
-					}
-				}
+//				if (actor != ETextures::Crusader) {
+//					if (splatFrame > -1) {
+//						pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
+//						batches[static_cast<ETextures >(splatFrame +
+//						                                ETextures::Splat0)].emplace_back(getBillboardTransform(pos),
+//						                                                                 EGeometryType::kBillboard,
+//						                                                                 shade);
+//					}
+//				}
 
 			}
 		}
@@ -886,7 +1013,7 @@ namespace odb {
 		glm::vec3 pos = glm::vec3(-10 + (2 * 2), -4.0f, -10 + (-5 * 2));
 		glm::mat4 trans = getCubeTransform(pos);
 
-		glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::CubeColours]->mTextureId);
+		glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::Grass]->mTextureId);
 
 		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &trans[0][0]);
 		checkGlError("before drawing");
@@ -900,4 +1027,24 @@ namespace odb {
 		glDisableVertexAttribArray(textureCoordinatesAttributePosition);
 	}
 
+	glm::vec3 DungeonGLES2Renderer::transformToMapPosition(const glm::vec3 &pos) {
+		return glm::vec3(-10 + (pos.x * 2), -5.0f + pos.y, -10 + (-pos.z * 2));
+	}
+
+	glm::mat4 DungeonGLES2Renderer::getXYWallTransform(glm::vec3 translation, float y0, float y1) {
+		glm::mat4 translated = glm::translate(glm::mat4(1.0f), translation);
+		glm::mat4 scaled = glm::scale( translated, glm::vec3( 1.0f, (y1-y0)/4.0f, 1.0f ) );
+
+
+		return scaled;
+
+	}
+
+	glm::mat4 DungeonGLES2Renderer::getYZWallTransform(glm::vec3 translation, float y0, float y1) {
+		glm::mat4 translated = glm::translate(glm::mat4(1.0f), translation);
+		glm::mat4 scaled = glm::scale( translated, glm::vec3( 1.0f, (y1-y0)/4.0f, 1.0f ) );
+
+
+		return scaled;
+	}
 }
