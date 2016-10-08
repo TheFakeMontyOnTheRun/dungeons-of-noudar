@@ -4,3 +4,9 @@
 [submodule "DungeonsOfNoudar-NDK/common_includes/glm-head"]
 	path = DungeonsOfNoudar-NDK/common_includes/glm-head
 	url = https://github.com/g-truc/glm.git
+[submodule "noudar-core"]
+	path = noudar-core
+	url = https://github.com/TheFakeMontyOnTheRun/noudar-core.git
+[submodule "gles2-renderer"]
+	path = gles2-renderer
+	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git

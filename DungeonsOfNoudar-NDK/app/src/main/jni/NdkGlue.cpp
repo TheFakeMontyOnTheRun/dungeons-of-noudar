@@ -9,8 +9,8 @@
 #include <memory>
 #include <vector>
 
-#include "gles2-renderer/Logger.h"
-#include "gles2-renderer/NativeBitmap.h"
+#include "Logger.h"
+#include "NativeBitmap.h"
 #include "android_asset_operations.h"
 #include "GameNativeAPI.h"
 

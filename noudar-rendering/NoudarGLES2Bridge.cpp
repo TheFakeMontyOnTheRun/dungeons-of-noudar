@@ -18,7 +18,7 @@
 #include <vector>
 
 #include "Vec2i.h"
-#include "gles2-renderer/NativeBitmap.h"
+#include "NativeBitmap.h"
 #include "IMapElement.h"
 #include "CActor.h"
 #include "CMap.h"
@@ -30,7 +30,7 @@
 #include "NoudarGLES2Bridge.h"
 #include "GameNativeAPI.h"
 
-#include "gles2-renderer/Logger.h"
+#include "Logger.h"
 
 namespace odb {
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {

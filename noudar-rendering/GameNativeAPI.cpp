@@ -20,20 +20,16 @@
 #include <cmath>
 #include <mutex>
 
-#include "gles2-renderer/NativeBitmap.h"
-#include "gles2-renderer/Texture.h"
-#include "gles2-renderer/Material.h"
-#include "gles2-renderer/Trig.h"
-#include "gles2-renderer/TrigBatch.h"
-#include "gles2-renderer/MeshObject.h"
-#include "gles2-renderer/MaterialList.h"
-#include "gles2-renderer/Scene.h"
-#include "gles2-renderer/WavefrontOBJReader.h"
-#include "gles2-renderer/Logger.h"
-
-#include "gles2-renderer/PETEntry.h"
-#include "gles2-renderer/PETTable.h"
-#include "gles2-renderer/GEOMap.h"
+#include "NativeBitmap.h"
+#include "Texture.h"
+#include "Material.h"
+#include "Trig.h"
+#include "TrigBatch.h"
+#include "MeshObject.h"
+#include "MaterialList.h"
+#include "Scene.h"
+#include "WavefrontOBJReader.h"
+#include "Logger.h"
 
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
@@ -44,6 +40,7 @@
 #include "CActor.h"
 #include "CMap.h"
 #include "IRenderer.h"
+#include "NativeBitmap.h"
 #include "CFalconKnight.h"
 #include "CBullKnight.h"
 #include "CTurtleKnight.h"
@@ -53,9 +50,6 @@
 
 std::string gVertexShader;
 std::string gFragmentShader;
-
-//std::string wavefrontCubeMesh;
-//std::string wavefrontCubeMaterials;
 
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 std::map<int, glm::vec2> mPositions;
@@ -72,10 +66,8 @@ long animationTime = 0;
 std::mutex mutex;
 bool hasCache = false;
 odb::LightMap lightMapCache;
-//std::shared_ptr<odb::Scene> scene;
+
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
-//std::shared_ptr<odb::PETTable> petTable = std::make_shared<odb::PETTable>();
-//std::shared_ptr<odb::GEOMap> geoMap = std::make_shared<odb::GEOMap>();
 
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
@@ -90,23 +82,10 @@ bool setupGraphics(int w, int h, std::vector<std::shared_ptr<odb::NativeBitmap>>
 	std::stringstream meshData;
 	std::stringstream materialData;
 
-//	meshData << wavefrontCubeMesh;
-//	materialData << wavefrontCubeMaterials;
-//	scene = readScene( meshData, materialData );
-
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
-
-//	auto it = scene->materialList.materials.begin();
-
-//	while ( it != scene->materialList.materials.end() ) {
-//		std::shared_ptr<odb::Material> material = it->second;
-//		it = std::next( it );
-//	}
 
 	gles2Renderer->setTexture(textures);
 	animationTime = 0;
-
-
 
 	return gles2Renderer->init(w, h, gVertexShader.c_str(), gFragmentShader.c_str());
 }
@@ -115,18 +94,8 @@ void renderFrame(long delta) {
 	if (gles2Renderer != nullptr && textures.size() > 0) {
 
 		gles2Renderer->updateFadeState(delta);
-//		gles2Renderer->produceRenderingBatches( *geoMap, *petTable, map, snapshot, splat, lightMap, ids, animationList, animationTime );
 		gles2Renderer->render(map, snapshot, splat, lightMap, ids, animationList, animationTime);
 		gles2Renderer->updateCamera(delta);
-
-//	    if ( scene != nullptr ) {
-//		    auto it = scene->meshObjects.begin();
-//		    while ( it != scene->meshObjects.end() ) {
-//			    std::shared_ptr<odb::MeshObject> mesh = it->second;
-//			    gles2Renderer->drawTrigBatch( mesh->trigBatches[0] );
-//			    it = std::next( it );
-//		    }
-//	    }
 	}
 }
 
@@ -321,15 +290,6 @@ void setAngleYZ( float YZAngle ) {
 }
 
 void loadMapData( std::string geoFile, std::string petFile ) {
-
-	std::stringstream geoStream;
-	std::stringstream petStream;
-
-	geoStream << geoFile;
-	petStream << petFile;
-
-//	geoMap = std::make_shared<odb::GEOMap>( geoStream );
-//	petTable = std::make_shared<odb::PETTable>(petStream);
 }
 
 void readMap( std::string data ) {

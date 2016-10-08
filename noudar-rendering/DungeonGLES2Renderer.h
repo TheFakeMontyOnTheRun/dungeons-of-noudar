@@ -185,17 +185,11 @@ namespace odb {
 		std::map<TextureId, ETextures> mElementMap;
 
 		float *mEyeView = nullptr;
-		float mAngleXZ;
-		float mAngleYZ;
+		float mAngleXZ = 0;
+		float mAngleYZ = 0;
 
 		glm::vec3 transformToMapPosition(  const glm::vec3& pos );
 	public:
-		void produceRenderingBatches(const GEOMap& geoMap, const PETTable& petTable, IntGameMap map, IntGameMap actors,
-		                             IntGameMap splats,
-		                             LightMap lightMap, IntField ids,
-		                             AnimationList movingCharacters,
-		                             long animationTime);
-
 		DungeonGLES2Renderer();
 
 		~DungeonGLES2Renderer();

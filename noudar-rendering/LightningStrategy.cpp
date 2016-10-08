@@ -13,19 +13,14 @@
 #include <GLES2/gl2ext.h>
 #include <map>
 #include <vector>
-#include "gles2-renderer/NativeBitmap.h"
-#include "gles2-renderer/Texture.h"
-#include "gles2-renderer/Material.h"
-#include "gles2-renderer/Trig.h"
-#include "gles2-renderer/TrigBatch.h"
-#include "gles2-renderer/MeshObject.h"
-#include "gles2-renderer/MaterialList.h"
-#include "gles2-renderer/Scene.h"
-
-#include "gles2-renderer/PETEntry.h"
-#include "gles2-renderer/PETTable.h"
-#include "gles2-renderer/GEOMap.h"
-
+#include "NativeBitmap.h"
+#include "Texture.h"
+#include "Material.h"
+#include "Trig.h"
+#include "TrigBatch.h"
+#include "MeshObject.h"
+#include "MaterialList.h"
+#include "Scene.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 

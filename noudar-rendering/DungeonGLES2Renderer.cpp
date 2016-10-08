@@ -4,8 +4,8 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <GLES2/gl2.h>
-#include <android/log.h>
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -14,23 +14,18 @@
 #include <map>
 #include <array>
 
-#include "gles2-renderer/NativeBitmap.h"
-#include "gles2-renderer/Texture.h"
-#include "gles2-renderer/Material.h"
-#include "gles2-renderer/Trig.h"
-#include "gles2-renderer/TrigBatch.h"
-#include "gles2-renderer/MeshObject.h"
-#include "gles2-renderer/MaterialList.h"
-#include "gles2-renderer/Scene.h"
-
-#include "gles2-renderer/PETEntry.h"
-#include "gles2-renderer/PETTable.h"
-#include "gles2-renderer/GEOMap.h"
+#include "NativeBitmap.h"
+#include "Texture.h"
+#include "Material.h"
+#include "Trig.h"
+#include "TrigBatch.h"
+#include "MeshObject.h"
+#include "Logger.h"
+#include "MaterialList.h"
+#include "Scene.h"
 
 #include "DungeonGLES2Renderer.h"
-#include "NdkGlue.h"
 
-#include <glm/gtc/type_ptr.hpp>
 
 namespace odb {
 	const static bool kShouldDestroyThingsManually = false;
@@ -204,12 +199,12 @@ namespace odb {
 
 	extern void printGLString(const char *name, GLenum s) {
 		const char *v = (const char *) glGetString(s);
-		LOGI("GL %s = %s\n", name, v);
+		odb::Logger::log("GL %s = %s\n", name, v);
 	}
 
 	extern void checkGlError(const char *op) {
 		for (GLint error = glGetError(); error; error = glGetError()) {
-			LOGI("after %s() glError (0x%x)\n", op, error);
+			odb::Logger::log("after %s() glError (0x%x)\n", op, error);
 		}
 	}
 
@@ -227,7 +222,7 @@ namespace odb {
 					char *buf = (char *) malloc(infoLen);
 					if (buf) {
 						glGetShaderInfoLog(shader, infoLen, NULL, buf);
-						LOGE("Could not compile shader %d:\n%s\n", shaderType, buf);
+						odb::Logger::log("Could not compile shader %d:\n%s\n", shaderType, buf);
 						free(buf);
 					}
 					glDeleteShader(shader);
@@ -266,7 +261,7 @@ namespace odb {
 					char *buf = (char *) malloc(bufLength);
 					if (buf) {
 						glGetProgramInfoLog(program, bufLength, NULL, buf);
-						LOGE("Could not link program:\n%s\n", buf);
+						odb::Logger::log("Could not link program:\n%s\n", buf);
 						free(buf);
 					}
 				}
@@ -295,7 +290,7 @@ namespace odb {
 	}
 
 	DungeonGLES2Renderer::~DungeonGLES2Renderer() {
-		LOGI("Destroying the renderer");
+		odb::Logger::log("Destroying the renderer");
 
 		if (kShouldDestroyThingsManually) {
 			for (auto &texture : mTextures) {
@@ -314,7 +309,7 @@ namespace odb {
 		gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
 
 		if (!gProgram) {
-			LOGE("Could not create program.");
+			odb::Logger::log("Could not create program.");
 			return false;
 		}
 
@@ -637,7 +632,7 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::shutdown() {
-		LOGI("Shutdown!\n");
+		odb::Logger::log("Shutdown!\n");
 	}
 
 	void DungeonGLES2Renderer::setCameraPosition(float x, float y) {
