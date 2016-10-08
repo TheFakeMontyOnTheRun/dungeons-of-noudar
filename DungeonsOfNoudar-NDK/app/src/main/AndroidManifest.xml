@@ -39,7 +39,7 @@
         android:label="@string/app_name">
 
         <activity
-            android:name="br.odb.menu.KnightsOfAlentejoSplashActivity"
+            android:name="br.odb.menu.RootActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,19 +59,27 @@
 
         <activity
             android:name="br.odb.menu.GameActivity"
-            android:label="@string/purge_souls"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:parentActivityName="br.odb.menu.KnightsOfAlentejoSplashActivity">
+            android:parentActivityName="br.odb.menu.RootActivity">
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="br.odb.menu.KnightsOfAlentejoSplashActivity" />
-
+                android:value="br.odb.menu.RootActivity" />
         </activity>
 
+        <activity
+            android:name="br.odb.menu.CardboardGameActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:parentActivityName="br.odb.menu.CardboardRootActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="br.odb.menu.CardboardRootActivity" />
+        </activity>
     </application>
 
 </manifest>

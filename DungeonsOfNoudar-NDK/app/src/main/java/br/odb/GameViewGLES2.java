@@ -1,86 +1,51 @@
 /**
  *
  */
-package br.odb.noudar;
+package br.odb;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.google.vr.sdk.base.Eye;
-import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.HeadTransform;
-import com.google.vr.sdk.base.Viewport;
 
 import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
-
-import br.odb.GL2JNILib;
-import br.odb.OnSwipeTouchListener;
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * @author monty
  */
-public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
+public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Renderer {
 
 	public static final int TICK_INTERVAL = 500;
 
 	@Override
-	public void onNewFrame(HeadTransform headTransform) {
-		long delta = tick();
-		GL2JNILib.tick(delta);
+	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
 
-		headTransform.getEulerAngles(forwardVector, 0);
-		float xz = extractAngleXZFromHeadtransform(headTransform);
-		float yz = extractAngleYZFromHeadtransform(headTransform);
-
-		if (!mHaveController && getStereoModeEnabled()) {
-			rotation = (int) ((360 - xz) / 90);
-		}
-
-		if (getStereoModeEnabled()) {
-			GL2JNILib.setXZAngle(xz);
-			GL2JNILib.setYZAngle(yz);
-		}
-	}
-
-
-	@Override
-	public void onDrawEye(Eye eye) {
-
-		synchronized (renderingLock) {
-			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-
-			if (getStereoModeEnabled()) {
-				GL2JNILib.setEyeMatrix(eye.getEyeView());
-				GL2JNILib.setPerspectiveMatrix(eye.getPerspective(0.1f, 1000.0f));
-			}
-
-			GL2JNILib.step();
-		}
 	}
 
 	@Override
-	public void onFinishFrame(Viewport viewport) {
-	}
-
-	@Override
-	public void onSurfaceChanged(int width, int height) {
+	public void onSurfaceChanged(GL10 gl10, int width, int height) {
 		GL2JNILib.init(width, height);
 	}
 
 	@Override
-	public void onSurfaceCreated(EGLConfig eglConfig) {
-	}
+	public void onDrawFrame(GL10 gl10) {
+		long delta = tick();
+		GL2JNILib.tick(delta);
 
-	@Override
-	public void onRendererShutdown() {
+		synchronized (renderingLock) {
+			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+			GL2JNILib.step();
+		}
 	}
 
 
@@ -161,6 +126,9 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 	}
 
 	private void init() {
+
+		setEGLContextClientVersion(2);
+
 		setRenderer(this);
 		setFocusable(true);
 		t0 = System.currentTimeMillis();
@@ -184,15 +152,7 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 			setOnKeyListener(keyListener);
 		}
 
-		if (this.getStereoModeEnabled()) {
-			setOnCardboardTriggerListener(new Runnable() {
-				@Override
-				public void run() {
-					key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
-				}
-			});
-		} else {
-			setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+		setOnTouchListener(new OnSwipeTouchListener(getContext()) {
 
 				@Override
 				public void onSwipeLeft() {
@@ -220,7 +180,7 @@ public class GameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 					key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
 				}
 			});
-		}
+
 
 		requestFocus();
 		requestFocusFromTouch();

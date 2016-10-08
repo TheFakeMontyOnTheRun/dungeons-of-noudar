@@ -8,7 +8,7 @@ import br.odb.noudar.R;
 
 import static br.odb.menu.GameActivity.USE_VR;
 
-public class KnightsOfAlentejoSplashActivity extends Activity {
+public class RootActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

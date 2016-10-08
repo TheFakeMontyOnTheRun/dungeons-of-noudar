@@ -1,4 +1,4 @@
-package br.odb.menu;
+package br.odb;
 
 import android.content.Context;
 import android.content.res.Configuration;

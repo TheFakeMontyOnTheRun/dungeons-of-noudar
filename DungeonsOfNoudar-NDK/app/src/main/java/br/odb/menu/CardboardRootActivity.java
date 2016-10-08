@@ -17,7 +17,7 @@ public class CardboardRootActivity extends Activity {
     }
 
 	private void playNextLevel(int levelToPlay) {
-		Intent intent = new Intent(getBaseContext(), GameActivity.class);
+		Intent intent = new Intent(getBaseContext(), CardboardGameActivity.class);
 		intent.putExtra(USE_VR, Boolean.TRUE);
 		startActivity(intent);
 		overridePendingTransition(R.anim.fade_out, R.anim.fade_in);

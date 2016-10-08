@@ -1,18 +1,19 @@
 package br.odb.menu;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-import br.odb.ControllerHelper;
-import br.odb.GameViewGLES2;
+import com.google.vr.sdk.base.GvrActivity;
 
-public class GameActivity extends Activity {
+import br.odb.ControllerHelper;
+import br.odb.CardboardGameViewGLES2;
+
+public class CardboardGameActivity extends GvrActivity {
 
 	public static final String USE_VR = "use-vr";
 
 	private ControllerHelper mControllerHelper;
-	private GameViewGLES2 view;
+	private CardboardGameViewGLES2 view;
 	private boolean mHaveController;
 
 	@Override
@@ -25,9 +26,11 @@ public class GameActivity extends Activity {
 
 		configureUiForInputDevice();
 
-		view = new GameViewGLES2( this );
+		view = new CardboardGameViewGLES2( this );
 		setContentView( view );
+		view.setStereoModeEnabled( playInVR );
 		view.init(this, 0, mHaveController);
+		setGvrView( view );
 	}
 
 	@Override
