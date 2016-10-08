@@ -29,23 +29,4 @@ FILE *android_fopen(const char *fname, const char *mode, AAssetManager *assetMan
 
     return funopen(asset, android_read, android_write, android_seek, android_close);
 }
-
-std::string readToString(FILE *fileDescriptor) {
-    const unsigned N = 1024;
-    std::string total;
-    while (true) {
-        char buffer[N];
-        size_t read = fread((void *) &buffer[0], 1, N, fileDescriptor);
-        if (read) {
-            for (int c = 0; c < read; ++c) {
-                total.push_back(buffer[c]);
-            }
-        }
-        if (read < N) {
-            break;
-        }
-    }
-
-    return total;
-}
 #endif

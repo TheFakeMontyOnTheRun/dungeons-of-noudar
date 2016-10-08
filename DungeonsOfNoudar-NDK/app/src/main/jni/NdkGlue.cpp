@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 
+#include "Common.h"
 #include "Logger.h"
 #include "NativeBitmap.h"
 #include "android_asset_operations.h"
@@ -16,6 +17,9 @@
 
 long currentDelta = 0;
 std::vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
+std::string gVertexShader;
+std::string gFragmentShader;
+
 
 std::shared_ptr<odb::NativeBitmap> makeNativeBitmapFromJObject(JNIEnv *env, jobject bitmap) {
 
@@ -137,11 +141,11 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 	FILE *fd;
 
 	fd = android_fopen("vertex.glsl", "r", asset_manager);
-	std::string gVertexShader = readToString(fd);
+	gVertexShader = readToString(fd);
 	fclose(fd);
 
 	fd = android_fopen("fragment.glsl", "r", asset_manager);
-	std::string gFragmentShader = readToString(fd);
+	gFragmentShader = readToString(fd);
 	fclose(fd);
 
 //	fd = android_fopen("textured.obj", "r", asset_manager);
@@ -168,13 +172,12 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 	fclose(fd);
 
 	readMap( data );
-
-	loadShaders(gVertexShader, gFragmentShader);
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
                                                   jint width, jint height) {
-	setupGraphics(width, height, texturesToLoad );
+
+	setupGraphics(width, height,gVertexShader, gFragmentShader, texturesToLoad );
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type) {

@@ -5,9 +5,7 @@
 #ifndef DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H
 #define DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H
 
-void loadShaders( std::string vertexShader, std::string fragmentShader );
-
-bool setupGraphics(int w, int h, std::vector<std::shared_ptr<odb::NativeBitmap>> textures );
+bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textures );
 
 void renderFrame(long delta);
 
@@ -58,5 +56,7 @@ void moveDown();
 void moveLeft();
 
 void moveRight();
+
+void gameLoopTick( long ms );
 
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

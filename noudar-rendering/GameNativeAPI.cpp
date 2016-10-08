@@ -2,7 +2,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
-#include <jni.h>
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -45,11 +44,8 @@
 #include "CBullKnight.h"
 #include "CTurtleKnight.h"
 #include "CGame.h"
-
+#include "Common.h"
 #include "NoudarGLES2Bridge.h"
-
-std::string gVertexShader;
-std::string gFragmentShader;
 
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 std::map<int, glm::vec2> mPositions;
@@ -72,22 +68,16 @@ std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
 
-void loadShaders( std::string vertexShader, std::string fragmentShader ) {
-	gVertexShader = vertexShader;
-	gFragmentShader = fragmentShader;
-}
 
-bool setupGraphics(int w, int h, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
+bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
 	textures = textureList;
-	std::stringstream meshData;
-	std::stringstream materialData;
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
 
 	gles2Renderer->setTexture(textures);
 	animationTime = 0;
 
-	return gles2Renderer->init(w, h, gVertexShader.c_str(), gFragmentShader.c_str());
+	return gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
 }
 
 void renderFrame(long delta) {
@@ -367,4 +357,8 @@ void moveRight() {
 		game->tick();
 		render->setNextCommand('.');
 	}
+}
+
+void gameLoopTick( long ms ) {
+    updateAnimations( ms );
 }
