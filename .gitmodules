@@ -10,3 +10,6 @@
 [submodule "gles2-renderer"]
 	path = gles2-renderer
 	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git
+[submodule "glm"]
+	path = glm
+	url = https://github.com/g-truc/glm.git
