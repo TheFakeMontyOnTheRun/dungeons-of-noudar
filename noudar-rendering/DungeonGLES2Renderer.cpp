@@ -613,6 +613,8 @@ namespace odb {
 		mBitmaps.insert(mBitmaps.end(), textures.begin(), textures.end());
 
 		mElementMap[ '.' ] = ETextures::Grass;
+		mElementMap[ '_' ] = ETextures::Floor;
+		mElementMap[ '=' ] = ETextures::Floor;
 		mElementMap[ '1' ] = ETextures::Bricks;
 		mElementMap[ '#' ] = ETextures::Bars;
 		mElementMap[ '~' ] = ETextures::Arch;
@@ -789,7 +791,12 @@ namespace odb {
 				Shade shade = (0.25f * std::min(255, lightMap[19 - z][x]) / 255.0f) + 0.75f;
 
 				if ( actor == '@' ) {
-					chosenTexture = ETextures::Shadow;
+				//	chosenTexture = ETextures::Shadow;
+				} else {
+				}
+
+				if (tile == '.' || tile == '_' || tile == '=' || tile == '-' ) {
+					chosenTexture = mElementMap[ tile ];
 				} else {
 					chosenTexture = mElementMap[ '.' ];
 				}
@@ -822,7 +829,7 @@ namespace odb {
 					                                                    EGeometryType::kLeftNearCorner,
 					                                                    shade);
 
-				} else if (tile != '.') {
+				} else if (tile != '.' && tile != '_' &&  tile != '=' && tile != '-') {
 
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCubeTransform(pos), EGeometryType::kWalls,
@@ -851,9 +858,14 @@ namespace odb {
 						                                                                     shade);
 					}
 				} else {
-					if (mFloorNumber > 0) {
+					if (tile == '=' || tile == '-') {
 						pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
-						batches[Grass].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
+						batches[Floor].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
+
+						pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+						batches[Floor].emplace_back(getCubeTransform(pos), EGeometryType::kWalls,
+						                                                                   shade);
+
 					}
 				}
 
@@ -1008,7 +1020,7 @@ namespace odb {
 		glm::vec3 pos = glm::vec3(-10 + (2 * 2), -4.0f, -10 + (-5 * 2));
 		glm::mat4 trans = getCubeTransform(pos);
 
-		glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::Grass]->mTextureId);
+		glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::Floor]->mTextureId);
 
 		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &trans[0][0]);
 		checkGlError("before drawing");

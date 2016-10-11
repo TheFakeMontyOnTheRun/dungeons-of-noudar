@@ -247,8 +247,8 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 			boolean isDungeonSurfaceLevel = true;
 
 			bitmaps = loadBitmaps(assets, new String[]{
-					"grass.png", //none
-					(isDungeonSurfaceLevel ? "grass.png" : "stonefloor.png"),
+					"grass.png",
+					"stonefloor.png",
 					"bricks.png",
 					"arch.png",
 					"bars.png",

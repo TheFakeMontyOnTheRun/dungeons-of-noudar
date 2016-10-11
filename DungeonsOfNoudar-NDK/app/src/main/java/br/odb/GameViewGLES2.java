@@ -210,8 +210,8 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 			boolean isDungeonSurfaceLevel = true;
 
 			bitmaps = loadBitmaps(assets, new String[]{
-					"grass.png", //none
-					(isDungeonSurfaceLevel ? "grass.png" : "stonefloor.png"),
+					"grass.png",
+					"stonefloor.png",
 					"bricks.png",
 					"arch.png",
 					"bars.png",

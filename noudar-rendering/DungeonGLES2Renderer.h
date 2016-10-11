@@ -26,8 +26,8 @@ namespace odb {
 	};
 
 	enum ETextures {
-		None,
 		Grass,
+		Floor,
 		Bricks,
 		Arch,
 		Bars,

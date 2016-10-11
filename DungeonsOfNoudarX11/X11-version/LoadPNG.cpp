@@ -1,13 +1,15 @@
 //
 // Created by monty on 06/10/16.
 //
-
+#include <memory>
 #include <string>
 #include <png.h>
+#include "NativeBitmap.h"
 #include "LoadPNG.h"
 
+
 //https://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures#A_simple_libpng_example
-int* loadPNG(const std::string filename, int width, int height) {
+std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
     //header for testing if it is a png
     png_byte header[8];
 
@@ -46,8 +48,8 @@ int* loadPNG(const std::string filename, int width, int height) {
                  NULL, NULL, NULL);
 
     //update width and height based on png info
-    width = twidth;
-    height = theight;
+    int width = twidth;
+    int height = theight;
 
     // Update the png info struct.
     png_read_update_info(png_ptr, info_ptr);
@@ -62,7 +64,7 @@ int* loadPNG(const std::string filename, int width, int height) {
     png_bytep *row_pointers = new png_bytep[height];
     // set the individual row_pointers to point at the correct offsets of image_data
     for (int i = 0; i < height; ++i)
-        row_pointers[i] = image_data + i * rowbytes;
+        row_pointers[ i] = image_data + i * rowbytes;
 
     //read the png into image_data through row_pointers
     png_read_image(png_ptr, row_pointers);
@@ -72,5 +74,7 @@ int* loadPNG(const std::string filename, int width, int height) {
     delete[] row_pointers;
     fclose(fp);
 
-    return (int*)image_data;
+    std::shared_ptr<odb::NativeBitmap> toReturn = std::make_shared<odb::NativeBitmap>( width, height, (int*)image_data );
+
+    return toReturn;
 }

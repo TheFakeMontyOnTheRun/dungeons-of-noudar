@@ -190,11 +190,18 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
 
     *winRet = win;
     *ctxRet = ctx;
+
+    EmscriptenFullscreenStrategy s;
+    memset(&s, 0, sizeof(s));
+    s.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT;
+    s.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
+    s.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
+    EMSCRIPTEN_RESULT ret = emscripten_enter_soft_fullscreen(0, &s);
 }
 
 void tick() {
-    gameLoopTick( 20 );
-    renderFrame( 20 );
+    gameLoopTick( 16 );
+    renderFrame( 16 );
     eglSwapBuffers(eglDisplay, eglSurface);
 }
 
