@@ -14,7 +14,7 @@ class AndroidAudioSink: public AudioSink {
 
 	std::vector< int > mQueuedItems;
 public:
-	void updateEnv( JNIEnv *env );
+	void updateEnv( JNIEnv *env, jclass type, jobject sink );
 	void flush(JNIEnv *env, jclass type, jobject sink);
 	AndroidAudioSink(JNIEnv *env, jclass type, jobject sink);
 	int bufferData(  unsigned char* data, int size, unsigned sampleRate, unsigned channels, unsigned bits ) override;

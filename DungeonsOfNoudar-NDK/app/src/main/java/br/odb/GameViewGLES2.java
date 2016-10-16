@@ -209,12 +209,12 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 			GL2JNILib.onCreate(assets);
 			loadTextures(assets);
 
-			((Activity) getContext()).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					mSink = new SoundSink();
-					GL2JNILib.setSoundSink(mSink);
-				}
+			final Activity activity = ((Activity) getContext());
+
+			mSink = new SoundSink();
+			GL2JNILib.loadSounds( mSink, activity.getAssets(), new String[] {
+					"grasssteps.wav",
+					"stepsstones.wav"
 			});
 		}
 	}

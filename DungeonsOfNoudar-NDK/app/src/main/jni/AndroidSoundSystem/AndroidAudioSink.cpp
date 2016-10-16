@@ -39,8 +39,9 @@ void AndroidAudioSink::play(int id, float volumeLeft, float volumeRight) {
 	mQueuedItems.push_back( id );
 }
 
-void AndroidAudioSink::updateEnv(JNIEnv *env) {
+void AndroidAudioSink::updateEnv(JNIEnv *env, jclass type, jobject sink ) {
 	mEnv = env;
+	mSink = sink;
 }
 
 void AndroidAudioSink::flush(JNIEnv *env, jclass type, jobject sink) {

@@ -4,6 +4,7 @@
 #include <android/asset_manager_jni.h>
 #include <android/bitmap.h>
 #include <android/asset_manager.h>
+#include "NdkGlue.h"
 
 #include <string>
 #include <memory>
@@ -14,26 +15,41 @@
 #include "NativeBitmap.h"
 #include "android_asset_operations.h"
 #include "GameNativeAPI.h"
+
 #include "AndroidSoundSystem/AudioSink.h"
-#include "AndroidSoundSystem/AndroidAudioSink.h"
-#include "NdkGlue.h"
 #include "AndroidSoundSystem/SoundClip.h"
 #include "AndroidSoundSystem/SoundUtils.h"
 #include "AndroidSoundSystem/SoundListener.h"
 #include "AndroidSoundSystem/SoundEmitter.h"
 
+#include "AndroidSoundSystem/AndroidAudioSink.h"
+
 long currentDelta = 0;
 std::vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
+std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+
 std::string gVertexShader;
 std::string gFragmentShader;
-FILE *soundFile;
-
 
 std::shared_ptr<AndroidAudioSink> audioSinkWrapper;
-
-std::shared_ptr<odb::SoundClip> soundClip;
-std::shared_ptr<odb::SoundEmitter> soundEmitter;
 std::shared_ptr<odb::SoundListener> soundListener;
+
+std::shared_ptr<odb::SoundEmitter> makeSoundEmitterFromFilename(JNIEnv *env, jclass type,
+                                                                jobject sink,
+                                                                AAssetManager *assetManager,
+                                                                jstring filename) {
+	FILE *soundFile;
+
+	const char *rawString = env->GetStringUTFChars(filename, 0);
+
+	soundFile = android_fopen(rawString, "r", assetManager);
+	auto soundClip = odb::makeSoundClipFrom(audioSinkWrapper, soundFile);
+	fclose(soundFile);
+
+	audioSinkWrapper->updateEnv(env, type, sink);
+
+	return std::make_shared<odb::SoundEmitter>(audioSinkWrapper, soundClip);
+}
 
 std::shared_ptr<odb::NativeBitmap> makeNativeBitmapFromJObject(JNIEnv *env, jobject bitmap) {
 
@@ -49,7 +65,8 @@ std::shared_ptr<odb::NativeBitmap> makeNativeBitmapFromJObject(JNIEnv *env, jobj
 		odb::Logger::log("error %d", errorCode);
 	}
 
-	odb::Logger::log("bitmap info: %d wide, %d tall, %d ints per pixel", info.width, info.height, info.format);
+	odb::Logger::log("bitmap info: %d wide, %d tall, %d ints per pixel", info.width, info.height,
+	                 info.format);
 
 
 	long size = info.width * info.height * info.format;
@@ -73,12 +90,27 @@ void loadTexturesFromBitmaps(JNIEnv *env, _jobjectArray *bitmaps, int length) {
 	}
 }
 
+void loadSoundsFromFilenames(JNIEnv *env, jclass type, jobject sink, jobject asset_manager,
+                             _jobjectArray *soundFiles, jsize length) {
+	sounds.clear();
+	AAssetManager *assetManager = AAssetManager_fromJava(env, asset_manager);
+
+	for (int c = 0; c < length; ++c) {
+
+		sounds.push_back(makeSoundEmitterFromFilename(env, type, sink, assetManager,
+		                                              (jstring) (env->GetObjectArrayElement(
+				                                              soundFiles, c))));
+	}
+}
+
 extern "C" {
-JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_flush(JNIEnv *env, jclass type, jobject sink);
 
 JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setSoundSink(JNIEnv *env, jclass type, jobject sink);
+		Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type, jobject sink,
+		                                 jobject asset_manager, jobjectArray soundFiles);
+
+JNIEXPORT void JNICALL
+		Java_br_odb_GL2JNILib_flush(JNIEnv *env, jclass type, jobject sink);
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserved,
                                                       jobject assetManager);
@@ -101,19 +133,17 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setClearColour(JNIEnv *env, jclass type, jfloat r, jfloat g,
 		                                     jfloat b);
-
+JNIEXPORT void JNICALL
+		Java_br_odb_GL2JNILib_moveUp(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_moveUp(JNIEnv *env, jclass type);
+		Java_br_odb_GL2JNILib_moveDown(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_moveDown(JNIEnv *env, jclass type);
+		Java_br_odb_GL2JNILib_moveLeft(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_moveLeft(JNIEnv *env, jclass type);
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_moveRight(JNIEnv *env, jclass type);
+		Java_br_odb_GL2JNILib_moveRight(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_rotateLeft(JNIEnv *env, jclass type);
@@ -168,39 +198,17 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 	gFragmentShader = readToString(fd);
 	fclose(fd);
 
-//	fd = android_fopen("textured.obj", "r", asset_manager);
-//	wavefrontCubeMesh = readToString(fd);
-//	fclose(fd);
-//
-//	fd = android_fopen("textured.mtl", "r", asset_manager);
-//	wavefrontCubeMaterials = readToString(fd);
-//	fclose(fd);
-//
-//
-//	fd = android_fopen("geo-on-disk.geo", "r", asset_manager);
-//	std::string geoFile = readToString(fd);
-//	fclose(fd);
-//
-//	fd = android_fopen("pet-on-disk.pet", "r", asset_manager);
-//	std::string petFile = readToString(fd);
-//	fclose(fd);
-//
-//	loadMapData( geoFile, petFile );
-
 	fd = android_fopen("map_tiles0.txt", "r", asset_manager);
 	std::string data = readToString(fd);
 	fclose(fd);
 
-	readMap( data );
-
-
-	soundFile = android_fopen( "test.wav", "r", asset_manager  );
+	readMap(data);
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
                                                   jint width, jint height) {
 
-	setupGraphics(width, height,gVertexShader, gFragmentShader, texturesToLoad );
+	setupGraphics(width, height, gVertexShader, gFragmentShader, texturesToLoad);
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type) {
@@ -255,7 +263,7 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setEyeMatrix(JNIEnv *env, jclass type, jfloatArray eyeView_) {
 	jfloat *eyeView = env->GetFloatArrayElements(eyeView_, NULL);
 
-	setEyeViewMatrix( eyeView );
+	setEyeViewMatrix(eyeView);
 
 	env->ReleaseFloatArrayElements(eyeView_, eyeView, 0);
 }
@@ -263,7 +271,7 @@ Java_br_odb_GL2JNILib_setEyeMatrix(JNIEnv *env, jclass type, jfloatArray eyeView
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_tick(JNIEnv *env, jclass type, jlong delta) {
 
-	updateAnimations( delta );
+	updateAnimations(delta);
 	currentDelta = delta;
 }
 
@@ -272,7 +280,7 @@ Java_br_odb_GL2JNILib_setPerspectiveMatrix(JNIEnv *env, jclass type,
                                            jfloatArray perspectiveMatrix_) {
 	jfloat *perspectiveMatrix = env->GetFloatArrayElements(perspectiveMatrix_, NULL);
 
-	setPerspectiveMatrix( perspectiveMatrix );
+	setPerspectiveMatrix(perspectiveMatrix);
 
 	env->ReleaseFloatArrayElements(perspectiveMatrix_, perspectiveMatrix, 0);
 }
@@ -280,51 +288,56 @@ Java_br_odb_GL2JNILib_setPerspectiveMatrix(JNIEnv *env, jclass type,
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setXZAngle(JNIEnv *env, jclass type, jfloat xz) {
 
-	setAngleXZ( xz );
+	setAngleXZ(xz);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setYZAngle(JNIEnv *env, jclass type, jfloat yz) {
 
-	setAngleYZ( yz );
+	setAngleYZ(yz);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveUp(JNIEnv *env, jclass type) {
 
 	moveUp();
+	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveDown(JNIEnv *env, jclass type) {
 
 	moveDown();
-	soundEmitter->play( soundListener );
+	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveLeft(JNIEnv *env, jclass type) {
 
 	moveLeft();
+	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveRight(JNIEnv *env, jclass type) {
 
 	moveRight();
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setSoundSink(JNIEnv *env, jclass type, jobject sink) {
-
-	audioSinkWrapper = std::make_shared<AndroidAudioSink>( env, type, sink );
-	soundClip = odb::makeSoundClipFrom( audioSinkWrapper, soundFile );
-	soundListener = std::make_shared<odb::SoundListener>(audioSinkWrapper);
-	soundEmitter = std::make_shared<odb::SoundEmitter>(audioSinkWrapper, soundClip);
+	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_flush(JNIEnv *env, jclass type, jobject sink) {
 
 	audioSinkWrapper->flush(env, type, sink);
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type, jobject sink, jobject asset_manager,
+                                 jobjectArray soundFiles) {
+
+	audioSinkWrapper = std::make_shared<AndroidAudioSink>(env, type, sink);
+	soundListener = std::make_shared<odb::SoundListener>(audioSinkWrapper);
+
+	loadSoundsFromFilenames(env, type, sink, asset_manager, soundFiles,
+	                        env->GetArrayLength(soundFiles));
 }
