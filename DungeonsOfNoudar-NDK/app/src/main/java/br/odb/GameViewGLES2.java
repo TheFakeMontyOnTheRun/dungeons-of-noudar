@@ -3,6 +3,7 @@
  */
 package br.odb;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Renderer {
 
 	public static final int TICK_INTERVAL = 500;
+	private volatile SoundSink mSink;
 
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
@@ -45,6 +47,16 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		synchronized (renderingLock) {
 			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 			GL2JNILib.step();
+
+
+			((Activity) getContext()).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					GL2JNILib.flush(mSink);
+				}
+			});
+
+
 		}
 	}
 
@@ -196,6 +208,14 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		synchronized (renderingLock) {
 			GL2JNILib.onCreate(assets);
 			loadTextures(assets);
+
+			((Activity) getContext()).runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					mSink = new SoundSink();
+					GL2JNILib.setSoundSink(mSink);
+				}
+			});
 		}
 	}
 

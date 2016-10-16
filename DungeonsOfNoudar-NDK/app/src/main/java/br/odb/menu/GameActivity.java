@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import br.odb.ControllerHelper;
+import br.odb.GL2JNILib;
 import br.odb.GameViewGLES2;
+import br.odb.SoundSink;
 
 public class GameActivity extends Activity {
 

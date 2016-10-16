@@ -5,6 +5,8 @@
 #ifndef LESSON02_GLES2LESSON_H
 #define LESSON02_GLES2LESSON_H
 
+void printGLString(const char *name, GLenum s);
+
 namespace odb {
 
 	enum EFadeState {

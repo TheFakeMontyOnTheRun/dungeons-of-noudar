@@ -45,4 +45,8 @@ public class GL2JNILib {
 	public static native void moveLeft();
 
 	public static native void moveRight();
+
+	public static native void setSoundSink( SoundSink sink );
+
+	public static native void flush(SoundSink sink);
 }
