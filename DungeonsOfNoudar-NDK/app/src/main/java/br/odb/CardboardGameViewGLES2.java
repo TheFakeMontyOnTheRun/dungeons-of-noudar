@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -178,7 +179,10 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		mHaveController = haveController;
 
 		if (haveController) {
+			Log.d("Monty", "We have controllers!");
 			setOnKeyListener(keyListener);
+			requestFocus();
+			requestFocusFromTouch();
 		}
 
 		if (this.getStereoModeEnabled()) {
@@ -300,6 +304,11 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 	}
 
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		return keyListener.onKey(this, keyCode, event);
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 		setFocusable(true);
@@ -310,37 +319,36 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		return direction;
 	}
 
-	public synchronized void handleCommand(final KB key) {
+	public void handleCommand(final KB key) {
 		synchronized (renderingLock) {
-			if (!GL2JNILib.isAnimating()) {
-				switch (key) {
+			switch (key) {
 
-					case UP:
-						GL2JNILib.moveUp();
-						break;
+				case UP:
+					GL2JNILib.moveUp();
+					break;
 
-					case DOWN:
-						GL2JNILib.moveDown();
-						break;
+				case DOWN:
+					GL2JNILib.moveDown();
+					break;
 
-					case LEFT:
-						GL2JNILib.moveLeft();
-						break;
+				case LEFT:
+					GL2JNILib.moveLeft();
+					break;
 
-					case RIGHT:
-						GL2JNILib.moveRight();
-						break;
+				case RIGHT:
+					GL2JNILib.moveRight();
+					break;
 
-					case ROTATE_LEFT:
-						GL2JNILib.rotateLeft();
-						break;
+				case ROTATE_LEFT:
+					GL2JNILib.rotateLeft();
+					break;
 
-					case ROTATE_RIGHT:
-						GL2JNILib.rotateRight();
-						break;
+				case ROTATE_RIGHT:
+					GL2JNILib.rotateRight();
+					break;
 
-				}
 			}
+
 		}
 	}
 

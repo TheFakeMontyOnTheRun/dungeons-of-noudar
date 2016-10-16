@@ -166,32 +166,32 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 		setOnTouchListener(new OnSwipeTouchListener(getContext()) {
 
-				@Override
-				public void onSwipeLeft() {
-					super.onSwipeLeft();
+			@Override
+			public void onSwipeLeft() {
+				super.onSwipeLeft();
 
-					key = KB.ROTATE_LEFT;
-				}
+				key = KB.ROTATE_LEFT;
+			}
 
-				@Override
-				public void onSwipeRight() {
-					super.onSwipeRight();
+			@Override
+			public void onSwipeRight() {
+				super.onSwipeRight();
 
-					key = KB.ROTATE_RIGHT;
-				}
+				key = KB.ROTATE_RIGHT;
+			}
 
-				@Override
-				public void onSwipeUp() {
-					super.onSwipeUp();
-					key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
-				}
+			@Override
+			public void onSwipeUp() {
+				super.onSwipeUp();
+				key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
+			}
 
-				@Override
-				public void onSwipeDown() {
-					super.onSwipeDown();
-					key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
-				}
-			});
+			@Override
+			public void onSwipeDown() {
+				super.onSwipeDown();
+				key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
+			}
+		});
 
 
 		requestFocus();

@@ -23,7 +23,6 @@ public class GameActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		mControllerHelper = new ControllerHelper( this );
-		boolean playInVR = getIntent().getBooleanExtra(USE_VR, false);
 
 		configureUiForInputDevice();
 
@@ -46,22 +45,11 @@ public class GameActivity extends Activity {
 
 		view.onCreate(getAssets());
 		view.onResume();
+
 	}
 	//presentation and interaction
 
 	private void configureUiForInputDevice() {
 		mHaveController = mControllerHelper.hasGamepad() || mControllerHelper.hasPhysicalKeyboard();
-	}
-
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		boolean handled = super.onKeyDown(keyCode, event);
-
-		if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-			finish();
-			return true;
-		}
-
-		return handled || view.onKeyDown(keyCode, event);
 	}
 }

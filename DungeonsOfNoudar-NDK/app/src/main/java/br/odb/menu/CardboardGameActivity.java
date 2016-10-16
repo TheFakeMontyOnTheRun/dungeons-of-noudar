@@ -5,8 +5,8 @@ import android.view.KeyEvent;
 
 import com.google.vr.sdk.base.GvrActivity;
 
-import br.odb.ControllerHelper;
 import br.odb.CardboardGameViewGLES2;
+import br.odb.ControllerHelper;
 
 public class CardboardGameActivity extends GvrActivity {
 
