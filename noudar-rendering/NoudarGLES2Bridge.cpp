@@ -80,7 +80,7 @@ namespace odb {
 	    position = ( current->getPosition().y * 20 ) + current->getPosition().x;
 	    ids[ position ] = current->getId();
 	    actors[ position ] = '^';
-	    level[ position ] = '.';
+//	    level[ position ] = '.';
 
 
 	    updateLevelSnapshot(level.data(), actors.data(), splats.data());
