@@ -28,6 +28,15 @@
 #include "CTurtleKnight.h"
 #include "CGame.h"
 #include "NoudarGLES2Bridge.h"
+
+
+#include "AudioSink.h"
+#include "SoundClip.h"
+#include "SoundUtils.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+
+
 #include "GameNativeAPI.h"
 
 #include "Logger.h"

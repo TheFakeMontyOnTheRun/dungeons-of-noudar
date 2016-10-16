@@ -30,6 +30,12 @@
 #include "WavefrontOBJReader.h"
 #include "Logger.h"
 
+#include "AudioSink.h"
+#include "SoundClip.h"
+#include "SoundUtils.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 #include "GameNativeAPI.h"
@@ -68,6 +74,10 @@ std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
 
+
+std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
+
+std::shared_ptr<odb::SoundListener> mainListener;
 
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
 	textures = textureList;
@@ -130,6 +140,16 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 	}
 
 	animationList[id] = movement;
+
+	char floorType = map[ newPosition.y ][ newPosition.x ];
+
+	if ( floorType  == '.' || floorType == '-' ) {
+		soundEmitters[0]->play(mainListener);
+	} else if ( floorType == '_' || floorType == '=') {
+		soundEmitters[1]->play(mainListener);
+	}
+
+
 }
 
 void updateCharacterMovements(const int *idsLocal) {
@@ -143,9 +163,12 @@ void updateCharacterMovements(const int *idsLocal) {
 			if (id != 0) {
 				auto previousPosition = mPositions[id];
 
-				if (previousPosition != glm::vec2(x, y)) {
+				if (previousPosition != glm::vec2(x, y) ) {
 					mPositions[id] = glm::vec2(x, y);
-					addCharacterMovement(id, previousPosition, mPositions[id]);
+
+					if ( game->getTurn() > 0  ) {
+						addCharacterMovement(id, previousPosition, mPositions[id]);
+					}
 				}
 			}
 		}
@@ -361,4 +384,9 @@ void moveRight() {
 
 void gameLoopTick( long ms ) {
     updateAnimations( ms );
+}
+
+void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener ) {
+	soundEmitters = emitters;
+	mainListener = listener;
 }

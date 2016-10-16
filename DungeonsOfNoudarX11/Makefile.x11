@@ -1,5 +1,5 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm
-LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng
+CXXFLAGS = -O2 -g -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm
+LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng -lopenal
 CXX = clang++
 OBJS = X11-version/main.o \
         ../noudar-core/noudar-core/src/CActor.o \
@@ -26,7 +26,11 @@ OBJS = X11-version/main.o \
         ../gles2-renderer/TrigBatch.o \
         ../gles2-renderer/NativeBitmap.o \
         ../gles2-renderer/Texture.o \
-        ../gles2-renderer/Common.o
+        ../gles2-renderer/Common.o \
+        ../OpenALSoundSystem/SoundClip.o \
+        ../OpenALSoundSystem/SoundEmitter.o \
+        ../OpenALSoundSystem/SoundListener.o \
+        ../OpenALSoundSystem/SoundUtils.o
 
 TARGET = noudar
 

@@ -19,6 +19,7 @@ model {
 						srcDir "../../noudar-core/noudar-core/src"
 						srcDir "../../gles2-renderer"
 						srcDir "../../noudar-rendering"
+						srcDir "../../AndroidSoundSystem"
 					}
 				}
 			}
@@ -33,6 +34,7 @@ model {
 		stl = "c++_static"
 
 		cppFlags.add("-I${file("../common_includes")}".toString())
+		cppFlags.add("-I${file("../../AndroidSoundSystem")}".toString())
 		cppFlags.add("-I${file("../../glm")}".toString())
 		cppFlags.add("-I${file("../../noudar-core/noudar-core/include")}".toString())
 		cppFlags.add("-I${file("../../noudar-rendering")}".toString())

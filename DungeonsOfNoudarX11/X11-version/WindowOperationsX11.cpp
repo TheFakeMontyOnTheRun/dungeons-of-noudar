@@ -1,7 +1,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <cstdio>
 #include <assert.h>
 #include <math.h>
 #include <stdlib.h>
@@ -20,6 +20,13 @@
 #include <iostream>
 
 #include "NativeBitmap.h"
+
+#include "SoundClip.h"
+#include "SoundUtils.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+
+
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
 #include "x11.h"
@@ -136,6 +143,24 @@ void initWindow() {
     fclose(fd);
 
    setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
+
+    auto soundListener = std::make_shared<odb::SoundListener>();
+
+    std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+
+    std::string filenames[] {
+            "res/grasssteps.wav",
+            "res/stepsstones.wav"
+    };
+
+    for ( auto filename : filenames ) {
+        FILE *file = fopen( filename.c_str(), "r");
+        auto soundClip = odb::makeSoundClipFrom( file );
+
+        sounds.push_back( std::make_shared<odb::SoundEmitter>(soundClip) );
+    }
+
+    setSoundEmitters( sounds, soundListener );
 }
 
 void setMainLoop() {

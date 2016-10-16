@@ -59,4 +59,6 @@ void moveRight();
 
 void gameLoopTick( long ms );
 
+void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener );
+
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

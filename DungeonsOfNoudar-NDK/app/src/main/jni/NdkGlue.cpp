@@ -14,15 +14,14 @@
 #include "Logger.h"
 #include "NativeBitmap.h"
 #include "android_asset_operations.h"
+#include "AudioSink.h"
+#include "SoundClip.h"
+#include "SoundUtils.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+
 #include "GameNativeAPI.h"
-
-#include "AndroidSoundSystem/AudioSink.h"
-#include "AndroidSoundSystem/SoundClip.h"
-#include "AndroidSoundSystem/SoundUtils.h"
-#include "AndroidSoundSystem/SoundListener.h"
-#include "AndroidSoundSystem/SoundEmitter.h"
-
-#include "AndroidSoundSystem/AndroidAudioSink.h"
+#include "AndroidAudioSink.h"
 
 long currentDelta = 0;
 std::vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
@@ -301,28 +300,24 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveUp(JNIEnv *env, jclass type) {
 
 	moveUp();
-	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveDown(JNIEnv *env, jclass type) {
 
 	moveDown();
-	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveLeft(JNIEnv *env, jclass type) {
 
 	moveLeft();
-	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_moveRight(JNIEnv *env, jclass type) {
 
 	moveRight();
-	sounds[0]->play(soundListener);
 }
 
 JNIEXPORT void JNICALL
@@ -340,4 +335,6 @@ Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type, jobject sink, jobject
 
 	loadSoundsFromFilenames(env, type, sink, asset_manager, soundFiles,
 	                        env->GetArrayLength(soundFiles));
+
+	setSoundEmitters( sounds, soundListener );
 }

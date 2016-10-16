@@ -19,6 +19,11 @@
 #include <EGL/egl.h>
 #include <iostream>
 
+#include "SoundClip.h"
+#include "SoundUtils.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+
 #include "x11.h"
 #include "NativeBitmap.h"
 #include "GameNativeAPI.h"

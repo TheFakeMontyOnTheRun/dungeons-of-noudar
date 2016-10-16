@@ -14,6 +14,11 @@
 #include <map>
 #include <array>
 
+#include "SoundClip.h"
+#include "SoundUtils.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+
 #include "NativeBitmap.h"
 #include "Common.h"
 #include "GameNativeAPI.h"
