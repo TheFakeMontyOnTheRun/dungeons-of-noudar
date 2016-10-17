@@ -265,6 +265,10 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 					"bricks.png",
 					"clouds.png",
 					"monty.png",
+					"stonegrassfar.png",
+					"grassstonefar.png",
+					"stonegrassnear.png",
+					"grassstonenear.png",
 			});
 			setTextures(bitmaps);
 		} catch (IOException e) {

@@ -62,6 +62,11 @@ namespace odb {
 		CornerLeftFar,
 		CornerLeftNear,
 		Skybox,
+		Monty,
+		StoneGrassFar,
+		GrassStoneFar,
+		StoneGrassNear,
+		GrassStoneNear,
 	};
 
 	using IntGameMap = std::array<std::array<ETextures, 20>, 20>;

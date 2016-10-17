@@ -87,6 +87,14 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	gles2Renderer->setTexture(textures);
 	animationTime = 0;
 
+	hasCache = false;
+
+	for (int y = 0; y < 20; ++y) {
+		for (int x = 0; x < 20; ++x) {
+			lightMapCache[ y ][ x ] = 0;
+		}
+	}
+
 	return gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
 }
 
@@ -200,7 +208,7 @@ void updateLevelSnapshot(const int *level, const int *actors, const int *splats)
 	for (int y = 0; y < 20; ++y) {
 		for (int x = 0; x < 20; ++x) {
 
-			if (map[y][x] == odb::BricksCandles) {
+			if (map[y][x] == '|') {
 
 				if (!hasCache) {
 					odb::LightningStrategy::castLightInAllDirections(lightMapCache, 255, map, x, y);

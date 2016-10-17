@@ -23,7 +23,7 @@
 #include "Logger.h"
 #include "MaterialList.h"
 #include "Scene.h"
-
+#include "Common.h"
 #include "DungeonGLES2Renderer.h"
 
 
@@ -614,23 +614,39 @@ namespace odb {
 
 		mElementMap[ '.' ] = ETextures::Grass;
 		mElementMap[ '_' ] = ETextures::Floor;
+
+		mElementMap[ '(' ] = ETextures::GrassStoneFar;
+		mElementMap[ '{' ] = ETextures::GrassStoneNear;
+
+		mElementMap[ ')' ] = ETextures::StoneGrassNear;
+		mElementMap[ '}' ] = ETextures::StoneGrassFar;
+
 		mElementMap[ '=' ] = ETextures::Floor;
 		mElementMap[ '1' ] = ETextures::Bricks;
 		mElementMap[ '#' ] = ETextures::Bars;
 		mElementMap[ '~' ] = ETextures::Arch;
-		mElementMap[ '|' ] = ETextures::BricksCandles;
+		mElementMap[ 'Y' ] = ETextures::BricksCandles;
 		mElementMap[ 'X' ] = ETextures::BricksBlood;
+
+		mElementMap[ '%' ] = ETextures::Bricks;
+		mElementMap[ '|' ] = ETextures::Bricks;
 		mElementMap[ '\\' ] = ETextures::Bricks;
 		mElementMap[ '/' ] = ETextures::Bricks;
+		mElementMap[ '>' ] = ETextures::Bricks;
+		mElementMap[ '<' ] = ETextures::Bricks;
+		mElementMap[ 'Z' ] = ETextures::Bricks;
+		mElementMap[ 'S' ] = ETextures::Bricks;
+
+		mElementMap[ '9' ] = ETextures::Exit;
+		mElementMap[ '*' ] = ETextures::Begin;
+
 
 		mElementMap[ '@' ] = ETextures::Cuco0;
 
 		mElementMap[ ' ' ] = ETextures::Skybox;
 
 		mElementMap[ '^' ] = ETextures::Crusader;
-		mElementMap[ '>' ] = ETextures::Crusader;
-		mElementMap[ '<' ] = ETextures::Crusader;
-		mElementMap[ 'V' ] = ETextures::Crusader;
+
 	}
 
 	void DungeonGLES2Renderer::shutdown() {
@@ -796,8 +812,19 @@ namespace odb {
 				} else {
 				}
 
-				if (tile == '.' || tile == '_' || tile == '=' || tile == '-' ) {
+				if (tile == '.' || tile == '_' || tile == '=' || tile == '-' || tile == ')' || tile == '(' || tile == '}' || tile == '{' ) {
 					chosenTexture = mElementMap[ tile ];
+				} else if (tile == '#' || tile == '~' || tile == '|'  || tile == '%' ) {
+					chosenTexture = mElementMap[ '_' ];
+				} else if (tile == '\\' ) {
+					chosenTexture = mElementMap[ '(' ];
+				} else if (tile == '/' ) {
+					chosenTexture = mElementMap[ ')' ];
+				} else if (tile == '>') {
+					chosenTexture = mElementMap[ '{' ];
+				} else if (tile == '<') {
+					chosenTexture = mElementMap[ '}' ];
+
 				} else {
 					chosenTexture = mElementMap[ '.' ];
 				}
@@ -813,7 +840,7 @@ namespace odb {
 				shade = placeShade;
 
 				//walls
-				if (tile == '\\') {
+				if (tile == '\\' || tile == '<' || tile == '|' || tile == 'S' ) {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftFarTransform(pos),
 					                                                    EGeometryType::kLeftFarCorner,
@@ -830,7 +857,7 @@ namespace odb {
 					                                                                   shade);
 
 
-				} else if (tile == '/' ) {
+				} else if (tile == '/'  || tile == '>' || tile == '%' || tile == 'Z') {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
 					                                                    EGeometryType::kLeftNearCorner,
@@ -847,7 +874,7 @@ namespace odb {
 					                                                                   EGeometryType::kLeftNearCorner,
 					                                                                   shade);
 
-				} else if (tile != '.' && tile != '_' &&  tile != '=' && tile != '-') {
+				} else if (tile != '.' && tile != '_' &&  tile != '=' && tile != '-' && tile != ')' && tile != '(' && tile != '}' && tile != '{') {
 
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCubeTransform(pos), EGeometryType::kWalls,
