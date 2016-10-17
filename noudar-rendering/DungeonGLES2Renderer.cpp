@@ -788,7 +788,8 @@ namespace odb {
 				int actor = actors[19 - z][x];
 				int splatFrame = splats[19 - z][x];
 
-				Shade shade = (0.25f * std::min(255, lightMap[19 - z][x]) / 255.0f) + 0.75f;
+				Shade placeShade = (0.25f * std::min(255, lightMap[19 - z][x]) / 255.0f) + 0.75f;
+				Shade shade = placeShade;
 
 				if ( actor == '@' ) {
 				//	chosenTexture = ETextures::Shadow;
@@ -801,9 +802,15 @@ namespace odb {
 					chosenTexture = mElementMap[ '.' ];
 				}
 
+				if (tile == '=' || tile == '-' ) {
+					shade -= 0.25f;
+				}
+
+
 				pos = glm::vec3(-10 + (x * 2), -5.0f, -10 + (-z * 2));
 				batches[chosenTexture].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
 
+				shade = placeShade;
 
 				//walls
 				if (tile == '\\') {
@@ -859,12 +866,17 @@ namespace odb {
 					}
 				} else {
 					if (tile == '=' || tile == '-') {
-						pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
-						batches[Floor].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
+
+
 
 						pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
 						batches[Floor].emplace_back(getCubeTransform(pos), EGeometryType::kWalls,
 						                                                                   shade);
+						shade -= 0.375f;
+						pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
+						batches[Floor].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
+
+						shade = placeShade;
 
 					}
 				}
