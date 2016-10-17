@@ -3,6 +3,7 @@
  */
 package br.odb;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -28,6 +29,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 
 	public static final int TICK_INTERVAL = 500;
+	private SoundSink mSink;
 
 	@Override
 	public void onNewFrame(HeadTransform headTransform) {
@@ -46,6 +48,13 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 			GL2JNILib.setXZAngle(xz);
 			GL2JNILib.setYZAngle(yz);
 		}
+
+		((Activity) getContext()).runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				GL2JNILib.flush(mSink);
+			}
+		});
 	}
 
 
@@ -237,6 +246,14 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		synchronized (renderingLock) {
 			GL2JNILib.onCreate(assets);
 			loadTextures(assets);
+
+			final Activity activity = ((Activity) getContext());
+
+			mSink = new SoundSink();
+			GL2JNILib.loadSounds( mSink, activity.getAssets(), new String[] {
+					"grasssteps.wav",
+					"stepsstones.wav"
+			});
 		}
 	}
 
