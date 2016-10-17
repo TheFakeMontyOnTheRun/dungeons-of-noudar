@@ -824,6 +824,12 @@ namespace odb {
 					                                                    EGeometryType::kLeftFarCorner,
 					                                                    shade);
 
+					pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftFarTransform(pos),
+					                                                                   EGeometryType::kLeftFarCorner,
+					                                                                   shade);
+
+
 				} else if (tile == '/' ) {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
@@ -835,6 +841,11 @@ namespace odb {
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
 					                                                    EGeometryType::kLeftNearCorner,
 					                                                    shade);
+
+					pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
+					                                                                   EGeometryType::kLeftNearCorner,
+					                                                                   shade);
 
 				} else if (tile != '.' && tile != '_' &&  tile != '=' && tile != '-') {
 
@@ -863,7 +874,16 @@ namespace odb {
 						                                   : mElementMap[ '1' ]].emplace_back(getCubeTransform(pos),
 						                                                                     EGeometryType::kWalls,
 						                                                                     shade);
+
+						pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+						batches[(tile == 'b') ? ETextures::CeilingEnd
+						                      : mElementMap[ '1' ]].emplace_back(getCubeTransform(pos),
+						                                                         EGeometryType::kWalls,
+						                                                         shade);
+
 					}
+
+
 				} else {
 					if (tile == '=' || tile == '-') {
 
