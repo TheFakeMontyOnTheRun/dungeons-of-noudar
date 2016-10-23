@@ -29,6 +29,13 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	public static final int TICK_INTERVAL = 20;
 	private volatile SoundSink mSink;
 
+	final Runnable flushAudioSinkRunnable = new Runnable() {
+		@Override
+		public void run() {
+			GL2JNILib.flush(mSink);
+		}
+	};
+
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
 
@@ -48,15 +55,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 			GL2JNILib.step();
 
-
-			((Activity) getContext()).runOnUiThread(new Runnable() {
-				@Override
-				public void run() {
-					GL2JNILib.flush(mSink);
-				}
-			});
-
-
+			((Activity) getContext()).runOnUiThread( flushAudioSinkRunnable );
 		}
 	}
 
