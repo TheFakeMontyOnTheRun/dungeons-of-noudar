@@ -175,6 +175,10 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 		soundEmitters[0]->play(mainListener);
 	} else if ( floorType == '_' || floorType == '=') {
 		soundEmitters[1]->play(mainListener);
+	} else {
+		if ( floorType == '{' || floorType == '(' || floorType == ')' || floorType == '}' || floorType == '2' || floorType == '7' || '~' ) {
+			soundEmitters[1]->play(mainListener);
+		}
 	}
 
 
