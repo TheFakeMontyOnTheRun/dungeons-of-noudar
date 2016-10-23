@@ -351,12 +351,15 @@ void readMap( std::string data ) {
 	}
 
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
+		soundEmitters[ 4 ]->play( mainListener );
 	};
 
 	auto onPlayerDead = [&](Knights::Vec2i pos) {
+		soundEmitters[ 6 ]->play( mainListener );
 	};
 
 	auto onPlayerAttack = [&](Knights::Vec2i pos) {
+		soundEmitters[ 7 ]->play( mainListener );
 	};
 
 	auto onMonsterAttack = [&](Knights::Vec2i pos) {
@@ -368,9 +371,11 @@ void readMap( std::string data ) {
 		splatAnimation.push_back( splat );
 		splat->startSplatAnimation();
 
+		soundEmitters[ 3 ]->play( mainListener );
 	};
 
 	auto onPlayerDamaged = [&](Knights::Vec2i pos) {
+		soundEmitters[ 5 ]->play( mainListener );
 	};
 
 	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();

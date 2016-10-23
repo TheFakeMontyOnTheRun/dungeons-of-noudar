@@ -156,7 +156,13 @@ void initWindow() {
 
     std::string filenames[] {
             "res/grasssteps.wav",
-            "res/stepsstones.wav"
+            "res/stepsstones.wav",
+            "res/bgnoise.wav",
+            "res/monsterdamage.wav",
+            "res/monsterdead.wav",
+            "res/playerdamage.wav",
+            "res/playerdead.wav",
+            "res/swing.wav"
     };
 
     for ( auto filename : filenames ) {
