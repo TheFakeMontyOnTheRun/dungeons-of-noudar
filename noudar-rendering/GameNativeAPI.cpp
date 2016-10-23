@@ -2,6 +2,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include <functional>
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -43,6 +44,7 @@
 #include "Vec2i.h"
 #include "IMapElement.h"
 #include "CActor.h"
+#include "CGameDelegate.h"
 #include "CMap.h"
 #include "IRenderer.h"
 #include "NativeBitmap.h"
@@ -324,6 +326,11 @@ void readMap( std::string data ) {
 	}
 
 	game = std::make_shared<Knights::CGame>( data, render );
+
+	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();
+
+
+	game = std::make_shared<Knights::CGame>( data, render, gameDelegate );
 	setFloorNumber(0);
 	if ( game != nullptr ) {
 		game->tick();

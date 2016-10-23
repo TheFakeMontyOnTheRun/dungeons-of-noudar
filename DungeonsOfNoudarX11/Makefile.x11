@@ -9,6 +9,7 @@ OBJS = X11-version/main.o \
         ../noudar-core/noudar-core/src/CDemon.o \
         ../noudar-core/noudar-core/src/CFalconKnight.o \
         ../noudar-core/noudar-core/src/CMap.o \
+        ../noudar-core/noudar-core/src/CGameDelegate.o \
         ../noudar-core/noudar-core/src/CMoura.o \
         ../noudar-core/noudar-core/src/CTurtleKnight.o \
         ../noudar-core/noudar-core/src/CDoorway.o \

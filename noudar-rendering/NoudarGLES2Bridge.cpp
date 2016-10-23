@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <utility>
+#include <functional>
 #include <string>
 #include <iostream>
 #include <memory>
@@ -21,6 +22,7 @@
 #include "NativeBitmap.h"
 #include "IMapElement.h"
 #include "CActor.h"
+#include "CGameDelegate.h"
 #include "CMap.h"
 #include "IRenderer.h"
 #include "CFalconKnight.h"
