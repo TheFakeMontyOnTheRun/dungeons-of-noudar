@@ -26,7 +26,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Renderer {
 
-	public static final int TICK_INTERVAL = 500;
+	public static final int TICK_INTERVAL = 20;
 	private volatile SoundSink mSink;
 
 	@Override
@@ -42,7 +42,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	@Override
 	public void onDrawFrame(GL10 gl10) {
 		long delta = tick();
-		GL2JNILib.tick(delta);
+		GL2JNILib.tick(TICK_INTERVAL);
 
 		synchronized (renderingLock) {
 			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -329,17 +329,5 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 				}
 			}
 		}
-	}
-
-	private float extractAngleXYFromHeadtransform(HeadTransform headTransform) {
-		return 360.0f - ((float) (forwardVector[2] * (180 / Math.PI)));
-	}
-
-	private float extractAngleYZFromHeadtransform(HeadTransform headTransform) {
-		return ((float) (forwardVector[0] * (180 / Math.PI)));
-	}
-
-	private float extractAngleXZFromHeadtransform(HeadTransform headTransform) {
-		return ((float) (forwardVector[1] * (180 / Math.PI)));
 	}
 }

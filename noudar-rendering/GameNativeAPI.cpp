@@ -54,6 +54,7 @@
 #include "CGame.h"
 #include "Common.h"
 #include "NoudarGLES2Bridge.h"
+#include "SplatAnimation.h"
 
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 std::map<int, glm::vec2> mPositions;
@@ -78,7 +79,7 @@ std::shared_ptr<odb::NoudarGLES2Bridge> render;
 
 
 std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
-
+std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 std::shared_ptr<odb::SoundListener> mainListener;
 
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
@@ -136,6 +137,22 @@ void updateAnimations( long delta ) {
 		}
 	}
 
+	hasActiveSplats = splatAnimation.size() > 0;
+
+	for ( auto splat : splatAnimation ) {
+		odb::Logger::log( "updating animatings" );
+		splat->update( delta );
+	}
+
+	splatAnimation.erase( std::remove_if( splatAnimation.begin(), splatAnimation.end(),
+	                              [](std::shared_ptr<odb::SplatAnimation> splat){ return splat->isFinished();}
+	), splatAnimation.end() );
+
+	if ( hasActiveSplats ) {
+		game->tick();
+	}
+
+
 	animationTime += delta;
 }
 
@@ -152,6 +169,7 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 	animationList[id] = movement;
 
 	char floorType = map[ newPosition.y ][ newPosition.x ];
+	char prevFloorType = map[ newPosition.y ][ newPosition.x ];
 
 	if ( floorType  == '.' || floorType == '-' ) {
 		soundEmitters[0]->play(mainListener);
@@ -200,11 +218,14 @@ void updateLevelSnapshot(const int *level, const int *actors, const int *splats)
 			position = (y * 20) + x;
 			map[y][x] = (odb::ETextures) level[position];
 			snapshot[y][x] = (odb::ETextures) actors[position];
-			splat[y][x] = (odb::ETextures) splats[position];
-
-			hasActiveSplats = hasActiveSplats || (splat[y][x] != -1);
+			splat[ y ][ x ] = static_cast<odb::ETextures>( -1 );
 			lightMap[y][x] = lightMapCache[y][x];
 		}
+	}
+
+	for ( auto& splatAnim : splatAnimation ) {
+		auto pos = splatAnim->getPosition();
+		splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
 	}
 
 	for (int y = 0; y < 20; ++y) {
@@ -325,10 +346,37 @@ void readMap( std::string data ) {
 		++n;
 	}
 
-	game = std::make_shared<Knights::CGame>( data, render );
+	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
+	};
+
+	auto onPlayerDead = [&](Knights::Vec2i pos) {
+	};
+
+	auto onPlayerAttack = [&](Knights::Vec2i pos) {
+	};
+
+	auto onMonsterAttack = [&](Knights::Vec2i pos) {
+
+	};
+
+	auto onMonsterDamaged = [&](Knights::Vec2i pos) {
+		auto splat = std::make_shared<odb::SplatAnimation>( pos );
+		splatAnimation.push_back( splat );
+		splat->startSplatAnimation();
+
+	};
+
+	auto onPlayerDamaged = [&](Knights::Vec2i pos) {
+	};
 
 	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();
 
+	gameDelegate->setMonsterAttackedCallback( onMonsterAttack );
+	gameDelegate->setMonsterDiedCallback( onMonsterDead );
+	gameDelegate->setMonsterDamagedCallback(onMonsterDamaged);
+	gameDelegate->setPlayerAttackedCallback( onPlayerAttack );
+	gameDelegate->setPlayerDiedCallback( onPlayerDead );
+	gameDelegate->setPlayerDamagedCallback( onPlayerDamaged );
 
 	game = std::make_shared<Knights::CGame>( data, render, gameDelegate );
 	setFloorNumber(0);

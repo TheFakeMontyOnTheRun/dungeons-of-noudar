@@ -5,7 +5,6 @@
 #include <vector>
 
 #include <jni.h>
-#include <cstdlib>
 #include "AudioSink.h"
 #include "AndroidAudioSink.h"
 
@@ -56,6 +55,7 @@ void AndroidAudioSink::flush(JNIEnv *env, jclass type, jobject sink) {
 	for ( auto id : mQueuedItems ) {
 		env->CallVoidMethod( mSink, mPlayMethod, id, 1.0f, 1.0f );
 	}
+
 	mQueuedItems.clear();
 }
 

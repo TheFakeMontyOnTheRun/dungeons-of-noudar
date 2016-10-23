@@ -86,10 +86,13 @@ namespace odb {
 
 		castLight(Direction::N, lightMap, (from == Direction::N ? 0 : emission / 2), occluders,
 		          Vec2i{x, y - 1});
+
 		castLight(Direction::W, lightMap, (from == Direction::W ? 0 : emission / 2), occluders,
 		          Vec2i{x - 1, y});
+
 		castLight(Direction::S, lightMap, (from == Direction::S ? 0 : emission / 2), occluders,
 		          Vec2i{x, y + 1});
+
 		castLight(Direction::E, lightMap, (from == Direction::E ? 0 : emission / 2), occluders,
 		          Vec2i{x + 1, y});
 	}

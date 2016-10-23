@@ -16,9 +16,6 @@ public class SoundSink {
 	private ArrayList<byte[]> soundData = new ArrayList<>();
 
 	public int bufferData(  byte[] data, int sampleRate, int channels, int bits ) {
-
-		Log.d( "Monty", "buffer data, java side" );
-
 		int key = soundPool.size();
 
 		int formatChannels;
@@ -48,8 +45,6 @@ public class SoundSink {
 	}
 
 	public void play( int id, float volumeLeft, float volumeRight ) {
-
-		Log.d( "Monty", "play, java side" );
 
 		byte[] data = soundData.get( id );
 		AudioTrack player = soundPool.get( id );

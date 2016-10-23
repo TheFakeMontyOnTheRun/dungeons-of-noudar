@@ -970,17 +970,12 @@ namespace odb {
 					}
 				}
 
-
-//				if (actor != ETextures::Crusader) {
-//					if (splatFrame > -1) {
-//						pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-//						batches[static_cast<ETextures >(splatFrame +
-//						                                ETextures::Splat0)].emplace_back(getBillboardTransform(pos),
-//						                                                                 EGeometryType::kBillboard,
-//						                                                                 shade);
-//					}
-//				}
-
+				if (splatFrame > -1) {
+					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
+					batches[static_cast<ETextures >(splatFrame +
+					                                ETextures::Splat0)].emplace_back(getBillboardTransform(pos),
+					                                                                 EGeometryType::kBillboard, shade);
+				}
 			}
 		}
 	}
