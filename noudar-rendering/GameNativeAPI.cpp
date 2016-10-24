@@ -462,3 +462,11 @@ void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters,
 	soundEmitters = emitters;
 	mainListener = listener;
 }
+
+void forceDirection( int direction ) {
+	char directions[] = { 'r', 'f', 'c', 'd'};
+	render->setNextCommand( directions[ direction ] );
+	game->tick();
+	render->setNextCommand('.');
+
+}

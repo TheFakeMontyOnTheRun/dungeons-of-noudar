@@ -49,4 +49,6 @@ public class GL2JNILib {
 	public static native void flush(SoundSink sink);
 
 	public static native void loadSounds(SoundSink sink, AssetManager assetManager, String[] soundFiles);
+
+	public static native void forcePlayerDirection(int direction);
 }

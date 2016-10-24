@@ -41,7 +41,18 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		float yz = extractAngleYZFromHeadtransform(headTransform);
 
 		if (!mHaveController && getStereoModeEnabled()) {
-			rotation = (int) ((360 - xz) / 90);
+
+			int previousRotation = rotation;
+
+			rotation = (int) (( 360- xz) / 90) % 4;
+
+			while ( rotation < 0 ) {
+				rotation += 4;
+			}
+
+			if ( rotation != previousRotation ) {
+				GL2JNILib.forcePlayerDirection( rotation );
+			}
 		}
 
 		if (getStereoModeEnabled()) {

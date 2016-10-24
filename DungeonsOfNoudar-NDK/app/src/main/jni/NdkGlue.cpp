@@ -153,6 +153,9 @@ JNIEXPORT void JNICALL
 JNIEXPORT jboolean JNICALL
 		Java_br_odb_GL2JNILib_isAnimating(JNIEnv *env, jclass type);
 
+JNIEXPORT void JNICALL
+		Java_br_odb_GL2JNILib_forcePlayerDirection(JNIEnv *env, jclass type, jint direction);
+
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jobject obj);
 
 JNIEXPORT void JNICALL
@@ -337,4 +340,9 @@ Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type, jobject sink, jobject
 	                        env->GetArrayLength(soundFiles));
 
 	setSoundEmitters( sounds, soundListener );
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_forcePlayerDirection(JNIEnv *env, jclass type, jint direction) {
+	forceDirection( direction );
 }
