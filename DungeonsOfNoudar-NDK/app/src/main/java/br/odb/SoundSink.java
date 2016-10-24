@@ -52,5 +52,7 @@ public class SoundSink {
 		player.setVolume( ( volumeLeft + volumeRight ) * 0.5f );
 		player.play();
 		player.write(data, 0, data.length);
+		player.stop();
+
 	}
 }
