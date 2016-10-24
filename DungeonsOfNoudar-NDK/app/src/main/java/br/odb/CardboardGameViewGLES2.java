@@ -262,8 +262,14 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 
 			mSink = new SoundSink();
 			GL2JNILib.loadSounds( mSink, activity.getAssets(), new String[] {
-					"grasssteps.wav",
-					"stepsstones.wav"
+					"grasssteps.wav", //0
+					"stepsstones.wav", //1
+					"bgnoise.wav", //2
+					"monsterdamage.wav", //3
+					"monsterdead.wav", //4
+					"playerdamage.wav", //5
+					"playerdead.wav", //6
+					"swing.wav" //7
 			});
 		}
 	}
