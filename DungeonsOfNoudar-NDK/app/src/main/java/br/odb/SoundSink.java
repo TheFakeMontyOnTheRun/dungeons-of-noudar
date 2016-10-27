@@ -44,15 +44,22 @@ public class SoundSink {
 		return key;
 	}
 
-	public void play( int id, float volumeLeft, float volumeRight ) {
+	public void play( int id, final float volumeLeft, final float volumeRight ) {
 
-		byte[] data = soundData.get( id );
-		AudioTrack player = soundPool.get( id );
+		final byte[] data = soundData.get( id );
+		final AudioTrack player = soundPool.get( id );
 
-		player.setVolume( ( volumeLeft + volumeRight ) * 0.5f );
-		player.play();
-		player.write(data, 0, data.length);
-		player.stop();
+			Thread thread = new Thread( new Runnable(){
 
+				@Override
+				public void run() {
+					player.setVolume( ( volumeLeft + volumeRight ) * 0.5f );
+					player.play();
+					player.write(data, 0, data.length);;
+					player.stop();
+				}
+			} );
+
+			thread.start();
 	}
 }
