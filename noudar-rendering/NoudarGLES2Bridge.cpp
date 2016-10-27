@@ -72,18 +72,17 @@ namespace odb {
         for ( int y = 0; y < 20; ++y ) {
             for ( int x = 0; x < 20; ++x ) {
                 position = ( y * 20 ) + x;
+	            auto element = map.getElementAt( x, y );
+
+	            if ( element != '0' ) {
+		            level[ position ] = element;
+	            }
 
 	            auto actor = map.getActorAt({ x, y } );
 
 	            if ( actor != nullptr && actor != current ) {
 		            ids[ position ] = actor->getId();
 		            actors[ position ] = '@';
-	            } else {
-		            auto element = map.getElementAt( x, y );
-
-		            if ( element != '0' ) {
-			            level[ position ] = element;
-		            }
 	            }
             }
         }
