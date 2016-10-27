@@ -5,8 +5,6 @@
 #include <emscripten.h>
 #endif
 
-#include <iostream>
-
 #include "glm/glm.hpp"
 #include <memory>
 
@@ -30,14 +28,6 @@ namespace odb {
         alGenSources(1, sources);
         mEmitterHandle = sources[ 0 ];
         alSourcei(mEmitterHandle, AL_BUFFER, aSample->mBufferHandle );
-
-        std::cout << "is source?" << (alIsSource( mEmitterHandle ) == AL_TRUE)<< std::endl;
-
-        ALint state;
-        alGetSourcei(mEmitterHandle, AL_SOURCE_STATE, &state);
-
-        std::cout << "state: " << state << std::endl;
-
     }
 
     void SoundEmitter::play(std::shared_ptr<SoundListener> listener) {
@@ -50,19 +40,18 @@ namespace odb {
         alListenerfv(AL_ORIENTATION, listenerOri);
         alListenerf(AL_GAIN, mVolume);
 
-        std::cout << "Playing:" << std::endl;
+
 
 #ifdef __EMSCRIPTEN__
-        emscripten_async_call(playSource, reinterpret_cast<void*>(mEmitterHandle), 700);
+        emscripten_async_call(playSource, reinterpret_cast<void*>(mEmitterHandle), 0);
 #else
-        usleep(700000);
         playSource(reinterpret_cast<void*>(mEmitterHandle));
 #endif
 
         ALint state;
         alGetSourcei(mEmitterHandle, AL_SOURCE_STATE, &state);
 
-        std::cout << "state: " << state << std::endl;
+
 
     }
 }
