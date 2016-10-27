@@ -18,7 +18,6 @@
 #include <array>
 #include <stdio.h>
 #include <cmath>
-#include <mutex>
 
 #include "NativeBitmap.h"
 #include "Texture.h"
@@ -68,7 +67,6 @@ odb::IntField ids;
 odb::LightMap lightMap;
 odb::AnimationList animationList;
 long animationTime = 0;
-std::mutex mutex;
 bool hasCache = false;
 odb::LightMap lightMapCache;
 
@@ -272,8 +270,6 @@ bool isAnimating() {
 
 void rotateCameraLeft() {
 
-	std::lock_guard<std::mutex> lock(mutex);
-
 	if (gles2Renderer != nullptr&& !isAnimating() ) {
 		gles2Renderer->rotateLeft();
 		render->setNextCommand('i');
@@ -283,8 +279,6 @@ void rotateCameraLeft() {
 }
 
 void rotateCameraRight() {
-
-	std::lock_guard<std::mutex> lock(mutex);
 
 	if (gles2Renderer != nullptr&& !isAnimating() ) {
 		gles2Renderer->rotateRight();
@@ -396,8 +390,6 @@ void readMap( std::string data ) {
 
 void moveUp() {
 
-	std::lock_guard<std::mutex> lock(mutex);
-
 	if ( game != nullptr && !isAnimating() ) {
 		render->setNextCommand('o');
 		game->tick();
@@ -406,8 +398,6 @@ void moveUp() {
 }
 
 void moveDown() {
-
-	std::lock_guard<std::mutex> lock(mutex);
 
 	if ( game != nullptr && !isAnimating() ) {
 		render->setNextCommand('p');
@@ -426,8 +416,6 @@ void moveDown() {
 
 void moveLeft() {
 
-	std::lock_guard<std::mutex> lock(mutex);
-
 	if ( game != nullptr && !isAnimating() ) {
 		render->setNextCommand('i');
 		game->tick();
@@ -440,8 +428,6 @@ void moveLeft() {
 }
 
 void moveRight() {
-
-	std::lock_guard<std::mutex> lock(mutex);
 
 	if ( game != nullptr && !isAnimating() ) {
 		render->setNextCommand('p');
