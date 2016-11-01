@@ -2,19 +2,21 @@ CXXFLAGS = -O2 -g -c -std=c++0x -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -
 LDFLAGS =  -O2 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins
 CXX = em++
 OBJS = X11-version/main.o \
-               ../noudar-core/noudar-core/src/CActor.o \
-               ../noudar-core/noudar-core/src/CBaphomet.o \
-               ../noudar-core/noudar-core/src/CBullKnight.o \
-               ../noudar-core/noudar-core/src/CCuco.o \
-               ../noudar-core/noudar-core/src/CDemon.o \
-               ../noudar-core/noudar-core/src/CFalconKnight.o \
-               ../noudar-core/noudar-core/src/CMap.o \
-               ../noudar-core/noudar-core/src/CGameDelegate.o \
-               ../noudar-core/noudar-core/src/CMoura.o \
-               ../noudar-core/noudar-core/src/CTurtleKnight.o \
-               ../noudar-core/noudar-core/src/CDoorway.o \
-               ../noudar-core/noudar-core/src/IMapElement.o \
-               ../noudar-core/noudar-core/src/CGame.o \
+            ../noudar-core/noudar-core/src/CActor.o \
+            ../noudar-core/noudar-core/src/CKnight.o \
+            ../noudar-core/noudar-core/src/CCuco.o \
+            ../noudar-core/noudar-core/src/CMap.o \
+            ../noudar-core/noudar-core/src/CDoorway.o \
+            ../noudar-core/noudar-core/src/IMapElement.o \
+            ../noudar-core/noudar-core/src/CGame.o \
+            ../noudar-core/noudar-core/src/CGameDelegate.o \
+            ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
+            ../noudar-core/noudar-core/src/commands/IGameCommand.o \
+            ../noudar-core/noudar-core/src/commands/CMoveActorCommand.o \
+            ../noudar-core/noudar-core/src/commands/CTurnActorCommand.o \
+            ../noudar-core/noudar-core/src/commands/CQuitCommand.o \
+            ../noudar-core/noudar-core/src/commands/CNullCommand.o \
+            ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
                ../noudar-rendering/GameNativeAPI.o \
                ../noudar-rendering/DungeonGLES2Renderer.o \
                ../noudar-rendering/LightningStrategy.o \

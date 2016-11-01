@@ -25,9 +25,7 @@
 #include "CGameDelegate.h"
 #include "CMap.h"
 #include "IRenderer.h"
-#include "CFalconKnight.h"
-#include "CBullKnight.h"
-#include "CTurtleKnight.h"
+#include "CKnight.h"
 #include "CGame.h"
 #include "NoudarGLES2Bridge.h"
 
