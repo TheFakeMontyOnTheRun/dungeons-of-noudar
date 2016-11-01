@@ -195,6 +195,9 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
 
     *winRet = win;
     *ctxRet = ctx;
+    EM_ASM(
+        document.title = "Dungeons of Noudar"
+    );
 
     EmscriptenFullscreenStrategy s;
     memset(&s, 0, sizeof(s));
