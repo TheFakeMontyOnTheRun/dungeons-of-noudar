@@ -2,6 +2,7 @@
 // Created by monty on 22/10/16.
 //
 #include <utility>
+#include "Vec2i.h"
 #include "SplatAnimation.h"
 
 void odb::SplatAnimation::update(long ms) {

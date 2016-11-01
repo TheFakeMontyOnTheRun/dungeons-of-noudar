@@ -5,7 +5,6 @@
 #ifndef DUNGEONSOFNOUDAR_NDK_SPLATANIMATION_H
 #define DUNGEONSOFNOUDAR_NDK_SPLATANIMATION_H
 
-#include <Vec2i.h>
 
 namespace odb {
 	class SplatAnimation {
