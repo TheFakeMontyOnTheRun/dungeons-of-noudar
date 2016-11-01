@@ -85,6 +85,16 @@ EM_BOOL keyup_callback(int eventType, const EmscriptenKeyboardEvent *e, void *us
 }
 }
 
+
+void enterFullScreenMode() {
+    EmscriptenFullscreenStrategy s;
+    memset(&s, 0, sizeof(s));
+    s.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT;
+    s.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
+    s.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
+    EMSCRIPTEN_RESULT ret = emscripten_enter_soft_fullscreen(0, &s);
+}
+
 /*
  * Create an RGB, double-buffered X window.
  * Return the window and context handles.
@@ -199,12 +209,7 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
         document.title = "Dungeons of Noudar"
     );
 
-    EmscriptenFullscreenStrategy s;
-    memset(&s, 0, sizeof(s));
-    s.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT;
-    s.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
-    s.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
-    EMSCRIPTEN_RESULT ret = emscripten_enter_soft_fullscreen(0, &s);
+    enterFullScreenMode();
 }
 
 void tick() {
