@@ -570,8 +570,9 @@ namespace odb {
 
 	void DungeonGLES2Renderer::clearBuffers() {
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+        checkGlError("glClearColor");
 		glClearDepthf(1.0f);
-		checkGlError("glClearColor");
+		checkGlError("glClearDepthf");
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		checkGlError("glClear");
 	}
