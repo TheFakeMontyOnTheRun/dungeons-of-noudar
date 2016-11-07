@@ -114,6 +114,8 @@ void renderFrame(long delta) {
 	if (gles2Renderer != nullptr && textures.size() > 0) {
 
 		gles2Renderer->updateFadeState(delta);
+		auto cursor = game->getCursorPosition();
+		gles2Renderer->setCursorPosition( cursor.x, cursor.y );
 		gles2Renderer->render(map, snapshot, splat, lightMap, ids, animationList, animationTime);
 		gles2Renderer->updateCamera(delta);
 	}

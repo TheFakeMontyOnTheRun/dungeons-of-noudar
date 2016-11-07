@@ -154,6 +154,7 @@ namespace odb {
 		std::vector<std::shared_ptr<Texture>> mTextures;
 
 		glm::vec2 mCameraTarget;
+		glm::vec2 mCursorPosition{ 0, 0 };
 		glm::vec3 mCurrentCharacterPosition;
 		glm::vec3 mCameraDirection{0, 0, 0};
 		int mRotationTarget = 0;
@@ -275,6 +276,8 @@ namespace odb {
 		void setAngleXZ(float xz);
 
 		void setAngleYZ(float yz);
+
+		void setCursorPosition( int x, int y );
 	};
 }
 #endif //LESSON02_GLES2LESSON_H

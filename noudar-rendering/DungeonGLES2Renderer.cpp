@@ -822,6 +822,12 @@ namespace odb {
 				Shade placeShade = (0.25f * std::min(255, lightMap[19 - z][x]) / 255.0f) + 0.75f;
 				Shade shade = placeShade;
 
+				if ( x == mCursorPosition.x && ( 19 - z ) == static_cast<int>(mCursorPosition.y) ) {
+					shade = 1.5f
+
+							;
+				}
+
 				if ( actor == '@' ) {
 				//	chosenTexture = ETextures::Shadow;
 				} else {
@@ -1122,5 +1128,9 @@ namespace odb {
 
 
 		return scaled;
+	}
+
+	void DungeonGLES2Renderer::setCursorPosition(int x, int y) {
+		mCursorPosition = {x , y };
 	}
 }
