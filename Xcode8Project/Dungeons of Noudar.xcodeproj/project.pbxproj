@@ -115,7 +115,6 @@
 		F140E8E31DCFA64D00B28CCA /* falcon2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E87B1DCFA64C00B28CCA /* falcon2.png */; };
 		F140E8E41DCFA64D00B28CCA /* falcon2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E87B1DCFA64C00B28CCA /* falcon2.png */; };
 		F140E8E51DCFA64D00B28CCA /* fragment.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F140E87C1DCFA64C00B28CCA /* fragment.glsl */; };
-		F140E8E61DCFA64D00B28CCA /* fragment.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F140E87C1DCFA64C00B28CCA /* fragment.glsl */; };
 		F140E8E71DCFA64D00B28CCA /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E87D1DCFA64C00B28CCA /* grass.png */; };
 		F140E8E81DCFA64D00B28CCA /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E87D1DCFA64C00B28CCA /* grass.png */; };
 		F140E8E91DCFA64D00B28CCA /* grasssteps.wav in Resources */ = {isa = PBXBuildFile; fileRef = F140E87E1DCFA64C00B28CCA /* grasssteps.wav */; };
@@ -179,7 +178,6 @@
 		F140E9231DCFA64D00B28CCA /* turtle2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E89B1DCFA64D00B28CCA /* turtle2.png */; };
 		F140E9241DCFA64D00B28CCA /* turtle2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E89B1DCFA64D00B28CCA /* turtle2.png */; };
 		F140E9251DCFA64D00B28CCA /* vertex.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F140E89C1DCFA64D00B28CCA /* vertex.glsl */; };
-		F140E9261DCFA64D00B28CCA /* vertex.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F140E89C1DCFA64D00B28CCA /* vertex.glsl */; };
 		F18755581DC90ECC001188C5 /* CActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552C1DC90ECC001188C5 /* CActor.cpp */; };
 		F18755591DC90ECC001188C5 /* CActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552C1DC90ECC001188C5 /* CActor.cpp */; };
 		F187555C1DC90ECC001188C5 /* CCuco.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552E1DC90ECC001188C5 /* CCuco.cpp */; };
@@ -254,8 +252,10 @@
 		F1875ED91DC91789001188C5 /* SoundUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875ED01DC91789001188C5 /* SoundUtils.cpp */; };
 		F1B23E9F1DCF5E33009E807B /* EAGLNoudarView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23E9E1DCF5E33009E807B /* EAGLNoudarView.mm */; };
 		F1B23EA21DCF5E60009E807B /* GL3NoudarView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EA11DCF5E60009E807B /* GL3NoudarView.mm */; };
-		F1B23EAA1DCF5ED0009E807B /* GL3NoudarWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.m */; };
+		F1B23EAA1DCF5ED0009E807B /* GL3NoudarWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.mm */; };
 		F1B23EAD1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EAC1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m */; };
+		F1FD4E781DD3C20900B21A9D /* vertex_OSX.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F1FD4E771DD3C20900B21A9D /* vertex_OSX.glsl */; };
+		F1FD4E7A1DD3C43F00B21A9D /* fragment_OSX.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F1FD4E791DD3C43F00B21A9D /* fragment_OSX.glsl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -445,9 +445,11 @@
 		F1B23EA01DCF5E60009E807B /* GL3NoudarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GL3NoudarView.h; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarView.h"; sourceTree = SOURCE_ROOT; };
 		F1B23EA11DCF5E60009E807B /* GL3NoudarView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GL3NoudarView.mm; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarView.mm"; sourceTree = SOURCE_ROOT; };
 		F1B23EA81DCF5ED0009E807B /* GL3NoudarWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GL3NoudarWindowController.h; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarWindowController.h"; sourceTree = SOURCE_ROOT; };
-		F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GL3NoudarWindowController.m; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarWindowController.m"; sourceTree = SOURCE_ROOT; };
+		F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GL3NoudarWindowController.mm; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarWindowController.mm"; sourceTree = SOURCE_ROOT; };
 		F1B23EAB1DCF5F64009E807B /* GL3NoudarFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GL3NoudarFullscreenWindow.h; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarFullscreenWindow.h"; sourceTree = SOURCE_ROOT; };
 		F1B23EAC1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GL3NoudarFullscreenWindow.m; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarFullscreenWindow.m"; sourceTree = SOURCE_ROOT; };
+		F1FD4E771DD3C20900B21A9D /* vertex_OSX.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vertex_OSX.glsl; sourceTree = "<group>"; };
+		F1FD4E791DD3C43F00B21A9D /* fragment_OSX.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fragment_OSX.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -533,6 +535,7 @@
 				F140E8741DCFA64C00B28CCA /* cursorgood2.png */,
 				F140E8751DCFA64C00B28CCA /* demon0.png */,
 				F140E8761DCFA64C00B28CCA /* demon1.png */,
+				F1FD4E791DD3C43F00B21A9D /* fragment_OSX.glsl */,
 				F140E8771DCFA64C00B28CCA /* demon2.png */,
 				F140E8781DCFA64C00B28CCA /* exit.png */,
 				F140E8791DCFA64C00B28CCA /* falcon0.png */,
@@ -571,6 +574,7 @@
 				F140E89A1DCFA64D00B28CCA /* turtle1.png */,
 				F140E89B1DCFA64D00B28CCA /* turtle2.png */,
 				F140E89C1DCFA64D00B28CCA /* vertex.glsl */,
+				F1FD4E771DD3C20900B21A9D /* vertex_OSX.glsl */,
 				3A4CF8901A89593700324DBF /* demon.model */,
 				3A4CF8911A89593700324DBF /* demon.png */,
 			);
@@ -831,7 +835,7 @@
 				F1B23EA01DCF5E60009E807B /* GL3NoudarView.h */,
 				F1B23EA11DCF5E60009E807B /* GL3NoudarView.mm */,
 				F1B23EA81DCF5ED0009E807B /* GL3NoudarWindowController.h */,
-				F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.m */,
+				F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.mm */,
 				F1B23EAB1DCF5F64009E807B /* GL3NoudarFullscreenWindow.h */,
 				F1B23EAC1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m */,
 			);
@@ -1013,8 +1017,8 @@
 				F140E8A41DCFA64D00B28CCA /* bgnoise.wav in Resources */,
 				F140E8B41DCFA64D00B28CCA /* bull1.png in Resources */,
 				F140E91A1DCFA64D00B28CCA /* stoneshadow.png in Resources */,
-				F140E8E61DCFA64D00B28CCA /* fragment.glsl in Resources */,
 				F140E8DE1DCFA64D00B28CCA /* exit.png in Resources */,
+				F1FD4E781DD3C20900B21A9D /* vertex_OSX.glsl in Resources */,
 				F140E9081DCFA64D00B28CCA /* splat1.png in Resources */,
 				F140E8D21DCFA64D00B28CCA /* cursorgood0.png in Resources */,
 				F140E8F01DCFA64D00B28CCA /* lady0.png in Resources */,
@@ -1034,6 +1038,7 @@
 				F140E8F21DCFA64D00B28CCA /* lady1.png in Resources */,
 				F140E9101DCFA64D00B28CCA /* stonecursorbad.png in Resources */,
 				F140E8C41DCFA64D00B28CCA /* cross.png in Resources */,
+				F1FD4E7A1DD3C43F00B21A9D /* fragment_OSX.glsl in Resources */,
 				3A0574051A898095001A7683 /* demon.model in Resources */,
 				F1180B901DC8F77D00BDC97D /* Info.plist in Resources */,
 				F140E8D61DCFA64D00B28CCA /* cursorgood2.png in Resources */,
@@ -1041,7 +1046,6 @@
 				F140E8AC1DCFA64D00B28CCA /* bricks_blood.png in Resources */,
 				F140E91E1DCFA64D00B28CCA /* test.wav in Resources */,
 				F140E8BE1DCFA64D00B28CCA /* ceilingdoor.png in Resources */,
-				F140E9261DCFA64D00B28CCA /* vertex.glsl in Resources */,
 				F140E8B21DCFA64D00B28CCA /* bull0.png in Resources */,
 				F140E9161DCFA64D00B28CCA /* stonegrassfar.png in Resources */,
 				F140E8D41DCFA64D00B28CCA /* cursorgood1.png in Resources */,
@@ -1171,7 +1175,7 @@
 				F18755911DC90ECC001188C5 /* IMapElement.cpp in Sources */,
 				F18755651DC90ECC001188C5 /* CGame.cpp in Sources */,
 				F1875E881DC91137001188C5 /* Texture.cpp in Sources */,
-				F1B23EAA1DCF5ED0009E807B /* GL3NoudarWindowController.m in Sources */,
+				F1B23EAA1DCF5ED0009E807B /* GL3NoudarWindowController.mm in Sources */,
 				F1875EA11DC9124C001188C5 /* LightningStrategy.cpp in Sources */,
 				F18755611DC90ECC001188C5 /* CDoorway.cpp in Sources */,
 				F18755691DC90ECC001188C5 /* CGameDelegate.cpp in Sources */,
