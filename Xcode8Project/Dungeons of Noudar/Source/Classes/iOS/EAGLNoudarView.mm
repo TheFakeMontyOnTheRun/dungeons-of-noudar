@@ -84,6 +84,23 @@
 }
 
 
+-(void) onSwipeLeft {
+	rotateCameraLeft();
+}
+
+-(void) onSwipeRight {
+	rotateCameraRight();
+}
+
+-(void) onSwipeUp {
+	moveUp();
+}
+
+-(void) onSwipeDown {
+	moveDown();
+}
+
+
 std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
 	
@@ -238,6 +255,24 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 //	[NSTimer scheduledTimerWithTimeInterval:0.1f
 //									 target:self selector:@selector(render) userInfo:nil repeats:YES];
 	[self setupDisplayLink];
+	
+	
+	mSwipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeLeft)];
+	mSwipeLeftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+	[ self addGestureRecognizer: mSwipeLeftRecognizer ];
+
+	mSwipeRightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeRight)];
+	mSwipeRightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+	[ self addGestureRecognizer: mSwipeRightRecognizer ];
+
+	mSwipeUpRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeUp)];
+	mSwipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+	[ self addGestureRecognizer: mSwipeUpRecognizer ];
+
+	mSwipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeDown)];
+	mSwipeDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+	[ self addGestureRecognizer: mSwipeDownRecognizer ];
+	
 	return self;
 }
 

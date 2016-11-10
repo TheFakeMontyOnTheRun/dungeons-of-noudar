@@ -111,7 +111,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 }
 
 void renderFrame(long delta) {
-	if (gles2Renderer != nullptr && textures.size() > 0) {
+	if (gles2Renderer != nullptr && game != nullptr && textures.size() > 0) {
 
 		gles2Renderer->updateFadeState(delta);
 		auto cursor = game->getCursorPosition();

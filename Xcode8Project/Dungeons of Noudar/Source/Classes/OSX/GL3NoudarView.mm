@@ -47,12 +47,63 @@
 #include "SoundEmitter.h"
 
 
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
+#ifdef __APPLE__
+#if TARGET_IOS
+#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES2/glext.h>
+#else
+#import <OpenGL/OpenGL.h>
+#import <OpenGL/gl3.h>
+#endif
+#else
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <EGL/egl.h>
+#endif
+
+#include <cstdio>
+#include <assert.h>
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
+#include <string.h>
+#include <memory>
+#include <iostream>
+#include <map>
+#include <array>
+#include <iostream>
+
+#include "NativeBitmap.h"
+
+#include "SoundClip.h"
+#include "SoundUtils.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+
+
+#include "GameNativeAPI.h"
+#include "Common.h"
+
+
+#include <vector>
+#include <memory>
+
+
+#include "AppleImageLoader.h"
+
+#include <cstdio>
+
+#include "Logger.h"
 #include "GameNativeAPI.h"
 
 #import "GL3NoudarView.h"
-#import "OpenGLRenderer.h"
 
-#define SUPPORT_RETINA_RESOLUTION 1
 
 long timeSinceStart = 0;
 
@@ -64,6 +115,54 @@ long timeSinceStart = 0;
 
 @implementation GL3NoudarView
 
+
+
+std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
+	std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
+	
+	toReturn.push_back( loadPNG( [[[NSBundle mainBundle] pathForResource:@"grass" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonefloor" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"arch" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bars" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"begin" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"exit" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks_blood" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks_candles" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss1" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss2" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco1" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco2" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon1" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon2" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady1" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady2" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bull0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"shadow" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceiling" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingdoor" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingbegin" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingend" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat1" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat2" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingbars" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks" ofType:@"png"] UTF8String ]));	;
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"clouds" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"monty" ofType:@"png"] UTF8String ]));
+	
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassfar" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"grassstonefar" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassnear" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"grassstonenear" ofType:@"png"] UTF8String ]));
+	
+	return toReturn;
+}
 
 - (CVReturn) getFrameForTime:(const CVTimeStamp*)outputTime
 {
@@ -93,14 +192,15 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
 		NSOpenGLPFADoubleBuffer,
+		NSOpenGLPFAColorSize, 24,
 		NSOpenGLPFADepthSize, 24,
-		// Must specify the 3.2 Core Profile to use OpenGL 3.2
-#if ESSENTIAL_GL_PRACTICES_SUPPORT_GL3
 		NSOpenGLPFAOpenGLProfile,
 		NSOpenGLProfileVersion3_2Core,
-#endif
 		0
 	};
+
+
+	
 	
 	NSOpenGLPixelFormat *pf = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
 	
@@ -111,23 +211,16 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	
 	NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:pf shareContext:nil];
 	
-#if ESSENTIAL_GL_PRACTICES_SUPPORT_GL3 && defined(DEBUG)
 	// When we're using a CoreProfile context, crash if we call a legacy OpenGL function
 	// This will make it much more obvious where and when such a function call is made so
 	// that we can remove such calls.
 	// Without this we'd simply get GL_INVALID_OPERATION error for calling legacy functions
 	// but it would be more difficult to see where that function was called.
-	CGLEnable([context CGLContextObj], kCGLCECrashOnRemovedFunctions);
-#endif
+//	CGLEnable([context CGLContextObj], kCGLCECrashOnRemovedFunctions);
 	
 	[self setPixelFormat:pf];
 	
 	[self setOpenGLContext:context];
-	
-#if SUPPORT_RETINA_RESOLUTION
-	// Opt-In to Retina resolution
-	[self setWantsBestResolutionOpenGLSurface:YES];
-#endif // SUPPORT_RETINA_RESOLUTION
 }
 
 - (void) prepareOpenGL
@@ -184,6 +277,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	// Init our renderer.  Use 0 for the defaultFBO which is appropriate for
 	// OSX (but not iOS since iOS apps must create their own FBO)
 //	_renderer = [[OpenGLRenderer alloc] initWithDefaultFBO:0];
+	
+	float  glLanguageVersion;
+	sscanf((char *)glGetString(GL_SHADING_LANGUAGE_VERSION), "%f", &glLanguageVersion);
+	odb::Logger::log( "GLSL: %s", glLanguageVersion );
 }
 
 - (void)reshape
@@ -199,36 +296,51 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	// Get the view size in Points
 	NSRect viewRectPoints = [self bounds];
 	
-#if SUPPORT_RETINA_RESOLUTION
-	
-	// Rendering at retina resolutions will reduce aliasing, but at the potential
-	// cost of framerate and battery life due to the GPU needing to render more
-	// pixels.
-	
-	// Any calculations the renderer does which use pixel dimentions, must be
-	// in "retina" space.  [NSView convertRectToBacking] converts point sizes
-	// to pixel sizes.  Thus the renderer gets the size in pixels, not points,
-	// so that it can set it's viewport and perform and other pixel based
-	// calculations appropriately.
-	// viewRectPixels will be larger than viewRectPoints for retina displays.
-	// viewRectPixels will be the same as viewRectPoints for non-retina displays
-	NSRect viewRectPixels = [self convertRectToBacking:viewRectPoints];
-	
-#else //if !SUPPORT_RETINA_RESOLUTION
-	
-	// App will typically render faster and use less power rendering at
-	// non-retina resolutions since the GPU needs to render less pixels.
-	// There is the cost of more aliasing, but it will be no-worse than
-	// on a Mac without a retina display.
-	
-	// Points:Pixels is always 1:1 when not supporting retina resolutions
 	NSRect viewRectPixels = viewRectPoints;
 	
-#endif // !SUPPORT_RETINA_RESOLUTION
 	
-	// Set the new dimensions in our renderer
-//	[_renderer resizeWithWidth:viewRectPixels.size.width
-//					 AndHeight:viewRectPixels.size.height];
+	
+	FILE *fd;
+	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"vertex_OSX" ofType:@"glsl"] UTF8String ], "r");
+	std::string gVertexShader = readToString(fd);
+	fclose(fd);
+	
+	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"fragment_OSX" ofType:@"glsl"] UTF8String ], "r");
+	std::string gFragmentShader = readToString(fd);
+	fclose(fd);
+	
+	setupGraphics(viewRectPixels.size.width, viewRectPixels.size.height, gVertexShader, gFragmentShader, loadTextures());
+	
+	auto soundListener = std::make_shared<odb::SoundListener>();
+	
+	std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+	
+	std::string filenames[] {
+		[[[NSBundle mainBundle] pathForResource:@"grasssteps" ofType:@"wav"] UTF8String ],
+		[[[NSBundle mainBundle] pathForResource:@"stepsstones" ofType:@"wav"] UTF8String ],
+		[[[NSBundle mainBundle] pathForResource:@"bgnoise" ofType:@"wav"] UTF8String ],
+		[[[NSBundle mainBundle] pathForResource:@"monsterdamage" ofType:@"wav"] UTF8String ],
+		[[[NSBundle mainBundle] pathForResource:@"monsterdead" ofType:@"wav"] UTF8String ],
+		[[[NSBundle mainBundle] pathForResource:@"playerdamage" ofType:@"wav"] UTF8String ],
+		[[[NSBundle mainBundle] pathForResource:@"playerdead" ofType:@"wav"] UTF8String ],
+		[[[NSBundle mainBundle] pathForResource:@"swing" ofType:@"wav"] UTF8String ]
+	};
+	
+	for ( auto filename : filenames ) {
+		FILE *file = fopen( filename.c_str(), "r");
+		auto soundClip = odb::makeSoundClipFrom( file );
+		
+		sounds.push_back( std::make_shared<odb::SoundEmitter>(soundClip) );
+	}
+	
+	setSoundEmitters( sounds, soundListener );
+	
+	
+	
+	fd = std::fopen( [[[NSBundle mainBundle] pathForResource:@"map_tiles0" ofType:@"txt"] UTF8String ], "r" );
+	readMap( readToString(fd ) );
+	fclose( fd );
+
 	
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);
 }
@@ -258,21 +370,16 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 - (void) drawView
 {
-	[[self openGLContext] makeCurrentContext];
-	
-	// We draw on a secondary thread through the display link
-	// When resizing the view, -reshape is called automatically on the main
-	// thread. Add a mutex around to avoid the threads accessing the context
-	// simultaneously when resizing
-	CGLLockContext([[self openGLContext] CGLContextObj]);
-	
-//	[_renderer render];
-	gameLoopTick( 20 );
-	renderFrame( 20 );
-	
-	
-	CGLFlushDrawable([[self openGLContext] CGLContextObj]);
-	CGLUnlockContext([[self openGLContext] CGLContextObj]);
+	@synchronized (self) {
+		[[self openGLContext] makeCurrentContext];
+		{
+			NSLog( @"before rendering: %s", GetGLErrorString( glGetError() ) );
+			gameLoopTick( 20 );
+			renderFrame( 20 );
+			
+		}
+		[[self openGLContext] flushBuffer];
+	}
 }
 
 - (void) dealloc
