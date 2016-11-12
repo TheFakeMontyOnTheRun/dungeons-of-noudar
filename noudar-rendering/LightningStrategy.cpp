@@ -34,6 +34,7 @@
 #include "MeshObject.h"
 #include "MaterialList.h"
 #include "Scene.h"
+#include "VBORenderingJob.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 

@@ -15,7 +15,7 @@ void odb::SplatAnimation::startSplatAnimation() {
 
 int odb::SplatAnimation::getSplatFrame() {
 	if (showSplatTime > 0) {
-		return ((TOTAL_ANIMATION_TIME - showSplatTime) * NUMBER_OF_FRAMES) / TOTAL_ANIMATION_TIME;
+		return (int)((TOTAL_ANIMATION_TIME - showSplatTime) * NUMBER_OF_FRAMES) / TOTAL_ANIMATION_TIME;
 	} else {
 		return -1;
 	}

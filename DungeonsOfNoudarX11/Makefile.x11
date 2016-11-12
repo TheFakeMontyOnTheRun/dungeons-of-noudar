@@ -28,6 +28,7 @@ OBJS = X11-version/main.o \
         ../gles2-renderer/Logger.o \
         ../gles2-renderer/Trig.o \
         ../gles2-renderer/TrigBatch.o \
+        ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \
         ../gles2-renderer/Texture.o \
         ../gles2-renderer/Common.o \

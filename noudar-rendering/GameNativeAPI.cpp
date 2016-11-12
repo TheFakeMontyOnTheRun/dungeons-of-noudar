@@ -49,6 +49,7 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "VBORenderingJob.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 #include "GameNativeAPI.h"
@@ -180,7 +181,6 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 	animationList[id] = movement;
 
 	char floorType = map[ newPosition.y ][ newPosition.x ];
-	char prevFloorType = map[ newPosition.y ][ newPosition.x ];
 
 	if ( floorType  == '.' || floorType == '-' ) {
 		soundEmitters[0]->play(mainListener);
@@ -243,18 +243,18 @@ void updateLevelSnapshot(const int *level, const int *actors, const int *splats)
 		splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
 	}
 
-	for (int y = 0; y < 20; ++y) {
-		for (int x = 0; x < 20; ++x) {
-
-			if (map[y][x] == '|') {
-
-				if (!hasCache) {
-					odb::LightningStrategy::castLightInAllDirections(lightMapCache, 255, map, x, y);
-					odb::LightningStrategy::castLightInAllDirections(lightMap, 255, map, x, y);
-				}
-			}
-		}
-	}
+//	for (int y = 0; y < 20; ++y) {
+//		for (int x = 0; x < 20; ++x) {
+//
+//			if (map[y][x] == '|') {
+//
+//				if (!hasCache) {
+//					odb::LightningStrategy::castLightInAllDirections(lightMapCache, 255, map, x, y);
+//					odb::LightningStrategy::castLightInAllDirections(lightMap, 255, map, x, y);
+//				}
+//			}
+//		}
+//	}
 
 	hasCache = true;
 }
