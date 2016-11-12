@@ -802,21 +802,21 @@ namespace odb {
 
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftFarVertexDataIndex,
 																					   vboCornerLeftFarVertexIndicesIndex,
-																					   24,
+																					   6,
 																					   getCornerLeftFarTransform(pos),
 					                                                                   shade);
 
 					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftFarVertexDataIndex,
 																					   vboCornerLeftFarVertexIndicesIndex,
-																					   24,
+																					   6,
 																					   getCornerLeftFarTransform(pos),
 																					   shade);
 
 					pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftFarVertexDataIndex,
 																					   vboCornerLeftFarVertexIndicesIndex,
-																					   24,
+																					   6,
 																					   getCornerLeftFarTransform(pos),
 																					   shade);
 
@@ -825,21 +825,21 @@ namespace odb {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftNearVertexDataIndex,
 																					   vboCornerLeftNearVertexIndicesIndex,
-																					   24,
+																					   6,
 																					   getCornerLeftFarTransform(pos),
 																					   shade);
 
 					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftNearVertexDataIndex,
 																					   vboCornerLeftNearVertexIndicesIndex,
-																					   24,
+																					   6,
 																					   getCornerLeftFarTransform(pos),
 																					   shade);
 
 					pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftNearVertexDataIndex,
 																					   vboCornerLeftNearVertexIndicesIndex,
-																					   24,
+																					   6,
 																					   getCornerLeftFarTransform(pos),
 																					   shade);
 
