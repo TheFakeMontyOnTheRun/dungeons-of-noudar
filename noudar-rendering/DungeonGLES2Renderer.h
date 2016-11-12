@@ -14,18 +14,6 @@ namespace odb {
 		kFadingOut
 	};
 
-	enum EGeometryType {
-		kFloor,
-		kWalls,
-		kLeftFarCorner,
-		kLeftNearCorner,
-		kBillboard,
-		kSkyBox,
-		kXYWall,
-		kYZWall,
-		kXZWall,
-	};
-
 	enum ETextures {
 		Grass,
 		Floor,
@@ -73,7 +61,6 @@ namespace odb {
 	using LightMap = IntField;
 	using Shade = float;
 	using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
-	using CRenderingBatchElement = std::tuple<glm::mat4, EGeometryType, Shade>;
 	using TextureId = int;
 
 	static const long kAnimationLength = 750;
@@ -187,7 +174,7 @@ namespace odb {
 
 
 
-		std::map<ETextures, std::vector<CRenderingBatchElement>> batches;
+		std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
 
 		std::map<TextureId, ETextures> mElementMap;
 

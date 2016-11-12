@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "406"
             endingLineNumber = "406"
-            landmarkName = "DungeonGLES2Renderer::fetchShaderLocations()"
+            landmarkName = "DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount, const glm::mat4 &amp;transform)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -38,22 +38,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../noudar-rendering/DungeonGLES2Renderer.cpp"
-            timestampString = "500425475.128458"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "735"
-            endingLineNumber = "735"
-            landmarkName = "DungeonGLES2Renderer::consumeRenderingBatches(long animationTime)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -64,22 +48,6 @@
             startingLineNumber = "421"
             endingLineNumber = "421"
             landmarkName = "DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount, const glm::mat4 &amp;transform)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../noudar-rendering/DungeonGLES2Renderer.cpp"
-            timestampString = "500425506.714061"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "752"
-            endingLineNumber = "752"
-            landmarkName = "DungeonGLES2Renderer::consumeRenderingBatches(long animationTime)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

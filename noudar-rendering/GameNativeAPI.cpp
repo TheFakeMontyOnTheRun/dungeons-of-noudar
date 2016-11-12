@@ -49,6 +49,7 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "VBORenderingJob.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 #include "GameNativeAPI.h"

@@ -38,6 +38,7 @@
 #include "MaterialList.h"
 #include "Scene.h"
 #include "Common.h"
+#include "VBORenderingJob.h"
 #include "DungeonGLES2Renderer.h"
 
 
@@ -704,85 +705,19 @@ namespace odb {
 			glBindTexture(GL_TEXTURE_2D, mTextures[batch.first]->mTextureId);
 
 			for (auto &element : batch.second) {
-				transform = std::get<0>(element);
-				shade = std::get<2>(element);
-				EGeometryType type = std::get<1>(element);
+				auto transform = element.getTransform();
+				auto shade = element.getShade();
+				auto amount = element.getAmount();
+				auto vboId = element.getVBOId();
+				auto vboIndicesId = element.getVBOIndicesId();
 
 				glUniform4f(uMod, shade, shade, shade, 1.0f);
 
-				if (EGeometryType::kFloor == type) {
-					drawGeometry(vboFloorVertexDataIndex,
-					             vboFloorVertexIndicesIndex,
-					             6, transform
-					);
-				} else if (EGeometryType::kWalls == type) {
-					drawGeometry(vboCubeVertexDataIndex,
-					             vboCubeVertexIndicesIndex,
-					             24,
-					             transform
-					);
-				} else if (EGeometryType::kBillboard == type) {
-
-					drawGeometry(vboBillboardVertexDataIndex,
-					             vboBillboardVertexIndicesIndex,
-					             6,
-					             transform
-					);
-
-				} else if (EGeometryType::kLeftNearCorner == type) {
-
-					drawGeometry(vboCornerLeftNearVertexDataIndex,
-					             vboCornerLeftNearVertexIndicesIndex,
-					             6,
-					             transform
-					);
-
-				} else if (EGeometryType::kLeftFarCorner == type) {
-
-					drawGeometry(vboCornerLeftFarVertexDataIndex,
-					             vboCornerLeftFarVertexIndicesIndex,
-					             6,
-					             transform
-					);
-
-				} else if (EGeometryType::kXZWall == type) {
-
-					drawGeometry(vboXZWallVertexDataIndex,
-					             vboXZWallVertexIndicesIndex,
-					             6,
-					             transform
-					);
-
-				} else if (EGeometryType::kXYWall == type) {
-
-					drawGeometry(vboXYWallVertexDataIndex,
-					             vboXYWallVertexIndicesIndex,
-					             6,
-					             transform
-					);
-
-				} else if (EGeometryType::kYZWall == type) {
-
-					drawGeometry(vboYZWallVertexDataIndex,
-					             vboYZWallVertexIndicesIndex,
-					             6,
-					             transform
-					);
-
-				} else if (EGeometryType::kSkyBox == type) {
-					drawGeometry(vboSkyVertexDataIndex,
-					             vboSkyVertexIndicesIndex,
-					             6,
-					             getSkyTransform(animationTime)
-					);
-
-					drawGeometry(vboSkyVertexDataIndex,
-					             vboSkyVertexIndicesIndex,
-					             6,
-					             getSkyTransform(animationTime + kSkyTextureLength * 1000)
-					);
-
-				}
+				drawGeometry(vboId,
+							 vboIndicesId,
+							 amount,
+							 transform
+				);
 			}
 		}
 	}
@@ -794,15 +729,22 @@ namespace odb {
 	                                                   long animationTime) {
 
 		ETextures chosenTexture;
-		glm::vec3 pos;
-		Shade shade;
+		glm::vec3 pos;		
 
 		batches.clear();
 
 		if (mFloorNumber == 0) {
-			batches[ETextures::Skybox].emplace_back( getSkyTransform(0),
-			                                        EGeometryType::kSkyBox,
-			                                        1.0f);
+			batches[ETextures::Skybox].emplace_back( vboSkyVertexDataIndex,
+						 vboSkyVertexIndicesIndex,
+						 6,
+						 getSkyTransform(animationTime),
+						 1.0f);
+
+			batches[ETextures::Skybox].emplace_back( vboSkyVertexDataIndex,
+								vboSkyVertexIndicesIndex,
+								6,
+								getSkyTransform(animationTime + kSkyTextureLength * 1000),
+								1.0f);
 		}
 
 
@@ -850,50 +792,66 @@ namespace odb {
 
 
 				pos = glm::vec3(-10 + (x * 2), -5.0f, -10 + (-z * 2));
-				batches[chosenTexture].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
+				batches[chosenTexture].emplace_back(vboFloorVertexDataIndex, vboFloorVertexIndicesIndex, 6, getFloorTransform(pos), shade);
 
 				shade = placeShade;
 
 				//walls
 				if (tile == '\\' || tile == '<' || tile == '|' || tile == 'S' ) {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftFarTransform(pos),
-					                                                    EGeometryType::kLeftFarCorner,
-					                                                    shade);
+
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftFarVertexDataIndex,
+																					   vboCornerLeftFarVertexIndicesIndex,
+																					   24,
+																					   getCornerLeftFarTransform(pos),
+					                                                                   shade);
 
 					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftFarTransform(pos),
-					                                                    EGeometryType::kLeftFarCorner,
-					                                                    shade);
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftFarVertexDataIndex,
+																					   vboCornerLeftFarVertexIndicesIndex,
+																					   24,
+																					   getCornerLeftFarTransform(pos),
+																					   shade);
 
 					pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftFarTransform(pos),
-					                                                                   EGeometryType::kLeftFarCorner,
-					                                                                   shade);
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftFarVertexDataIndex,
+																					   vboCornerLeftFarVertexIndicesIndex,
+																					   24,
+																					   getCornerLeftFarTransform(pos),
+																					   shade);
 
 
 				} else if (tile == '/'  || tile == '>' || tile == '%' || tile == 'Z') {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
-					                                                    EGeometryType::kLeftNearCorner,
-					                                                    shade);
-
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftNearVertexDataIndex,
+																					   vboCornerLeftNearVertexIndicesIndex,
+																					   24,
+																					   getCornerLeftFarTransform(pos),
+																					   shade);
 
 					pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
-					                                                    EGeometryType::kLeftNearCorner,
-					                                                    shade);
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftNearVertexDataIndex,
+																					   vboCornerLeftNearVertexIndicesIndex,
+																					   24,
+																					   getCornerLeftFarTransform(pos),
+																					   shade);
 
 					pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCornerLeftNearTransform(pos),
-					                                                                   EGeometryType::kLeftNearCorner,
-					                                                                   shade);
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCornerLeftNearVertexDataIndex,
+																					   vboCornerLeftNearVertexIndicesIndex,
+																					   24,
+																					   getCornerLeftFarTransform(pos),
+																					   shade);
 
 				} else if (tile != '.' && tile != '_' &&  tile != '=' && tile != '-' && tile != ')' && tile != '(' && tile != '}' && tile != '{') {
 
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
-					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(getCubeTransform(pos), EGeometryType::kWalls,
-					                                                    shade);
+
+					batches[static_cast<ETextures >(mElementMap[ tile ])].emplace_back(vboCubeVertexDataIndex,
+																					   vboCubeVertexIndicesIndex,
+																					   24,
+																					   getCornerLeftFarTransform(pos),
+																					   shade);
 
 					//top of walls cube
 					ETextures textureForCeling = ETextures::Ceiling;
@@ -913,15 +871,19 @@ namespace odb {
 					if (tile != 'E') {
 						pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
 						batches[(tile == 'b') ? ETextures::CeilingEnd
-						                                   : mElementMap[ '1' ]].emplace_back(getCubeTransform(pos),
-						                                                                     EGeometryType::kWalls,
-						                                                                     shade);
+						                                   : mElementMap[ '1' ]].emplace_back(vboCubeVertexDataIndex,
+																							  vboCubeVertexIndicesIndex,
+																							  24,
+																							  getCornerLeftFarTransform(pos),
+																							  shade);
 
 						pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
 						batches[(tile == 'b') ? ETextures::CeilingEnd
-						                      : mElementMap[ '1' ]].emplace_back(getCubeTransform(pos),
-						                                                         EGeometryType::kWalls,
-						                                                         shade);
+						                      : mElementMap[ '1' ]].emplace_back(vboCubeVertexDataIndex,
+																				 vboCubeVertexIndicesIndex,
+																				 24,
+																				 getCornerLeftFarTransform(pos),
+																				 shade);
 
 					}
 
@@ -932,11 +894,14 @@ namespace odb {
 
 
 						pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
-						batches[Floor].emplace_back(getCubeTransform(pos), EGeometryType::kWalls,
-						                                                                   shade);
+						batches[Floor].emplace_back(vboCubeVertexDataIndex,
+													vboCubeVertexIndicesIndex,
+													24,
+													getCornerLeftFarTransform(pos),
+													shade);
 						shade -= 0.375f;
 						pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
-						batches[Floor].emplace_back(getFloorTransform(pos), EGeometryType::kFloor, shade);
+						batches[Floor].emplace_back(vboFloorVertexDataIndex, vboFloorVertexIndicesIndex, 6, getFloorTransform(pos), shade);
 
 						shade = placeShade;
 
@@ -977,9 +942,11 @@ namespace odb {
 
 
 					if (actor == '@' ) {
-						batches[static_cast<ETextures >(mElementMap[ actor ])].emplace_back(getBillboardTransform(pos),
-						                                                     EGeometryType::kBillboard,
-						                                                     shade);
+
+
+
+						batches[static_cast<ETextures >(mElementMap[ actor ])].emplace_back(vboBillboardVertexDataIndex, vboBillboardVertexIndicesIndex, 6, getBillboardTransform(pos), shade);
+
 					} else {
 						mCurrentCharacterPosition = pos;
 					}
@@ -988,8 +955,7 @@ namespace odb {
 				if (splatFrame > -1) {
 					pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 					batches[static_cast<ETextures >(splatFrame +
-					                                ETextures::Splat0)].emplace_back(getBillboardTransform(pos),
-					                                                                 EGeometryType::kBillboard, shade);
+					                                ETextures::Splat0)].emplace_back(vboBillboardVertexDataIndex, vboBillboardVertexIndicesIndex, 6, getBillboardTransform(pos), shade);
 				}
 			}
 		}
