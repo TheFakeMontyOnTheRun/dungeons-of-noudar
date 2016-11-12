@@ -527,10 +527,6 @@ namespace odb {
 		             GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-
-
-
-
 		//XY Wall
 		glGenBuffers(1, &vboXYWallVertexDataIndex);
 		glBindBuffer(GL_ARRAY_BUFFER, vboXYWallVertexDataIndex);
@@ -702,8 +698,6 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
-		glm::mat4 transform;
-		Shade shade;
 
 		for (auto &batch : batches) {
 

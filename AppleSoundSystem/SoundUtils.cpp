@@ -15,8 +15,8 @@
 namespace odb {
     std::shared_ptr<SoundClip> makeSoundClipFrom(FILE* source) {
         fseek(source, 0, SEEK_END);
-        int size = ftell(source);
-        printf( "size: %d\n", size );
+        size_t size = ftell(source);
+        printf( "size: %zu\n", size );
         fseek(source, 0, SEEK_SET);
 
         using bufferElement = unsigned char;
