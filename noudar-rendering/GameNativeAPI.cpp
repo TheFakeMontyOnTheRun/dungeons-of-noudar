@@ -301,12 +301,6 @@ void rotateCameraRight() {
 	}
 }
 
-void setFloorNumber( long floor ) {
-	if (gles2Renderer != nullptr) {
-		gles2Renderer->setFloorNumber(floor);
-	}
-}
-
 void onReleasedLongPressingMove() {
 	if (gles2Renderer != nullptr) {
 		gles2Renderer->onReleasedLongPressingMove();
@@ -395,7 +389,7 @@ void readMap( std::string data ) {
 	gameDelegate->setPlayerDamagedCallback( onPlayerDamaged );
 
 	game = std::make_shared<Knights::CGame>( data, render, gameDelegate );
-	setFloorNumber(0);
+
 	if ( game != nullptr ) {
 		game->tick();
 	}

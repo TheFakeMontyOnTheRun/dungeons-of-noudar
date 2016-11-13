@@ -31,8 +31,6 @@ void rotateCameraLeft();
 
 void rotateCameraRight();
 
-void setFloorNumber( long floor );
-
 void onReleasedLongPressingMove();
 
 void onLongPressingMove();

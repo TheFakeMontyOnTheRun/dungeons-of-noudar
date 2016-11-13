@@ -2,269 +2,252 @@
 // Created by monty on 23/11/15.
 //
 
-#ifndef LESSON02_GLES2LESSON_H
-#define LESSON02_GLES2LESSON_H
+#ifndef NOUDARRENDERING_DUNGEONRENDERER_H
+#define NOUDARRENDERING_DUNGEONRENDERER_H
 
 
 namespace odb {
 
-	enum EFadeState {
-		kNormal,
-		kFadingIn,
-		kFadingOut
-	};
-
-	enum ETextures {
-		Grass,
-		Floor,
-		Bricks,
-		Arch,
-		Bars,
-		Begin,
-		Exit,
-		BricksBlood,
-		BricksCandles,
-		Boss0,
-		Boss1,
-		Boss2,
-		Cuco0,
-		Cuco1,
-		Cuco2,
-		Demon0,
-		Demon1,
-		Demon2,
-		Lady0,
-		Lady1,
-		Lady2,
-		Crusader,
-		Shadow,
-		Ceiling,
-		CeilingDoor,
-		CeilingBegin,
-		CeilingEnd,
-		Splat0,
-		Splat1,
-		Splat2,
-		CeilingBars,
-		CornerLeftFar,
-		CornerLeftNear,
-		Skybox,
-		Monty,
-		StoneGrassFar,
-		GrassStoneFar,
-		StoneGrassNear,
-		GrassStoneNear,
-	};
-
-	using IntGameMap = std::array<std::array<ETextures, 20>, 20>;
-	using IntField = std::array<std::array<int, 20>, 20>;
-	using LightMap = IntField;
-	using Shade = float;
-	using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
-	using TextureId = int;
-
-	static const long kAnimationLength = 750;
-
-	class DungeonGLES2Renderer {
-
-		void fetchShaderLocations();
-
-		void setPerspective();
-
-		void prepareShaderProgram();
-
-		void clearBuffers();
+    enum EFadeState {
+        kNormal,
+        kFadingIn,
+        kFadingOut
+    };
+
+    enum ETextures {
+        Grass,
+        Floor,
+        Bricks,
+        Arch,
+        Bars,
+        Begin,
+        Exit,
+        BricksBlood,
+        BricksCandles,
+        Boss0,
+        Boss1,
+        Boss2,
+        Cuco0,
+        Cuco1,
+        Cuco2,
+        Demon0,
+        Demon1,
+        Demon2,
+        Lady0,
+        Lady1,
+        Lady2,
+        Crusader,
+        Shadow,
+        Ceiling,
+        CeilingDoor,
+        CeilingBegin,
+        CeilingEnd,
+        Splat0,
+        Splat1,
+        Splat2,
+        CeilingBars,
+        CornerLeftFar,
+        CornerLeftNear,
+        Skybox,
+        Monty,
+        StoneGrassFar,
+        GrassStoneFar,
+        StoneGrassNear,
+        GrassStoneNear,
+    };
+
+    using IntGameMap = std::array<std::array<ETextures, 20>, 20>;
+    using IntField = std::array<std::array<int, 20>, 20>;
+    using LightMap = IntField;
+    using Shade = float;
+    using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
+    using TextureId = int;
+
+    static const long kAnimationLength = 750;
 
-		void resetTransformMatrices();
+    class DungeonGLES2Renderer {
 
-		void printVerboseDriverInformation();
+    private:
 
-		void createVBOs();
+        void fetchShaderLocations();
 
-		void deleteVBOs();
+        void setPerspective();
 
-		void drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount,
-		                  const glm::mat4 &transform);
+        void prepareShaderProgram();
 
-		unsigned int createProgram(const char *pVertexSource, const char *pFragmentSource);
+        void clearBuffers();
 
-		unsigned int loadShader(GLenum shaderType, const char *pSource);
+        void resetTransformMatrices();
 
-		const static float cubeVertices[16 * 5];
-		const static unsigned short cubeIndices[6 * 4];
+        void printVerboseDriverInformation();
 
-		const static int kSkyTextureLength = 400;
+        void createVBOs();
 
-		glm::mat4 cubeTransformMatrix;
-		glm::mat4 projectionMatrix;
+        void deleteVBOs();
 
-		GLint vertexAttributePosition;
-		GLint modelMatrixAttributePosition;
-		GLint samplerUniformPosition;
-		GLint textureCoordinatesAttributePosition;
-		GLint projectionMatrixAttributePosition;
-		GLuint gProgram;
-		GLuint uView;
-		GLuint uMod;
-		GLuint uFogUniformPosition;
-		//VBO stuff
-		GLuint vboCubeVertexDataIndex;
-		GLuint vboCubeVertexIndicesIndex;
+        void drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount,
+                          const glm::mat4 &transform);
 
-		GLuint vboBillboardVertexDataIndex;
-		GLuint vboBillboardVertexIndicesIndex;
+        unsigned int createProgram(const char *pVertexSource, const char *pFragmentSource);
 
-		GLuint vboXZWallVertexDataIndex;
-		GLuint vboXZWallVertexIndicesIndex;
+        unsigned int loadShader(GLenum shaderType, const char *pSource);
 
-		GLuint vboXYWallVertexDataIndex;
-		GLuint vboXYWallVertexIndicesIndex;
+        glm::mat4 getSkyTransform(long offset);
 
-		GLuint vboYZWallVertexDataIndex;
-		GLuint vboYZWallVertexIndicesIndex;
+        glm::mat4 getFloorTransform(glm::vec3 translation);
 
-		GLuint vboCornerLeftFarVertexDataIndex;
-		GLuint vboCornerLeftFarVertexIndicesIndex;
+        glm::mat4 getBillboardTransform(glm::vec3 translation);
 
-		GLuint vboCornerLeftNearVertexDataIndex;
-		GLuint vboCornerLeftNearVertexIndicesIndex;
+        glm::mat4 getCornerLeftFarTransform(glm::vec3 translation);
 
-		GLuint vboFloorVertexDataIndex;
-		GLuint vboFloorVertexIndicesIndex;
+        glm::mat4 getCornerLeftNearTransform(glm::vec3 translation);
 
-		GLuint vboSkyVertexDataIndex;
-		GLuint vboSkyVertexIndicesIndex;
+        glm::mat4 getCubeTransform(glm::vec3 translation);
 
-		GLint fadeUniform;
+        void consumeRenderingBatches(long animationTime);
 
-		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
-		std::vector<std::shared_ptr<Texture>> mTextures;
+        void produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats,
+                                     LightMap lightmap, IntField ids,
+                                     AnimationList movingCharacters, long animationTime);
 
-		glm::vec2 mCameraTarget;
-		glm::vec2 mCursorPosition{ 0, 0 };
-		glm::vec3 mCurrentCharacterPosition;
-		glm::vec3 mCameraDirection{0, 0, 0};
-		int mRotationTarget = 0;
-		bool mLongPressing = false;
-		int mCameraRotation = 0;
-		long mFloorNumber = 0;
-		glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		EFadeState mFadeState = EFadeState::kNormal;
+        glm::vec3 transformToMapPosition(const glm::vec3 &pos);
 
-		glm::mat4 getSkyTransform(long offset);
+    private:
 
-		glm::mat4 getFloorTransform(glm::vec3 translation);
+        const static int kSkyTextureLength = 400;
 
-		glm::mat4 getBillboardTransform(glm::vec3 translation);
+        GLint vertexAttributePosition;
+        GLint modelMatrixAttributePosition;
+        GLint samplerUniformPosition;
+        GLint textureCoordinatesAttributePosition;
+        GLint projectionMatrixAttributePosition;
+        GLuint gProgram;
+        GLuint uView;
+        GLuint uMod;
+        GLuint uFogUniformPosition;
 
-		glm::mat4 getCornerLeftFarTransform(glm::vec3 translation);
+        glm::mat4 projectionMatrix;
 
-		glm::mat4 getCornerLeftNearTransform(glm::vec3 translation);
+        std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
+        std::map<TextureId, ETextures> mElementMap;
+        std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
+        std::vector<std::shared_ptr<Texture>> mTextures;
 
-		glm::mat4 getCubeTransform(glm::vec3 translation);
+        //fade state
+        glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+        GLint fadeUniform;
+        EFadeState mFadeState = EFadeState::kNormal;
 
-		glm::mat4 getXYWallTransform(glm::vec3 translation, float y0, float t1);
-		glm::mat4 getYZWallTransform(glm::vec3 translation, float y0, float t1);
+        //interaction
+        bool mLongPressing = false;
 
-		void consumeRenderingBatches(long animationTime);
+        glm::vec2 mCursorPosition{0, 0};
 
-		void produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats,
-		                             LightMap lightmap, IntField ids,
-		                             AnimationList movingCharacters, long animationTime);
+        glm::vec3 mCurrentCharacterPosition;
 
+        //camera
 
+        glm::vec2 cameraPosition;
+        float *mEyeView = nullptr;
+        float mAngleXZ = 0;
+        float mAngleYZ = 0;
+        glm::vec2 mCameraTarget;
+        glm::vec3 mCameraDirection{0, 0, 0};
+        int mCameraRotation = 0;
+        int mRotationTarget = 0;
 
-		std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
+        //VBOs
+        const static float cubeVertices[16 * 5];
+        const static unsigned short cubeIndices[6 * 4];
 
-		std::map<TextureId, ETextures> mElementMap;
+        GLuint vboCubeVertexDataIndex;
+        GLuint vboCubeVertexIndicesIndex;
 
-		float *mEyeView = nullptr;
-		float mAngleXZ = 0;
-		float mAngleYZ = 0;
+        GLuint vboBillboardVertexDataIndex;
+        GLuint vboBillboardVertexIndicesIndex;
 
-		glm::vec3 transformToMapPosition(  const glm::vec3& pos );
-	public:
-		DungeonGLES2Renderer();
+        GLuint vboCornerLeftFarVertexDataIndex;
+        GLuint vboCornerLeftFarVertexIndicesIndex;
 
-		~DungeonGLES2Renderer();
+        GLuint vboCornerLeftNearVertexDataIndex;
+        GLuint vboCornerLeftNearVertexIndicesIndex;
 
-		bool init(float w, float h, const std::string &vertexShader,
-		          const std::string &fragmentShader);
+        GLuint vboFloorVertexDataIndex;
+        GLuint vboFloorVertexIndicesIndex;
 
-		void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
+        GLuint vboSkyVertexDataIndex;
+        GLuint vboSkyVertexIndicesIndex;
 
-		void render(IntGameMap map, IntGameMap actors, IntGameMap splats, LightMap lightmap,
-		            IntField ids, AnimationList movingCharacters, long animationTime);
+        static const float billboardVertices[20];
+        static const unsigned short billboardIndices[6];
 
-		void shutdown();
+        static const float cornerLeftFarVertices[20];
+        static const unsigned short cornerLeftFarIndices[6];
 
-		void setCameraPosition(float x, float y);
+        static const float cornerLeftNearVertices[20];
+        static const unsigned short cornerLeftNearIndices[6];
 
-		void setClearColour(float r, float g, float b);
+        static const float floorVertices[20];
+        static const unsigned short floorIndices[6];
 
-		void startFadingIn();
+        static const float skyVertices[20];
+        static const unsigned short skyIndices[6];
 
-		void startFadingOut();
+    public:
+        //basic bookeeping
+        DungeonGLES2Renderer();
 
-		void drawTrigBatch(odb::TrigBatch &batch);
+        ~DungeonGLES2Renderer();
 
-		void updateCamera(long ms);
+        bool init(float w, float h, const std::string &vertexShader,
+                  const std::string &fragmentShader);
 
-		glm::vec2 cameraPosition;
-		static const float billboardVertices[20];
-		static const unsigned short billboardIndices[6];
+        void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
-		static const float cornerLeftFarVertices[20];
-		static const unsigned short cornerLeftFarIndices[6];
+        void render(IntGameMap map, IntGameMap actors, IntGameMap splats, LightMap lightmap,
+                    IntField ids, AnimationList movingCharacters, long animationTime);
 
-		static const float cornerLeftNearVertices[20];
-		static const unsigned short cornerLeftNearIndices[6];
+        void shutdown();
 
+        void invalidateCachedBatches();
 
-		static const float XZWallVertices[20];
-		static const unsigned short XZWallIndices[6];
+        void setPerspectiveMatrix(float *perspectiveMatrix);
 
-		static const float XYWallVertices[20];
-		static const unsigned short XYWallIndices[6];
+        void setClearColour(float r, float g, float b);
 
-		static const float YZWallVertices[20];
-		static const unsigned short YZWallIndices[6];
+        //camera controls
 
+        void updateCamera(long ms);
 
+        void rotateLeft();
 
-		static const float floorVertices[20];
-		static const unsigned short floorIndices[6];
+        void rotateRight();
 
-		static const float skyVertices[20];
-		static const unsigned short skyIndices[6];
+        bool isAnimating();
 
-		void invalidateCachedBatches();
+        void setEyeView(float *eyeView);
 
-		void rotateLeft();
+        void setCameraPosition(float x, float y);
 
-		void rotateRight();
+        void setAngleXZ(float xz);
 
-		bool isAnimating();
+        void setAngleYZ(float yz);
 
-		void updateFadeState(long ms);
+        //fade
+        void startFadingIn();
 
-		void setFloorNumber(long floor);
+        void startFadingOut();
 
-		void onReleasedLongPressingMove();
+        void updateFadeState(long ms);
 
-		void onLongPressingMove();
+        //interactions
+        void onLongPressingMove();
 
-		bool isLongPressing();
+        bool isLongPressing();
 
-		void setEyeView(float *eyeView);
+        void setCursorPosition(int x, int y);
 
-		void setPerspectiveMatrix(float *perspectiveMatrix);
-
-		void setAngleXZ(float xz);
-
-		void setAngleYZ(float yz);
-
-		void setCursorPosition( int x, int y );
-	};
+        void onReleasedLongPressingMove();
+    };
 }
-#endif //LESSON02_GLES2LESSON_H
+#endif //NOUDARRENDERING_DUNGEONRENDERER_H
