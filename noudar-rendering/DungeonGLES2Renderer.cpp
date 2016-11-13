@@ -28,6 +28,7 @@
 #include <sstream>
 #include <unordered_set>
 #include <map>
+#include <tuple>
 #include <array>
 
 #include "NativeBitmap.h"
@@ -385,97 +386,34 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::deleteVBOs() {
-        glDeleteBuffers(1, &vboCubeVertexDataIndex);
-        glDeleteBuffers(1, &vboCubeVertexIndicesIndex);
 
-        glDeleteBuffers(1, &vboFloorVertexDataIndex);
-        glDeleteBuffers(1, &vboFloorVertexIndicesIndex);
+        glDeleteBuffers(1, &std::get<0>(mCubeVBO));
+        glDeleteBuffers(1, &std::get<1>(mCubeVBO));
 
-        glDeleteBuffers(1, &vboBillboardVertexDataIndex);
-        glDeleteBuffers(1, &vboBillboardVertexIndicesIndex);
+        glDeleteBuffers(1, &std::get<0>(mBillboardVBO));
+        glDeleteBuffers(1, &std::get<1>(mBillboardVBO));
 
-        glDeleteBuffers(1, &vboSkyVertexIndicesIndex);
-        glDeleteBuffers(1, &vboSkyVertexDataIndex);
+        glDeleteBuffers(1, &std::get<0>(mCornerLeftFarVBO));
+        glDeleteBuffers(1, &std::get<1>(mCornerLeftFarVBO));
 
-        glDeleteBuffers(1, &vboCornerLeftFarVertexIndicesIndex);
-        glDeleteBuffers(1, &vboCornerLeftFarVertexDataIndex);
+        glDeleteBuffers(1, &std::get<0>(mCornerLeftNearVBO));
+        glDeleteBuffers(1, &std::get<1>(mCornerLeftNearVBO));
 
-        glDeleteBuffers(1, &vboCornerLeftNearVertexDataIndex);
-        glDeleteBuffers(1, &vboCornerLeftNearVertexIndicesIndex);
+        glDeleteBuffers(1, &std::get<0>(mFloorVBO));
+        glDeleteBuffers(1, &std::get<1>(mFloorVBO));
+
+        glDeleteBuffers(1, &std::get<0>(mSkyVBO));
+        glDeleteBuffers(1, &std::get<1>(mSkyVBO));
     }
 
     void DungeonGLES2Renderer::createVBOs() {
-        //walls
-        glGenBuffers(1, &vboCubeVertexDataIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vboCubeVertexDataIndex);
-        glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float) * 5, cubeVertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        glGenBuffers(1, &vboCubeVertexIndicesIndex);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboCubeVertexIndicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 24 * sizeof(GLushort), cubeIndices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        //characters
-        glGenBuffers(1, &vboBillboardVertexDataIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vboBillboardVertexDataIndex);
-        glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, billboardVertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glGenBuffers(1, &vboBillboardVertexIndicesIndex);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboBillboardVertexIndicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), billboardIndices,
-                     GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        //floor
-        glGenBuffers(1, &vboFloorVertexDataIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vboFloorVertexDataIndex);
-        glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, floorVertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &vboFloorVertexIndicesIndex);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboFloorVertexIndicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), floorIndices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-        //sky
-        glGenBuffers(1, &vboSkyVertexDataIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vboSkyVertexDataIndex);
-        glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, skyVertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &vboSkyVertexIndicesIndex);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboSkyVertexIndicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), skyIndices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-        //corner left far
-        glGenBuffers(1, &vboCornerLeftFarVertexDataIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vboCornerLeftFarVertexDataIndex);
-        glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, cornerLeftFarVertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &vboCornerLeftFarVertexIndicesIndex);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboCornerLeftFarVertexIndicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), cornerLeftFarIndices,
-                     GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        //corner left near
-        glGenBuffers(1, &vboCornerLeftNearVertexDataIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, vboCornerLeftNearVertexDataIndex);
-        glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(float) * 5, cornerLeftNearVertices,
-                     GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &vboCornerLeftNearVertexIndicesIndex);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboCornerLeftNearVertexIndicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLushort), cornerLeftNearIndices,
-                     GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        mCubeVBO = submitVBO((float *) cubeVertices, 16, (unsigned short *) cubeIndices, 24 );
+        mBillboardVBO = submitVBO((float *) billboardVertices, 4, (unsigned short *) billboardIndices, 6 );
+        mCornerLeftFarVBO = submitVBO((float *) cornerLeftFarVertices, 4, (unsigned short *) cornerLeftFarIndices, 6 );
+        mCornerLeftNearVBO = submitVBO((float *) cornerLeftNearVertices, 4, (unsigned short *) cornerLeftNearIndices, 6 );
+        mFloorVBO = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6 );
+        mSkyVBO = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6 );
     }
 
     void DungeonGLES2Renderer::clearBuffers() {
@@ -647,15 +585,15 @@ namespace odb {
         batches.clear();
 
 
-        batches[ETextures::Skybox].emplace_back(vboSkyVertexDataIndex,
-                                                vboSkyVertexIndicesIndex,
-                                                6,
+        batches[ETextures::Skybox].emplace_back( std::get<0>(mSkyVBO),
+                                                 std::get<1>(mSkyVBO),
+                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(animationTime),
                                                 1.0f);
 
-        batches[ETextures::Skybox].emplace_back(vboSkyVertexDataIndex,
-                                                vboSkyVertexIndicesIndex,
-                                                6,
+        batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
+                                                std::get<1>(mSkyVBO),
+                                                std::get<2>(mSkyVBO),
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
                                                 1.0f);
@@ -704,8 +642,9 @@ namespace odb {
 
 
                 pos = glm::vec3(-10 + (x * 2), -5.0f, -10 + (-z * 2));
-                batches[chosenTexture].emplace_back(vboFloorVertexDataIndex,
-                                                    vboFloorVertexIndicesIndex, 6,
+                batches[chosenTexture].emplace_back(std::get<0>(mFloorVBO),
+                                                    std::get<1>(mFloorVBO),
+                                                    std::get<2>(mFloorVBO),
                                                     getFloorTransform(pos), shade);
 
                 shade = placeShade;
@@ -715,25 +654,25 @@ namespace odb {
                     pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            vboCornerLeftFarVertexDataIndex,
-                            vboCornerLeftFarVertexIndicesIndex,
-                            6,
+                            std::get<0>(mCornerLeftFarVBO),
+                            std::get<1>(mCornerLeftFarVBO),
+                            std::get<2>(mCornerLeftFarVBO),
                             getCornerLeftFarTransform(pos),
                             shade);
 
                     pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            vboCornerLeftFarVertexDataIndex,
-                            vboCornerLeftFarVertexIndicesIndex,
-                            6,
+                            std::get<0>(mCornerLeftFarVBO),
+                            std::get<1>(mCornerLeftFarVBO),
+                            std::get<2>(mCornerLeftFarVBO),
                             getCornerLeftFarTransform(pos),
                             shade);
 
                     pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            vboCornerLeftFarVertexDataIndex,
-                            vboCornerLeftFarVertexIndicesIndex,
-                            6,
+                            std::get<0>(mCornerLeftFarVBO),
+                            std::get<1>(mCornerLeftFarVBO),
+                            std::get<2>(mCornerLeftFarVBO),
                             getCornerLeftFarTransform(pos),
                             shade);
 
@@ -741,26 +680,26 @@ namespace odb {
                 } else if (tile == '/' || tile == '>' || tile == '%' || tile == 'Z') {
                     pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            vboCornerLeftNearVertexDataIndex,
-                            vboCornerLeftNearVertexIndicesIndex,
-                            6,
-                            getCornerLeftFarTransform(pos),
+                            std::get<0>(mCornerLeftNearVBO),
+                            std::get<1>(mCornerLeftNearVBO),
+                            std::get<2>(mCornerLeftNearVBO),
+                            getCornerLeftNearTransform(pos),
                             shade);
 
                     pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            vboCornerLeftNearVertexDataIndex,
-                            vboCornerLeftNearVertexIndicesIndex,
-                            6,
-                            getCornerLeftFarTransform(pos),
+                            std::get<0>(mCornerLeftNearVBO),
+                            std::get<1>(mCornerLeftNearVBO),
+                            std::get<2>(mCornerLeftNearVBO),
+                            getCornerLeftNearTransform(pos),
                             shade);
 
                     pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            vboCornerLeftNearVertexDataIndex,
-                            vboCornerLeftNearVertexIndicesIndex,
-                            6,
-                            getCornerLeftFarTransform(pos),
+                            std::get<0>(mCornerLeftNearVBO),
+                            std::get<1>(mCornerLeftNearVBO),
+                            std::get<2>(mCornerLeftNearVBO),
+                            getCornerLeftNearTransform(pos),
                             shade);
 
                 } else if (tile != '.' && tile != '_' && tile != '=' && tile != '-' &&
@@ -769,10 +708,10 @@ namespace odb {
                     pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
 
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            vboCubeVertexDataIndex,
-                            vboCubeVertexIndicesIndex,
-                            24,
-                            getCornerLeftFarTransform(pos),
+                            std::get<0>(mCubeVBO),
+                            std::get<1>(mCubeVBO),
+                            std::get<2>(mCubeVBO),
+                            getCubeTransform(pos),
                             shade);
 
                     //top of walls cube
@@ -794,19 +733,19 @@ namespace odb {
                         pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
                         batches[(tile == 'b') ? ETextures::CeilingEnd
                                               : mElementMap['1']].emplace_back(
-                                vboCubeVertexDataIndex,
-                                vboCubeVertexIndicesIndex,
-                                24,
-                                getCornerLeftFarTransform(pos),
+                                std::get<0>(mCubeVBO),
+                                std::get<1>(mCubeVBO),
+                                std::get<2>(mCubeVBO),
+                                getCubeTransform(pos),
                                 shade);
 
                         pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
                         batches[(tile == 'b') ? ETextures::CeilingEnd
                                               : mElementMap['1']].emplace_back(
-                                vboCubeVertexDataIndex,
-                                vboCubeVertexIndicesIndex,
-                                24,
-                                getCornerLeftFarTransform(pos),
+                                std::get<0>(mCubeVBO),
+                                std::get<1>(mCubeVBO),
+                                std::get<2>(mCubeVBO),
+                                getCubeTransform(pos),
                                 shade);
 
                     }
@@ -815,18 +754,24 @@ namespace odb {
                 } else {
                     if (tile == '=' || tile == '-') {
 
-
                         pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
-                        batches[Floor].emplace_back(vboCubeVertexDataIndex,
-                                                    vboCubeVertexIndicesIndex,
-                                                    24,
-                                                    getCornerLeftFarTransform(pos),
+
+                        batches[Floor].emplace_back(
+                                std::get<0>(mCubeVBO),
+                                std::get<1>(mCubeVBO),
+                                std::get<2>(mCubeVBO),
+                                getCubeTransform(pos),
                                                     shade);
                         shade -= 0.375f;
+
                         pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
-                        batches[Floor].emplace_back(vboFloorVertexDataIndex,
-                                                    vboFloorVertexIndicesIndex, 6,
-                                                    getFloorTransform(pos), shade);
+
+                        batches[Floor].emplace_back(
+                                std::get<0>(mFloorVBO),
+                                std::get<1>(mFloorVBO),
+                                std::get<2>(mFloorVBO),
+                                getFloorTransform(pos),
+                                shade);
 
                         shade = placeShade;
 
@@ -870,7 +815,9 @@ namespace odb {
 
 
                         batches[static_cast<ETextures >(mElementMap[actor])].emplace_back(
-                                vboBillboardVertexDataIndex, vboBillboardVertexIndicesIndex, 6,
+                                std::get<0>(mBillboardVBO),
+                                std::get<1>(mBillboardVBO),
+                                std::get<2>(mBillboardVBO),
                                 getBillboardTransform(pos), shade);
 
                     } else {
@@ -882,7 +829,9 @@ namespace odb {
                     pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
                     batches[static_cast<ETextures >(splatFrame +
                                                     ETextures::Splat0)].emplace_back(
-                            vboBillboardVertexDataIndex, vboBillboardVertexIndicesIndex, 6,
+                            std::get<0>(mBillboardVBO),
+                            std::get<1>(mBillboardVBO),
+                            std::get<2>(mBillboardVBO),
                             getBillboardTransform(pos), shade);
                 }
             }
@@ -980,5 +929,24 @@ namespace odb {
 
     void DungeonGLES2Renderer::setCursorPosition(int x, int y) {
         mCursorPosition = {x, y};
+    }
+
+    VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices, unsigned short *indexData,
+                                                unsigned int indices) {
+
+        unsigned int dataIndex;
+        unsigned int indicesIndex;
+
+        glGenBuffers(1, &dataIndex);
+        glBindBuffer(GL_ARRAY_BUFFER, dataIndex);
+        glBufferData(GL_ARRAY_BUFFER, vertices * sizeof(float) * 5, data, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glGenBuffers(1, &indicesIndex);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesIndex);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices * sizeof(GLushort), indexData, GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        return VBORegister( dataIndex, indicesIndex, indices);
     }
 }

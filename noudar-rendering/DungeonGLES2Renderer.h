@@ -62,6 +62,7 @@ namespace odb {
     using Shade = float;
     using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
     using TextureId = int;
+    using VBORegister = std::tuple<unsigned int, unsigned int, unsigned int>;
 
     static const long kAnimationLength = 750;
 
@@ -157,26 +158,16 @@ namespace odb {
         int mRotationTarget = 0;
 
         //VBOs
+
+        VBORegister mCubeVBO;
+        VBORegister mBillboardVBO;
+        VBORegister mCornerLeftFarVBO;
+        VBORegister mCornerLeftNearVBO;
+        VBORegister mFloorVBO;
+        VBORegister mSkyVBO;
+
         const static float cubeVertices[16 * 5];
         const static unsigned short cubeIndices[6 * 4];
-
-        GLuint vboCubeVertexDataIndex;
-        GLuint vboCubeVertexIndicesIndex;
-
-        GLuint vboBillboardVertexDataIndex;
-        GLuint vboBillboardVertexIndicesIndex;
-
-        GLuint vboCornerLeftFarVertexDataIndex;
-        GLuint vboCornerLeftFarVertexIndicesIndex;
-
-        GLuint vboCornerLeftNearVertexDataIndex;
-        GLuint vboCornerLeftNearVertexIndicesIndex;
-
-        GLuint vboFloorVertexDataIndex;
-        GLuint vboFloorVertexIndicesIndex;
-
-        GLuint vboSkyVertexDataIndex;
-        GLuint vboSkyVertexIndicesIndex;
 
         static const float billboardVertices[20];
         static const unsigned short billboardIndices[6];
@@ -214,6 +205,8 @@ namespace odb {
         void setPerspectiveMatrix(float *perspectiveMatrix);
 
         void setClearColour(float r, float g, float b);
+
+        VBORegister submitVBO( float* data, int vertices, unsigned short* indexData, unsigned int indices );
 
         //camera controls
 
