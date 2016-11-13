@@ -59,6 +59,10 @@
 
 #import "EAGLNoudarView.h"
 
+#import <OpenAl/al.h>
+#import <OpenAl/alc.h>
+#include <AudioToolbox/AudioToolbox.h>
+
 @interface EAGLNoudarView () {
 
 	EAGLContext* _context;

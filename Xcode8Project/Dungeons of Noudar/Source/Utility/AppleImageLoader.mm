@@ -8,7 +8,7 @@
 #include <memory>
 
 #include "NativeBitmap.h"
-#include "imageUtil.h"
+#include "AppleImageLoader.h"
 
 #if TARGET_IOS
 #import <UIKit/UIKit.h>

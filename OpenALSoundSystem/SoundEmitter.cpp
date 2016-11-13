@@ -8,8 +8,20 @@
 #include "glm/glm.hpp"
 #include <memory>
 
+#ifdef __APPLE__
+#if TARGET_IOS
+#import <OpenAl/al.h>
+#import <OpenAl/alc.h>
+#include <AudioToolbox/AudioToolbox.h>
+#else
+#endif
+#else
+
 #include <AL/al.h>
 #include <AL/alc.h>
+
+#endif
+
 #include <unistd.h>
 
 #include "SoundClip.h"
@@ -43,7 +55,7 @@ namespace odb {
 
 
 #ifdef __EMSCRIPTEN__
-        emscripten_async_call(playSource, reinterpret_cast<void*>(mEmitterHandle), 0);
+        emscripten_async_call(playSource, reinterpret_cast<void*>(mEmitterHandle), 700);
 #else
         playSource(reinterpret_cast<void*>(mEmitterHandle));
 #endif

@@ -6,8 +6,21 @@
 #endif
 
 #include <iostream>
+
+
+#ifdef __APPLE__
+#if TARGET_IOS
+#import <OpenAl/al.h>
+#import <OpenAl/alc.h>
+#include <AudioToolbox/AudioToolbox.h>
+#else
+#endif
+#else
+
 #include <AL/al.h>
 #include <AL/alc.h>
+
+#endif
 
 #include "SoundClip.h"
 
