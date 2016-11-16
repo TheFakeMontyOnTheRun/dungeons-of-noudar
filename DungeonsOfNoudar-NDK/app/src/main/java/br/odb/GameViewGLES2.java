@@ -27,14 +27,6 @@ import javax.microedition.khronos.opengles.GL10;
 public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Renderer {
 
 	public static final int TICK_INTERVAL = 20;
-	private volatile SoundSink mSink;
-
-	final Runnable flushAudioSinkRunnable = new Runnable() {
-		@Override
-		public void run() {
-			GL2JNILib.flush(mSink);
-		}
-	};
 
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
@@ -54,8 +46,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		synchronized (renderingLock) {
 			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 			GL2JNILib.step();
-
-			((Activity) getContext()).runOnUiThread( flushAudioSinkRunnable );
 		}
 	}
 
@@ -210,8 +200,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 			final Activity activity = ((Activity) getContext());
 
-			mSink = new SoundSink();
-			GL2JNILib.loadSounds( mSink, activity.getAssets(), new String[] {
+			GL2JNILib.loadSounds( activity.getAssets(), new String[] {
 					"grasssteps.wav", //0
 					"stepsstones.wav", //1
 					"bgnoise.wav", //2

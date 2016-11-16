@@ -29,7 +29,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 
 	public static final int TICK_INTERVAL = 500;
-	private SoundSink mSink;
 
 	@Override
 	public void onNewFrame(HeadTransform headTransform) {
@@ -59,13 +58,6 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 			GL2JNILib.setXZAngle(xz);
 			GL2JNILib.setYZAngle(yz);
 		}
-
-		((Activity) getContext()).runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				GL2JNILib.flush(mSink);
-			}
-		});
 	}
 
 
@@ -260,8 +252,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 
 			final Activity activity = ((Activity) getContext());
 
-			mSink = new SoundSink();
-			GL2JNILib.loadSounds( mSink, activity.getAssets(), new String[] {
+			GL2JNILib.loadSounds( activity.getAssets(), new String[] {
 					"grasssteps.wav", //0
 					"stepsstones.wav", //1
 					"bgnoise.wav", //2
