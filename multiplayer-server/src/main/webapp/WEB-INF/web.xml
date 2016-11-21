@@ -1,0 +1,75 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<display-name>Multiplayer</display-name>
+
+<!-- ================= -->
+	<servlet>
+		<servlet-name>GetGameId</servlet-name>
+		<display-name>GetGameId</display-name>
+		<description></description>
+		<servlet-class>br.odb.multiplayer.GetGameId</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>
+			GetGameId
+		</servlet-name>
+		<url-pattern>
+			/GetGameId
+		</url-pattern>
+	</servlet-mapping>
+<!-- ================= -->
+	
+	<servlet>
+		<servlet-name>GetGameStatus</servlet-name>
+		<servlet-class>
+			br.odb.multiplayer.GetGameStatus
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>
+			GetGameStatus
+		</servlet-name>
+		<url-pattern>
+			/GetGameStatus
+		</url-pattern>
+	</servlet-mapping>
+<!-- ================= -->
+	<servlet>
+		<servlet-name>ResetServer</servlet-name>
+		<servlet-class>
+			br.odb.multiplayer.ResetServer
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>
+			ResetServer
+		</servlet-name>
+		<url-pattern>
+			/ResetServer
+		</url-pattern>
+	</servlet-mapping>
+
+<!-- ================= -->
+	<servlet>
+		<servlet-name>SendMove</servlet-name>
+		<servlet-class>
+			br.odb.multiplayer.SendMove
+		</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>
+			SendMove
+		</servlet-name>
+		<url-pattern>
+			/SendMove
+		</url-pattern>
+	</servlet-mapping>
+<!-- ================= -->	
+</web-app>

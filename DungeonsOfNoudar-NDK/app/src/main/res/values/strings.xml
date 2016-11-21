@@ -28,25 +28,25 @@
 
     <string name="brought_to_you">Brought to you by…</string>
 
-    <string name ="how_to_play1">You can control the two portuguese knights and warrior monk with a dark past. Its all controlled by the keys. They auto-attack and auto-retaliate.</string>
-    <string name ="how_to_play2">You must find the exit of the current level or clear the levels, on your mission to rescue the women of the citadel of Noudar, kidnapped by demons for the pagan ceremonies in honour of the demon viper, on the catacombs under the fortress.</string>
+    <string name="how_to_play1">You can control the two portuguese knights and warrior monk with a dark past. Its all controlled by the keys. They auto-attack and auto-retaliate.</string>
+    <string name="how_to_play2">You must find the exit of the current level or clear the levels, on your mission to rescue the women of the citadel of Noudar, kidnapped by demons for the pagan ceremonies in honour of the demon viper, on the catacombs under the fortress.</string>
 
-    <string name ="entry">Entryway</string>
-    <string name ="exit">Exit door</string>
-
-
-    <string name ="about_bull">The Crusader is the strongest, but has limited defense. A former justice champion that had to interrupt his training - now he is back and eager to do more!</string>
-    <string name ="about_turtle">The one with a big shield has better defense and a capable attack, but sometimes fail to deal any damage. He\'s also an alchemist who devised the best aloy to keep him safe.</string>
-    <string name ="about_falcon">The Assassin Monk is a former Assassin that repented his sins and decided to devout his life for the lord. Unfortunately, the lord now require him to go back into his former self ways.</string>
-
-    <string name ="about_entry">Your knights will always start near this door.</string>
-    <string name ="about_exit">You must lead all three characters to the exit in order to finish a level. If any of them die, it will respawn at the next level.</string>
+    <string name="entry">Entryway</string>
+    <string name="exit">Exit door</string>
 
 
-    <string name ="how_to_kill">To slain monsters, just move in the direction of the monster.</string>
+    <string name="about_bull">The Crusader is the strongest, but has limited defense. A former justice champion that had to interrupt his training - now he is back and eager to do more!</string>
+    <string name="about_turtle">The one with a big shield has better defense and a capable attack, but sometimes fail to deal any damage. He\'s also an alchemist who devised the best aloy to keep him safe.</string>
+    <string name="about_falcon">The Assassin Monk is a former Assassin that repented his sins and decided to devout his life for the lord. Unfortunately, the lord now require him to go back into his former self ways.</string>
 
-    <string name ="monsters">Monsters</string>
-    <string name ="about_monsters">They always try seeking you and sneak attack you.</string>
+    <string name="about_entry">Your knights will always start near this door.</string>
+    <string name="about_exit">You must lead all three characters to the exit in order to finish a level. If any of them die, it will respawn at the next level.</string>
+
+
+    <string name="how_to_kill">To slain monsters, just move in the direction of the monster.</string>
+
+    <string name="monsters">Monsters</string>
+    <string name="about_monsters">They always try seeking you and sneak attack you.</string>
 
 
 </resources>

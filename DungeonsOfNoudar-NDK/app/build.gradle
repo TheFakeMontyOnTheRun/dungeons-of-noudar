@@ -30,7 +30,8 @@ model {
 		moduleName = "NdkGlue"
 		toolchain = "clang"
 		cppFlags.addAll(["-std=gnu++14", "-g", "-fno-inline"])
-		ldLibs.addAll(["log", "GLESv2", "android", "jnigraphics"])
+		ldLibs.addAll(["log", "GLESv2", "android", "jnigraphics", "OpenSLES"])
+		CFlags.add('-std=c99')
 		stl = "c++_static"
 		platformVersion 22
 

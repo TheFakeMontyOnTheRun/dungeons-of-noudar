@@ -333,6 +333,8 @@ namespace odb {
         float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
         float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
 
+        glm::vec3 mCameraDirection{0, 0, 0};
+
         mCameraDirection = glm::rotate(
                 glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
                 angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;

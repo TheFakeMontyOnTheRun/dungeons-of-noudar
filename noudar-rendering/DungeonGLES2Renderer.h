@@ -125,7 +125,6 @@ namespace odb {
         GLuint gProgram;
         GLuint uView;
         GLuint uMod;
-        GLuint uFogUniformPosition;
 
         glm::mat4 projectionMatrix;
 
@@ -147,13 +146,13 @@ namespace odb {
         glm::vec3 mCurrentCharacterPosition;
 
         //camera
-
+        glm::vec2 mCameraTarget;
         glm::vec2 cameraPosition;
         float *mEyeView = nullptr;
+
         float mAngleXZ = 0;
         float mAngleYZ = 0;
-        glm::vec2 mCameraTarget;
-        glm::vec3 mCameraDirection{0, 0, 0};
+
         int mCameraRotation = 0;
         int mRotationTarget = 0;
 
