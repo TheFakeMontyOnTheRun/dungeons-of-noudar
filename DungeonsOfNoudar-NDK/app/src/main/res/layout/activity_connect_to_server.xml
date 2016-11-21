@@ -5,64 +5,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="br.odb.menu.ConnectToServerActivity"
-    android:orientation="vertical">
-
-    <ScrollView
+    android:orientation="horizontal">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:fillViewport="true"
+        android:orientation="horizontal"
         android:layout_height="match_parent">
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:background="#ccc"
+            android:id="@+id/edtServerState" />
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-
-
-            <Button
-                android:text="Button"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnConnect"
-                android:layout_weight="1" />
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
 
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="2"
-                android:ems="10"
-                android:id="@+id/edtPosX"
-                android:layout_weight="1" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="2"
-                android:ems="10"
-                android:id="@+id/edtPosY"
-                android:layout_weight="1" />
-
-            <Button
-                android:text="Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnSend"
-                android:layout_weight="1" />
+                <Button
+                    android:text="Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnConnect"
+                    android:layout_weight="1" />
 
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:background="#ccc"
-                android:id="@+id/edtServerState" />
-        </LinearLayout>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text="2"
+                    android:ems="10"
+                    android:id="@+id/edtPosX"
+                    android:layout_weight="1" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text="2"
+                    android:ems="10"
+                    android:id="@+id/edtPosY"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:text="Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnSend"
+                    android:layout_weight="1" />
 
 
-    </ScrollView>
+            </LinearLayout>
+
+
+        </ScrollView>
+
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

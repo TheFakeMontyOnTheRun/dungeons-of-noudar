@@ -34,10 +34,21 @@ public class NoudarGame extends Game {
 		int decodedY = Integer.parseInt(y);
 		int playerId = Integer.parseInt(params.get("playerId"));
 
-		System.out.println( "placing position for " + playerId + " at " + decodedX + ", " + decodedY );
-		table[decodedY][decodedX] = playerId;
-		
-		setTheNextPlayerAsCurrent();
+		if ( table[decodedY][decodedX] == 0 && playerId == currentPlayerId ) {
+			System.out.println("placing position for " + playerId + " at " + decodedX + ", " + decodedY);
+
+
+			for (int c = 0; c < kGameMapSize; ++c) {
+				for (int d = 0; d < kGameMapSize; ++d) {
+					if (table[c][d] == playerId ) {
+						table[c][d] = 0;
+					}
+				}
+			}
+			table[decodedY][decodedX] = playerId;
+
+			setTheNextPlayerAsCurrent();
+		}
 	}
 
 	public void writeState(OutputStream os) {
@@ -46,26 +57,28 @@ public class NoudarGame extends Game {
 		
 		
 		try {
+			System.out.println();
 			for (int c = 0; c < kGameMapSize; ++c) {
 				for (int d = 0; d < kGameMapSize; ++d) {
 					sb.append(table[c][d]);
+					System.out.print( table[c][d]);
 				}
+				System.out.println();
 			}			
 			
-//			System.out.println( "writing status for " + currentPlayerId );
+			System.out.println( "writing status for " + currentPlayerId );
 			
-//			Player p = players.get(currentPlayerId);
+			Player p = players.get(currentPlayerId);
 			
-//			if ( p != null ) {
+			if ( p != null ) {
 				sb.append( "</state><current>" );
-				sb.append( "0" );
-//				sb.append(p.playerId);
+				sb.append(p.playerId);
 				sb.append( "</current><winner>" );
 				sb.append(winnerPlayerId);
 				sb.append( "</winner></game>" );
-//			} else {
-//				System.out.println( "current player is null!" );
-//			}
+			} else {
+				System.out.println( "current player is null!" );
+			}
 
 			os.write( sb.toString().getBytes() );
 		} catch (IOException e) {
@@ -76,6 +89,6 @@ public class NoudarGame extends Game {
 
 	@Override
 	public int getNumberOfRequiredPlayers() {
-		return 1;
+		return 2;
 	}
 }

@@ -90,7 +90,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="br.odb.menu.CardboardRootActivity" />
         </activity>
-        <activity android:name="br.odb.menu.ConnectToServerActivity">
+        <activity android:name="br.odb.menu.ConnectToServerActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
