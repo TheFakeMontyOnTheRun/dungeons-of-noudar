@@ -32,6 +32,7 @@ public class ConnectToServerActivity extends Activity {
 
     String gameId = "";
     String playerId = "";
+    String currentPlayerId = "";
     private final Timer mTimer = new Timer();
 
     public static interface OnRequestResult {
@@ -182,9 +183,9 @@ public class ConnectToServerActivity extends Activity {
                         node = list.item(c);
 
                         if ("playerId".equalsIgnoreCase(node.getNodeName())) {
-                            playerId = node.getChildNodes().item(0).getNodeValue();
+                            playerId = node.getChildNodes().item(0).getNodeValue().trim();
                         } else if ("gameId".equalsIgnoreCase(node.getNodeName())) {
-                            gameId = node.getChildNodes().item(0).getNodeValue();
+                            gameId = node.getChildNodes().item(0).getNodeValue().trim();
                         }
                     }
 
@@ -253,6 +254,8 @@ public class ConnectToServerActivity extends Activity {
                             }
 
                             data = newState;
+                        } else if ("current".equalsIgnoreCase(node.getNodeName())) {
+                            currentPlayerId = node.getChildNodes().item(0).getNodeValue().trim();
                         }
                     }
 
@@ -282,6 +285,7 @@ public class ConnectToServerActivity extends Activity {
             public void run() {
                 EditText edtServerState = (EditText) findViewById(R.id.edtServerState);
                 edtServerState.setText(state);
+                findViewById(R.id.btnSend).setEnabled( currentPlayerId.equals( playerId ) );
             }
         });
     }
