@@ -297,7 +297,9 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 					"lady0.png",
 					"lady1.png",
 					"lady2.png",
-					"grass.png", //crusader
+					"crusader0.png",
+					"crusader1.png",
+					"crusader2.png",
 					(isDungeonSurfaceLevel ? "shadow.png" : "stoneshadow.png"),
 					(isDungeonSurfaceLevel ? "ceiling.png" : "stoneceiling.png"),
 					"ceilingdoor.png",

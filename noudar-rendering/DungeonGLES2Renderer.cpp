@@ -507,10 +507,11 @@ namespace odb {
 
 
         mElementMap['@'] = ETextures::Cuco0;
+        mElementMap['?'] = ETextures::Crusader0;
 
         mElementMap[' '] = ETextures::Skybox;
 
-        mElementMap['^'] = ETextures::Crusader;
+        mElementMap['^'] = ETextures::Crusader0;
 
     }
 
@@ -813,7 +814,7 @@ namespace odb {
                     pos = glm::vec3(-10 + (fx * 2), -4.0f, -10 + (-fz * 2));
 
 
-                    if (actor == '@') {
+                    if (actor == '@' || actor == '?') {
 
 
                         batches[static_cast<ETextures >(mElementMap[actor])].emplace_back(

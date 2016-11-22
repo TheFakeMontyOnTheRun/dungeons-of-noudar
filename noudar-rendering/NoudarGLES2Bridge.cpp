@@ -78,10 +78,14 @@ namespace odb {
 
 	            auto actor = map.getActorAt({ x, y } );
 
-	            if ( actor != nullptr && actor != current ) {
-		            ids[ position ] = actor->getId();
-		            actors[ position ] = '@';
-	            }
+	            if ( actor != nullptr) {
+                    ids[ position ] = actor->getId();
+                    if ( actor->getTeam() != current->getTeam() ) {
+                        actors[ position ] = '@';
+                    } else {
+                        actors[ position ] = (actor == current)? '^' : '?';
+                    }
+                }
             }
         }
 
