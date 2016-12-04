@@ -70,7 +70,7 @@ EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *
     } else if (code == "KeyZ") {
         moveLeft();
     } else if (code == "KeyX") {
-        moveLeft();
+        moveRight();
     }
 
     std::cout << "key code: " << e->code << std::endl;
