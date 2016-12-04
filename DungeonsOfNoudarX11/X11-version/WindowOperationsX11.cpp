@@ -68,7 +68,9 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
     toReturn.push_back( loadPNG( "res/lady0.png") );
     toReturn.push_back( loadPNG( "res/lady1.png") );
     toReturn.push_back( loadPNG( "res/lady2.png") );
-    toReturn.push_back( loadPNG( "res/bull0.png") );
+    toReturn.push_back( loadPNG( "res/crusader0.png") );
+	toReturn.push_back( loadPNG( "res/crusader1.png") );
+	toReturn.push_back( loadPNG( "res/crusader2.png") );
     toReturn.push_back( loadPNG( "res/shadow.png") );
     toReturn.push_back( loadPNG( "res/ceiling.png") );
     toReturn.push_back( loadPNG( "res/ceilingdoor.png") );
