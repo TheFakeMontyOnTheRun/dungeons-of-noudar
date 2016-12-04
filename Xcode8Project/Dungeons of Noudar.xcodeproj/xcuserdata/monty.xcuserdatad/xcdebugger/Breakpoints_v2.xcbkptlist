@@ -15,7 +15,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "406"
             endingLineNumber = "406"
-            landmarkName = "DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount, const glm::mat4 &amp;transform)"
+            landmarkName = "DungeonGLES2Renderer::deleteVBOs()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarView.mm"
-            timestampString = "500424449.568306"
+            timestampString = "502575865.58781"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "378"
-            endingLineNumber = "378"
+            startingLineNumber = "375"
+            endingLineNumber = "375"
             landmarkName = "-drawView"
             landmarkType = "7">
          </BreakpointContent>
@@ -47,7 +47,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "421"
             endingLineNumber = "421"
-            landmarkName = "DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount, const glm::mat4 &amp;transform)"
+            landmarkName = "DungeonGLES2Renderer::createVBOs()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

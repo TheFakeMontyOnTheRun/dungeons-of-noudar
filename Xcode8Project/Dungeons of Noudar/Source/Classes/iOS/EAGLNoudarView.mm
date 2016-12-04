@@ -129,7 +129,9 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady0" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady1" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bull0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader1" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader2" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"shadow" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceiling" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingdoor" ofType:@"png"] UTF8String ]));
@@ -139,15 +141,12 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat1" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat2" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingbars" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks" ofType:@"png"] UTF8String ]));	;
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"clouds" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"monty" ofType:@"png"] UTF8String ]));
-	
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassfar" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"grassstonefar" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassnear" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"grassstonenear" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cross" ofType:@"png"] UTF8String ]));
 	
 	return toReturn;
 }

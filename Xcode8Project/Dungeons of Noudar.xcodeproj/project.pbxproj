@@ -189,6 +189,12 @@
 		F140E9231DCFA64D00B28CCA /* turtle2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E89B1DCFA64D00B28CCA /* turtle2.png */; };
 		F140E9241DCFA64D00B28CCA /* turtle2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E89B1DCFA64D00B28CCA /* turtle2.png */; };
 		F140E9251DCFA64D00B28CCA /* vertex.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F140E89C1DCFA64D00B28CCA /* vertex.glsl */; };
+		F17238DF1DF4B5CC00194CF0 /* crusader0.png in Resources */ = {isa = PBXBuildFile; fileRef = F17238DC1DF4B5CC00194CF0 /* crusader0.png */; };
+		F17238E01DF4B5CC00194CF0 /* crusader0.png in Resources */ = {isa = PBXBuildFile; fileRef = F17238DC1DF4B5CC00194CF0 /* crusader0.png */; };
+		F17238E11DF4B5CC00194CF0 /* crusader1.png in Resources */ = {isa = PBXBuildFile; fileRef = F17238DD1DF4B5CC00194CF0 /* crusader1.png */; };
+		F17238E21DF4B5CC00194CF0 /* crusader1.png in Resources */ = {isa = PBXBuildFile; fileRef = F17238DD1DF4B5CC00194CF0 /* crusader1.png */; };
+		F17238E31DF4B5CC00194CF0 /* crusader2.png in Resources */ = {isa = PBXBuildFile; fileRef = F17238DE1DF4B5CC00194CF0 /* crusader2.png */; };
+		F17238E41DF4B5CC00194CF0 /* crusader2.png in Resources */ = {isa = PBXBuildFile; fileRef = F17238DE1DF4B5CC00194CF0 /* crusader2.png */; };
 		F18755581DC90ECC001188C5 /* CActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552C1DC90ECC001188C5 /* CActor.cpp */; };
 		F18755591DC90ECC001188C5 /* CActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552C1DC90ECC001188C5 /* CActor.cpp */; };
 		F187555C1DC90ECC001188C5 /* CCuco.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552E1DC90ECC001188C5 /* CCuco.cpp */; };
@@ -382,6 +388,9 @@
 		F140E89A1DCFA64D00B28CCA /* turtle1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = turtle1.png; sourceTree = "<group>"; };
 		F140E89B1DCFA64D00B28CCA /* turtle2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = turtle2.png; sourceTree = "<group>"; };
 		F140E89C1DCFA64D00B28CCA /* vertex.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vertex.glsl; sourceTree = "<group>"; };
+		F17238DC1DF4B5CC00194CF0 /* crusader0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crusader0.png; sourceTree = "<group>"; };
+		F17238DD1DF4B5CC00194CF0 /* crusader1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crusader1.png; sourceTree = "<group>"; };
+		F17238DE1DF4B5CC00194CF0 /* crusader2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = crusader2.png; sourceTree = "<group>"; };
 		F18755181DC90ECC001188C5 /* CActor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CActor.h; sourceTree = "<group>"; };
 		F18755191DC90ECC001188C5 /* CCuco.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCuco.h; sourceTree = "<group>"; };
 		F187551A1DC90ECC001188C5 /* CDoorway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDoorway.h; sourceTree = "<group>"; };
@@ -516,6 +525,9 @@
 		3A4CF88F1A89593700324DBF /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				F17238DC1DF4B5CC00194CF0 /* crusader0.png */,
+				F17238DD1DF4B5CC00194CF0 /* crusader1.png */,
+				F17238DE1DF4B5CC00194CF0 /* crusader2.png */,
 				F140E8581DCFA64C00B28CCA /* arch.png */,
 				F140E8591DCFA64C00B28CCA /* bars.png */,
 				F140E85A1DCFA64C00B28CCA /* begin.png */,
@@ -1010,10 +1022,12 @@
 				F140E9211DCFA64D00B28CCA /* turtle1.png in Resources */,
 				F140E8F71DCFA64D00B28CCA /* monsterdamage.wav in Resources */,
 				F140E8C91DCFA64D00B28CCA /* cuco2.png in Resources */,
+				F17238E31DF4B5CC00194CF0 /* crusader2.png in Resources */,
 				F140E8E11DCFA64D00B28CCA /* falcon1.png in Resources */,
 				F140E9091DCFA64D00B28CCA /* splat2.png in Resources */,
 				F140E8ED1DCFA64D00B28CCA /* grassstonenear.png in Resources */,
 				F140E8F31DCFA64D00B28CCA /* lady2.png in Resources */,
+				F17238DF1DF4B5CC00194CF0 /* crusader0.png in Resources */,
 				F140E9171DCFA64D00B28CCA /* stonegrassnear.png in Resources */,
 				F140E8CD1DCFA64D00B28CCA /* cursorbad1.png in Resources */,
 				F140E90B1DCFA64D00B28CCA /* stepsstones.wav in Resources */,
@@ -1025,6 +1039,7 @@
 				F140E8BB1DCFA64D00B28CCA /* ceilingbegin.png in Resources */,
 				F140E8FD1DCFA64D00B28CCA /* path8_resized.png in Resources */,
 				3A4CF8AE1A89593700324DBF /* reflect.fsh in Resources */,
+				F17238E11DF4B5CC00194CF0 /* crusader1.png in Resources */,
 				F140E9251DCFA64D00B28CCA /* vertex.glsl in Resources */,
 				F140E8E91DCFA64D00B28CCA /* grasssteps.wav in Resources */,
 				F140E9031DCFA64D00B28CCA /* shadow.png in Resources */,
@@ -1046,12 +1061,15 @@
 				F140E9141DCFA64D00B28CCA /* stonefloor.png in Resources */,
 				F140E9001DCFA64D00B28CCA /* playerdamage.wav in Resources */,
 				F140E8FE1DCFA64D00B28CCA /* path8_resized.png in Resources */,
+				F17238E01DF4B5CC00194CF0 /* crusader0.png in Resources */,
 				F140E9241DCFA64D00B28CCA /* turtle2.png in Resources */,
 				F140E9121DCFA64D00B28CCA /* stonecursorgood.png in Resources */,
 				F140E8C01DCFA64D00B28CCA /* ceilingend.png in Resources */,
 				F140E8AE1DCFA64D00B28CCA /* bricks_candles.png in Resources */,
 				F140E8CC1DCFA64D00B28CCA /* cursorbad0.png in Resources */,
+				F17238E41DF4B5CC00194CF0 /* crusader2.png in Resources */,
 				F140E8A41DCFA64D00B28CCA /* bgnoise.wav in Resources */,
+				F17238E21DF4B5CC00194CF0 /* crusader1.png in Resources */,
 				F140E8B41DCFA64D00B28CCA /* bull1.png in Resources */,
 				F140E91A1DCFA64D00B28CCA /* stoneshadow.png in Resources */,
 				F140E8DE1DCFA64D00B28CCA /* exit.png in Resources */,
@@ -1355,6 +1373,7 @@
 		3A4CF8891A8958DD00324DBF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1368,6 +1387,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = br.odb.noudar;
 				PRODUCT_NAME = "Dungeons of Noudar iOS";
 				SDKROOT = iphoneos;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				USER_HEADER_SEARCH_PATHS = "../noudar-core/noudar-core/include/** ../glm/** ../gles2-renderer/** ../noudar-rendering/** ../OpenALSoundSystem";
 			};
 			name = Debug;
@@ -1375,6 +1395,7 @@
 		3A4CF88A1A8958DD00324DBF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1385,6 +1406,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = br.odb.noudar;
 				PRODUCT_NAME = "Dungeons of Noudar iOS";
 				SDKROOT = iphoneos;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				USER_HEADER_SEARCH_PATHS = "../noudar-core/noudar-core/include/** ../glm/** ../gles2-renderer/** ../noudar-rendering/** ../OpenALSoundSystem";
 			};
 			name = Release;
