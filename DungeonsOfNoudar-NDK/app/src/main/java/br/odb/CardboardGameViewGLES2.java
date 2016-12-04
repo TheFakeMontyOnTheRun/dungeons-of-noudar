@@ -312,6 +312,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 					"grassstonefar.png",
 					"stonegrassnear.png",
 					"grassstonenear.png",
+					"cross.png",
 			});
 			setTextures(bitmaps);
 		} catch (IOException e) {

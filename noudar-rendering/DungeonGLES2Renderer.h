@@ -53,6 +53,7 @@ namespace odb {
         GrassStoneFar,
         StoneGrassNear,
         GrassStoneNear,
+        Cross
     };
 
     using IntGameMap = std::array<std::array<ETextures, Knights::kMapSize>, Knights::kMapSize>;
@@ -182,6 +183,9 @@ namespace odb {
         static const float skyVertices[20];
         static const unsigned short skyIndices[6];
 
+
+        float mPlayerHealth = 0.0f;
+
     public:
         //basic bookeeping
         DungeonGLES2Renderer();
@@ -239,6 +243,11 @@ namespace odb {
         void setCursorPosition(int x, int y);
 
         void onReleasedLongPressingMove();
+
+        void setPlayerHealth( float health );
+
+        float mWidth{ 0.0f };
+        float mHeight{ 0.0f };
     };
 }
 #endif //NOUDARRENDERING_DUNGEONRENDERER_H

@@ -119,6 +119,7 @@ void renderFrame(long delta) {
 		gles2Renderer->updateFadeState(delta);
 		auto cursor = game->getCursorPosition();
 		gles2Renderer->setCursorPosition( cursor.x, cursor.y );
+		gles2Renderer->setPlayerHealth( game->getMap()->getAvatar()->getHP() );
 		gles2Renderer->render(map, snapshot, splat, lightMap, ids, animationList, animationTime);
 		gles2Renderer->updateCamera(delta);
 	}
