@@ -31,6 +31,12 @@
 #include <tuple>
 #include <array>
 
+#include "Vec2i.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CGameDelegate.h"
+#include "CMap.h"
+
 #include "NativeBitmap.h"
 #include "Texture.h"
 #include "Material.h"
@@ -602,17 +608,17 @@ namespace odb {
                                                 1.0f);
 
 
-        for (int z = 0; z < 20; ++z) {
-            for (int x = 0; x < 20; ++x) {
+        for (int z = 0; z < Knights::kMapSize; ++z) {
+            for (int x = 0; x < Knights::kMapSize; ++x) {
 
-                int tile = map[19 - z][x];
-                int actor = actors[19 - z][x];
-                int splatFrame = splats[19 - z][x];
+                int tile = map[Knights::kMapSize - 1 - z][x];
+                int actor = actors[Knights::kMapSize -1 - z][x];
+                int splatFrame = splats[Knights::kMapSize -1 - z][x];
 
-                Shade placeShade = (0.25f * std::min(255, lightMap[19 - z][x]) / 255.0f) + 0.75f;
+                Shade placeShade = (0.25f * std::min(255, lightMap[Knights::kMapSize -1 - z][x]) / 255.0f) + 0.75f;
                 Shade shade = placeShade;
 
-                if (x == mCursorPosition.x && (19 - z) == static_cast<int>(mCursorPosition.y)) {
+                if (x == mCursorPosition.x && (Knights::kMapSize -1 - z) == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
 
@@ -644,7 +650,7 @@ namespace odb {
                 }
 
 
-                pos = glm::vec3(-10 + (x * 2), -5.0f, -10 + (-z * 2));
+                pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -5.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                 batches[chosenTexture].emplace_back(std::get<0>(mFloorVBO),
                                                     std::get<1>(mFloorVBO),
                                                     std::get<2>(mFloorVBO),
@@ -654,7 +660,7 @@ namespace odb {
 
                 //walls
                 if (tile == '\\' || tile == '<' || tile == '|' || tile == 'S') {
-                    pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -4.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
 
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
                             std::get<0>(mCornerLeftFarVBO),
@@ -663,7 +669,7 @@ namespace odb {
                             getCornerLeftFarTransform(pos),
                             shade);
 
-                    pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -2.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
                             std::get<0>(mCornerLeftFarVBO),
                             std::get<1>(mCornerLeftFarVBO),
@@ -671,7 +677,7 @@ namespace odb {
                             getCornerLeftFarTransform(pos),
                             shade);
 
-                    pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), 0.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
                             std::get<0>(mCornerLeftFarVBO),
                             std::get<1>(mCornerLeftFarVBO),
@@ -681,7 +687,7 @@ namespace odb {
 
 
                 } else if (tile == '/' || tile == '>' || tile == '%' || tile == 'Z') {
-                    pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -4.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
                             std::get<0>(mCornerLeftNearVBO),
                             std::get<1>(mCornerLeftNearVBO),
@@ -689,7 +695,7 @@ namespace odb {
                             getCornerLeftNearTransform(pos),
                             shade);
 
-                    pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -2.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
                             std::get<0>(mCornerLeftNearVBO),
                             std::get<1>(mCornerLeftNearVBO),
@@ -697,7 +703,7 @@ namespace odb {
                             getCornerLeftNearTransform(pos),
                             shade);
 
-                    pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), 0.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
                             std::get<0>(mCornerLeftNearVBO),
                             std::get<1>(mCornerLeftNearVBO),
@@ -708,7 +714,7 @@ namespace odb {
                 } else if (tile != '.' && tile != '_' && tile != '=' && tile != '-' &&
                            tile != ')' && tile != '(' && tile != '}' && tile != '{') {
 
-                    pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -4.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
 
                     batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
                             std::get<0>(mCubeVBO),
@@ -733,7 +739,7 @@ namespace odb {
                     }
 
                     if (tile != 'E') {
-                        pos = glm::vec3(-10 + (x * 2), -2.0f, -10 + (-z * 2));
+                        pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -2.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                         batches[(tile == 'b') ? ETextures::CeilingEnd
                                               : mElementMap['1']].emplace_back(
                                 std::get<0>(mCubeVBO),
@@ -742,7 +748,7 @@ namespace odb {
                                 getCubeTransform(pos),
                                 shade);
 
-                        pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+                        pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), 0.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                         batches[(tile == 'b') ? ETextures::CeilingEnd
                                               : mElementMap['1']].emplace_back(
                                 std::get<0>(mCubeVBO),
@@ -757,7 +763,7 @@ namespace odb {
                 } else {
                     if (tile == '=' || tile == '-') {
 
-                        pos = glm::vec3(-10 + (x * 2), 0.0f, -10 + (-z * 2));
+                        pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), 0.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
 
                         batches[Floor].emplace_back(
                                 std::get<0>(mCubeVBO),
@@ -767,7 +773,7 @@ namespace odb {
                                                     shade);
                         shade -= 0.375f;
 
-                        pos = glm::vec3(-10 + (x * 2), -1.0f, -10 + (-z * 2));
+                        pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -1.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
 
                         batches[Floor].emplace_back(
                                 std::get<0>(mFloorVBO),
@@ -784,7 +790,7 @@ namespace odb {
                 //characters
                 if (actor != 0) {
 
-                    int id = ids[19 - z][x];
+                    int id = ids[Knights::kMapSize -1 - z][x];
                     float fx, fz;
 
                     fx = x;
@@ -807,11 +813,11 @@ namespace odb {
                         auto destPosition = std::get<1>(animation);
 
                         fx = (step * (destPosition.x - prevPosition.x)) + prevPosition.x;
-                        fz = 19.0f -
+                        fz = Knights::kMapSize -1 -
                              ((step * (destPosition.y - (prevPosition.y))) + prevPosition.y);
                     }
 
-                    pos = glm::vec3(-10 + (fx * 2), -4.0f, -10 + (-fz * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (fx * 2), -4.0f, -(Knights::kMapSize / 2.0f) + (-fz * 2));
 
 
                     if (actor == '@' || actor == '?') {
@@ -829,7 +835,7 @@ namespace odb {
                 }
 
                 if (splatFrame > -1) {
-                    pos = glm::vec3(-10 + (x * 2), -4.0f, -10 + (-z * 2));
+                    pos = glm::vec3(-(Knights::kMapSize / 2.0f) + (x * 2), -4.0f, -(Knights::kMapSize / 2.0f) + (-z * 2));
                     batches[static_cast<ETextures >(splatFrame +
                                                     ETextures::Splat0)].emplace_back(
                             std::get<0>(mBillboardVBO),
@@ -926,8 +932,8 @@ namespace odb {
         mAngleYZ = yz;
     }
 
-    glm::vec3 DungeonGLES2Renderer::transformToMapPosition(const glm::vec3 &pos) {
-        return glm::vec3(-10 + (pos.x * 2), -5.0f + pos.y, -10 + (-pos.z * 2));
+    glm::vec3 DungeonGLES2Renderer::    transformToMapPosition(const glm::vec3 &pos) {
+        return glm::vec3(-(Knights::kMapSize / 2.0f) + (pos.x * 2), -5.0f + pos.y, -(Knights::kMapSize / 2.0f) + (-pos.z * 2));
     }
 
     void DungeonGLES2Renderer::setCursorPosition(int x, int y) {

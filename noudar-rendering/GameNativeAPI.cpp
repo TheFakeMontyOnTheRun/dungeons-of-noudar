@@ -49,16 +49,18 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
-#include "VBORenderingJob.h"
-#include "DungeonGLES2Renderer.h"
-#include "LightningStrategy.h"
-#include "GameNativeAPI.h"
-
 #include "Vec2i.h"
 #include "IMapElement.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
+
+
+#include "VBORenderingJob.h"
+#include "DungeonGLES2Renderer.h"
+#include "LightningStrategy.h"
+#include "GameNativeAPI.h"
+
 #include "IRenderer.h"
 #include "NativeBitmap.h"
 #include "CKnight.h"
@@ -169,6 +171,7 @@ void updateAnimations( long delta ) {
 }
 
 void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosition) {
+
 	auto movement = std::make_tuple<>(previousPosition, newPosition, animationTime);
 
 	if (animationList.count(id) > 0) {
@@ -197,12 +200,13 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 
 void updateCharacterMovements(const int *idsLocal) {
 	int position;
+	for (int y = 0; y < Knights::kMapSize; ++y) {
+		for (int x = 0; x < Knights::kMapSize; ++x) {
 
-	for (int y = 0; y < 20; ++y) {
-		for (int x = 0; x < 20; ++x) {
-			position = (y * 20) + x;
+			position = (y * Knights::kMapSize) + x;
 			int id = idsLocal[position];
 			ids[y][x] = id;
+
 			if (id != 0) {
 				auto previousPosition = mPositions[id];
 
@@ -228,9 +232,9 @@ void updateLevelSnapshot(const int *level, const int *actors, const int *splats)
 	hasActiveSplats = false;
 	int position;
 
-	for (int y = 0; y < 20; ++y) {
-		for (int x = 0; x < 20; ++x) {
-			position = (y * 20) + x;
+	for (int y = 0; y < Knights::kMapSize; ++y) {
+		for (int x = 0; x < Knights::kMapSize; ++x) {
+			position = ( Knights::kMapSize * y ) + x;
 			map[y][x] = (odb::ETextures) level[position];
 			snapshot[y][x] = (odb::ETextures) actors[position];
 			splat[ y ][ x ] = static_cast<odb::ETextures>( -1 );

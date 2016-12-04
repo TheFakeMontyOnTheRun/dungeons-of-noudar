@@ -17,6 +17,7 @@
 #include <array>
 #include <fstream>
 #include <vector>
+#include <cstdlib>
 
 #include "Vec2i.h"
 #include "NativeBitmap.h"
@@ -44,10 +45,10 @@
 namespace odb {
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
-        std::array<int, 400> level;
-        std::array<int, 400> actors;
-        std::array<int, 400> splats;
-        std::array<int, 400> ids;
+        std::array<int, Knights::kMapSize * Knights::kMapSize> level;
+        std::array<int, Knights::kMapSize * Knights::kMapSize> actors;
+        std::array<int, Knights::kMapSize * Knights::kMapSize> splats;
+        std::array<int, Knights::kMapSize * Knights::kMapSize> ids;
 
         for (auto &item : level) {
             item = '.';
@@ -67,9 +68,9 @@ namespace odb {
 
         int position =  0;
 
-        for ( int y = 0; y < 20; ++y ) {
-            for ( int x = 0; x < 20; ++x ) {
-                position = ( y * 20 ) + x;
+        for ( int y = 0; y < Knights::kMapSize; ++y ) {
+            for ( int x = 0; x < Knights::kMapSize; ++x ) {
+                position = ( y * Knights::kMapSize) + x;
 	            auto element = map.getElementAt( x, y );
 
 	            if ( element != '0' ) {
@@ -89,7 +90,7 @@ namespace odb {
             }
         }
 
-	    position = ( current->getPosition().y * 20 ) + current->getPosition().x;
+	    position = ( current->getPosition().y * Knights::kMapSize ) + current->getPosition().x;
 	    ids[ position ] = current->getId();
 	    actors[ position ] = '^';
 

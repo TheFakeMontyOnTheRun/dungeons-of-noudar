@@ -35,6 +35,14 @@
 #include "MaterialList.h"
 #include "Scene.h"
 #include "VBORenderingJob.h"
+
+#include "Vec2i.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CGameDelegate.h"
+#include "CMap.h"
+
+
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 

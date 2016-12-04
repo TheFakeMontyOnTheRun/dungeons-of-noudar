@@ -273,8 +273,6 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		try {
 			Bitmap[] bitmaps;
 
-			boolean isDungeonSurfaceLevel = true;
-
 			bitmaps = loadBitmaps(assets, new String[]{
 					"grass.png",
 					"stonefloor.png",
@@ -300,8 +298,8 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 					"crusader0.png",
 					"crusader1.png",
 					"crusader2.png",
-					(isDungeonSurfaceLevel ? "shadow.png" : "stoneshadow.png"),
-					(isDungeonSurfaceLevel ? "ceiling.png" : "stoneceiling.png"),
+					"shadow.png",
+					"ceiling.png",
 					"ceilingdoor.png",
 					"ceilingbegin.png",
 					"ceilingend.png",
@@ -309,10 +307,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 					"splat1.png",
 					"splat2.png",
 					"ceilingbars.png",
-					"bricks.png",
-					"bricks.png",
 					"clouds.png",
-					"monty.png",
 					"stonegrassfar.png",
 					"grassstonefar.png",
 					"stonegrassnear.png",

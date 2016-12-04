@@ -48,18 +48,15 @@ namespace odb {
         Splat1,
         Splat2,
         CeilingBars,
-        CornerLeftFar,
-        CornerLeftNear,
         Skybox,
-        Monty,
         StoneGrassFar,
         GrassStoneFar,
         StoneGrassNear,
         GrassStoneNear,
     };
 
-    using IntGameMap = std::array<std::array<ETextures, 20>, 20>;
-    using IntField = std::array<std::array<int, 20>, 20>;
+    using IntGameMap = std::array<std::array<ETextures, Knights::kMapSize>, Knights::kMapSize>;
+    using IntField = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
     using LightMap = IntField;
     using Shade = float;
     using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
