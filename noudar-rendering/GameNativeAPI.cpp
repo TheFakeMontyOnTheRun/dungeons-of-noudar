@@ -245,18 +245,18 @@ void updateLevelSnapshot(const int *level, const int *actors, const int *splats)
 		snapshot.splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
 	}
 
-//	for (int y = 0; y < 20; ++y) {
-//		for (int x = 0; x < 20; ++x) {
-//
-//			if (map[y][x] == '|') {
-//
-//				if (!hasCache) {
-//					odb::LightningStrategy::castLightInAllDirections(lightMapCache, 255, map, x, y);
-//					odb::LightningStrategy::castLightInAllDirections(lightMap, 255, map, x, y);
-//				}
-//			}
-//		}
-//	}
+	for (int y = 0; y < 20; ++y) {
+		for (int x = 0; x < 20; ++x) {
+
+			if (snapshot.map[y][x] == '|') {
+
+				if (!hasCache) {
+					odb::LightningStrategy::castLightInAllDirections(lightMapCache, 255, snapshot.map, x, y);
+					odb::LightningStrategy::castLightInAllDirections(lightMap, 255, snapshot.map, x, y);
+				}
+			}
+		}
+	}
 
 	hasCache = true;
 }
