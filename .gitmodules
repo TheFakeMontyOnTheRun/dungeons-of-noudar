@@ -16,3 +16,6 @@
 [submodule "socketiocpp"]
 	path = socketiocpp
 	url = https://github.com/socketio/socket.io-client-cpp.git
+[submodule "stb"]
+	path = stb
+	url = https://github.com/TheFakeMontyOnTheRun/stb.git
