@@ -20,6 +20,7 @@ OBJS = X11-version/main.o \
                ../noudar-rendering/GameNativeAPI.o \
                ../noudar-rendering/DungeonGLES2Renderer.o \
                ../noudar-rendering/LightningStrategy.o \
+               ../noudar-rendering/NoudarDungeonSnapshot.o \
                ../noudar-rendering/SplatAnimation.o \
                ../noudar-rendering/NoudarGLES2Bridge.o \
                X11-version/LoadPNG.o \

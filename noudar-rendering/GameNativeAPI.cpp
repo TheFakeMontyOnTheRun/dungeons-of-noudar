@@ -69,15 +69,13 @@
 #include "NoudarGLES2Bridge.h"
 #include "SplatAnimation.h"
 
+#include "NoudarDungeonSnapshot.h"
+
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 std::map<int, glm::vec2> mPositions;
 
 
 bool hasActiveSplats;
-odb::IntGameMap map;
-odb::IntGameMap snapshot;
-odb::IntGameMap splat;
-odb::IntField ids;
 odb::LightMap lightMap;
 odb::AnimationList animationList;
 long animationTime = 0;
@@ -85,14 +83,13 @@ bool hasCache = false;
 odb::LightMap lightMapCache;
 
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
-
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
-
-
 std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 std::shared_ptr<odb::SoundListener> mainListener;
+
+odb::NoudarDungeonSnapshot snapshot;
 
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
 	textures = textureList;
@@ -120,7 +117,7 @@ void renderFrame(long delta) {
 		auto cursor = game->getCursorPosition();
 		gles2Renderer->setCursorPosition( cursor.x, cursor.y );
 		gles2Renderer->setPlayerHealth( game->getMap()->getAvatar()->getHP() );
-		gles2Renderer->render(map, snapshot, splat, lightMap, ids, animationList, animationTime);
+		gles2Renderer->render(snapshot.map, snapshot.snapshot, snapshot.splat, lightMap, snapshot.ids, animationList, animationTime);
 		gles2Renderer->updateCamera(delta);
 	}
 }
@@ -184,7 +181,7 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 
 	animationList[id] = movement;
 
-	char floorType = map[ newPosition.y ][ newPosition.x ];
+	char floorType = snapshot.map[ newPosition.y ][ newPosition.x ];
 
 	if ( floorType  == '.' || floorType == '-' ) {
 		soundEmitters[0]->play(mainListener);
@@ -206,7 +203,7 @@ void updateCharacterMovements(const int *idsLocal) {
 
 			position = (y * Knights::kMapSize) + x;
 			int id = idsLocal[position];
-			ids[y][x] = id;
+			snapshot.ids[y][x] = id;
 
 			if (id != 0) {
 				auto previousPosition = mPositions[id];
@@ -236,16 +233,16 @@ void updateLevelSnapshot(const int *level, const int *actors, const int *splats)
 	for (int y = 0; y < Knights::kMapSize; ++y) {
 		for (int x = 0; x < Knights::kMapSize; ++x) {
 			position = ( Knights::kMapSize * y ) + x;
-			map[y][x] = (odb::ETextures) level[position];
-			snapshot[y][x] = (odb::ETextures) actors[position];
-			splat[ y ][ x ] = static_cast<odb::ETextures>( -1 );
+			snapshot.map[y][x] = (odb::ETextures) level[position];
+			snapshot.snapshot[y][x] = (odb::ETextures) actors[position];
+			snapshot.splat[y][x] = -1;
 			lightMap[y][x] = lightMapCache[y][x];
 		}
 	}
 
 	for ( auto& splatAnim : splatAnimation ) {
 		auto pos = splatAnim->getPosition();
-		splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
+		snapshot.splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
 	}
 
 //	for (int y = 0; y < 20; ++y) {
