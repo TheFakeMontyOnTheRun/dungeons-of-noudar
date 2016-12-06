@@ -68,7 +68,7 @@ namespace odb {
 
 	bool isBlock(IntGameMap occluders, int x, int y) {
 
-		ETextures tile = occluders[y][x];
+		ETextures tile = static_cast<ETextures >(occluders[y][x]);
 
 		for (auto candidate : {ETextures::Bricks, ETextures::BricksCandles, ETextures::BricksBlood,
 		                       ETextures::Begin, ETextures::Exit}) {

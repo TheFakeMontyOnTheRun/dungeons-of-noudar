@@ -56,7 +56,7 @@ namespace odb {
         Cross
     };
 
-    using IntGameMap = std::array<std::array<ETextures, Knights::kMapSize>, Knights::kMapSize>;
+    using IntGameMap = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
     using IntField = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
     using LightMap = IntField;
     using Shade = float;
