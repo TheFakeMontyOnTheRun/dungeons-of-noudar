@@ -46,6 +46,8 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "IFileLoaderDelegate.h"
+#include "CPlainFileLoader.h"
 
 #include "GameNativeAPI.h"
 #include "Common.h"
@@ -249,11 +251,11 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	
 	setSoundEmitters( sounds, soundListener );
 	
+	auto path = std::string( [ [ [ NSBundle mainBundle] resourcePath ] UTF8String ] ) + "/";
 	
 	
-	fd = std::fopen( [[[NSBundle mainBundle] pathForResource:@"map_tiles0" ofType:@"txt"] UTF8String ], "r" );
-	readMap( readToString(fd ) );
-	fclose( fd );
+	readMap( std::make_shared<Knights::CPlainFileLoader>( path ) );
+	
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.1f
 //									 target:self selector:@selector(render) userInfo:nil repeats:YES];

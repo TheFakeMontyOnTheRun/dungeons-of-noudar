@@ -257,6 +257,12 @@
 		F1875EB31DC9153D001188C5 /* WavefrontMaterialReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875EAA1DC9153D001188C5 /* WavefrontMaterialReader.cpp */; };
 		F1875EB41DC9153D001188C5 /* WavefrontOBJReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875EAC1DC9153D001188C5 /* WavefrontOBJReader.cpp */; };
 		F1875EB51DC9153D001188C5 /* WavefrontOBJReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875EAC1DC9153D001188C5 /* WavefrontOBJReader.cpp */; };
+		F18A6EBF1DFC6D490036AB6E /* CPlainFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18A6EBD1DFC6D490036AB6E /* CPlainFileLoader.cpp */; };
+		F18A6EC01DFC6D490036AB6E /* CPlainFileLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18A6EBD1DFC6D490036AB6E /* CPlainFileLoader.cpp */; };
+		F18A6EC11DFC6D490036AB6E /* IFileLoaderDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18A6EBE1DFC6D490036AB6E /* IFileLoaderDelegate.cpp */; };
+		F18A6EC21DFC6D490036AB6E /* IFileLoaderDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18A6EBE1DFC6D490036AB6E /* IFileLoaderDelegate.cpp */; };
+		F18A6ECB1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18A6ECA1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp */; };
+		F18A6ECC1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18A6ECA1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp */; };
 		F1B23E9F1DCF5E33009E807B /* EAGLNoudarView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23E9E1DCF5E33009E807B /* EAGLNoudarView.mm */; };
 		F1B23EA21DCF5E60009E807B /* GL3NoudarView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EA11DCF5E60009E807B /* GL3NoudarView.mm */; };
 		F1B23EAA1DCF5ED0009E807B /* GL3NoudarWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.mm */; };
@@ -459,6 +465,12 @@
 		F1875EAB1DC9153D001188C5 /* WavefrontMaterialReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavefrontMaterialReader.h; sourceTree = "<group>"; };
 		F1875EAC1DC9153D001188C5 /* WavefrontOBJReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WavefrontOBJReader.cpp; sourceTree = "<group>"; };
 		F1875EAD1DC9153D001188C5 /* WavefrontOBJReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavefrontOBJReader.h; sourceTree = "<group>"; };
+		F18A6EBD1DFC6D490036AB6E /* CPlainFileLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CPlainFileLoader.cpp; sourceTree = "<group>"; };
+		F18A6EBE1DFC6D490036AB6E /* IFileLoaderDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IFileLoaderDelegate.cpp; sourceTree = "<group>"; };
+		F18A6EC31DFC6D810036AB6E /* CPlainFileLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPlainFileLoader.h; sourceTree = "<group>"; };
+		F18A6EC41DFC6D810036AB6E /* IFileLoaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IFileLoaderDelegate.h; sourceTree = "<group>"; };
+		F18A6EC91DFC70CA0036AB6E /* CLoadNewLevelCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLoadNewLevelCommand.h; sourceTree = "<group>"; };
+		F18A6ECA1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CLoadNewLevelCommand.cpp; sourceTree = "<group>"; };
 		F1B23E9D1DCF5E33009E807B /* EAGLNoudarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EAGLNoudarView.h; path = "Dungeons of Noudar/Source/Classes/iOS/EAGLNoudarView.h"; sourceTree = SOURCE_ROOT; };
 		F1B23E9E1DCF5E33009E807B /* EAGLNoudarView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = EAGLNoudarView.mm; path = "Dungeons of Noudar/Source/Classes/iOS/EAGLNoudarView.mm"; sourceTree = SOURCE_ROOT; };
 		F1B23EA01DCF5E60009E807B /* GL3NoudarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GL3NoudarView.h; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarView.h"; sourceTree = SOURCE_ROOT; };
@@ -767,6 +779,8 @@
 			isa = PBXGroup;
 			children = (
 				F18755181DC90ECC001188C5 /* CActor.h */,
+				F18A6EC31DFC6D810036AB6E /* CPlainFileLoader.h */,
+				F18A6EC41DFC6D810036AB6E /* IFileLoaderDelegate.h */,
 				F18755191DC90ECC001188C5 /* CCuco.h */,
 				F187551A1DC90ECC001188C5 /* CDoorway.h */,
 				F187551B1DC90ECC001188C5 /* CGame.h */,
@@ -785,6 +799,7 @@
 		F18755201DC90ECC001188C5 /* commands */ = {
 			isa = PBXGroup;
 			children = (
+				F18A6EC91DFC70CA0036AB6E /* CLoadNewLevelCommand.h */,
 				F18755211DC90ECC001188C5 /* CActorMeleeAttackCommand.h */,
 				F18755221DC90ECC001188C5 /* CEndTurnCommand.h */,
 				F18755231DC90ECC001188C5 /* CMoveActorCommand.h */,
@@ -799,6 +814,8 @@
 		F187552B1DC90ECC001188C5 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				F18A6EBD1DFC6D490036AB6E /* CPlainFileLoader.cpp */,
+				F18A6EBE1DFC6D490036AB6E /* IFileLoaderDelegate.cpp */,
 				F187552C1DC90ECC001188C5 /* CActor.cpp */,
 				F187552E1DC90ECC001188C5 /* CCuco.cpp */,
 				F18755301DC90ECC001188C5 /* CDoorway.cpp */,
@@ -815,6 +832,7 @@
 		F187553A1DC90ECC001188C5 /* commands */ = {
 			isa = PBXGroup;
 			children = (
+				F18A6ECA1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp */,
 				F187553B1DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp */,
 				F187553D1DC90ECC001188C5 /* CEndTurnCommand.cpp */,
 				F187553F1DC90ECC001188C5 /* CMoveActorCommand.cpp */,
@@ -1173,11 +1191,13 @@
 				F1875E9C1DC9124C001188C5 /* DungeonGLES2Renderer.cpp in Sources */,
 				F1875E791DC91137001188C5 /* Logger.cpp in Sources */,
 				F1875E7F1DC91137001188C5 /* MeshObject.cpp in Sources */,
+				F18A6ECB1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp in Sources */,
 				F13B87B11DD8B84600BF256E /* SoundClip.cpp in Sources */,
 				F13B87B31DD8B84600BF256E /* SoundEmitter.cpp in Sources */,
 				F1180B841DC8F67000BDC97D /* matrixUtil.c in Sources */,
 				F18755841DC90ECC001188C5 /* CQuitCommand.cpp in Sources */,
 				F1875E751DC91137001188C5 /* Common.cpp in Sources */,
+				F18A6EBF1DFC6D490036AB6E /* CPlainFileLoader.cpp in Sources */,
 				F1875EB41DC9153D001188C5 /* WavefrontOBJReader.cpp in Sources */,
 				F1875EA21DC9124C001188C5 /* NoudarGLES2Bridge.cpp in Sources */,
 				F18755741DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */,
@@ -1190,6 +1210,7 @@
 				F13B87B51DD8B84600BF256E /* SoundListener.cpp in Sources */,
 				F187556C1DC90ECC001188C5 /* CKnight.cpp in Sources */,
 				F1875E7D1DC91137001188C5 /* MaterialList.cpp in Sources */,
+				F18A6EC11DFC6D490036AB6E /* IFileLoaderDelegate.cpp in Sources */,
 				F18755801DC90ECC001188C5 /* CNullCommand.cpp in Sources */,
 				F1875E9E1DC9124C001188C5 /* GameNativeAPI.cpp in Sources */,
 				F1180B821DC8F67000BDC97D /* AppleImageLoader.mm in Sources */,
@@ -1206,6 +1227,7 @@
 				F18755891DC90ECC001188C5 /* CTurnActorCommand.cpp in Sources */,
 				F1875E801DC91137001188C5 /* MeshObject.cpp in Sources */,
 				F135586A1DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */,
+				F18A6EC21DFC6D490036AB6E /* IFileLoaderDelegate.cpp in Sources */,
 				F1B23EA21DCF5E60009E807B /* GL3NoudarView.mm in Sources */,
 				F1875E821DC91137001188C5 /* NativeBitmap.cpp in Sources */,
 				F13B87C61DD8B86800BF256E /* SoundUtils.cpp in Sources */,
@@ -1216,10 +1238,12 @@
 				F18755591DC90ECC001188C5 /* CActor.cpp in Sources */,
 				F18755711DC90ECC001188C5 /* CMap.cpp in Sources */,
 				F1875E7C1DC91137001188C5 /* Material.cpp in Sources */,
+				F18A6ECC1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp in Sources */,
 				F1875E8A1DC91137001188C5 /* Trig.cpp in Sources */,
 				F13B87C51DD8B86800BF256E /* SoundListener.cpp in Sources */,
 				F187558D1DC90ECC001188C5 /* IGameCommand.cpp in Sources */,
 				F1875EB11DC9153D001188C5 /* TrigBatch.cpp in Sources */,
+				F18A6EC01DFC6D490036AB6E /* CPlainFileLoader.cpp in Sources */,
 				F140E8571DCF9B4500B28CCA /* imageUtil.m in Sources */,
 				F18755851DC90ECC001188C5 /* CQuitCommand.cpp in Sources */,
 				F13B87C31DD8B86800BF256E /* SoundClip.cpp in Sources */,
