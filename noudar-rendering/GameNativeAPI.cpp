@@ -376,6 +376,9 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 		soundEmitters[ 5 ]->play( mainListener );
 	};
 
+	auto onLevelLoaded = [&]() {
+	};
+
 	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();
 
 	gameDelegate->setMonsterAttackedCallback( onMonsterAttack );
@@ -384,6 +387,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 	gameDelegate->setPlayerAttackedCallback( onPlayerAttack );
 	gameDelegate->setPlayerDiedCallback( onPlayerDead );
 	gameDelegate->setPlayerDamagedCallback( onPlayerDamaged );
+	gameDelegate->setOnLevelLoadedCallback( onLevelLoaded );
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
 
@@ -454,9 +458,13 @@ void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters,
 }
 
 void forceDirection( int direction ) {
+
+	if ( game == nullptr ) {
+		return;
+	}
+
 	char directions[] = { 'r', 'f', 'c', 'd'};
 	render->setNextCommand( directions[ direction ] );
 	game->tick();
 	render->setNextCommand('.');
-
 }
