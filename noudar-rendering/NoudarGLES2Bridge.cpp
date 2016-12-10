@@ -27,6 +27,8 @@
 #include "CMap.h"
 #include "IRenderer.h"
 #include "CKnight.h"
+
+#include "IFileLoaderDelegate.h"
 #include "CGame.h"
 #include "NoudarGLES2Bridge.h"
 

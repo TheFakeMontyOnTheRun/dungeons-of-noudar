@@ -39,6 +39,7 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "IFileLoaderDelegate.h"
 #include "x11.h"
 #include "NativeBitmap.h"
 #include "GameNativeAPI.h"

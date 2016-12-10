@@ -19,6 +19,9 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "IFileLoaderDelegate.h"
+#include "CPlainFileLoader.h"
+
 #include "NativeBitmap.h"
 #include "Common.h"
 #include "GameNativeAPI.h"
@@ -30,7 +33,7 @@ int main(int argc, char *argv[]) {
 	FILE *fd;
 
 	fd = fopen("res/map_tiles0.txt", "r");
-	readMap( readToString(fd) );
+	readMap( std::make_shared<Knights::CPlainFileLoader>() );
 	fclose(fd);
 
     setMainLoop();

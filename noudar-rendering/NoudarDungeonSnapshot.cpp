@@ -62,11 +62,15 @@
 #include "VBORenderingJob.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
+#include "IFileLoaderDelegate.h"
+#include "CPlainFileLoader.h"
 #include "GameNativeAPI.h"
 
 #include "IRenderer.h"
 #include "NativeBitmap.h"
 #include "CKnight.h"
+
+
 #include "CGame.h"
 #include "Common.h"
 #include "NoudarGLES2Bridge.h"

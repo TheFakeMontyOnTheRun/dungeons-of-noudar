@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <cmath>
 
+#include "IFileLoaderDelegate.h"
+
 #include "NativeBitmap.h"
 #include "Texture.h"
 #include "Material.h"
@@ -343,15 +345,8 @@ void setAngleYZ( float YZAngle ) {
 void loadMapData( std::string geoFile, std::string petFile ) {
 }
 
-void readMap( std::string data ) {
+void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 	render = std::make_shared<odb::NoudarGLES2Bridge>();
-
-	std::string::size_type n = 0;
-	while ( ( n = data.find( "\n", n ) ) != std::string::npos )
-	{
-		data.replace( n, 1, "" );
-		++n;
-	}
 
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
 		soundEmitters[ 4 ]->play( mainListener );
@@ -390,7 +385,7 @@ void readMap( std::string data ) {
 	gameDelegate->setPlayerDiedCallback( onPlayerDead );
 	gameDelegate->setPlayerDamagedCallback( onPlayerDamaged );
 
-	game = std::make_shared<Knights::CGame>( data, render, gameDelegate );
+	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
 
 	if ( game != nullptr ) {
 		game->tick();

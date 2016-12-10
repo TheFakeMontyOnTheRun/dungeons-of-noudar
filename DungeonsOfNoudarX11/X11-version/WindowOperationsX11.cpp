@@ -26,7 +26,7 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
-
+#include "IFileLoaderDelegate.h"
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
 #include "x11.h"

@@ -45,7 +45,7 @@ void setAngleYZ( float YZAngle );
 
 void loadMapData( std::string geoFile, std::string petFile );
 
-void readMap( std::string data );
+void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate  );
 
 void moveUp();
 

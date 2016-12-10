@@ -20,6 +20,8 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "IFileLoaderDelegate.h"
+#include "AndroidFileLoaderDelegate.h"
 #include "GameNativeAPI.h"
 #include "AndroidAudioSink.h"
 
@@ -197,11 +199,7 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 	gFragmentShader = readToString(fd);
 	fclose(fd);
 
-	fd = android_fopen("map_tiles0.txt", "r", asset_manager);
-	std::string data = readToString(fd);
-	fclose(fd);
-
-	readMap(data);
+	readMap(std::make_shared<odb::AndroidFileLoaderDelegate>(asset_manager));
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
