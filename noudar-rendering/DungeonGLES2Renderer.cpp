@@ -195,8 +195,11 @@ namespace odb {
         }
     }
 
-    GLuint DungeonGLES2Renderer::loadShader(GLenum shaderType, const char *pSource) {
-        auto shader = glCreateShader(shaderType);
+    GLuint DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
+
+        GLenum shaderSourceType = shaderType == EShaderType::kFragmentShader ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
+
+        auto shader = glCreateShader(shaderSourceType);
         if (shader) {
             glShaderSource(shader, 1, &pSource, NULL);
             glCompileShader(shader);
@@ -222,12 +225,12 @@ namespace odb {
 
     GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource,
                                                const char *pFragmentSource) {
-        auto vertexShader = loadShader(GL_VERTEX_SHADER, pVertexSource);
+        auto vertexShader = loadShader(EShaderType::kVertexShader , pVertexSource);
         if (!vertexShader) {
             return 0;
         }
 
-        auto pixelShader = loadShader(GL_FRAGMENT_SHADER, pFragmentSource);
+        auto pixelShader = loadShader(EShaderType::kFragmentShader, pFragmentSource);
         if (!pixelShader) {
             return 0;
         }

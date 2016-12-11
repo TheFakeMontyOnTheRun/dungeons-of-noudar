@@ -14,6 +14,11 @@ namespace odb {
         kFadingOut
     };
 
+    enum EShaderType {
+        kVertexShader,
+        kFragmentShader,
+    };
+
     enum ETextures {
         Grass,
         Floor,
@@ -91,7 +96,7 @@ namespace odb {
 
         unsigned int createProgram(const char *pVertexSource, const char *pFragmentSource);
 
-        unsigned int loadShader(GLenum shaderType, const char *pSource);
+        unsigned int loadShader(EShaderType shaderType, const char *pSource);
 
         glm::mat4 getSkyTransform(long offset);
 
@@ -117,14 +122,14 @@ namespace odb {
 
         const static int kSkyTextureLength = 400;
 
-        GLint vertexAttributePosition;
-        GLint modelMatrixAttributePosition;
-        GLint samplerUniformPosition;
-        GLint textureCoordinatesAttributePosition;
-        GLint projectionMatrixAttributePosition;
-        GLuint gProgram;
-        GLuint uView;
-        GLuint uMod;
+        int vertexAttributePosition;
+        int modelMatrixAttributePosition;
+        int samplerUniformPosition;
+        int textureCoordinatesAttributePosition;
+        int projectionMatrixAttributePosition;
+        unsigned int gProgram;
+        unsigned int uView;
+        unsigned int uMod;
 
         glm::mat4 projectionMatrix;
 
@@ -135,7 +140,7 @@ namespace odb {
 
         //fade state
         glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-        GLint fadeUniform;
+        int fadeUniform;
         EFadeState mFadeState = EFadeState::kNormal;
 
         //interaction
