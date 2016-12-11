@@ -29,15 +29,8 @@
 
 int main(int argc, char *argv[]) {
 	initWindow();
-
-	FILE *fd;
-
-	fd = fopen("res/map_tiles0.txt", "r");
 	readMap( std::make_shared<Knights::CPlainFileLoader>() );
-	fclose(fd);
-
     setMainLoop();
-    //...
 	destroyWindow();
 	return 0;
 }
