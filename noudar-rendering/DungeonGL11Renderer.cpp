@@ -7,9 +7,19 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#ifdef __APPLE__
+
+#import <OpenGL/OpenGL.h>
+#import <OpenGL/gl.h>
+#import <OpenGL/glu.h>
+#else
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "SDL.h"
+#endif
+
+
+
 
 #include <memory>
 #include <vector>

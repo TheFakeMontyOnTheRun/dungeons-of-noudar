@@ -12,20 +12,6 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#ifdef __APPLE__
-#if TARGET_IOS
-#import <OpenGLES/ES2/gl.h>
-#import <OpenGLES/ES2/glext.h>
-#else
-#import <OpenGL/OpenGL.h>
-#import <OpenGL/gl3.h>
-#endif
-#else
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <EGL/egl.h>
-#endif
-
 #include <cstdio>
 #include <assert.h>
 #include <math.h>
@@ -58,7 +44,7 @@
 #import <OpenGLES/ES2/glext.h>
 #else
 #import <OpenGL/OpenGL.h>
-#import <OpenGL/gl3.h>
+#import <OpenGL/gl.h>
 #endif
 #else
 #include <GLES2/gl2.h>
@@ -86,6 +72,8 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "IFileLoaderDelegate.h"
+#include "CPlainFileLoader.h"
 
 #include "GameNativeAPI.h"
 #include "Common.h"
@@ -153,7 +141,7 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat1" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat2" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingbars" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"clouds" ofType:@"png"] UTF8String ]))
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"clouds" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassfar" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"grassstonefar" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassnear" ofType:@"png"] UTF8String ]));
@@ -194,7 +182,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 		NSOpenGLPFAColorSize, 24,
 		NSOpenGLPFADepthSize, 24,
 		NSOpenGLPFAOpenGLProfile,
-		NSOpenGLProfileVersion3_2Core,
+		NSOpenGLProfileVersionLegacy,
 		0
 	};
 
@@ -336,9 +324,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	
 	
 	
-	fd = std::fopen( [[[NSBundle mainBundle] pathForResource:@"map_tiles0" ofType:@"txt"] UTF8String ], "r" );
-	readMap( readToString(fd ) );
-	fclose( fd );
+	auto path = std::string( [ [ [ NSBundle mainBundle] resourcePath ] UTF8String ] ) + "/";
+	
+	
+	readMap( std::make_shared<Knights::CPlainFileLoader>( path ) );
+
 
 	
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);

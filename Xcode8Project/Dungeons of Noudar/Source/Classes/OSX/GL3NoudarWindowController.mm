@@ -46,6 +46,8 @@
 #include "SoundEmitter.h"
 
 
+#include "IFileLoaderDelegate.h"
+#include "CPlainFileLoader.h"
 #include "GameNativeAPI.h"
 
 
@@ -136,19 +138,40 @@
 				[self goWindow];
 			}
 			return;
-		case 'i':
-			rotateCameraLeft();
-			return;
-		case 'o':
-			moveUp();
-			return;
-		case 'p':
+			
+		case 'z':
+			moveLeft();
+			break;
+			
+		case 'x':
+			moveRight();
+			break;
+			
+		case 'q':
+			exit(0);
+			break;
+			
+			
+			
+		case NSRightArrowFunctionKey:
 			rotateCameraRight();
-			return;
+			break;
+			
+		case NSLeftArrowFunctionKey:
+			rotateCameraLeft();
+			break;
+			
+		case NSUpArrowFunctionKey:
+			moveUp();
+			break;
+			
+		case NSDownArrowFunctionKey:
+			moveDown();
+			break;
 			
 			
 	}
 	
 	[super keyDown:event];
-}		
+}
 @end

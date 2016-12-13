@@ -42,6 +42,7 @@
 		F1180B901DC8F77D00BDC97D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A4CF89D1A89593700324DBF /* Info.plist */; };
 		F13558691DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
 		F135586A1DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
+		F13883621E00AE3A004F50EA /* DungeonGL11Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */; };
 		F13B87B11DD8B84600BF256E /* SoundClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87A51DD8B84600BF256E /* SoundClip.cpp */; };
 		F13B87B31DD8B84600BF256E /* SoundEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87A81DD8B84600BF256E /* SoundEmitter.cpp */; };
 		F13B87B51DD8B84600BF256E /* SoundListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87AB1DD8B84600BF256E /* SoundListener.cpp */; };
@@ -242,7 +243,6 @@
 		F1875E891DC91137001188C5 /* Trig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E6B1DC91136001188C5 /* Trig.cpp */; };
 		F1875E8A1DC91137001188C5 /* Trig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E6B1DC91136001188C5 /* Trig.cpp */; };
 		F1875E9C1DC9124C001188C5 /* DungeonGLES2Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E921DC9124C001188C5 /* DungeonGLES2Renderer.cpp */; };
-		F1875E9D1DC9124C001188C5 /* DungeonGLES2Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E921DC9124C001188C5 /* DungeonGLES2Renderer.cpp */; };
 		F1875E9E1DC9124C001188C5 /* GameNativeAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E941DC9124C001188C5 /* GameNativeAPI.cpp */; };
 		F1875E9F1DC9124C001188C5 /* GameNativeAPI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E941DC9124C001188C5 /* GameNativeAPI.cpp */; };
 		F1875EA01DC9124C001188C5 /* LightningStrategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E961DC9124C001188C5 /* LightningStrategy.cpp */; };
@@ -304,6 +304,7 @@
 		F1180B811DC8F67000BDC97D /* vectorUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vectorUtil.h; path = "Dungeons of Noudar/Source/Utility/vectorUtil.h"; sourceTree = SOURCE_ROOT; };
 		F1180B8C1DC8F68B00BDC97D /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = "Dungeons of Noudar/Source/main.mm"; sourceTree = SOURCE_ROOT; };
 		F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBORenderingJob.cpp; sourceTree = "<group>"; };
+		F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DungeonGL11Renderer.cpp; sourceTree = "<group>"; };
 		F13B87A41DD8B84600BF256E /* AudioSink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSink.h; sourceTree = "<group>"; };
 		F13B87A51DD8B84600BF256E /* SoundClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundClip.cpp; sourceTree = "<group>"; };
 		F13B87A61DD8B84600BF256E /* SoundClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundClip.h; sourceTree = "<group>"; };
@@ -881,6 +882,7 @@
 		F1875E911DC9124C001188C5 /* noudar-rendering */ = {
 			isa = PBXGroup;
 			children = (
+				F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */,
 				F1875E921DC9124C001188C5 /* DungeonGLES2Renderer.cpp */,
 				F1875E931DC9124C001188C5 /* DungeonGLES2Renderer.h */,
 				F1875E941DC9124C001188C5 /* GameNativeAPI.cpp */,
@@ -1224,6 +1226,7 @@
 			files = (
 				F187557D1DC90ECC001188C5 /* CMoveActorCommand.cpp in Sources */,
 				F18755751DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */,
+				F13883621E00AE3A004F50EA /* DungeonGL11Renderer.cpp in Sources */,
 				F18755891DC90ECC001188C5 /* CTurnActorCommand.cpp in Sources */,
 				F1875E801DC91137001188C5 /* MeshObject.cpp in Sources */,
 				F135586A1DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */,
@@ -1267,7 +1270,6 @@
 				F1875EA51DC9124C001188C5 /* SplatAnimation.cpp in Sources */,
 				F13B87C41DD8B86800BF256E /* SoundEmitter.cpp in Sources */,
 				F1180B6F1DC8F62500BDC97D /* AppDelegate.mm in Sources */,
-				F1875E9D1DC9124C001188C5 /* DungeonGLES2Renderer.cpp in Sources */,
 				F1180B891DC8F67000BDC97D /* sourceUtil.c in Sources */,
 				F1180B8B1DC8F67000BDC97D /* vectorUtil.c in Sources */,
 				F1180B871DC8F67000BDC97D /* modelUtil.c in Sources */,
