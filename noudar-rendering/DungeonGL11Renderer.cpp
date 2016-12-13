@@ -1,6 +1,7 @@
 //
 // Created by monty on 23/11/15.
 //
+#ifndef __ANDROID__
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -923,3 +924,5 @@ namespace odb {
         mPlayerHealth = health;
     }
 }
+
+#endif
