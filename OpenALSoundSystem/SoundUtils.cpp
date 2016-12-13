@@ -16,7 +16,6 @@ namespace odb {
     std::shared_ptr<SoundClip> makeSoundClipFrom(FILE* source) {
         fseek(source, 0, SEEK_END);
         int size = ftell(source);
-        printf( "size: %d\n", size );
         fseek(source, 0, SEEK_SET);
 
         using bufferElement = unsigned char;
@@ -44,10 +43,6 @@ namespace odb {
         bits |= buffer[offset];
         offset += 2;
         offset += 8; // ignore the data chunk
-        printf("Start offset: %d\n", offset);
-        printf("Channels: %u\n", channels);
-        printf("Frequency: %u\n", frequency);
-        printf("Bits: %u\n", bits);
         return std::make_shared<SoundClip>( buffer, size, offset, bits, channels, frequency );
     }
 }

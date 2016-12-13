@@ -5,9 +5,6 @@
 #include <emscripten.h>
 #endif
 
-#include <iostream>
-
-
 #ifdef __APPLE__
 #if TARGET_IOS
 #import <OpenAl/al.h>
@@ -47,7 +44,5 @@ namespace odb {
         alGenBuffers(1, buffers);
         mBufferHandle = buffers[ 0 ];
         alBufferData(mBufferHandle, format, &buffer[offset], size - offset, frequency);
-
-        std::cout << "is buffer?" << (alIsBuffer( mBufferHandle ) == AL_TRUE) << std::endl;
     }
 }
