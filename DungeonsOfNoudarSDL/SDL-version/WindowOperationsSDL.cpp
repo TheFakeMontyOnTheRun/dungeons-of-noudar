@@ -182,6 +182,7 @@ void initWindow() {
 void tick() {
     gameLoopTick( 20 );
     renderFrame( 20 );
+        SDL_GL_SwapBuffers();
 
 }
 

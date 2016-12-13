@@ -207,10 +207,7 @@ void setMainLoop() {
 				}
 			}
 
-		if ( isActive ) {
-		      tick();
-			drawGLScene( );
-		}
+	      tick();
 	}
 }
 
