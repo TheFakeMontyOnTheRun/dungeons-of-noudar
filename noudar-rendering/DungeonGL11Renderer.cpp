@@ -11,15 +11,10 @@
 
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
-#import <OpenGL/glu.h>
 #else
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include "SDL.h"
 #endif
-
-
-
 
 #include <memory>
 #include <vector>
@@ -255,9 +250,6 @@ namespace odb {
         glMatrixMode( GL_PROJECTION );
         glLoadIdentity( );
 
-        /* Set our perspective */
-        gluPerspective( 45.0f, w/h, 0.1f, 100.0f );
-
         printVerboseDriverInformation();
 
         gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
@@ -383,6 +375,11 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::setPerspective() {
+        glMatrixMode( GL_PROJECTION );
+        glLoadIdentity( );
+        glLoadMatrixf( &projectionMatrix[0][0]);
+        glMatrixMode( GL_MODELVIEW );
+
     }
 
     void DungeonGLES2Renderer::prepareShaderProgram() {
