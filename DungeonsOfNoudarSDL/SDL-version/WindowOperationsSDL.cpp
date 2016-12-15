@@ -146,7 +146,7 @@ void initWindow() {
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
-	video = SDL_SetVideoMode( winWidth, winHeight, 16,
+	video = SDL_SetVideoMode( winWidth, winHeight, 0,
 				videoFlags );
     
 	auto gVertexShader = "";
