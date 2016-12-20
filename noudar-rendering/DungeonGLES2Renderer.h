@@ -251,6 +251,8 @@ namespace odb {
 
         void setPlayerHealth( float health );
 
+        void resetCamera();
+
         float mWidth{ 0.0f };
         float mHeight{ 0.0f };
     };

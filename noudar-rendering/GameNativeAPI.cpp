@@ -140,7 +140,6 @@ void updateAnimations( long delta ) {
 	hasActiveSplats = splatAnimation.size() > 0;
 
 	for ( auto splat : splatAnimation ) {
-		odb::Logger::log( "updating animatings" );
 		splat->update( delta );
 	}
 
@@ -363,6 +362,13 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 	};
 
 	auto onLevelLoaded = [&]() {
+	    forceDirection( 0 );
+
+		hasCache = false;
+
+		if ( gles2Renderer != nullptr ) {
+			gles2Renderer->resetCamera();
+		}
 	};
 
 	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();
@@ -445,7 +451,7 @@ void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters,
 
 void forceDirection( int direction ) {
 
-	if ( game == nullptr ) {
+	if ( game == nullptr || render == nullptr ) {
 		return;
 	}
 
