@@ -2,6 +2,7 @@
 // Created by monty on 09/12/16.
 //
 
+#include <vector>
 
 #include <jni.h>
 #include <android/asset_manager.h>
@@ -19,6 +20,16 @@
 
 namespace odb {
     AndroidFileLoaderDelegate::AndroidFileLoaderDelegate(AAssetManager *assetManager) : mAssetManager( assetManager ) {
+    }
+
+    std::vector<char> AndroidFileLoaderDelegate::loadBinaryFileFromPath( const std::string& path ) {
+        FILE *fd;
+
+        fd = android_fopen(path.c_str(), "rb", mAssetManager);
+        std::vector<char> toReturn = readToBuffer(fd);
+        fclose(fd);
+
+        return toReturn;
     }
 
     std::string AndroidFileLoaderDelegate::loadFileFromPath( const std::string& path ) {

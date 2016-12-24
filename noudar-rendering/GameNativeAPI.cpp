@@ -58,8 +58,10 @@
 #include "SplatAnimation.h"
 
 #include "NoudarDungeonSnapshot.h"
+#include "OverlayNanoVGRenderer.h"
 
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
+std::shared_ptr<odb::OverlayNanoVGRenderer> overlayRenderer = nullptr;
 std::map<int, glm::vec2> mPositions;
 
 
@@ -83,6 +85,12 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	textures = textureList;
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
+
+	if ( overlayRenderer == nullptr ) {
+		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>();
+	}
+
+	overlayRenderer->setFrame( w, h );
 
 	gles2Renderer->setTexture(textures);
 	animationTime = 0;
@@ -108,6 +116,10 @@ void renderFrame(long delta) {
 		gles2Renderer->render(snapshot.map, snapshot.snapshot, snapshot.splat, lightMap, snapshot.ids, animationList, animationTime);
 		gles2Renderer->updateCamera(delta);
 	}
+
+	if ( overlayRenderer != nullptr ) {
+		overlayRenderer->render(snapshot);
+	}
 }
 
 void shutdown() {
@@ -125,6 +137,7 @@ void shutdown() {
 	}
 
 	gles2Renderer = nullptr;
+	overlayRenderer = nullptr;
 }
 
 void updateAnimations( long delta ) {
@@ -331,6 +344,13 @@ void loadMapData( std::string geoFile, std::string petFile ) {
 }
 
 void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
+
+	if ( overlayRenderer == nullptr ) {
+		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>();
+	}
+
+	overlayRenderer->loadFonts( fileLoaderDelegate );
+
 	render = std::make_shared<odb::NoudarGLES2Bridge>();
 
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {

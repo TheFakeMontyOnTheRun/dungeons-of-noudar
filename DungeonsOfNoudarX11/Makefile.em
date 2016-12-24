@@ -1,6 +1,7 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm
+CXXFLAGS = -O2 -g -c -std=c++0x -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src
 LDFLAGS =  -O2 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins
 CXX = em++
+CC = emcc
 OBJS = X11-version/main.o \
         ../noudar-core/noudar-core/src/CActor.o \
         ../noudar-core/noudar-core/src/CKnight.o \
@@ -21,6 +22,7 @@ OBJS = X11-version/main.o \
         ../noudar-core/noudar-core/src/commands/CNullCommand.o \
         ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
                ../noudar-rendering/GameNativeAPI.o \
+               ../noudar-rendering/OverlayNanoVGRenderer.o \
                ../noudar-rendering/DungeonGLES2Renderer.o \
                ../noudar-rendering/LightningStrategy.o \
                ../noudar-rendering/NoudarDungeonSnapshot.o \
@@ -36,6 +38,7 @@ OBJS = X11-version/main.o \
                ../gles2-renderer/VBORenderingJob.o \
                ../gles2-renderer/Texture.o \
                 ../gles2-renderer/Common.o \
+                ../nanovg/src/nanovg.o \
                 ../OpenALSoundSystem/SoundClip.o \
                 ../OpenALSoundSystem/SoundEmitter.o \
                 ../OpenALSoundSystem/SoundListener.o \

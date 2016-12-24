@@ -19,6 +19,7 @@ model {
 						srcDir "../../noudar-core/noudar-core/src"
 						srcDir "../../gles2-renderer"
 						srcDir "../../noudar-rendering"
+						srcDir "../../nanovg/src"
 						srcDir "../../AndroidSoundSystem"
 					}
 				}
@@ -35,6 +36,7 @@ model {
 		stl = "c++_static"
 		platformVersion 22
 
+		cppFlags.add("-I${file("../../nanovg/src")}".toString())
 		cppFlags.add("-I${file("../common_includes")}".toString())
 		cppFlags.add("-I${file("../../AndroidSoundSystem")}".toString())
 		cppFlags.add("-I${file("../../glm")}".toString())
