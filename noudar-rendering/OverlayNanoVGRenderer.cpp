@@ -37,6 +37,7 @@
 #include "IMapElement.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
+#include "IFileLoaderDelegate.h"
 #include "CMap.h"
 
 #include "NativeBitmap.h"
@@ -75,7 +76,7 @@ namespace odb {
 
     void OverlayNanoVGRenderer::loadFonts(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 
-        mFontData = fileLoaderDelegate->loadBinaryFileFromPath( fileLoaderDelegate->getFilePathPrefix() + "fonts/MedievalSharp.ttf" );
+        mFontData = fileLoaderDelegate->loadBinaryFileFromPath( fileLoaderDelegate->getFilePathPrefix() + "MedievalSharp.ttf" );
     }
 
 

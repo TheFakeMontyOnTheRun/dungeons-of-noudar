@@ -930,6 +930,14 @@ namespace odb {
     void DungeonGLES2Renderer::setPlayerHealth(float health) {
         mPlayerHealth = health;
     }
+    
+    void DungeonGLES2Renderer::resetCamera() {
+        mAngleXZ = 0;
+        mAngleYZ = 0;
+        mCameraRotation = 0;
+        mRotationTarget = 0;
+    }
+    
 }
 
 #endif

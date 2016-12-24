@@ -5,9 +5,6 @@
 #ifndef NOUDARRENDERING_OVERLAYNANOVGRENDERER_H
 #define NOUDARRENDERING_OVERLAYNANOVGRENDERER_H
 
-
-#include <IFileLoaderDelegate.h>
-
 namespace odb {
     class OverlayNanoVGRenderer {
 
