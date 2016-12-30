@@ -146,7 +146,7 @@ void initWindow() {
 
 	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
-	video = SDL_SetVideoMode( winWidth, winHeight, 16,
+	video = SDL_SetVideoMode( winWidth, winHeight, 0,
 				videoFlags );
     
 	auto gVertexShader = "";
@@ -182,6 +182,7 @@ void initWindow() {
 void tick() {
     gameLoopTick( 20 );
     renderFrame( 20 );
+        SDL_GL_SwapBuffers();
 
 }
 
