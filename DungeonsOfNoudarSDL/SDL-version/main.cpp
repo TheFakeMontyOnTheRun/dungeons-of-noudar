@@ -23,6 +23,18 @@
 
 #include "NativeBitmap.h"
 #include "Common.h"
+
+#include "Vec2i.h"
+#include "NativeBitmap.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CGameDelegate.h"
+#include "CMap.h"
+#include "IRenderer.h"
+#include "CKnight.h"
+
+#include "NoudarDungeonSnapshot.h"
+
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
 

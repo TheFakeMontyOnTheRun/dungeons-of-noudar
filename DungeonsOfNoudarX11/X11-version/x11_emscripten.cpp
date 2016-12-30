@@ -42,6 +42,18 @@
 #include "IFileLoaderDelegate.h"
 #include "x11.h"
 #include "NativeBitmap.h"
+
+#include "Vec2i.h"
+#include "NativeBitmap.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CGameDelegate.h"
+#include "CMap.h"
+#include "IRenderer.h"
+#include "CKnight.h"
+
+#include "NoudarDungeonSnapshot.h"
+
 #include "GameNativeAPI.h"
 
 #include <html5.h>
@@ -127,7 +139,7 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
     Window root;
     Window win;
     //   XVisualInfo *visInfo, visTemplate;
-    
+
     EGLContext ctx;
     EGLConfig config;
     EGLint num_configs;

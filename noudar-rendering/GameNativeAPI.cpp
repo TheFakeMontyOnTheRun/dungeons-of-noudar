@@ -44,10 +44,12 @@
 #include "CMap.h"
 
 
+#include "NoudarDungeonSnapshot.h"
+#include "GameNativeAPI.h"
+
 #include "VBORenderingJob.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
-#include "GameNativeAPI.h"
 
 #include "IRenderer.h"
 #include "NativeBitmap.h"
@@ -57,20 +59,24 @@
 #include "NoudarGLES2Bridge.h"
 #include "SplatAnimation.h"
 
-#include "NoudarDungeonSnapshot.h"
+
+
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 #include "OverlayNanoVGRenderer.h"
+std::shared_ptr<odb::OverlayNanoVGRenderer> overlayRenderer = nullptr;
+#endif
 
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
-std::shared_ptr<odb::OverlayNanoVGRenderer> overlayRenderer = nullptr;
+
 std::map<int, glm::vec2> mPositions;
 
 
 bool hasActiveSplats;
-odb::LightMap lightMap;
+odb::IntMap lightMap;
 odb::AnimationList animationList;
 long animationTime = 0;
 bool hasCache = false;
-odb::LightMap lightMapCache;
+odb::IntMap lightMapCache;
 
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::shared_ptr<Knights::CGame> game;
@@ -86,11 +92,14 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
 
+    #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+
 	if ( overlayRenderer == nullptr ) {
 		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>();
 	}
 
 	overlayRenderer->setFrame( w, h );
+    #endif
 
 	gles2Renderer->setTexture(textures);
 	animationTime = 0;
@@ -117,9 +126,12 @@ void renderFrame(long delta) {
 		gles2Renderer->updateCamera(delta);
 	}
 
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+
 	if ( overlayRenderer != nullptr ) {
 		overlayRenderer->render(snapshot);
 	}
+#endif
 }
 
 void shutdown() {
@@ -137,7 +149,10 @@ void shutdown() {
 	}
 
 	gles2Renderer = nullptr;
+
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 	overlayRenderer = nullptr;
+#endif
 }
 
 void updateAnimations( long delta ) {
@@ -196,13 +211,12 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 
 }
 
-void updateCharacterMovements(const int *idsLocal) {
-	int position;
+void updateCharacterMovements(const odb::IntMap& idsLocal) {
+
 	for (int y = 0; y < Knights::kMapSize; ++y) {
 		for (int x = 0; x < Knights::kMapSize; ++x) {
 
-			position = (y * Knights::kMapSize) + x;
-			int id = idsLocal[position];
+			int id = idsLocal[y][x];
 			snapshot.ids[y][x] = id;
 
 			if (id != 0) {
@@ -226,15 +240,13 @@ void setCameraPosition( int x, int y ) {
 	}
 }
 
-void updateLevelSnapshot(const int *level, const int *actors, const int *splats) {
+void updateLevelSnapshot(const odb::CharMap& level, const odb::CharMap& actors, const odb::IntMap& splats) {
 	hasActiveSplats = false;
-	int position;
 
 	for (int y = 0; y < Knights::kMapSize; ++y) {
 		for (int x = 0; x < Knights::kMapSize; ++x) {
-			position = ( Knights::kMapSize * y ) + x;
-			snapshot.map[y][x] = (odb::ETextures) level[position];
-			snapshot.snapshot[y][x] = (odb::ETextures) actors[position];
+			snapshot.map[y][x] = level[y][x];
+			snapshot.snapshot[y][x] = actors[y][x];
 			snapshot.splat[y][x] = -1;
 			lightMap[y][x] = lightMapCache[y][x];
 		}
@@ -345,13 +357,16 @@ void loadMapData( std::string geoFile, std::string petFile ) {
 
 void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 	if ( overlayRenderer == nullptr ) {
 		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>();
 	}
 
 	overlayRenderer->loadFonts( fileLoaderDelegate );
+#endif
 
 	render = std::make_shared<odb::NoudarGLES2Bridge>();
+
 
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
 		soundEmitters[ 4 ]->play( mainListener );
@@ -479,4 +494,10 @@ void forceDirection( int direction ) {
 	render->setNextCommand( directions[ direction ] );
 	game->tick();
 	render->setNextCommand('.');
+}
+
+
+void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
+	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat);
+	updateCharacterMovements( snapshot.ids );
 }

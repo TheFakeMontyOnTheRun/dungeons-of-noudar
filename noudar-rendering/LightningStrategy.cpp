@@ -29,7 +29,15 @@
 #include "CMap.h"
 
 
-#include "DungeonGLES2Renderer.h"
+#include "Vec2i.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CGameDelegate.h"
+#include "CMap.h"
+
+
+#include "NoudarDungeonSnapshot.h"
+
 #include "LightningStrategy.h"
 
 namespace odb {
@@ -38,12 +46,12 @@ namespace odb {
 		return 0 <= pos.first && pos.first < 20 && 0 <= pos.second && pos.second < 20;
 	}
 
-	void LightningStrategy::castPointLight(LightMap &lightMap, int emission, IntGameMap occluders,
+	void LightningStrategy::castPointLight(IntMap &lightMap, int emission, CharMap occluders,
 	                                       int x, int y) {
 		castLight(Direction::TOP, lightMap, emission, occluders, Vec2i{x, y});
 	}
 
-	void LightningStrategy::castLightInAllDirections(LightMap &lightMap, int emission, IntGameMap occluders,
+	void LightningStrategy::castLightInAllDirections(IntMap &lightMap, int emission, CharMap occluders,
 	                                                 int x, int y) {
 
 		castLight(Direction::N, lightMap, emission, occluders, Vec2i{x, y - 1});
@@ -52,12 +60,11 @@ namespace odb {
 		castLight(Direction::W, lightMap, emission, occluders, Vec2i{x - 1, y});
 	}
 
-	bool isBlock(IntGameMap occluders, int x, int y) {
+	bool isBlock(CharMap occluders, int x, int y) {
 
-		ETextures tile = static_cast<ETextures >(occluders[y][x]);
+		auto tile = occluders[y][x];
 
-		for (auto candidate : {ETextures::Bricks, ETextures::BricksCandles, ETextures::BricksBlood,
-		                       ETextures::Begin, ETextures::Exit}) {
+		for (auto candidate : { '1', 'Y', 'X', '9', '*'}) {
 			if (candidate == tile) {
 				return true;
 			}
@@ -67,8 +74,8 @@ namespace odb {
 	}
 
 
-	void LightningStrategy::castLight(Direction from, LightMap &lightMap, int emission,
-	                                  IntGameMap occluders, Vec2i pos) {
+	void LightningStrategy::castLight(Direction from, IntMap &lightMap, int emission,
+	                                  CharMap occluders, Vec2i pos) {
 
 		if (emission <= 1) {
 			return;

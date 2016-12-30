@@ -61,9 +61,6 @@ namespace odb {
         Cross
     };
 
-    using IntGameMap = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
-    using IntField = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
-    using LightMap = IntField;
     using Shade = float;
     using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
     using TextureId = int;
@@ -112,8 +109,8 @@ namespace odb {
 
         void consumeRenderingBatches(long animationTime);
 
-        void produceRenderingBatches(IntGameMap map, IntGameMap actors, IntGameMap splats,
-                                     LightMap lightmap, IntField ids,
+        void produceRenderingBatches(CharMap map, CharMap actors, IntMap splats,
+                                     IntMap lightmap, IntMap ids,
                                      AnimationList movingCharacters, long animationTime);
 
         glm::vec3 transformToMapPosition(const glm::vec3 &pos);
@@ -202,8 +199,8 @@ namespace odb {
 
         void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
-        void render(IntGameMap map, IntGameMap actors, IntGameMap splats, LightMap lightmap,
-                    IntField ids, AnimationList movingCharacters, long animationTime);
+        void render(CharMap map, CharMap actors, IntMap splats, IntMap lightmap,
+                    IntMap ids, AnimationList movingCharacters, long animationTime);
 
         void shutdown();
 

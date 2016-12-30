@@ -22,8 +22,15 @@
 #include "IFileLoaderDelegate.h"
 #include "CPlainFileLoader.h"
 
+#include "Vec2i.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CGameDelegate.h"
+#include "CMap.h"
+
 #include "NativeBitmap.h"
 #include "Common.h"
+#include "NoudarDungeonSnapshot.h"
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
 

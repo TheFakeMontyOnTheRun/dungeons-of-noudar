@@ -39,6 +39,7 @@
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
+#include "NoudarDungeonSnapshot.h"
 
 #include "GameNativeAPI.h"
 
@@ -47,60 +48,40 @@
 namespace odb {
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
-        std::array<int, Knights::kMapSize * Knights::kMapSize> level;
-        std::array<int, Knights::kMapSize * Knights::kMapSize> actors;
-        std::array<int, Knights::kMapSize * Knights::kMapSize> splats;
-        std::array<int, Knights::kMapSize * Knights::kMapSize> ids;
-
-        for (auto &item : level) {
-            item = '.';
-        }
-
-        for (auto &item : actors) {
-            item = 0;
-        }
-
-        for (auto &item : splats) {
-            item = -1;
-        }
-
-        for (auto &item: ids) {
-            item = 0;
-        }
-
-        int position =  0;
+        odb::NoudarDungeonSnapshot snapshot;
 
         for ( int y = 0; y < Knights::kMapSize; ++y ) {
             for ( int x = 0; x < Knights::kMapSize; ++x ) {
-                position = ( y * Knights::kMapSize) + x;
+
+                snapshot.map[ y ][ x ] = '.';
+                snapshot.snapshot[ y ][ x ] = '.';
+                snapshot.ids[ y ][ x ] = 0;
+                snapshot.splat[ y ][ x ] = -1;
+
 	            auto element = map.getElementAt( x, y );
 
 	            if ( element != '0' ) {
-		            level[ position ] = element;
+                    snapshot.map[ y ][ x ] = element;
 	            }
 
 	            auto actor = map.getActorAt({ x, y } );
 
 	            if ( actor != nullptr) {
-                    ids[ position ] = actor->getId();
+
+                    snapshot.ids[ y ][ x ] = actor->getId();
+
                     if ( actor->getTeam() != current->getTeam() ) {
-                        actors[ position ] = '@';
+                        snapshot.snapshot[ y ][ x ] = '@';
                     } else {
-                        actors[ position ] = (actor == current)? '^' : '?';
+                        snapshot.snapshot[ y ][ x ] = (actor == current)? '^' : '?';
                     }
                 }
             }
         }
 
-	    position = ( current->getPosition().y * Knights::kMapSize ) + current->getPosition().x;
-	    ids[ position ] = current->getId();
-	    actors[ position ] = '^';
-
-	    updateLevelSnapshot(level.data(), actors.data(), splats.data());
-        updateCharacterMovements(ids.data());
-
         auto cameraPosition = current->getPosition();
         setCameraPosition(cameraPosition.x, cameraPosition.y);
+        setSnapshot( snapshot );
     }
 
     char NoudarGLES2Bridge::getInput() {

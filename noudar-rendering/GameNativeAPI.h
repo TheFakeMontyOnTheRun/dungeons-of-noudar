@@ -15,9 +15,7 @@ void updateAnimations( long delta );
 
 void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosition);
 
-void updateCharacterMovements(const int *idsLocal);
-
-void updateLevelSnapshot(const int *level, const int *actors, const int *splats);
+void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot );
 
 void setCameraPosition( int x, int y );
 
