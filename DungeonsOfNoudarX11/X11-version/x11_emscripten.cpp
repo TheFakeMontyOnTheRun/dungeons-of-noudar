@@ -93,7 +93,7 @@ void enterFullScreenMode() {
     s.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT;
     s.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
     s.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
-    EMSCRIPTEN_RESULT ret = emscripten_enter_soft_fullscreen(0, &s);
+    emscripten_enter_soft_fullscreen(0, &s);
 }
 
 /*
@@ -127,7 +127,7 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
     Window root;
     Window win;
     //   XVisualInfo *visInfo, visTemplate;
-    int num_visuals;
+    
     EGLContext ctx;
     EGLConfig config;
     EGLint num_configs;
