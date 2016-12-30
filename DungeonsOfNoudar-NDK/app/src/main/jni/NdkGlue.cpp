@@ -9,6 +9,8 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <functional>
+#include <array>
 
 #include "Common.h"
 #include "Logger.h"
@@ -22,6 +24,17 @@
 
 #include "IFileLoaderDelegate.h"
 #include "AndroidFileLoaderDelegate.h"
+
+
+#include "Vec2i.h"
+#include "IMapElement.h"
+#include "CActor.h"
+#include "CGameDelegate.h"
+#include "CMap.h"
+
+
+#include "NoudarDungeonSnapshot.h"
+
 #include "GameNativeAPI.h"
 #include "AndroidAudioSink.h"
 
