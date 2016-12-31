@@ -21,7 +21,8 @@
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl3.h>
 #endif
-#endif
+
+#else
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2)
 
@@ -36,6 +37,7 @@
 
 #include <GL/gl.h>
 
+#endif
 #endif
 
 #include "nanovg_gl.h"
