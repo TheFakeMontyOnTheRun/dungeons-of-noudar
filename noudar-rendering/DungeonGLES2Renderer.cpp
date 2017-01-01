@@ -442,6 +442,7 @@ namespace odb {
         mSkyVBO = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6 );
 
         mTileProperties['.'] = { ETextures::Grass, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties['H'] = { ETextures::Grass, ETextures::Ceiling, ETextures::Skybox, ETextures::BricksCandles, mCubeVBO, 1, 3 };
         mTileProperties['0'] = { ETextures::Grass, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
         mTileProperties['-'] = { ETextures::Grass, ETextures::Ceiling, ETextures::Skybox, ETextures::Bricks, mCubeVBO, 1, 2 };
         mTileProperties['='] = { ETextures::Floor, ETextures::Ceiling, ETextures::Skybox, ETextures::Bricks, mCubeVBO, 1, 2 };
@@ -453,7 +454,7 @@ namespace odb {
         mTileProperties['1'] = { ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCubeVBO, 2, 1 };
         mTileProperties['\''] = { ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCubeVBO, 3, 1 };
         mTileProperties['#'] = { ETextures::Floor, ETextures::CeilingBars, ETextures::Bars, ETextures::Bricks, mCubeVBO, 2, 1 };
-        mTileProperties['H'] = { ETextures::Floor, ETextures::CeilingBars, ETextures::Skybox, ETextures::Bricks, mCubeVBO, 2, 1 };
+        mTileProperties['!'] = { ETextures::Floor, ETextures::CeilingBars, ETextures::Skybox, ETextures::Bricks, mCubeVBO, 2, 1 };
         mTileProperties['~'] = { ETextures::Floor, ETextures::CeilingBars, ETextures::Arch, ETextures::Bricks, mCubeVBO, 2, 1 };
         mTileProperties['Y'] = { ETextures::Skybox, ETextures::Skybox, ETextures::BricksCandles, ETextures::Bricks, mCubeVBO, 2, 1 };
         mTileProperties['X'] = { ETextures::Skybox, ETextures::Skybox, ETextures::BricksBlood, ETextures::Bricks, mCubeVBO, 2, 1 };
