@@ -8,6 +8,7 @@ OBJS = SDL-version/main.o \
         ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
         ../noudar-core/noudar-core/src/CCuco.o \
         ../noudar-core/noudar-core/src/CMap.o \
+        ../noudar-core/noudar-core/src/CElixirFountain.o \
         ../noudar-core/noudar-core/src/CDoorway.o \
         ../noudar-core/noudar-core/src/IMapElement.o \
         ../noudar-core/noudar-core/src/CGame.o \
