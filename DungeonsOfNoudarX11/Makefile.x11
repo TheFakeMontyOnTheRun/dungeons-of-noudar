@@ -4,6 +4,7 @@ CXX = clang++
 CC = clang
 OBJS = X11-version/main.o \
         ../noudar-core/noudar-core/src/CActor.o \
+        ../noudar-core/noudar-core/src/CElixirFountain.o \
         ../noudar-core/noudar-core/src/CKnight.o \
         ../noudar-core/noudar-core/src/CPlainFileLoader.o \
         ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
