@@ -112,7 +112,7 @@ namespace odb {
         if ( mFontData.size() > 0 ) {
 
 #ifdef NANOVG_GLES2_IMPLEMENTATION
-            mContext = 	nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES );
+            mContext = 	nvgCreateGLES2(NVG_STENCIL_STROKES );
 #else
             mContext = 	nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES );
 #endif
@@ -134,14 +134,12 @@ namespace odb {
 
         nvgBeginFrame(mContext, mWidth, mHeight, mWidth / mHeight);
 
-        nvgBeginPath(mContext);
-        nvgFillColor(mContext, nvgRGBA(255, 255, 255, 128));
-        nvgStrokeColor(mContext, nvgRGBA(255,0,0, 255));
-
         nvgFontSize(mContext, 18.0f);
         nvgFontFace(mContext, "font");
-        nvgFillColor(mContext, nvgRGBA(255,255,255,128));
+        nvgFillColor(mContext, nvgRGBA(255,255,255,255));
+        nvgStrokeColor(mContext, nvgRGBA(255,0,0, 255));
         nvgTextAlign(mContext,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+        nvgText(mContext, 10, 10, "Map", nullptr);
 
         for ( int y = 0; y < Knights::kMapSize; ++y ) {
             for ( int x = 0; x < Knights::kMapSize; ++x ) {
@@ -149,16 +147,8 @@ namespace odb {
                 if ( snapshot.ids[ y ][ x ] > 0 ) {
                     nvgRoundedRect(mContext, 10 + (10 * x), 10 + ( 10 * y ), 10, 10, 2.0f );
                 }
-
-                std::string element;
-                element = snapshot.map[ y ][ x ];
-                nvgText(mContext, 10 + (10 * x), 10 + ( 10 * y ), element.c_str(), nullptr);
-                element = snapshot.snapshot[ y ][ x ];
-                nvgText(mContext, 10 + (10 * x), 10 + ( 10 * y ), element.c_str(), nullptr);
             }
         }
-
-
 
         nvgFill(mContext);
         nvgStroke(mContext);

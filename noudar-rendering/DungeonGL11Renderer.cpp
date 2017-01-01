@@ -470,6 +470,7 @@ namespace odb {
 
 
         mElementMap['@'] = ETextures::Cuco0;
+        mElementMap['J'] = ETextures::Lady0;
         mElementMap['?'] = ETextures::Crusader0;
 
         mElementMap[' '] = ETextures::Skybox;

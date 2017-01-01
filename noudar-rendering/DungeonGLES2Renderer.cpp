@@ -440,6 +440,39 @@ namespace odb {
         mCornerLeftNearVBO = submitVBO((float *) cornerLeftNearVertices, 4, (unsigned short *) cornerLeftNearIndices, 6 );
         mFloorVBO = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6 );
         mSkyVBO = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6 );
+
+        mTileProperties['.'] = { ETextures::Grass, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties['0'] = { ETextures::Grass, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties['-'] = { ETextures::Grass, ETextures::Ceiling, ETextures::Skybox, ETextures::Bricks, mCubeVBO, 1, 2 };
+        mTileProperties['='] = { ETextures::Floor, ETextures::Ceiling, ETextures::Skybox, ETextures::Bricks, mCubeVBO, 1, 2 };
+        mTileProperties['_'] = { ETextures::Floor, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties['('] = { ETextures::GrassStoneFar, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties['{'] = { ETextures::GrassStoneNear, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties[')'] = { ETextures::StoneGrassNear, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties['}'] = { ETextures::StoneGrassFar, ETextures::Skybox, ETextures::Skybox, ETextures::Skybox, mFloorVBO, 0, 0 };
+        mTileProperties['1'] = { ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCubeVBO, 2, 1 };
+        mTileProperties['\''] = { ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCubeVBO, 3, 1 };
+        mTileProperties['#'] = { ETextures::Floor, ETextures::CeilingBars, ETextures::Bars, ETextures::Bricks, mCubeVBO, 2, 1 };
+        mTileProperties['H'] = { ETextures::Floor, ETextures::CeilingBars, ETextures::Skybox, ETextures::Bricks, mCubeVBO, 2, 1 };
+        mTileProperties['~'] = { ETextures::Floor, ETextures::CeilingBars, ETextures::Arch, ETextures::Bricks, mCubeVBO, 2, 1 };
+        mTileProperties['Y'] = { ETextures::Skybox, ETextures::Skybox, ETextures::BricksCandles, ETextures::Bricks, mCubeVBO, 2, 1 };
+        mTileProperties['X'] = { ETextures::Skybox, ETextures::Skybox, ETextures::BricksBlood, ETextures::Bricks, mCubeVBO, 2, 1 };
+        mTileProperties['9'] = { ETextures::Floor, ETextures::CeilingBegin, ETextures::Begin, ETextures::Skybox, mCubeVBO, 2, 1 };
+        mTileProperties['*'] = { ETextures::Floor, ETextures::CeilingEnd, ETextures::Exit, ETextures::Skybox, mCubeVBO, 1, 1 };
+        mTileProperties['%'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftNearVBO, 3, 1 };
+        mTileProperties['|'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftFarVBO, 3, 1 };
+        mTileProperties['\\'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftFarVBO, 2, 1 };
+        mTileProperties['/'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftNearVBO, 2, 1 };
+        mTileProperties['>'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftNearVBO, 2, 1 };
+        mTileProperties['<'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftFarVBO, 2, 1 };
+        mTileProperties['Z'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftNearVBO, 2, 1 };
+        mTileProperties['S'] = { ETextures::Floor, ETextures::Skybox, ETextures::Bricks, ETextures::Bricks, mCornerLeftFarVBO, 2, 1 };
+
+        mElementMap['@'] = ETextures::Cuco0;
+        mElementMap['J'] = ETextures::Lady0;
+        mElementMap['?'] = ETextures::Crusader0;
+        mElementMap[' '] = ETextures::Skybox;
+        mElementMap['^'] = ETextures::Crusader0;
     }
 
     void DungeonGLES2Renderer::clearBuffers() {
@@ -505,43 +538,6 @@ namespace odb {
     void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
         mBitmaps.clear();
         mBitmaps.insert(mBitmaps.end(), textures.begin(), textures.end());
-
-        mElementMap['.'] = ETextures::Grass;
-        mElementMap['_'] = ETextures::Floor;
-
-        mElementMap['('] = ETextures::GrassStoneFar;
-        mElementMap['{'] = ETextures::GrassStoneNear;
-
-        mElementMap[')'] = ETextures::StoneGrassNear;
-        mElementMap['}'] = ETextures::StoneGrassFar;
-
-        mElementMap['='] = ETextures::Floor;
-        mElementMap['1'] = ETextures::Bricks;
-        mElementMap['#'] = ETextures::Bars;
-        mElementMap['~'] = ETextures::Arch;
-        mElementMap['Y'] = ETextures::BricksCandles;
-        mElementMap['X'] = ETextures::BricksBlood;
-
-        mElementMap['%'] = ETextures::Bricks;
-        mElementMap['|'] = ETextures::Bricks;
-        mElementMap['\\'] = ETextures::Bricks;
-        mElementMap['/'] = ETextures::Bricks;
-        mElementMap['>'] = ETextures::Bricks;
-        mElementMap['<'] = ETextures::Bricks;
-        mElementMap['Z'] = ETextures::Bricks;
-        mElementMap['S'] = ETextures::Bricks;
-
-        mElementMap['9'] = ETextures::Exit;
-        mElementMap['*'] = ETextures::Begin;
-
-
-        mElementMap['@'] = ETextures::Cuco0;
-        mElementMap['?'] = ETextures::Crusader0;
-
-        mElementMap[' '] = ETextures::Skybox;
-
-        mElementMap['^'] = ETextures::Crusader0;
-
     }
 
     void DungeonGLES2Renderer::shutdown() {
@@ -696,7 +692,7 @@ namespace odb {
                                                        AnimationList movingCharacters,
                                                        long animationTime) {
 
-        ETextures chosenTexture;
+//        ETextures chosenTexture;
         glm::vec3 pos;
 
         batches.clear();
@@ -720,168 +716,57 @@ namespace odb {
                 char actor = actors[z][x];
                 int splatFrame = splats[z][x];
 
-                Shade placeShade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
-                Shade shade = placeShade;
+                Shade shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
 
-                if (x == mCursorPosition.x && (z) == static_cast<int>(mCursorPosition.y)) {
+                if (x == static_cast<int>(mCursorPosition.x) && z == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
 
-                if (tile == '.' || tile == '_' || tile == '=' || tile == '-' || tile == ')' ||
-                    tile == '(' || tile == '}' || tile == '{') {
-                    chosenTexture = mElementMap[tile];
-                } else if (tile == '#' || tile == '~' || tile == '|' || tile == '%') {
-                    chosenTexture = mElementMap['_'];
-                } else if (tile == '\\') {
-                    chosenTexture = mElementMap['('];
-                } else if (tile == '/') {
-                    chosenTexture = mElementMap[')'];
-                } else if (tile == '>') {
-                    chosenTexture = mElementMap['{'];
-                } else if (tile == '<') {
-                    chosenTexture = mElementMap['}'];
-                } else {
-                    chosenTexture = mElementMap['.'];
+
+                if ( mTileProperties.count( tile ) <= 0 ) {
+                    continue;
                 }
 
-                if (tile == '=' || tile == '-') {
-                    shade -= 0.25f;
-                }
+                auto tileProperties = mTileProperties[ tile ];
 
-                pos = glm::vec3(x * 2, -5.0f, z * 2);
-                batches[chosenTexture].emplace_back(std::get<0>(mFloorVBO),
+                if ( tileProperties.mFloorTexture != ETextures::Skybox ) {
+                    pos = glm::vec3(x * 2, -5.0f, z * 2);
+                    batches[tileProperties.mFloorTexture ].emplace_back(std::get<0>(mFloorVBO),
                                                     std::get<1>(mFloorVBO),
                                                     std::get<2>(mFloorVBO),
-                                                    getFloorTransform(pos), shade);
+                                                    getFloorTransform(pos), 1.0f );
+                }
 
-                shade = placeShade;
+                if ( tileProperties.mCeilingTexture != ETextures::Skybox ) {
+                    pos = glm::vec3(x * 2, -5.0f + (2.0 * tileProperties.mCeilingHeight), z * 2);
+                    batches[tileProperties.mCeilingTexture ].emplace_back(std::get<0>(mFloorVBO),
+                                                                        std::get<1>(mFloorVBO),
+                                                                        std::get<2>(mFloorVBO),
+                                                                        getFloorTransform(pos), 1.0f );
+                }
 
-                //walls
-                if (tile == '\\' || tile == '<' || tile == '|' || tile == 'S') {
-                    pos = glm::vec3(x * 2, -4.0f,z * 2);
-
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftFarVBO),
-                            std::get<1>(mCornerLeftFarVBO),
-                            std::get<2>(mCornerLeftFarVBO),
-                            getCornerLeftFarTransform(pos),
-                            shade);
-
-                    pos = glm::vec3(x * 2, -2.0f,z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftFarVBO),
-                            std::get<1>(mCornerLeftFarVBO),
-                            std::get<2>(mCornerLeftFarVBO),
-                            getCornerLeftFarTransform(pos),
-                            shade);
-
-                    pos = glm::vec3(x * 2, 0.0f,z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftFarVBO),
-                            std::get<1>(mCornerLeftFarVBO),
-                            std::get<2>(mCornerLeftFarVBO),
-                            getCornerLeftFarTransform(pos),
-                            shade);
-
-
-                } else if (tile == '/' || tile == '>' || tile == '%' || tile == 'Z') {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftNearVBO),
-                            std::get<1>(mCornerLeftNearVBO),
-                            std::get<2>(mCornerLeftNearVBO),
-                            getCornerLeftNearTransform(pos),
-                            shade);
-
-                    pos = glm::vec3(x * 2, -2.0f, z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftNearVBO),
-                            std::get<1>(mCornerLeftNearVBO),
-                            std::get<2>(mCornerLeftNearVBO),
-                            getCornerLeftNearTransform(pos),
-                            shade);
-
-                    pos = glm::vec3(x * 2, 0.0f, z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftNearVBO),
-                            std::get<1>(mCornerLeftNearVBO),
-                            std::get<2>(mCornerLeftNearVBO),
-                            getCornerLeftNearTransform(pos),
-                            shade);
-
-                } else if (tile != '.' && tile != '_' && tile != '=' && tile != '-' &&
-                           tile != ')' && tile != '(' && tile != '}' && tile != '{') {
-
+                if ( tileProperties.mMainWallTexture != ETextures::Skybox ) {
                     pos = glm::vec3(x * 2, -4.0f, z * 2);
 
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCubeVBO),
-                            std::get<1>(mCubeVBO),
-                            std::get<2>(mCubeVBO),
-                            getCubeTransform(pos),
-                            shade);
+                    batches[tileProperties.mMainWallTexture ].emplace_back(
+                        std::get<0>(tileProperties.mVBOToRender),
+                        std::get<1>(tileProperties.mVBOToRender),
+                        std::get<2>(tileProperties.mVBOToRender),
+                        getCubeTransform(pos), 1.0f);
+                }
 
-                    //top of walls cube
-                    ETextures textureForCeling = ETextures::Ceiling;
+                if ( tileProperties.mRepeatedWallTexture != ETextures::Skybox ) {
 
-                    if (tile == 'B') {
-                        textureForCeling = ETextures::CeilingBegin;
-                    } else if (tile == 'E') {
-                        textureForCeling = ETextures::CeilingEnd;
-                    } else if (tile == '~') {
-                        textureForCeling = ETextures::CeilingDoor;
-                    } else if (tile == '#') {
-                        textureForCeling = ETextures::CeilingBars;
-                    } else {
-                        textureForCeling = ETextures::Ceiling;
-                    }
+                    for ( int y = 0; y < tileProperties.mRepetitions; ++y ) {
 
-                    if (tile != 'E') {
-                        pos = glm::vec3(x * 2, -2.0f, z * 2);
-                        batches[(tile == 'b') ? ETextures::CeilingEnd
-                                              : mElementMap['1']].emplace_back(
-                                std::get<0>(mCubeVBO),
-                                std::get<1>(mCubeVBO),
-                                std::get<2>(mCubeVBO),
+                        pos = glm::vec3(x * 2, -4.0f + ( 2.0f * tileProperties.mCeilingHeight ) + (2.0 * y), z * 2);
+
+                        batches[tileProperties.mRepeatedWallTexture].emplace_back(
+                                std::get<0>(tileProperties.mVBOToRender),
+                                std::get<1>(tileProperties.mVBOToRender),
+                                std::get<2>(tileProperties.mVBOToRender),
                                 getCubeTransform(pos),
-                                shade);
-
-                        pos = glm::vec3(x * 2, 0.0f, z * 2);
-                        batches[(tile == 'b') ? ETextures::CeilingEnd
-                                              : mElementMap['1']].emplace_back(
-                                std::get<0>(mCubeVBO),
-                                std::get<1>(mCubeVBO),
-                                std::get<2>(mCubeVBO),
-                                getCubeTransform(pos),
-                                shade);
-
-                    }
-
-
-                } else {
-                    if (tile == '=' || tile == '-') {
-
-                        pos = glm::vec3(x * 2, 0.0f, z * 2);
-
-                        batches[Floor].emplace_back(
-                                std::get<0>(mCubeVBO),
-                                std::get<1>(mCubeVBO),
-                                std::get<2>(mCubeVBO),
-                                getCubeTransform(pos),
-                                                    shade);
-                        shade -= 0.375f;
-
-                        pos = glm::vec3(x * 2, -1.0f, z * 2);
-
-                        batches[Floor].emplace_back(
-                                std::get<0>(mFloorVBO),
-                                std::get<1>(mFloorVBO),
-                                std::get<2>(mFloorVBO),
-                                getFloorTransform(pos),
-                                shade);
-
-                        shade = placeShade;
-
+                                1.0f);
                     }
                 }
 
@@ -920,7 +805,7 @@ namespace odb {
                     pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
 
 
-                    if (actor == '@' || actor == '?') {
+                    if (actor == '@' || actor == '?' || actor == 'J') {
 
 
                         batches[static_cast<ETextures >(mElementMap[actor])].emplace_back(

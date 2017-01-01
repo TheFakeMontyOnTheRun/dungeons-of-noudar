@@ -68,9 +68,21 @@ namespace odb {
 
     static const long kAnimationLength = 750;
 
+    class CTile3DProperties {
+    public:
+        ETextures mFloorTexture;
+        ETextures mCeilingTexture;
+        ETextures mMainWallTexture;
+        ETextures mRepeatedWallTexture;
+        VBORegister mVBOToRender;
+        int mRepetitions;
+        int mCeilingHeight;
+    };
+
     class DungeonGLES2Renderer {
 
     private:
+        std::map< char, CTile3DProperties > mTileProperties;
 
         void fetchShaderLocations();
 
