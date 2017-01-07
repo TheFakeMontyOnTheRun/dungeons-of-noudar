@@ -33,6 +33,7 @@
 
 #include "Vec2i.h"
 #include "IMapElement.h"
+#include "CTeam.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
@@ -49,14 +50,8 @@
 #include "Common.h"
 #include "VBORenderingJob.h"
 
-#include "Vec2i.h"
 #include "NativeBitmap.h"
-#include "IMapElement.h"
-#include "CActor.h"
-#include "CGameDelegate.h"
-#include "CMap.h"
 #include "IRenderer.h"
-#include "CKnight.h"
 
 #include "NoudarDungeonSnapshot.h"
 
