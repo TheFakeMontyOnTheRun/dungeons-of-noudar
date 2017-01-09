@@ -364,7 +364,6 @@ namespace odb {
                 pos_front + pos,
                 glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
 
-
         glUniformMatrix4fv(uView, 1, false, &viewMatrix[0][0]);
     }
 
@@ -596,90 +595,6 @@ namespace odb {
                 );
             }
         }
-
-        glDisable( GL_DEPTH_TEST );
-
-
-        glm::mat4 viewMatrix = glm::translate( glm::mat4( 1.0f ), glm::vec3( 0.0f, 0.0f, -1.0f ) );
-
-        float bigger = std::max<float>( mWidth, mHeight );
-        float smaller = std::min<float>( mWidth, mHeight );
-
-        glUniformMatrix4fv(uView, 1, false, &viewMatrix[0][0]);
-
-        float positionOrigin = - ( smaller / bigger) / 2.0f;
-        float positionFull = 0.5f;
-        float fullAmount = 20.0f;
-        float currentWidth = 0.0f;//mPlayerHealth / fullAmount;
-        float translation = positionOrigin;
-        auto translate = glm::translate( glm::mat4(1.0f), glm::vec3( translation + currentWidth, -0.5f, 0.0f ));
-        auto scale = glm::scale( translate, glm::vec3(0.1, 0.1f, 1.0f));
-
-        auto element = VBORenderingJob(
-                std::get<0>(mBillboardVBO),
-                std::get<1>(mBillboardVBO),
-                std::get<2>(mBillboardVBO),
-               scale,
-                1.0f
-        );
-
-        glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::Cross]->mTextureId);
-
-        auto transform = element.getTransform();
-        auto shade = element.getShade();
-        auto amount = element.getAmount();
-        auto vboId = element.getVBOId();
-        auto vboIndicesId = element.getVBOIndicesId();
-
-        glUniform4f(uMod, shade, shade, shade, 1.0f);
-
-        drawGeometry(vboId,
-                     vboIndicesId,
-                     amount,
-                     transform
-        );
-
-        glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::Cross]->mTextureId);
-
-        positionOrigin =  ( smaller / bigger) / 2.0f;
-        positionFull = 0.5f;
-        fullAmount = 20.0f;
-        currentWidth = 0.0f;
-        translation = positionOrigin;
-        translate = glm::translate( glm::mat4(1.0f), glm::vec3( translation + currentWidth, -0.5f, 0.0f ));
-        scale = glm::scale( translate, glm::vec3(0.1, 0.1f, 1.0f));
-
-
-
-        drawGeometry(vboId,
-                     vboIndicesId,
-                     amount,
-                     scale
-        );
-
-        float range = ( smaller / bigger) / 2.0f - ( - ( smaller / bigger) / 2.0f );
-
-        glBindTexture(GL_TEXTURE_2D, mTextures[ETextures::Cross]->mTextureId);
-
-        for ( int hp = 0; hp < static_cast<int>(mPlayerHealth); ++hp ) {
-            positionOrigin =  -( smaller / bigger) / 2.0f;
-            positionFull = 0.5f;
-            fullAmount = 20.0f;
-            currentWidth = (range / 20.0f) * static_cast<float>(hp);
-            translation = positionOrigin;
-            translate = glm::translate( glm::mat4(1.0f), glm::vec3( translation + currentWidth, -0.5f, 0.0f ));
-            scale = glm::scale( translate, glm::vec3(0.05, 0.05f, 1.0f));
-
-            drawGeometry(vboId,
-                         vboIndicesId,
-                         amount,
-                         scale
-            );
-        }
-
-
-
-
     }
 
     void DungeonGLES2Renderer::produceRenderingBatches(CharMap map, CharMap actors,
@@ -688,7 +603,6 @@ namespace odb {
                                                        AnimationList movingCharacters,
                                                        long animationTime) {
 
-//        ETextures chosenTexture;
         glm::vec3 pos;
 
         batches.clear();
