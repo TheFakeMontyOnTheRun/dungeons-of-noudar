@@ -66,7 +66,7 @@ namespace odb {
     using TextureId = int;
     using VBORegister = std::tuple<unsigned int, unsigned int, unsigned int>;
 
-    static const long kAnimationLength = 750;
+    static const long kAnimationLength = 500;
 
     class CTile3DProperties {
     public:
