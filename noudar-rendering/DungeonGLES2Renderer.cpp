@@ -17,8 +17,6 @@
 #else
 
 #include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <EGL/egl.h>
 
 #endif
 
@@ -28,7 +26,6 @@
 #include <sstream>
 #include <unordered_set>
 #include <map>
-#include <tuple>
 #include <array>
 
 #include "Vec2i.h"
@@ -40,17 +37,9 @@
 
 #include "NativeBitmap.h"
 #include "Texture.h"
-#include "Material.h"
-#include "Trig.h"
-#include "TrigBatch.h"
-#include "MeshObject.h"
 #include "Logger.h"
-#include "MaterialList.h"
-#include "Scene.h"
-#include "Common.h"
 #include "VBORenderingJob.h"
 
-#include "NativeBitmap.h"
 #include "IRenderer.h"
 
 #include "NoudarDungeonSnapshot.h"
@@ -204,7 +193,8 @@ namespace odb {
 
     GLuint DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
 
-        GLenum shaderSourceType = shaderType == EShaderType::kFragmentShader ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
+        GLenum shaderSourceType =
+                shaderType == EShaderType::kFragmentShader ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
 
         auto shader = glCreateShader(shaderSourceType);
         if (shader) {
@@ -232,7 +222,7 @@ namespace odb {
 
     GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource,
                                                const char *pFragmentSource) {
-        auto vertexShader = loadShader(EShaderType::kVertexShader , pVertexSource);
+        auto vertexShader = loadShader(EShaderType::kVertexShader, pVertexSource);
         if (!vertexShader) {
             return 0;
         }
@@ -429,40 +419,78 @@ namespace odb {
 
     void DungeonGLES2Renderer::createVBOs() {
 
-        mCubeVBO = submitVBO((float *) cubeVertices, 16, (unsigned short *) cubeIndices, 24 );
-        mBillboardVBO = submitVBO((float *) billboardVertices, 4, (unsigned short *) billboardIndices, 6 );
-        mCornerLeftFarVBO = submitVBO((float *) cornerLeftFarVertices, 4, (unsigned short *) cornerLeftFarIndices, 6 );
-        mCornerLeftNearVBO = submitVBO((float *) cornerLeftNearVertices, 4, (unsigned short *) cornerLeftNearIndices, 6 );
-        mFloorVBO = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6 );
-        mSkyVBO = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6 );
+        mCubeVBO = submitVBO((float *) cubeVertices, 16, (unsigned short *) cubeIndices, 24);
+        mBillboardVBO = submitVBO((float *) billboardVertices, 4,
+                                  (unsigned short *) billboardIndices, 6);
+        mCornerLeftFarVBO = submitVBO((float *) cornerLeftFarVertices, 4,
+                                      (unsigned short *) cornerLeftFarIndices, 6);
+        mCornerLeftNearVBO = submitVBO((float *) cornerLeftNearVertices, 4,
+                                       (unsigned short *) cornerLeftNearIndices, 6);
+        mFloorVBO = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6);
+        mSkyVBO = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6);
 
-        mTileProperties['.'] = { ETextures::Skybox, ETextures::Grass, ETextures::Skybox, mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0.0f, 0.0f };
-        mTileProperties['H'] = { ETextures::Ceiling,ETextures::Grass, ETextures::Skybox, mCubeVBO, ETextures::BricksCandles, ETextures::Skybox, 1, 0, 3, 0 };
-        mTileProperties['0'] = { ETextures::Skybox, ETextures::Grass,  ETextures::Skybox, mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0 };
-        mTileProperties['-'] = { ETextures::Ceiling, ETextures::Grass, ETextures::Skybox, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0 };
-        mTileProperties['='] = { ETextures::Ceiling,ETextures::Floor, ETextures::Skybox, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0 };
-        mTileProperties['_'] = { ETextures::Skybox, ETextures::Floor,  ETextures::Skybox, mCubeVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0 };
-        mTileProperties['('] = { ETextures::Skybox, ETextures::GrassStoneFar,  ETextures::Skybox, mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0  };
-        mTileProperties['{'] = { ETextures::Skybox, ETextures::GrassStoneNear, ETextures::Skybox, mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0  };
-        mTileProperties[')'] = { ETextures::Skybox, ETextures::StoneGrassNear, ETextures::Skybox, mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0  };
-        mTileProperties['}'] = { ETextures::Skybox, ETextures::StoneGrassFar, ETextures::Skybox, mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0  };
-        mTileProperties['1'] = { ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['\''] = { ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1, 0 };
-        mTileProperties['#'] = { ETextures::CeilingBars, ETextures::Floor, ETextures::Bars, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['!'] = { ETextures::CeilingBars, ETextures::Floor, ETextures::Skybox, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['~'] = { ETextures::CeilingBars, ETextures::Floor, ETextures::Arch, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['Y'] = { ETextures::Skybox, ETextures::Skybox, ETextures::BricksCandles, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['X'] = { ETextures::Skybox, ETextures::Skybox, ETextures::BricksBlood, mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['9'] = { ETextures::CeilingBegin, ETextures::Floor, ETextures::Begin, mCubeVBO, ETextures::Skybox, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['*'] = { ETextures::CeilingEnd, ETextures::Floor, ETextures::Exit, mCubeVBO, ETextures::Skybox, ETextures::Skybox, 1, 0, 1, 0 };
-        mTileProperties['%'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1, 0 };
-        mTileProperties['|'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1, 0 };
-        mTileProperties['\\'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['/'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['>'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['<'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['Z'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
-        mTileProperties['S'] = { ETextures::Skybox, ETextures::Floor, ETextures::Bricks, mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0 };
+        mTileProperties['.'] = {ETextures::Skybox, ETextures::Grass, ETextures::Skybox, mFloorVBO,
+                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0.0f, 0.0f};
+        mTileProperties['H'] = {ETextures::Ceiling, ETextures::Grass, ETextures::Skybox, mCubeVBO,
+                                ETextures::BricksCandles, ETextures::Skybox, 1, 0, 3, 0};
+        mTileProperties['0'] = {ETextures::Skybox, ETextures::Grass, ETextures::Skybox, mFloorVBO,
+                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['-'] = {ETextures::Ceiling, ETextures::Grass, ETextures::Skybox, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0};
+        mTileProperties['='] = {ETextures::Ceiling, ETextures::Floor, ETextures::Skybox, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0};
+        mTileProperties['_'] = {ETextures::Skybox, ETextures::Floor, ETextures::Skybox, mCubeVBO,
+                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['('] = {ETextures::Skybox, ETextures::GrassStoneFar, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['{'] = {ETextures::Skybox, ETextures::GrassStoneNear, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties[')'] = {ETextures::Skybox, ETextures::StoneGrassNear, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['}'] = {ETextures::Skybox, ETextures::StoneGrassFar, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['1'] = {ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['\''] = {ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO,
+                                 ETextures::Bricks, ETextures::Skybox, 3, 0, 1, 0};
+        mTileProperties['#'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Bars, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['!'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Skybox,
+                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['~'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Arch, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['Y'] = {ETextures::Skybox, ETextures::Skybox, ETextures::BricksCandles,
+                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['X'] = {ETextures::Skybox, ETextures::Skybox, ETextures::BricksBlood,
+                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['9'] = {ETextures::CeilingBegin, ETextures::Floor, ETextures::Begin,
+                                mCubeVBO, ETextures::Skybox, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['*'] = {ETextures::CeilingEnd, ETextures::Floor, ETextures::Exit, mCubeVBO,
+                                ETextures::Skybox, ETextures::Skybox, 1, 0, 1, 0};
+        mTileProperties['%'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1,
+                                0};
+        mTileProperties['|'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1,
+                                0};
+        mTileProperties['\\'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                 mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                 0};
+        mTileProperties['/'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['>'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['<'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['Z'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['S'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
 
         mElementMap['@'] = ETextures::Cuco0;
         mElementMap['J'] = ETextures::Lady0;
@@ -493,11 +521,11 @@ namespace odb {
                                       IntMap lightMap, IntMap ids,
                                       AnimationList movingCharacters,
                                       long animationTime) {
-        
-        if ( mBitmaps.empty() ) {
+
+        if (mBitmaps.empty()) {
             return;
         }
-        
+
         clearBuffers();
         prepareShaderProgram();
         setPerspective();
@@ -574,7 +602,7 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
-        glEnable( GL_DEPTH_TEST );
+        glEnable(GL_DEPTH_TEST);
 
         for (auto &batch : batches) {
 
@@ -607,9 +635,9 @@ namespace odb {
         glm::vec3 pos;
 
         batches.clear();
-        batches[ETextures::Skybox].emplace_back( std::get<0>(mSkyVBO),
-                                                 std::get<1>(mSkyVBO),
-                                                 std::get<2>(mSkyVBO),
+        batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
+                                                std::get<1>(mSkyVBO),
+                                                std::get<2>(mSkyVBO),
                                                 getSkyTransform(animationTime),
                                                 1.0f);
 
@@ -629,74 +657,80 @@ namespace odb {
 
                 Shade shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
 
-                if (x == static_cast<int>(mCursorPosition.x) && z == static_cast<int>(mCursorPosition.y)) {
+                if (x == static_cast<int>(mCursorPosition.x) &&
+                    z == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
 
-                if ( mTileProperties.count( tile ) <= 0 ) {
+                if (mTileProperties.count(tile) <= 0) {
                     continue;
                 }
 
-                auto tileProperties = mTileProperties[ tile ];
+                auto tileProperties = mTileProperties[tile];
 
 
-                if ( tileProperties.mCeilingTexture != ETextures::Skybox ) {
+                if (tileProperties.mCeilingTexture != ETextures::Skybox) {
                     pos = glm::vec3(x * 2, -5.0f + (2.0 * tileProperties.mCeilingHeight), z * 2);
-                    batches[tileProperties.mCeilingTexture ].emplace_back(std::get<0>(mFloorVBO),
-                                                                        std::get<1>(mFloorVBO),
-                                                                        std::get<2>(mFloorVBO),
-                                                                        getFloorTransform(pos), 1.0f );
+                    batches[tileProperties.mCeilingTexture].emplace_back(std::get<0>(mFloorVBO),
+                                                                         std::get<1>(mFloorVBO),
+                                                                         std::get<2>(mFloorVBO),
+                                                                         getFloorTransform(pos),
+                                                                         shade);
                 }
 
-                if ( tileProperties.mCeilingRepeatedWallTexture != ETextures::Skybox ) {
+                if (tileProperties.mCeilingRepeatedWallTexture != ETextures::Skybox) {
 
-                    for ( float y = 0; y < tileProperties.mCeilingRepetitions; ++y ) {
+                    for (float y = 0; y < tileProperties.mCeilingRepetitions; ++y) {
 
-                        pos = glm::vec3(x * 2, -4.0f + ( 2.0f * tileProperties.mCeilingHeight ) + (2.0 * y), z * 2);
+                        pos = glm::vec3(x * 2,
+                                        -4.0f + (2.0f * tileProperties.mCeilingHeight) + (2.0 * y),
+                                        z * 2);
 
                         batches[tileProperties.mCeilingRepeatedWallTexture].emplace_back(
                                 std::get<0>(tileProperties.mVBOToRender),
                                 std::get<1>(tileProperties.mVBOToRender),
                                 std::get<2>(tileProperties.mVBOToRender),
                                 getCubeTransform(pos),
-                                1.0f);
+                                shade);
                     }
                 }
 
-                if ( tileProperties.mMainWallTexture != ETextures::Skybox ) {
+                if (tileProperties.mMainWallTexture != ETextures::Skybox) {
                     pos = glm::vec3(x * 2, -4.0f, z * 2);
 
-                    batches[tileProperties.mMainWallTexture ].emplace_back(
+                    batches[tileProperties.mMainWallTexture].emplace_back(
                             std::get<0>(tileProperties.mVBOToRender),
                             std::get<1>(tileProperties.mVBOToRender),
                             std::get<2>(tileProperties.mVBOToRender),
-                            getCubeTransform(pos), 1.0f);
+                            getCubeTransform(pos), shade);
                 }
 
-                if ( tileProperties.mFloorTexture != ETextures::Skybox ) {
-                    pos = glm::vec3(x * 2, -5.0f + ( 2.0f * tileProperties.mFloorHeight), z * 2);
-                    batches[tileProperties.mFloorTexture ].emplace_back(std::get<0>(mFloorVBO),
-                                                                        std::get<1>(mFloorVBO),
-                                                                        std::get<2>(mFloorVBO),
-                                                                        getFloorTransform(pos), 1.0f );
-                }
+                if (tileProperties.mFloorRepeatedWallTexture != ETextures::Skybox) {
 
-                if ( tileProperties.mFloorRepeatedWallTexture != ETextures::Skybox ) {
-
-                    for ( float y = 0; y < tileProperties.mFloorRepetitions; ++y ) {
+                    for (float y = 0; y < tileProperties.mFloorRepetitions; ++y) {
 
                         //the final -1.0f in y is for accounting fore the block's length
-                        pos = glm::vec3(x * 2, -5.0f + ( 2.0f * tileProperties.mFloorHeight ) - (2.0 * y) - 1.0f, z * 2);
+                        pos = glm::vec3(x * 2,
+                                        -5.0f + (2.0f * tileProperties.mFloorHeight) - (2.0 * y) -
+                                        1.0f, z * 2);
 
                         batches[tileProperties.mFloorRepeatedWallTexture].emplace_back(
                                 std::get<0>(tileProperties.mVBOToRender),
                                 std::get<1>(tileProperties.mVBOToRender),
                                 std::get<2>(tileProperties.mVBOToRender),
                                 getCubeTransform(pos),
-                                1.0f);
+                                shade);
                     }
                 }
 
+                if (tileProperties.mFloorTexture != ETextures::Skybox) {
+                    pos = glm::vec3(x * 2, -5.0f + (2.0f * tileProperties.mFloorHeight), z * 2);
+                    batches[tileProperties.mFloorTexture].emplace_back(std::get<0>(mFloorVBO),
+                                                                       std::get<1>(mFloorVBO),
+                                                                       std::get<2>(mFloorVBO),
+                                                                       getFloorTransform(pos),
+                                                                       shade);
+                }
 
                 //characters
                 if (actor != '.') {
@@ -713,7 +747,7 @@ namespace odb {
                     if (id != 0 && movingCharacters.count(id) > 0) {
                         auto animation = movingCharacters[id];
                         step = (((float) ((animationTime - std::get<2>(animation)))) /
-                                      ((float) kAnimationLength));
+                                ((float) kAnimationLength));
 
                         if (!mLongPressing) {
                             if (step < 0.5f) {
@@ -734,7 +768,6 @@ namespace odb {
 
 
                     if (actor == '@' || actor == '?' || actor == 'J') {
-
 
                         batches[static_cast<ETextures >(mElementMap[actor])].emplace_back(
                                 std::get<0>(mBillboardVBO),
@@ -846,14 +879,16 @@ namespace odb {
     }
 
     glm::vec3 DungeonGLES2Renderer::transformToMapPosition(const glm::vec3 &pos) {
-        return glm::vec3(-(Knights::kMapSize / 2.0f) + (pos.x * 2), -5.0f + pos.y, -(Knights::kMapSize / 2.0f) + (-pos.z * 2));
+        return glm::vec3(-(Knights::kMapSize / 2.0f) + (pos.x * 2), -5.0f + pos.y,
+                         -(Knights::kMapSize / 2.0f) + (-pos.z * 2));
     }
 
     void DungeonGLES2Renderer::setCursorPosition(int x, int y) {
         mCursorPosition = {x, y};
     }
 
-    VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices, unsigned short *indexData,
+    VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
+                                                unsigned short *indexData,
                                                 unsigned int indices) {
 
         unsigned int dataIndex;
@@ -866,13 +901,14 @@ namespace odb {
 
         glGenBuffers(1, &indicesIndex);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices * sizeof(GLushort), indexData, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices * sizeof(GLushort), indexData,
+                     GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        return VBORegister( dataIndex, indicesIndex, indices);
+        return VBORegister(dataIndex, indicesIndex, indices);
     }
 
-    void DungeonGLES2Renderer::setPlayerHealth( float health ) {
+    void DungeonGLES2Renderer::setPlayerHealth(float health) {
         mPlayerHealth = health;
     }
 
