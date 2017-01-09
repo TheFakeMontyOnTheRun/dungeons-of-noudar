@@ -684,7 +684,7 @@ namespace odb {
 
                     for ( float y = 0; y < tileProperties.mFloorRepetitions; ++y ) {
 
-                        //the final -2.0f in y is for accounting fore the block's length
+                        //the final -1.0f in y is for accounting fore the block's length
                         pos = glm::vec3(x * 2, -5.0f + ( 2.0f * tileProperties.mFloorHeight ) - (2.0 * y) - 1.0f, z * 2);
 
                         batches[tileProperties.mFloorRepeatedWallTexture].emplace_back(
