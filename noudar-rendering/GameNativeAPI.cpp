@@ -207,8 +207,6 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 			soundEmitters[1]->play(mainListener);
 		}
 	}
-
-
 }
 
 void updateCharacterMovements(const odb::IntMap& idsLocal) {

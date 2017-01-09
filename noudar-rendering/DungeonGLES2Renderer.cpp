@@ -357,6 +357,7 @@ namespace odb {
         mCameraDirection = glm::rotate(
                 glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
                 angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
+
         pos_front = mCameraDirection;
 
         viewMatrix = glm::lookAt(
@@ -632,20 +633,12 @@ namespace odb {
                     shade = 1.5f;
                 }
 
-
                 if ( mTileProperties.count( tile ) <= 0 ) {
                     continue;
                 }
 
                 auto tileProperties = mTileProperties[ tile ];
 
-                if ( tileProperties.mFloorTexture != ETextures::Skybox ) {
-                    pos = glm::vec3(x * 2, -5.0f + ( 2.0f * tileProperties.mFloorHeight), z * 2);
-                    batches[tileProperties.mFloorTexture ].emplace_back(std::get<0>(mFloorVBO),
-                                                    std::get<1>(mFloorVBO),
-                                                    std::get<2>(mFloorVBO),
-                                                    getFloorTransform(pos), 1.0f );
-                }
 
                 if ( tileProperties.mCeilingTexture != ETextures::Skybox ) {
                     pos = glm::vec3(x * 2, -5.0f + (2.0 * tileProperties.mCeilingHeight), z * 2);
@@ -653,16 +646,6 @@ namespace odb {
                                                                         std::get<1>(mFloorVBO),
                                                                         std::get<2>(mFloorVBO),
                                                                         getFloorTransform(pos), 1.0f );
-                }
-
-                if ( tileProperties.mMainWallTexture != ETextures::Skybox ) {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-
-                    batches[tileProperties.mMainWallTexture ].emplace_back(
-                        std::get<0>(tileProperties.mVBOToRender),
-                        std::get<1>(tileProperties.mVBOToRender),
-                        std::get<2>(tileProperties.mVBOToRender),
-                        getCubeTransform(pos), 1.0f);
                 }
 
                 if ( tileProperties.mCeilingRepeatedWallTexture != ETextures::Skybox ) {
@@ -678,6 +661,24 @@ namespace odb {
                                 getCubeTransform(pos),
                                 1.0f);
                     }
+                }
+
+                if ( tileProperties.mMainWallTexture != ETextures::Skybox ) {
+                    pos = glm::vec3(x * 2, -4.0f, z * 2);
+
+                    batches[tileProperties.mMainWallTexture ].emplace_back(
+                            std::get<0>(tileProperties.mVBOToRender),
+                            std::get<1>(tileProperties.mVBOToRender),
+                            std::get<2>(tileProperties.mVBOToRender),
+                            getCubeTransform(pos), 1.0f);
+                }
+
+                if ( tileProperties.mFloorTexture != ETextures::Skybox ) {
+                    pos = glm::vec3(x * 2, -5.0f + ( 2.0f * tileProperties.mFloorHeight), z * 2);
+                    batches[tileProperties.mFloorTexture ].emplace_back(std::get<0>(mFloorVBO),
+                                                                        std::get<1>(mFloorVBO),
+                                                                        std::get<2>(mFloorVBO),
+                                                                        getFloorTransform(pos), 1.0f );
                 }
 
                 if ( tileProperties.mFloorRepeatedWallTexture != ETextures::Skybox ) {
