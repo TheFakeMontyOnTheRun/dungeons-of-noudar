@@ -70,13 +70,16 @@ namespace odb {
 
     class CTile3DProperties {
     public:
-        ETextures mFloorTexture;
         ETextures mCeilingTexture;
+        ETextures mFloorTexture;
         ETextures mMainWallTexture;
-        ETextures mRepeatedWallTexture;
         VBORegister mVBOToRender;
-        int mRepetitions;
-        int mCeilingHeight;
+        ETextures mCeilingRepeatedWallTexture;
+        ETextures mFloorRepeatedWallTexture;
+        int mCeilingRepetitions;
+        int mFloorRepetitions;
+        float mCeilingHeight;
+        float mFloorHeight;
     };
 
     class DungeonGLES2Renderer {
