@@ -34,21 +34,19 @@
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
-
 #include "NativeBitmap.h"
 #include "Texture.h"
 #include "Logger.h"
 #include "VBORenderingJob.h"
-
 #include "IRenderer.h"
-
 #include "NoudarDungeonSnapshot.h"
-
 #include "DungeonGLES2Renderer.h"
 
 
 namespace odb {
     const static bool kShouldDestroyThingsManually = false;
+
+    //OpenGL specific stuff
 
     const float DungeonGLES2Renderer::billboardVertices[]{
             -1.0f, 1.0f, 0.0f, 0.0f, .0f,
@@ -158,6 +156,27 @@ namespace odb {
             8, 11, 15
     };
 
+    VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
+                                                unsigned short *indexData,
+                                                unsigned int indices) {
+
+        unsigned int dataIndex;
+        unsigned int indicesIndex;
+
+        glGenBuffers(1, &dataIndex);
+        glBindBuffer(GL_ARRAY_BUFFER, dataIndex);
+        glBufferData(GL_ARRAY_BUFFER, vertices * sizeof(float) * 5, data, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glGenBuffers(1, &indicesIndex);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesIndex);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices * sizeof(GLushort), indexData,
+                     GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        return VBORegister(dataIndex, indicesIndex, indices);
+    }
+
     unsigned int uploadTextureData(std::shared_ptr<NativeBitmap> bitmap) {
         // Texture object handle
         unsigned int textureId = 0;
@@ -262,26 +281,6 @@ namespace odb {
     void DungeonGLES2Renderer::printVerboseDriverInformation() {
     }
 
-    DungeonGLES2Renderer::DungeonGLES2Renderer() {
-        projectionMatrix = glm::mat4(1.0f);
-        vertexAttributePosition = 0;
-        modelMatrixAttributePosition = 0;
-        projectionMatrixAttributePosition = 0;
-        gProgram = 0;
-    }
-
-    DungeonGLES2Renderer::~DungeonGLES2Renderer() {
-        odb::Logger::log("Destroying the renderer");
-
-        if (kShouldDestroyThingsManually) {
-            for (auto &texture : mTextures) {
-                glDeleteTextures(1, &(texture->mTextureId));
-            }
-            deleteVBOs();
-        }
-
-    }
-
     bool DungeonGLES2Renderer::init(float w, float h, const std::string &vertexShader,
                                     const std::string &fragmentShader) {
 
@@ -293,23 +292,20 @@ namespace odb {
             odb::Logger::log("Could not create program.");
             return false;
         }
-
         fetchShaderLocations();
 
         mWidth = w;
         mHeight = h;
+        projectionMatrix = glm::perspective(45.0f, w / h, 0.1f, 100.0f);
 
         glViewport(0, 0, w, h);
         checkGlError("glViewport");
-
-        projectionMatrix = glm::perspective(45.0f, w / h, 0.1f, 100.0f);
-
-        createVBOs();
 
         for (auto &bitmap : mBitmaps) {
             mTextures.push_back(std::make_shared<Texture>(uploadTextureData(bitmap), bitmap));
         }
 
+        createVBOs();
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LEQUAL);
         glFrontFace(GL_CW);
@@ -318,44 +314,15 @@ namespace odb {
         return true;
     }
 
-    glm::mat4 DungeonGLES2Renderer::getCubeTransform(glm::vec3 translation) {
-        glm::mat4 identity = glm::mat4(1.0f);
-        glm::mat4 translated = glm::translate(identity, translation);
+    DungeonGLES2Renderer::~DungeonGLES2Renderer() {
+        odb::Logger::log("Destroying the renderer");
 
-        return translated;
-    }
-
-    void DungeonGLES2Renderer::resetTransformMatrices() {
-        glm::mat4 viewMatrix;
-
-        glm::vec3 pos = mCurrentCharacterPosition;
-        glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-        glm::vec3 pos_front;
-        glm::mat4 eyeMatrixOriginal =
-                mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
-        glm::mat4 eyeMatrix = glm::mat4(1.0f);
-
-        eyeMatrix[3][0] = eyeMatrixOriginal[3][0];
-        eyeMatrix[3][1] = eyeMatrixOriginal[3][1];
-        eyeMatrix[3][2] = eyeMatrixOriginal[3][2];
-
-        float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
-        float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
-
-        glm::vec3 mCameraDirection{0, 0, 0};
-
-        mCameraDirection = glm::rotate(
-                glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
-                angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
-
-        pos_front = mCameraDirection;
-
-        viewMatrix = glm::lookAt(
-                pos,
-                pos_front + pos,
-                glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
-
-        glUniformMatrix4fv(uView, 1, false, &viewMatrix[0][0]);
+        if (kShouldDestroyThingsManually) {
+            for (auto &texture : mTextures) {
+                glDeleteTextures(1, &(texture->mTextureId));
+            }
+            deleteVBOs();
+        }
     }
 
     void DungeonGLES2Renderer::fetchShaderLocations() {
@@ -370,9 +337,15 @@ namespace odb {
         fadeUniform = glGetUniformLocation(gProgram, "uFade");
     }
 
-    void DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo,
+    void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
                                             int vertexCount,
-                                            const glm::mat4 &transform) {
+                                            const glm::mat4 &transform, float shade) {
+
+        glBindTexture(GL_TEXTURE_2D, textureId);
+        glEnable(GL_DEPTH_TEST);
+        glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
+        glUniform4f(uMod, shade, shade, shade, 1.0f);
+        glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
         glEnableVertexAttribArray(vertexAttributePosition);
@@ -429,74 +402,7 @@ namespace odb {
         mFloorVBO = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6);
         mSkyVBO = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6);
 
-        mTileProperties['.'] = {ETextures::Skybox, ETextures::Grass, ETextures::Skybox, mFloorVBO,
-                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0.0f, 0.0f};
-        mTileProperties['H'] = {ETextures::Ceiling, ETextures::Grass, ETextures::Skybox, mCubeVBO,
-                                ETextures::BricksCandles, ETextures::Skybox, 1, 0, 3, 0};
-        mTileProperties['0'] = {ETextures::Skybox, ETextures::Grass, ETextures::Skybox, mFloorVBO,
-                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
-        mTileProperties['-'] = {ETextures::Ceiling, ETextures::Grass, ETextures::Skybox, mCubeVBO,
-                                ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0};
-        mTileProperties['='] = {ETextures::Ceiling, ETextures::Floor, ETextures::Skybox, mCubeVBO,
-                                ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0};
-        mTileProperties['_'] = {ETextures::Skybox, ETextures::Floor, ETextures::Skybox, mCubeVBO,
-                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
-        mTileProperties['('] = {ETextures::Skybox, ETextures::GrassStoneFar, ETextures::Skybox,
-                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
-        mTileProperties['{'] = {ETextures::Skybox, ETextures::GrassStoneNear, ETextures::Skybox,
-                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
-        mTileProperties[')'] = {ETextures::Skybox, ETextures::StoneGrassNear, ETextures::Skybox,
-                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
-        mTileProperties['}'] = {ETextures::Skybox, ETextures::StoneGrassFar, ETextures::Skybox,
-                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
-        mTileProperties['1'] = {ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO,
-                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
-        mTileProperties['\''] = {ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO,
-                                 ETextures::Bricks, ETextures::Skybox, 3, 0, 1, 0};
-        mTileProperties['#'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Bars, mCubeVBO,
-                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
-        mTileProperties['!'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Skybox,
-                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
-        mTileProperties['~'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Arch, mCubeVBO,
-                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
-        mTileProperties['Y'] = {ETextures::Skybox, ETextures::Skybox, ETextures::BricksCandles,
-                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
-        mTileProperties['X'] = {ETextures::Skybox, ETextures::Skybox, ETextures::BricksBlood,
-                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
-        mTileProperties['9'] = {ETextures::CeilingBegin, ETextures::Floor, ETextures::Begin,
-                                mCubeVBO, ETextures::Skybox, ETextures::Skybox, 2, 0, 1, 0};
-        mTileProperties['*'] = {ETextures::CeilingEnd, ETextures::Floor, ETextures::Exit, mCubeVBO,
-                                ETextures::Skybox, ETextures::Skybox, 1, 0, 1, 0};
-        mTileProperties['%'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1,
-                                0};
-        mTileProperties['|'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1,
-                                0};
-        mTileProperties['\\'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                 mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
-                                 0};
-        mTileProperties['/'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
-                                0};
-        mTileProperties['>'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
-                                0};
-        mTileProperties['<'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
-                                0};
-        mTileProperties['Z'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
-                                0};
-        mTileProperties['S'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
-                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
-                                0};
-
-        mElementMap['@'] = ETextures::Cuco0;
-        mElementMap['J'] = ETextures::Lady0;
-        mElementMap['?'] = ETextures::Crusader0;
-        mElementMap[' '] = ETextures::Skybox;
-        mElementMap['^'] = ETextures::Crusader0;
+        initTileProperties();
     }
 
     void DungeonGLES2Renderer::clearBuffers() {
@@ -517,26 +423,23 @@ namespace odb {
         checkGlError("glUseProgram");
     }
 
-    void DungeonGLES2Renderer::render(CharMap map, CharMap actors, IntMap splats,
-                                      IntMap lightMap, IntMap ids,
-                                      AnimationList movingCharacters,
-                                      long animationTime) {
-
-        if (mBitmaps.empty()) {
-            return;
-        }
-
-        clearBuffers();
-        prepareShaderProgram();
-        setPerspective();
-        resetTransformMatrices();
-
-        glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
-        invalidateCachedBatches();
-        produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
-                                animationTime);
-        consumeRenderingBatches(animationTime);
+    //independent code
+    DungeonGLES2Renderer::DungeonGLES2Renderer() {
+        projectionMatrix = glm::mat4(1.0f);
+        vertexAttributePosition = 0;
+        modelMatrixAttributePosition = 0;
+        projectionMatrixAttributePosition = 0;
+        gProgram = 0;
     }
+
+
+    glm::mat4 DungeonGLES2Renderer::getCubeTransform(glm::vec3 translation) {
+        glm::mat4 identity = glm::mat4(1.0f);
+        glm::mat4 translated = glm::translate(identity, translation);
+
+        return translated;
+    }
+
 
     void DungeonGLES2Renderer::updateFadeState(long ms) {
         if (mFadeState == kFadingIn) {
@@ -561,7 +464,7 @@ namespace odb {
 
     void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
         mBitmaps.clear();
-        mBitmaps.insert(mBitmaps.end(), textures.begin(), textures.end());
+        mBitmaps.insert(mBitmaps.end(), begin(textures), end(textures));
     }
 
     void DungeonGLES2Renderer::shutdown() {
@@ -601,29 +504,34 @@ namespace odb {
         }
     }
 
-    void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
-        glEnable(GL_DEPTH_TEST);
+    void DungeonGLES2Renderer::resetTransformMatrices() {
 
-        for (auto &batch : batches) {
+        glm::vec3 pos = mCurrentCharacterPosition;
+        glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+        glm::vec3 pos_front;
+        glm::mat4 eyeMatrixOriginal =
+                mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
+        glm::mat4 eyeMatrix = glm::mat4(1.0f);
 
-            glBindTexture(GL_TEXTURE_2D, mTextures[batch.first]->mTextureId);
+        eyeMatrix[3][0] = eyeMatrixOriginal[3][0];
+        eyeMatrix[3][1] = eyeMatrixOriginal[3][1];
+        eyeMatrix[3][2] = eyeMatrixOriginal[3][2];
 
-            for (auto &element : batch.second) {
-                auto transform = element.getTransform();
-                auto shade = element.getShade();
-                auto amount = element.getAmount();
-                auto vboId = element.getVBOId();
-                auto vboIndicesId = element.getVBOIndicesId();
+        float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
+        float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
 
-                glUniform4f(uMod, shade, shade, shade, 1.0f);
+        glm::vec3 mCameraDirection{0, 0, 0};
 
-                drawGeometry(vboId,
-                             vboIndicesId,
-                             amount,
-                             transform
-                );
-            }
-        }
+        mCameraDirection = glm::rotate(
+                glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
+                angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
+
+        pos_front = mCameraDirection;
+
+        mViewMatrix = glm::lookAt(
+                pos,
+                pos_front + pos,
+                glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
     }
 
     void DungeonGLES2Renderer::produceRenderingBatches(CharMap map, CharMap actors,
@@ -793,8 +701,123 @@ namespace odb {
         }
     }
 
+    void DungeonGLES2Renderer::initTileProperties() {
+        mTileProperties['.'] = {ETextures::Skybox, ETextures::Grass, ETextures::Skybox, mFloorVBO,
+                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0.0f, 0.0f};
+        mTileProperties['H'] = {ETextures::Ceiling, ETextures::Grass, ETextures::Skybox, mCubeVBO,
+                                ETextures::BricksCandles, ETextures::Skybox, 1, 0, 3, 0};
+        mTileProperties['0'] = {ETextures::Skybox, ETextures::Grass, ETextures::Skybox, mFloorVBO,
+                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['-'] = {ETextures::Ceiling, ETextures::Grass, ETextures::Skybox, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0};
+        mTileProperties['='] = {ETextures::Ceiling, ETextures::Floor, ETextures::Skybox, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 1, 0, 2, 0};
+        mTileProperties['_'] = {ETextures::Skybox, ETextures::Floor, ETextures::Skybox, mCubeVBO,
+                                ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['('] = {ETextures::Skybox, ETextures::GrassStoneFar, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['{'] = {ETextures::Skybox, ETextures::GrassStoneNear, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties[')'] = {ETextures::Skybox, ETextures::StoneGrassNear, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['}'] = {ETextures::Skybox, ETextures::StoneGrassFar, ETextures::Skybox,
+                                mFloorVBO, ETextures::Skybox, ETextures::Skybox, 0, 0, 0, 0};
+        mTileProperties['1'] = {ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['\''] = {ETextures::Skybox, ETextures::Skybox, ETextures::Bricks, mCubeVBO,
+                                 ETextures::Bricks, ETextures::Skybox, 3, 0, 1, 0};
+        mTileProperties['#'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Bars, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['!'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Skybox,
+                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['~'] = {ETextures::CeilingBars, ETextures::Floor, ETextures::Arch, mCubeVBO,
+                                ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['Y'] = {ETextures::Skybox, ETextures::Skybox, ETextures::BricksCandles,
+                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['X'] = {ETextures::Skybox, ETextures::Skybox, ETextures::BricksBlood,
+                                mCubeVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['9'] = {ETextures::CeilingBegin, ETextures::Floor, ETextures::Begin,
+                                mCubeVBO, ETextures::Skybox, ETextures::Skybox, 2, 0, 1, 0};
+        mTileProperties['*'] = {ETextures::CeilingEnd, ETextures::Floor, ETextures::Exit, mCubeVBO,
+                                ETextures::Skybox, ETextures::Skybox, 1, 0, 1, 0};
+        mTileProperties['%'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1,
+                                0};
+        mTileProperties['|'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 3, 0, 1,
+                                0};
+        mTileProperties['\\'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                 mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                 0};
+        mTileProperties['/'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['>'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['<'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['Z'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftNearVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+        mTileProperties['S'] = {ETextures::Skybox, ETextures::Floor, ETextures::Bricks,
+                                mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
+                                0};
+
+        mElementMap['@'] = ETextures::Cuco0;
+        mElementMap['J'] = ETextures::Lady0;
+        mElementMap['?'] = ETextures::Crusader0;
+        mElementMap[' '] = ETextures::Skybox;
+        mElementMap['^'] = ETextures::Crusader0;
+    }
+
     void DungeonGLES2Renderer::invalidateCachedBatches() {
         batches.clear();
+    }
+
+    void DungeonGLES2Renderer::render(CharMap map, CharMap actors, IntMap splats,
+                                      IntMap lightMap, IntMap ids,
+                                      AnimationList movingCharacters,
+                                      long animationTime) {
+
+        if (mBitmaps.empty()) {
+            return;
+        }
+
+        clearBuffers();
+        prepareShaderProgram();
+        setPerspective();
+        resetTransformMatrices();
+
+        invalidateCachedBatches();
+        produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
+                                animationTime);
+        consumeRenderingBatches(animationTime);
+    }
+
+    void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
+
+        for (auto &batch : batches) {
+
+            auto textureId = mTextures[batch.first]->mTextureId;
+
+            for (auto &element : batch.second) {
+                auto transform = element.getTransform();
+                auto shade = element.getShade();
+                auto amount = element.getAmount();
+                auto vboId = element.getVBOId();
+                auto vboIndicesId = element.getVBOIndicesId();
+
+                drawGeometry(textureId,
+                             vboId,
+                             vboIndicesId,
+                             amount,
+                             transform,
+                             shade
+                );
+            }
+        }
     }
 
     void DungeonGLES2Renderer::rotateLeft() {
@@ -885,27 +908,6 @@ namespace odb {
 
     void DungeonGLES2Renderer::setCursorPosition(int x, int y) {
         mCursorPosition = {x, y};
-    }
-
-    VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
-                                                unsigned short *indexData,
-                                                unsigned int indices) {
-
-        unsigned int dataIndex;
-        unsigned int indicesIndex;
-
-        glGenBuffers(1, &dataIndex);
-        glBindBuffer(GL_ARRAY_BUFFER, dataIndex);
-        glBufferData(GL_ARRAY_BUFFER, vertices * sizeof(float) * 5, data, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        glGenBuffers(1, &indicesIndex);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesIndex);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices * sizeof(GLushort), indexData,
-                     GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        return VBORegister(dataIndex, indicesIndex, indices);
     }
 
     void DungeonGLES2Renderer::setPlayerHealth(float health) {

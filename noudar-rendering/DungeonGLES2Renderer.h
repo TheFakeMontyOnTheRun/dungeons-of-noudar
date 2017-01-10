@@ -103,8 +103,8 @@ namespace odb {
 
         void deleteVBOs();
 
-        void drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount,
-                          const glm::mat4 &transform);
+        void drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo, int vertexCount,
+                          const glm::mat4 &transform, float shade);
 
         unsigned int createProgram(const char *pVertexSource, const char *pFragmentSource);
 
@@ -130,6 +130,7 @@ namespace odb {
 
         glm::vec3 transformToMapPosition(const glm::vec3 &pos);
 
+        void initTileProperties();
     private:
 
         const static int kSkyTextureLength = 400;
@@ -144,7 +145,7 @@ namespace odb {
         unsigned int uMod;
 
         glm::mat4 projectionMatrix;
-
+        glm::mat4 mViewMatrix = glm::mat4( 1.0f );
         std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
         std::map<TextureId, ETextures> mElementMap;
         std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
