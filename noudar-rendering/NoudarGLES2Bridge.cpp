@@ -71,7 +71,16 @@ namespace odb {
                     snapshot.ids[ y ][ x ] = actor->getId();
 
                     if ( actor->getTeam() != current->getTeam() ) {
-                        snapshot.snapshot[ y ][ x ] = '@';
+
+                        bool alternate = (actor->getMoves() % 2) == 0;
+
+                        if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? 'J' : 'j';
+                        } else {
+                            snapshot.snapshot[ y ][ x ] =  ( alternate ) ? 'K' : 'k';
+                        }
+
+
                     } else {
                         snapshot.snapshot[ y ][ x ] = (actor == current)? '^' : '?';
                     }

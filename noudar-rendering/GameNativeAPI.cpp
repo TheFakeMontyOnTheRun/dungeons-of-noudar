@@ -179,6 +179,9 @@ void updateAnimations( long delta ) {
 		game->tick();
 	}
 
+	if ( hasActiveSplats || animationList.size() > 0 ) {
+		gles2Renderer->invalidateCachedBatches();
+	}
 
 	animationTime += delta;
 }
@@ -496,6 +499,11 @@ void forceDirection( int direction ) {
 
 
 void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
+
+	if (gles2Renderer != nullptr ) {
+		gles2Renderer->setTurn( game->getTurn() );
+	}
+
 	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat);
 	updateCharacterMovements( snapshot.ids );
 }

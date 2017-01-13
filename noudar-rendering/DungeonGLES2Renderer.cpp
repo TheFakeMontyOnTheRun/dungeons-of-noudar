@@ -675,9 +675,15 @@ namespace odb {
                     pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
 
 
-                    if (actor == '@' || actor == '?' || actor == 'J') {
+                    if (actor == 'K' || actor == 'k' || actor == '?' || actor == 'j' || actor == 'J') {
 
-                        batches[static_cast<ETextures >(mElementMap[actor])].emplace_back(
+                        TextureId frame = mElementMap[actor];
+
+                        if (splatFrame > -1) {
+                            frame = ETextures::Foe2a;
+                        }
+
+                        batches[static_cast<ETextures >(frame) ].emplace_back(
                                 std::get<0>(mBillboardVBO),
                                 std::get<1>(mBillboardVBO),
                                 std::get<2>(mBillboardVBO),
@@ -765,8 +771,10 @@ namespace odb {
                                 mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
                                 0};
 
-        mElementMap['@'] = ETextures::Cuco0;
-        mElementMap['J'] = ETextures::Lady0;
+        mElementMap['k'] = ETextures::Foe0a;
+        mElementMap['K'] = ETextures::Foe0b;
+        mElementMap['J'] = ETextures::Foe1a;
+        mElementMap['j'] = ETextures::Foe1b;
         mElementMap['?'] = ETextures::Crusader0;
         mElementMap[' '] = ETextures::Skybox;
         mElementMap['^'] = ETextures::Crusader0;
@@ -791,8 +799,11 @@ namespace odb {
         resetTransformMatrices();
 
         invalidateCachedBatches();
-        produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
-                                animationTime);
+
+        if ( batches.size() == 0 ) {
+            produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
+                                    animationTime);
+        }
         consumeRenderingBatches(animationTime);
     }
 
@@ -919,5 +930,9 @@ namespace odb {
         mAngleYZ = 0;
         mCameraRotation = 0;
         mRotationTarget = 0;
+    }
+
+    void DungeonGLES2Renderer::setTurn(int turn) {
+        mTurn = turn;
     }
 }

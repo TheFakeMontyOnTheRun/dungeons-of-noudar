@@ -29,18 +29,16 @@ namespace odb {
         Exit,
         BricksBlood,
         BricksCandles,
-        Boss0,
-        Boss1,
-        Boss2,
-        Cuco0,
-        Cuco1,
-        Cuco2,
-        Demon0,
-        Demon1,
-        Demon2,
-        Lady0,
-        Lady1,
-        Lady2,
+
+        Foe0a,
+        Foe0b,
+
+        Foe1a,
+        Foe1b,
+
+        Foe2a,
+        Foe2b,
+
         Crusader0,
         Crusader1,
         Crusader2,
@@ -131,6 +129,7 @@ namespace odb {
         glm::vec3 transformToMapPosition(const glm::vec3 &pos);
 
         void initTileProperties();
+
     private:
 
         const static int kSkyTextureLength = 400;
@@ -143,11 +142,11 @@ namespace odb {
         unsigned int gProgram;
         unsigned int uView;
         unsigned int uMod;
-
+        int mTurn = 0;
         glm::mat4 projectionMatrix;
         glm::mat4 mViewMatrix = glm::mat4( 1.0f );
         std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
-        std::map<TextureId, ETextures> mElementMap;
+        std::map<char, ETextures> mElementMap;
         std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
         std::vector<std::shared_ptr<Texture>> mTextures;
 
@@ -209,6 +208,8 @@ namespace odb {
         DungeonGLES2Renderer();
 
         ~DungeonGLES2Renderer();
+
+        void setTurn( int turn );
 
         bool init(float w, float h, const std::string &vertexShader,
                   const std::string &fragmentShader);
