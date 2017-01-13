@@ -534,7 +534,7 @@ namespace odb {
                 glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
     }
 
-    void DungeonGLES2Renderer::produceRenderingBatches(CharMap map, CharMap actors,
+    void DungeonGLES2Renderer::produceRenderingBatches(IntMap map, CharMap actors,
                                                        IntMap splats,
                                                        IntMap lightMap, IntMap ids,
                                                        AnimationList movingCharacters,
@@ -559,8 +559,8 @@ namespace odb {
         for (int z = 0; z < Knights::kMapSize; ++z) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
 
-                char tile = map[z][x];
-                char actor = actors[z][x];
+                auto tile = map[z][x];
+                auto actor = actors[z][x];
                 int splatFrame = splats[z][x];
 
                 Shade shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
@@ -641,7 +641,7 @@ namespace odb {
                 }
 
                 //characters
-                if (actor != '.') {
+                if (actor != EActorsSnapshotElement::kNothing) {
 
                     int id = ids[z][x];
                     float fx, fz;
@@ -675,7 +675,10 @@ namespace odb {
                     pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
 
 
-                    if (actor == 'K' || actor == 'k' || actor == '?' || actor == 'j' || actor == 'J') {
+                    if (actor == EActorsSnapshotElement::kDemonAttacking0  ||
+                            actor == EActorsSnapshotElement::kDemonAttacking1 ||
+                            actor == EActorsSnapshotElement::kDemonStanding0 ||
+                            actor == EActorsSnapshotElement::kDemonStanding1) {
 
                         TextureId frame = mElementMap[actor];
 
@@ -771,20 +774,22 @@ namespace odb {
                                 mCornerLeftFarVBO, ETextures::Bricks, ETextures::Skybox, 2, 0, 1,
                                 0};
 
-        mElementMap['k'] = ETextures::Foe0a;
-        mElementMap['K'] = ETextures::Foe0b;
-        mElementMap['J'] = ETextures::Foe1a;
-        mElementMap['j'] = ETextures::Foe1b;
-        mElementMap['?'] = ETextures::Crusader0;
-        mElementMap[' '] = ETextures::Skybox;
-        mElementMap['^'] = ETextures::Crusader0;
+        mElementMap[EActorsSnapshotElement::kDemonAttacking0] = ETextures::Foe1a;
+        mElementMap[EActorsSnapshotElement::kDemonAttacking1] = ETextures::Foe1b;
+        mElementMap[EActorsSnapshotElement::kDemonStanding0] = ETextures::Foe0a;
+        mElementMap[EActorsSnapshotElement::kDemonStanding1] = ETextures::Foe0b;
+        mElementMap[EActorsSnapshotElement::kHeroStanding0] = ETextures::Crusader0;
+        mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::Crusader0;
+        mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::Crusader1;
+        mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::Crusader1;
+
     }
 
     void DungeonGLES2Renderer::invalidateCachedBatches() {
         batches.clear();
     }
 
-    void DungeonGLES2Renderer::render(CharMap map, CharMap actors, IntMap splats,
+    void DungeonGLES2Renderer::render(IntMap map, CharMap actors, IntMap splats,
                                       IntMap lightMap, IntMap ids,
                                       AnimationList movingCharacters,
                                       long animationTime) {

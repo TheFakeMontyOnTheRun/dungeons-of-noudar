@@ -26,13 +26,13 @@ namespace odb {
 		static bool isValid(Vec2i pos);
 
 		static void castLight(Direction from, IntMap &lightMap, int emission,
-		               CharMap occluders, Vec2i pos);
+		               IntMap occluders, Vec2i pos);
 
 	public:
-		static void castPointLight(IntMap &lightMap, int emission, CharMap occluders,
+		static void castPointLight(IntMap &lightMap, int emission, IntMap occluders,
 		                                       int x, int y);
 
-		static void castLightInAllDirections(IntMap &lightMap, int emission, CharMap occluders,
+		static void castLightInAllDirections(IntMap &lightMap, int emission, IntMap occluders,
 		                                                 int x, int y);
 	};
 }

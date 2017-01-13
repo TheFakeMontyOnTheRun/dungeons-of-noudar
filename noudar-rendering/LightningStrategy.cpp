@@ -39,12 +39,12 @@ namespace odb {
 		return 0 <= pos.first && pos.first < 20 && 0 <= pos.second && pos.second < 20;
 	}
 
-	void LightningStrategy::castPointLight(IntMap &lightMap, int emission, CharMap occluders,
+	void LightningStrategy::castPointLight(IntMap &lightMap, int emission, IntMap occluders,
 	                                       int x, int y) {
 		castLight(Direction::TOP, lightMap, emission, occluders, Vec2i{x, y});
 	}
 
-	void LightningStrategy::castLightInAllDirections(IntMap &lightMap, int emission, CharMap occluders,
+	void LightningStrategy::castLightInAllDirections(IntMap &lightMap, int emission, IntMap occluders,
 	                                                 int x, int y) {
 
 		castLight(Direction::N, lightMap, emission, occluders, Vec2i{x, y - 1});
@@ -53,7 +53,7 @@ namespace odb {
 		castLight(Direction::W, lightMap, emission, occluders, Vec2i{x - 1, y});
 	}
 
-	bool isBlock(CharMap occluders, int x, int y) {
+	bool isBlock(IntMap occluders, int x, int y) {
 
 		auto tile = occluders[y][x];
 
@@ -68,7 +68,7 @@ namespace odb {
 
 
 	void LightningStrategy::castLight(Direction from, IntMap &lightMap, int emission,
-	                                  CharMap occluders, Vec2i pos) {
+	                                  IntMap occluders, Vec2i pos) {
 
 		if (emission <= 1) {
 			return;

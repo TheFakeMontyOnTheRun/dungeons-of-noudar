@@ -7,13 +7,31 @@
 
 namespace odb {
 
+    enum class EActorsSnapshotElement {
+        kNothing,
+        kHeroStanding0,
+        kHeroStanding1,
+        kHeroDead0,
+        kHeroDead1,
+        kHeroAttacking0,
+        kHeroAttacking1,
+        kDemonStanding0,
+        kDemonStanding1,
+        kDemonDead0,
+        kDemonDead1,
+        kDemonAttacking0,
+        kDemonAttacking1,
+    };
+
+    using CCharacterId = int;
+
     using IntMap = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
-    using CharMap = std::array<std::array<char, Knights::kMapSize>, Knights::kMapSize>;
+    using CharMap = std::array<std::array<EActorsSnapshotElement, Knights::kMapSize>, Knights::kMapSize>;
 
     class NoudarDungeonSnapshot {
 
     public:
-        odb::CharMap map;
+        odb::IntMap map;
         odb::CharMap snapshot;
         odb::IntMap splat;
         odb::IntMap ids;

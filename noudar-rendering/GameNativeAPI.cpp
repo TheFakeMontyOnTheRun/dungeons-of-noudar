@@ -199,7 +199,7 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 
 	animationList[id] = movement;
 
-	char floorType = snapshot.map[ newPosition.y ][ newPosition.x ];
+	auto floorType = snapshot.map[ newPosition.y ][ newPosition.x ];
 
 	if ( floorType  == '.' || floorType == '-' ) {
 		soundEmitters[0]->play(mainListener);
@@ -241,7 +241,7 @@ void setCameraPosition( int x, int y ) {
 	}
 }
 
-void updateLevelSnapshot(const odb::CharMap& level, const odb::CharMap& actors, const odb::IntMap& splats) {
+void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats) {
 	hasActiveSplats = false;
 
 	for (int y = 0; y < Knights::kMapSize; ++y) {

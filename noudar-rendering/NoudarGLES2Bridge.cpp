@@ -54,7 +54,7 @@ namespace odb {
             for ( int x = 0; x < Knights::kMapSize; ++x ) {
 
                 snapshot.map[ y ][ x ] = '.';
-                snapshot.snapshot[ y ][ x ] = '.';
+                snapshot.snapshot[ y ][ x ] = EActorsSnapshotElement::kNothing;
                 snapshot.ids[ y ][ x ] = 0;
                 snapshot.splat[ y ][ x ] = -1;
 
@@ -69,20 +69,20 @@ namespace odb {
 	            if ( actor != nullptr) {
 
                     snapshot.ids[ y ][ x ] = actor->getId();
+                    bool alternate = (actor->getMoves() % 2) == 0;
 
                     if ( actor->getTeam() != current->getTeam() ) {
-
-                        bool alternate = (actor->getMoves() % 2) == 0;
-
                         if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? 'J' : 'j';
+                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kDemonAttacking0 : EActorsSnapshotElement::kDemonAttacking1;
                         } else {
-                            snapshot.snapshot[ y ][ x ] =  ( alternate ) ? 'K' : 'k';
+                            snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kDemonStanding0 : EActorsSnapshotElement::kDemonStanding1;
                         }
-
-
                     } else {
-                        snapshot.snapshot[ y ][ x ] = (actor == current)? '^' : '?';
+                        if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kHeroAttacking0 : EActorsSnapshotElement::kHeroAttacking1;
+                        } else {
+                            snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kHeroStanding0: EActorsSnapshotElement::kHeroStanding1;
+                        }
                     }
                 }
             }

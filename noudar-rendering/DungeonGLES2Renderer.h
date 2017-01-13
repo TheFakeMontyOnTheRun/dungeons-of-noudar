@@ -83,7 +83,7 @@ namespace odb {
     class DungeonGLES2Renderer {
 
     private:
-        std::map< char, CTile3DProperties > mTileProperties;
+        std::map< int, CTile3DProperties > mTileProperties;
 
         void fetchShaderLocations();
 
@@ -122,7 +122,7 @@ namespace odb {
 
         void consumeRenderingBatches(long animationTime);
 
-        void produceRenderingBatches(CharMap map, CharMap actors, IntMap splats,
+        void produceRenderingBatches(IntMap map, CharMap actors, IntMap splats,
                                      IntMap lightmap, IntMap ids,
                                      AnimationList movingCharacters, long animationTime);
 
@@ -146,7 +146,7 @@ namespace odb {
         glm::mat4 projectionMatrix;
         glm::mat4 mViewMatrix = glm::mat4( 1.0f );
         std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
-        std::map<char, ETextures> mElementMap;
+        std::map<EActorsSnapshotElement, ETextures> mElementMap;
         std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
         std::vector<std::shared_ptr<Texture>> mTextures;
 
@@ -216,7 +216,7 @@ namespace odb {
 
         void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
-        void render(CharMap map, CharMap actors, IntMap splats, IntMap lightmap,
+        void render(IntMap map, CharMap actors, IntMap splats, IntMap lightmap,
                     IntMap ids, AnimationList movingCharacters, long animationTime);
 
         void shutdown();
