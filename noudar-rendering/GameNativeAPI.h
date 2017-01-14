@@ -59,4 +59,6 @@ void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters,
 
 void forceDirection( int direction );
 
+void setTileProperties( std::string tileProperties );
+
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

@@ -19,71 +19,18 @@ namespace odb {
         kFragmentShader,
     };
 
-    enum ETextures {
-        Grass,
-        Floor,
-        Bricks,
-        Arch,
-        Bars,
-        Begin,
-        Exit,
-        BricksBlood,
-        BricksCandles,
-
-        Foe0a,
-        Foe0b,
-
-        Foe1a,
-        Foe1b,
-
-        Foe2a,
-        Foe2b,
-
-        Crusader0,
-        Crusader1,
-        Crusader2,
-        Shadow,
-        Ceiling,
-        CeilingDoor,
-        CeilingBegin,
-        CeilingEnd,
-        Splat0,
-        Splat1,
-        Splat2,
-        CeilingBars,
-        Skybox,
-        StoneGrassFar,
-        GrassStoneFar,
-        StoneGrassNear,
-        GrassStoneNear,
-        Cross
-    };
-
     using Shade = float;
     using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
     using TextureId = int;
-    using VBORegister = std::tuple<unsigned int, unsigned int, unsigned int>;
 
     static const long kAnimationLength = 500;
-
-    class CTile3DProperties {
-    public:
-        ETextures mCeilingTexture;
-        ETextures mFloorTexture;
-        ETextures mMainWallTexture;
-        VBORegister mVBOToRender;
-        ETextures mCeilingRepeatedWallTexture;
-        ETextures mFloorRepeatedWallTexture;
-        int mCeilingRepetitions;
-        int mFloorRepetitions;
-        float mCeilingHeight;
-        float mFloorHeight;
-    };
 
     class DungeonGLES2Renderer {
 
     private:
-        std::map< int, CTile3DProperties > mTileProperties;
+        CTilePropertyMap mTileProperties;
+        std::map< VBORegisterId, VBORegister > mVBORegisters;
+        std::map<std::string, ETextures > mTextureRegistry;
 
         void fetchShaderLocations();
 
@@ -202,7 +149,9 @@ namespace odb {
 
 
         float mPlayerHealth = 0.0f;
-
+        VBORegisterId  mNullVBO = "null";
+        TextureName mSkyBoxTextureName = "sky";
+        TextureName mNullTexture = "null";
     public:
         //basic bookeeping
         DungeonGLES2Renderer();
@@ -223,6 +172,8 @@ namespace odb {
 
         void invalidateCachedBatches();
 
+        void setTileProperties( CTilePropertyMap propertyMap );
+
         void setPerspectiveMatrix(float *perspectiveMatrix);
 
         void setClearColour(float r, float g, float b);
@@ -233,6 +184,8 @@ namespace odb {
 
         void updateCamera(long ms);
 
+        VBORegister VBORegisterFrom( VBORegisterId id );
+        ETextures textureIndexFrom( TextureName name );
         void rotateLeft();
 
         void rotateRight();

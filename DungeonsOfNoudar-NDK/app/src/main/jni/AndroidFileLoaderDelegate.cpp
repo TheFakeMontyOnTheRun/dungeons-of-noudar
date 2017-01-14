@@ -39,7 +39,7 @@ namespace odb {
         std::string toReturn = readToString(fd);
         fclose(fd);
 
-        return Knights::filterLineBreaks( toReturn );
+        return toReturn;
     }
 
     std::string AndroidFileLoaderDelegate::getFilePathPrefix() {

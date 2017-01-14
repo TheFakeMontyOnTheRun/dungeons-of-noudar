@@ -48,16 +48,20 @@
 #include "NoudarDungeonSnapshot.h"
 #include "GameNativeAPI.h"
 
-#include "VBORenderingJob.h"
-#include "DungeonGLES2Renderer.h"
-#include "LightningStrategy.h"
-
 #include "IRenderer.h"
 #include "NativeBitmap.h"
 #include "CGame.h"
 #include "Common.h"
 #include "NoudarGLES2Bridge.h"
 #include "SplatAnimation.h"
+
+#include "ETextures.h"
+#include "VBORegister.h"
+#include "VBORenderingJob.h"
+#include "CTile3DProperties.h"
+#include "DungeonGLES2Renderer.h"
+#include "LightningStrategy.h"
+
 
 
 
@@ -84,7 +88,7 @@ std::shared_ptr<odb::NoudarGLES2Bridge> render;
 std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 std::shared_ptr<odb::SoundListener> mainListener;
-
+odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
 
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
@@ -112,7 +116,11 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 		}
 	}
 
-	return gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
+	auto toReturn = gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
+
+	gles2Renderer->setTileProperties( tileProperties );
+
+	return toReturn;
 }
 
 void renderFrame(long delta) {
@@ -124,7 +132,7 @@ void renderFrame(long delta) {
 		gles2Renderer->setPlayerHealth( game->getMap()->getAvatar()->getHP() );
 		gles2Renderer->render(snapshot.map, snapshot.snapshot, snapshot.splat, lightMap, snapshot.ids, animationList, animationTime);
 		gles2Renderer->updateCamera(delta);
-	}
+}
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 
@@ -368,7 +376,6 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	render = std::make_shared<odb::NoudarGLES2Bridge>();
 
-
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
 		soundEmitters[ 4 ]->play( mainListener );
 	};
@@ -418,6 +425,13 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 	gameDelegate->setOnLevelLoadedCallback( onLevelLoaded );
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
+
+	std::stringstream ss;
+	ss << fileLoaderDelegate->getFilePathPrefix();
+	ss << "tiles.properties";
+	auto tilesData = fileLoaderDelegate->loadFileFromPath(ss.str());
+
+	setTileProperties( tilesData );
 
 	if ( game != nullptr ) {
 		game->tick();
@@ -506,4 +520,8 @@ void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
 
 	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat);
 	updateCharacterMovements( snapshot.ids );
+}
+
+void setTileProperties( std::string tilePropertiesData ) {
+	tileProperties = odb::CTile3DProperties::parsePropertyList( tilePropertiesData );
 }

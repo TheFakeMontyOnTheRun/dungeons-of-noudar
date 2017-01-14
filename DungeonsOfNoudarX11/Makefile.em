@@ -31,6 +31,7 @@ OBJS = X11-version/main.o \
                ../noudar-rendering/LightningStrategy.o \
                ../noudar-rendering/NoudarDungeonSnapshot.o \
                ../noudar-rendering/SplatAnimation.o \
+    ../noudar-rendering/CTile3DProperties.o \
                ../noudar-rendering/NoudarGLES2Bridge.o \
                X11-version/LoadPNG.o \
                X11-version/WindowOperationsX11.o \
