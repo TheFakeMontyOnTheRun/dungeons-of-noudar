@@ -922,7 +922,6 @@ namespace odb {
         auto mapEnd = std::end( map );
 
         while ( it != mapEnd ) {
-            char id = it->first;
             mTileProperties[ it->first ] = it->second;
             it = std::next( it );
         }

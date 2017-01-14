@@ -37,8 +37,8 @@
 #include "WindowOperations.h"
 
 int main(int argc, char *argv[]) {
-	initWindow();
 	readMap( std::make_shared<Knights::CPlainFileLoader>() );
+	initWindow();
     setMainLoop();
 	destroyWindow();
 	return 0;
