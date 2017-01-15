@@ -131,18 +131,12 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"exit" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks_blood" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks_candles" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady2" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"foe0" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"foe1" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"foe2" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"foe3" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"foe4" ofType:@"png"] UTF8String ]));
+	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"foe5" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader0" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader1" ofType:@"png"] UTF8String ]));
 	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader2" ofType:@"png"] UTF8String ]));
@@ -237,7 +231,6 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	fclose(fd);
 	
 	auto frameDimensions = [self frame];
-	setupGraphics( frameDimensions.size.width, frameDimensions.size.height, gVertexShader, gFragmentShader, loadTextures());
 	
 	auto soundListener = std::make_shared<odb::SoundListener>();
 	
@@ -267,6 +260,8 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	
 	
 	readMap( std::make_shared<Knights::CPlainFileLoader>( path ) );
+	
+	setupGraphics( frameDimensions.size.width, frameDimensions.size.height, gVertexShader, gFragmentShader, loadTextures());
 	
 	
 //	[NSTimer scheduledTimerWithTimeInterval:0.1f

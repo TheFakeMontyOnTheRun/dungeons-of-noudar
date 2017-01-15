@@ -40,6 +40,26 @@
 		F1180B8E1DC8F68B00BDC97D /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1180B8C1DC8F68B00BDC97D /* main.mm */; };
 		F1180B8F1DC8F76D00BDC97D /* info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A4CF8981A89593700324DBF /* info.plist */; };
 		F1180B901DC8F77D00BDC97D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3A4CF89D1A89593700324DBF /* Info.plist */; };
+		F127A30E1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F127A30D1E2B8248005FCEEC /* CTile3DProperties.cpp */; };
+		F127A30F1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F127A30D1E2B8248005FCEEC /* CTile3DProperties.cpp */; };
+		F127A3111E2B84F8005FCEEC /* tiles.properties in Resources */ = {isa = PBXBuildFile; fileRef = F127A3101E2B84F8005FCEEC /* tiles.properties */; };
+		F127A3121E2B84F8005FCEEC /* tiles.properties in Resources */ = {isa = PBXBuildFile; fileRef = F127A3101E2B84F8005FCEEC /* tiles.properties */; };
+		F127A31B1E2B8723005FCEEC /* foe0.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3131E2B8723005FCEEC /* foe0.png */; };
+		F127A31C1E2B8723005FCEEC /* foe0.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3131E2B8723005FCEEC /* foe0.png */; };
+		F127A31D1E2B8723005FCEEC /* foe1.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3141E2B8723005FCEEC /* foe1.png */; };
+		F127A31E1E2B8723005FCEEC /* foe1.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3141E2B8723005FCEEC /* foe1.png */; };
+		F127A31F1E2B8723005FCEEC /* foe2.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3151E2B8723005FCEEC /* foe2.png */; };
+		F127A3201E2B8723005FCEEC /* foe2.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3151E2B8723005FCEEC /* foe2.png */; };
+		F127A3211E2B8723005FCEEC /* foe3.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3161E2B8723005FCEEC /* foe3.png */; };
+		F127A3221E2B8723005FCEEC /* foe3.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3161E2B8723005FCEEC /* foe3.png */; };
+		F127A3231E2B8723005FCEEC /* foe4.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3171E2B8723005FCEEC /* foe4.png */; };
+		F127A3241E2B8723005FCEEC /* foe4.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3171E2B8723005FCEEC /* foe4.png */; };
+		F127A3251E2B8723005FCEEC /* foe5.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3181E2B8723005FCEEC /* foe5.png */; };
+		F127A3261E2B8723005FCEEC /* foe5.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3181E2B8723005FCEEC /* foe5.png */; };
+		F127A3271E2B8723005FCEEC /* foe6.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3191E2B8723005FCEEC /* foe6.png */; };
+		F127A3281E2B8723005FCEEC /* foe6.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A3191E2B8723005FCEEC /* foe6.png */; };
+		F127A3291E2B8723005FCEEC /* foe7.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A31A1E2B8723005FCEEC /* foe7.png */; };
+		F127A32A1E2B8723005FCEEC /* foe7.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A31A1E2B8723005FCEEC /* foe7.png */; };
 		F13558691DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
 		F135586A1DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
 		F13883621E00AE3A004F50EA /* DungeonGL11Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */; };
@@ -319,6 +339,16 @@
 		F1180B801DC8F67000BDC97D /* vectorUtil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = vectorUtil.c; path = "Dungeons of Noudar/Source/Utility/vectorUtil.c"; sourceTree = SOURCE_ROOT; };
 		F1180B811DC8F67000BDC97D /* vectorUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vectorUtil.h; path = "Dungeons of Noudar/Source/Utility/vectorUtil.h"; sourceTree = SOURCE_ROOT; };
 		F1180B8C1DC8F68B00BDC97D /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = main.mm; path = "Dungeons of Noudar/Source/main.mm"; sourceTree = SOURCE_ROOT; };
+		F127A30D1E2B8248005FCEEC /* CTile3DProperties.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTile3DProperties.cpp; sourceTree = "<group>"; };
+		F127A3101E2B84F8005FCEEC /* tiles.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = tiles.properties; path = ../../../../DungeonsOfNoudarX11/res/tiles.properties; sourceTree = "<group>"; };
+		F127A3131E2B8723005FCEEC /* foe0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe0.png; sourceTree = "<group>"; };
+		F127A3141E2B8723005FCEEC /* foe1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe1.png; sourceTree = "<group>"; };
+		F127A3151E2B8723005FCEEC /* foe2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe2.png; sourceTree = "<group>"; };
+		F127A3161E2B8723005FCEEC /* foe3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe3.png; sourceTree = "<group>"; };
+		F127A3171E2B8723005FCEEC /* foe4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe4.png; sourceTree = "<group>"; };
+		F127A3181E2B8723005FCEEC /* foe5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe5.png; sourceTree = "<group>"; };
+		F127A3191E2B8723005FCEEC /* foe6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe6.png; sourceTree = "<group>"; };
+		F127A31A1E2B8723005FCEEC /* foe7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe7.png; sourceTree = "<group>"; };
 		F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBORenderingJob.cpp; sourceTree = "<group>"; };
 		F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DungeonGL11Renderer.cpp; sourceTree = "<group>"; };
 		F13B87A41DD8B84600BF256E /* AudioSink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSink.h; sourceTree = "<group>"; };
@@ -576,6 +606,7 @@
 			children = (
 				F17238DC1DF4B5CC00194CF0 /* crusader0.png */,
 				F17238DD1DF4B5CC00194CF0 /* crusader1.png */,
+				F127A3101E2B84F8005FCEEC /* tiles.properties */,
 				F17238DE1DF4B5CC00194CF0 /* crusader2.png */,
 				F140E8581DCFA64C00B28CCA /* arch.png */,
 				F140E8591DCFA64C00B28CCA /* bars.png */,
@@ -611,6 +642,14 @@
 				F1FD4E791DD3C43F00B21A9D /* fragment_OSX.glsl */,
 				F140E8771DCFA64C00B28CCA /* demon2.png */,
 				F140E8781DCFA64C00B28CCA /* exit.png */,
+				F127A3131E2B8723005FCEEC /* foe0.png */,
+				F127A3141E2B8723005FCEEC /* foe1.png */,
+				F127A3151E2B8723005FCEEC /* foe2.png */,
+				F127A3161E2B8723005FCEEC /* foe3.png */,
+				F127A3171E2B8723005FCEEC /* foe4.png */,
+				F127A3181E2B8723005FCEEC /* foe5.png */,
+				F127A3191E2B8723005FCEEC /* foe6.png */,
+				F127A31A1E2B8723005FCEEC /* foe7.png */,
 				F140E8791DCFA64C00B28CCA /* falcon0.png */,
 				F140E87A1DCFA64C00B28CCA /* falcon1.png */,
 				F140E87B1DCFA64C00B28CCA /* falcon2.png */,
@@ -931,6 +970,7 @@
 		F1875E911DC9124C001188C5 /* noudar-rendering */ = {
 			isa = PBXGroup;
 			children = (
+				F127A30D1E2B8248005FCEEC /* CTile3DProperties.cpp */,
 				F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */,
 				F1875E921DC9124C001188C5 /* DungeonGLES2Renderer.cpp */,
 				F1875E931DC9124C001188C5 /* DungeonGLES2Renderer.h */,
@@ -1081,6 +1121,7 @@
 				F140E8F51DCFA64D00B28CCA /* map_tiles0.txt in Resources */,
 				F140E91B1DCFA64D00B28CCA /* swing.wav in Resources */,
 				F1180B8F1DC8F76D00BDC97D /* info.plist in Resources */,
+				F127A3231E2B8723005FCEEC /* foe4.png in Resources */,
 				F140E8BD1DCFA64D00B28CCA /* ceilingdoor.png in Resources */,
 				F140E89D1DCFA64D00B28CCA /* arch.png in Resources */,
 				F140E9111DCFA64D00B28CCA /* stonecursorgood.png in Resources */,
@@ -1088,12 +1129,14 @@
 				F140E91D1DCFA64D00B28CCA /* test.wav in Resources */,
 				F140E8A51DCFA64D00B28CCA /* boss0.png in Resources */,
 				3A4CF8A31A89593700324DBF /* demon.model in Resources */,
+				F127A3271E2B8723005FCEEC /* foe6.png in Resources */,
 				F140E8E71DCFA64D00B28CCA /* grass.png in Resources */,
 				F140E8EF1DCFA64D00B28CCA /* lady0.png in Resources */,
 				F1AA95C81E21A94300759076 /* MedievalSharp.ttf in Resources */,
 				F1AA95CA1E21A94300759076 /* regular.ttf in Resources */,
 				F140E8BF1DCFA64D00B28CCA /* ceilingend.png in Resources */,
 				F140E90D1DCFA64D00B28CCA /* stoneceiling.png in Resources */,
+				F127A3291E2B8723005FCEEC /* foe7.png in Resources */,
 				F140E9011DCFA64D00B28CCA /* playerdead.wav in Resources */,
 				F140E9191DCFA64D00B28CCA /* stoneshadow.png in Resources */,
 				F140E9071DCFA64D00B28CCA /* splat1.png in Resources */,
@@ -1111,6 +1154,8 @@
 				F140E8A11DCFA64D00B28CCA /* begin.png in Resources */,
 				F140E8B91DCFA64D00B28CCA /* ceilingbars.png in Resources */,
 				F140E9151DCFA64D00B28CCA /* stonegrassfar.png in Resources */,
+				F127A31D1E2B8723005FCEEC /* foe1.png in Resources */,
+				F127A3251E2B8723005FCEEC /* foe5.png in Resources */,
 				F140E8CB1DCFA64D00B28CCA /* cursorbad0.png in Resources */,
 				F140E9051DCFA64D00B28CCA /* splat0.png in Resources */,
 				F140E9131DCFA64D00B28CCA /* stonefloor.png in Resources */,
@@ -1127,6 +1172,7 @@
 				F140E8C91DCFA64D00B28CCA /* cuco2.png in Resources */,
 				F17238E31DF4B5CC00194CF0 /* crusader2.png in Resources */,
 				F140E8E11DCFA64D00B28CCA /* falcon1.png in Resources */,
+				F127A3211E2B8723005FCEEC /* foe3.png in Resources */,
 				F140E9091DCFA64D00B28CCA /* splat2.png in Resources */,
 				F140E8ED1DCFA64D00B28CCA /* grassstonenear.png in Resources */,
 				F140E8F31DCFA64D00B28CCA /* lady2.png in Resources */,
@@ -1135,6 +1181,7 @@
 				F140E8CD1DCFA64D00B28CCA /* cursorbad1.png in Resources */,
 				F140E90B1DCFA64D00B28CCA /* stepsstones.wav in Resources */,
 				F140E8B51DCFA64D00B28CCA /* bull2.png in Resources */,
+				F127A31B1E2B8723005FCEEC /* foe0.png in Resources */,
 				3A4CF8AC1A89593700324DBF /* character.fsh in Resources */,
 				F140E8C71DCFA64D00B28CCA /* cuco1.png in Resources */,
 				F140E8C11DCFA64D00B28CCA /* clouds.png in Resources */,
@@ -1153,7 +1200,9 @@
 				F140E8FF1DCFA64D00B28CCA /* playerdamage.wav in Resources */,
 				3A4CF8AF1A89593700324DBF /* reflect.vsh in Resources */,
 				F140E8A91DCFA64D00B28CCA /* boss2.png in Resources */,
+				F127A3111E2B84F8005FCEEC /* tiles.properties in Resources */,
 				F140E89F1DCFA64D00B28CCA /* bars.png in Resources */,
+				F127A31F1E2B8723005FCEEC /* foe2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1167,9 +1216,11 @@
 				F17238E01DF4B5CC00194CF0 /* crusader0.png in Resources */,
 				F140E9241DCFA64D00B28CCA /* turtle2.png in Resources */,
 				F140E9121DCFA64D00B28CCA /* stonecursorgood.png in Resources */,
+				F127A31C1E2B8723005FCEEC /* foe0.png in Resources */,
 				F140E8C01DCFA64D00B28CCA /* ceilingend.png in Resources */,
 				F140E8AE1DCFA64D00B28CCA /* bricks_candles.png in Resources */,
 				F140E8CC1DCFA64D00B28CCA /* cursorbad0.png in Resources */,
+				F127A3241E2B8723005FCEEC /* foe4.png in Resources */,
 				F17238E41DF4B5CC00194CF0 /* crusader2.png in Resources */,
 				F140E8A41DCFA64D00B28CCA /* bgnoise.wav in Resources */,
 				F17238E21DF4B5CC00194CF0 /* crusader1.png in Resources */,
@@ -1198,6 +1249,7 @@
 				F140E8C41DCFA64D00B28CCA /* cross.png in Resources */,
 				F1FD4E7A1DD3C43F00B21A9D /* fragment_OSX.glsl in Resources */,
 				F1AA95C91E21A94300759076 /* MedievalSharp.ttf in Resources */,
+				F127A3201E2B8723005FCEEC /* foe2.png in Resources */,
 				3A0574051A898095001A7683 /* demon.model in Resources */,
 				F1180B901DC8F77D00BDC97D /* Info.plist in Resources */,
 				F140E8D61DCFA64D00B28CCA /* cursorgood2.png in Resources */,
@@ -1210,14 +1262,17 @@
 				F140E8D41DCFA64D00B28CCA /* cursorgood1.png in Resources */,
 				F140E8EE1DCFA64D00B28CCA /* grassstonenear.png in Resources */,
 				F140E8AA1DCFA64D00B28CCA /* boss2.png in Resources */,
+				F127A32A1E2B8723005FCEEC /* foe7.png in Resources */,
 				F140E8A81DCFA64D00B28CCA /* boss1.png in Resources */,
 				F140E8CE1DCFA64D00B28CCA /* cursorbad1.png in Resources */,
 				F140E8D81DCFA64D00B28CCA /* demon0.png in Resources */,
 				F140E90E1DCFA64D00B28CCA /* stoneceiling.png in Resources */,
+				F127A3261E2B8723005FCEEC /* foe5.png in Resources */,
 				3A0574041A89808F001A7683 /* reflect.vsh in Resources */,
 				F140E8DC1DCFA64D00B28CCA /* demon2.png in Resources */,
 				F140E9201DCFA64D00B28CCA /* turtle0.png in Resources */,
 				F140E91C1DCFA64D00B28CCA /* swing.wav in Resources */,
+				F127A3281E2B8723005FCEEC /* foe6.png in Resources */,
 				F140E9041DCFA64D00B28CCA /* shadow.png in Resources */,
 				3A0574021A89808F001A7683 /* character.vsh in Resources */,
 				F1AA95CB1E21A94300759076 /* regular.ttf in Resources */,
@@ -1231,14 +1286,17 @@
 				3A0574031A89808F001A7683 /* reflect.fsh in Resources */,
 				F140E8A61DCFA64D00B28CCA /* boss0.png in Resources */,
 				F140E8CA1DCFA64D00B28CCA /* cuco2.png in Resources */,
+				F127A3221E2B8723005FCEEC /* foe3.png in Resources */,
 				F140E9221DCFA64D00B28CCA /* turtle1.png in Resources */,
 				3A0574011A89808F001A7683 /* character.fsh in Resources */,
 				F140E9021DCFA64D00B28CCA /* playerdead.wav in Resources */,
 				F140E8C61DCFA64D00B28CCA /* cuco0.png in Resources */,
 				F140E8DA1DCFA64D00B28CCA /* demon1.png in Resources */,
 				F140E8A21DCFA64D00B28CCA /* begin.png in Resources */,
+				F127A3121E2B84F8005FCEEC /* tiles.properties in Resources */,
 				3A0574061A898095001A7683 /* demon.png in Resources */,
 				F140E8B01DCFA64D00B28CCA /* bricks.png in Resources */,
+				F127A31E1E2B8723005FCEEC /* foe1.png in Resources */,
 				F140E8A01DCFA64D00B28CCA /* bars.png in Resources */,
 				F140E8F61DCFA64D00B28CCA /* map_tiles0.txt in Resources */,
 				F140E8E81DCFA64D00B28CCA /* grass.png in Resources */,
@@ -1297,6 +1355,7 @@
 				F18755701DC90ECC001188C5 /* CMap.cpp in Sources */,
 				F1875E891DC91137001188C5 /* Trig.cpp in Sources */,
 				F1875EB01DC9153D001188C5 /* TrigBatch.cpp in Sources */,
+				F127A30E1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */,
 				F18755681DC90ECC001188C5 /* CGameDelegate.cpp in Sources */,
 				F18755581DC90ECC001188C5 /* CActor.cpp in Sources */,
 				F1AA95421E21A0F900759076 /* CMonster.cpp in Sources */,
@@ -1325,6 +1384,7 @@
 				F18A6EC21DFC6D490036AB6E /* IFileLoaderDelegate.cpp in Sources */,
 				F1B23EA21DCF5E60009E807B /* GL3NoudarView.mm in Sources */,
 				F1875E821DC91137001188C5 /* NativeBitmap.cpp in Sources */,
+				F127A30F1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */,
 				F13B87C61DD8B86800BF256E /* SoundUtils.cpp in Sources */,
 				F1875EA31DC9124C001188C5 /* NoudarGLES2Bridge.cpp in Sources */,
 				F1180B851DC8F67000BDC97D /* matrixUtil.c in Sources */,
