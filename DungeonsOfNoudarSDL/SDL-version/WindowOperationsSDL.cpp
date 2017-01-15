@@ -33,11 +33,11 @@
 #include "Vec2i.h"
 #include "NativeBitmap.h"
 #include "IMapElement.h"
+#include "CTeam.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
 #include "IRenderer.h"
-#include "CKnight.h"
 
 #include "NoudarDungeonSnapshot.h"
 
@@ -66,18 +66,12 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
     toReturn.push_back( loadPNG( "res/exit.png") );
     toReturn.push_back( loadPNG( "res/bricks_blood.png") );
     toReturn.push_back( loadPNG( "res/bricks_candles.png") );
-    toReturn.push_back( loadPNG( "res/boss0.png") );
-    toReturn.push_back( loadPNG( "res/boss1.png") );
-    toReturn.push_back( loadPNG( "res/boss2.png") );
-    toReturn.push_back( loadPNG( "res/cuco0.png") );
-    toReturn.push_back( loadPNG( "res/cuco1.png") );
-    toReturn.push_back( loadPNG( "res/cuco2.png") );
-    toReturn.push_back( loadPNG( "res/demon0.png") );
-    toReturn.push_back( loadPNG( "res/demon1.png") );
-    toReturn.push_back( loadPNG( "res/demon2.png") );
-    toReturn.push_back( loadPNG( "res/lady0.png") );
-    toReturn.push_back( loadPNG( "res/lady1.png") );
-    toReturn.push_back( loadPNG( "res/lady2.png") );
+    toReturn.push_back( loadPNG( "res/foe0.png") );
+    toReturn.push_back( loadPNG( "res/foe1.png") );
+    toReturn.push_back( loadPNG( "res/foe2.png") );
+    toReturn.push_back( loadPNG( "res/foe3.png") );
+    toReturn.push_back( loadPNG( "res/foe4.png") );
+    toReturn.push_back( loadPNG( "res/foe5.png") );
     toReturn.push_back( loadPNG( "res/crusader0.png") );
     toReturn.push_back( loadPNG( "res/crusader1.png") );
     toReturn.push_back( loadPNG( "res/crusader2.png") );
@@ -96,6 +90,7 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
     toReturn.push_back( loadPNG( "res/stonegrassnear.png"));
     toReturn.push_back( loadPNG( "res/grassstonenear.png"));
     toReturn.push_back( loadPNG( "res/cross.png"));
+
 
     return toReturn;
 }

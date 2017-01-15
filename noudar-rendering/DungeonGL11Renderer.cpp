@@ -20,38 +20,23 @@
 #include <sstream>
 #include <unordered_set>
 #include <map>
-#include <tuple>
 #include <array>
 
 #include "Vec2i.h"
 #include "IMapElement.h"
+#include "CTeam.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
-
 #include "NativeBitmap.h"
 #include "Texture.h"
-#include "Material.h"
-#include "Trig.h"
-#include "TrigBatch.h"
-#include "MeshObject.h"
 #include "Logger.h"
-#include "MaterialList.h"
-#include "Scene.h"
-#include "Common.h"
 #include "VBORenderingJob.h"
-
-#include "Vec2i.h"
-#include "NativeBitmap.h"
-#include "IMapElement.h"
-#include "CActor.h"
-#include "CGameDelegate.h"
-#include "CMap.h"
 #include "IRenderer.h"
-#include "CKnight.h"
-
 #include "NoudarDungeonSnapshot.h"
-
+#include "ETextures.h"
+#include "VBORegister.h"
+#include "CTile3DProperties.h"
 #include "DungeonGLES2Renderer.h"
 
 
@@ -69,10 +54,10 @@ namespace odb {
 
     std::vector<TGeometryBatch> GeometryBatches; //bitches!
     std::vector<TIndicesBatch> IndicesBatches; //bitches!
-
+    const static int kGeometryLineStride = 5;
     const static bool kShouldDestroyThingsManually = false;
 
-    const static int kGeometryLineStride = 5;
+    //OpenGL specific stuff
 
     const float DungeonGLES2Renderer::billboardVertices[]{
             -1.0f, 1.0f, 0.0f, 0.0f, .0f,
@@ -182,6 +167,20 @@ namespace odb {
             8, 11, 15
     };
 
+    VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
+                                                unsigned short *indexData,
+                                                unsigned int indices) {
+
+        unsigned int dataIndex = GeometryBatches.size();
+        unsigned int indicesIndex = IndicesBatches.size();
+
+
+        GeometryBatches.push_back( { data, vertices } );
+        IndicesBatches.push_back( { indexData, indices });
+
+        return VBORegister(dataIndex, indicesIndex, indices);
+    }
+
     unsigned int uploadTextureData(std::shared_ptr<NativeBitmap> bitmap) {
         // Texture object handle
         unsigned int textureId = 0;
@@ -223,33 +222,15 @@ namespace odb {
 
     GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource,
                                                const char *pFragmentSource) {
-        return 1;
+       return 1;
     }
 
     void DungeonGLES2Renderer::printVerboseDriverInformation() {
     }
 
-    DungeonGLES2Renderer::DungeonGLES2Renderer() {
-        projectionMatrix = glm::mat4(1.0f);
-        vertexAttributePosition = 0;
-        modelMatrixAttributePosition = 0;
-        projectionMatrixAttributePosition = 0;
-        gProgram = 0;
-    }
-
-    DungeonGLES2Renderer::~DungeonGLES2Renderer() {
-        odb::Logger::log("Destroying the renderer");
-
-        if (kShouldDestroyThingsManually) {
-            deleteVBOs();
-            for (auto &texture : mTextures) {
-                glDeleteTextures(1, &(texture->mTextureId));
-            }
-        }
-    }
-
     bool DungeonGLES2Renderer::init(float w, float h, const std::string &vertexShader,
                                     const std::string &fragmentShader) {
+
         createVBOs();
 
         glEnable(GL_TEXTURE_2D);
@@ -286,65 +267,69 @@ namespace odb {
             mTextures.push_back(std::make_shared<Texture>(uploadTextureData(bitmap), bitmap));
         }
 
+        mTextureRegistry[ "sky" ] = ETextures::Skybox;
+        mTextureRegistry[ "grass" ] = ETextures::Grass;
+        mTextureRegistry[ "floor" ] = ETextures::Floor;
+        mTextureRegistry[ "bricks" ] = ETextures::Bricks;
+        mTextureRegistry[ "arch" ] = ETextures::Arch;
+        mTextureRegistry[ "bars" ] = ETextures::Bars;
+        mTextureRegistry[ "begin" ] = ETextures::Begin;
+        mTextureRegistry[ "exit" ] = ETextures::Exit;
+        mTextureRegistry[ "bricksblood" ] = ETextures::BricksBlood;
+        mTextureRegistry[ "brickscandles" ] = ETextures::BricksCandles;
+        mTextureRegistry[ "stonegrassfar" ] = ETextures::StoneGrassFar;
+        mTextureRegistry[ "grassstonefar" ] = ETextures::GrassStoneFar;
+        mTextureRegistry[ "stonegrassnear" ] = ETextures::StoneGrassNear;
+        mTextureRegistry[ "grassstonenear" ] = ETextures::GrassStoneNear;
+        mTextureRegistry[ "ceiling" ] = ETextures::Ceiling;
+        mTextureRegistry[ "ceilingdoor" ] = ETextures::CeilingDoor;
+        mTextureRegistry[ "ceilingbegin" ] = ETextures::CeilingBegin;
+        mTextureRegistry[ "ceilingend" ] = ETextures::CeilingEnd;
+        mTextureRegistry[ "ceilingbars" ] = ETextures::CeilingBars;
 
-
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+        glFrontFace(GL_CW);
+        glDepthMask(true);
         startFadingIn();
         return true;
     }
 
-    glm::mat4 DungeonGLES2Renderer::getCubeTransform(glm::vec3 translation) {
-        glm::mat4 identity = glm::mat4(1.0f);
-        glm::mat4 translated = glm::translate(identity, translation);
+    DungeonGLES2Renderer::~DungeonGLES2Renderer() {
+        odb::Logger::log("Destroying the renderer");
 
-        return translated;
+        if (kShouldDestroyThingsManually) {
+            deleteVBOs();
+            for (auto &texture : mTextures) {
+                glDeleteTextures(1, &(texture->mTextureId));
+            }
+        }
     }
-
-    static glm::mat4 viewMatrix;
-
-    void DungeonGLES2Renderer::resetTransformMatrices() {
-
-        glm::vec3 pos = mCurrentCharacterPosition;
-        glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-        glm::vec3 pos_front;
-        glm::mat4 eyeMatrixOriginal =
-                mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
-        glm::mat4 eyeMatrix = glm::mat4(1.0f);
-
-        eyeMatrix[3][0] = eyeMatrixOriginal[3][0];
-        eyeMatrix[3][1] = eyeMatrixOriginal[3][1];
-        eyeMatrix[3][2] = eyeMatrixOriginal[3][2];
-
-        float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
-        float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
-
-        glm::vec3 mCameraDirection{0, 0, 0};
-
-        mCameraDirection = glm::rotate(
-                glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
-                angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
-        pos_front = mCameraDirection;
-
-        viewMatrix = glm::lookAt(
-                pos,
-                pos_front + pos,
-                glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
-
-    }
-
-
 
     void DungeonGLES2Renderer::fetchShaderLocations() {
-
     }
 
-    void DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo,
+    void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
                                             int vertexCount,
-                                            const glm::mat4 &transform) {
+                                            const glm::mat4 &transform, float shade) {
+
+
+        glMatrixMode(GL_MODELVIEW);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+
+        glEnable( GL_TEXTURE_2D );
+        glEnable( GL_ALPHA_TEST );
+        glAlphaFunc(GL_GREATER,0.5);
+
+
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
 
         auto geometryBatch = GeometryBatches[ vertexVbo ];
         auto indicesBatch = IndicesBatches[ indexVbo ];
 
-        glLoadMatrixf( &(viewMatrix*transform)[0][0] );
+        glLoadMatrixf( &(mViewMatrix*transform)[0][0] );
 
         glBegin(GL_TRIANGLES);
 
@@ -373,6 +358,13 @@ namespace odb {
                                        (unsigned short *) cornerLeftNearIndices, 6);
         mFloorVBO = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6);
         mSkyVBO = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6);
+
+        mVBORegisters[ "cube" ] = mCubeVBO;
+        mVBORegisters[ "leftfar" ] = mCornerLeftFarVBO;
+        mVBORegisters[ "leftnear" ] = mCornerLeftNearVBO;
+        mVBORegisters[ "floor" ] = mFloorVBO;
+
+        initTileProperties();
     }
 
     void DungeonGLES2Renderer::clearBuffers() {
@@ -389,32 +381,29 @@ namespace odb {
         glLoadIdentity( );
         glLoadMatrixf( &projectionMatrix[0][0]);
         glMatrixMode( GL_MODELVIEW );
-
     }
 
     void DungeonGLES2Renderer::prepareShaderProgram() {
         checkGlError("glUseProgram");
     }
 
-    void DungeonGLES2Renderer::render(CharMap map, CharMap actors, IntMap splats,
-                                      IntMap lightMap, IntMap ids,
-                                      AnimationList movingCharacters,
-                                      long animationTime) {
-
-        if (mBitmaps.empty()) {
-            return;
-        }
-
-        clearBuffers();
-        prepareShaderProgram();
-        setPerspective();
-        resetTransformMatrices();
-
-        invalidateCachedBatches();
-        produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
-                                animationTime);
-        consumeRenderingBatches(animationTime);
+    //independent code
+    DungeonGLES2Renderer::DungeonGLES2Renderer() {
+         projectionMatrix = glm::mat4(1.0f);
+        vertexAttributePosition = 0;
+        modelMatrixAttributePosition = 0;
+        projectionMatrixAttributePosition = 0;
+        gProgram = 0;
     }
+
+
+    glm::mat4 DungeonGLES2Renderer::getCubeTransform(glm::vec3 translation) {
+        glm::mat4 identity = glm::mat4(1.0f);
+        glm::mat4 translated = glm::translate(identity, translation);
+
+        return translated;
+    }
+
 
     void DungeonGLES2Renderer::updateFadeState(long ms) {
         if (mFadeState == kFadingIn) {
@@ -439,44 +428,7 @@ namespace odb {
 
     void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
         mBitmaps.clear();
-        mBitmaps.insert(mBitmaps.end(), textures.begin(), textures.end());
-        mElementMap['.'] = ETextures::Grass;
-        mElementMap['_'] = ETextures::Floor;
-
-        mElementMap['('] = ETextures::GrassStoneFar;
-        mElementMap['{'] = ETextures::GrassStoneNear;
-
-        mElementMap[')'] = ETextures::StoneGrassNear;
-        mElementMap['}'] = ETextures::StoneGrassFar;
-
-        mElementMap['='] = ETextures::Floor;
-        mElementMap['1'] = ETextures::Bricks;
-        mElementMap['#'] = ETextures::Bars;
-        mElementMap['~'] = ETextures::Arch;
-        mElementMap['Y'] = ETextures::BricksCandles;
-        mElementMap['X'] = ETextures::BricksBlood;
-
-        mElementMap['%'] = ETextures::Bricks;
-        mElementMap['|'] = ETextures::Bricks;
-        mElementMap['\\'] = ETextures::Bricks;
-        mElementMap['/'] = ETextures::Bricks;
-        mElementMap['>'] = ETextures::Bricks;
-        mElementMap['<'] = ETextures::Bricks;
-        mElementMap['Z'] = ETextures::Bricks;
-        mElementMap['S'] = ETextures::Bricks;
-
-        mElementMap['9'] = ETextures::Exit;
-        mElementMap['*'] = ETextures::Begin;
-
-
-        mElementMap['@'] = ETextures::Cuco0;
-        mElementMap['J'] = ETextures::Lady0;
-        mElementMap['?'] = ETextures::Crusader0;
-
-        mElementMap[' '] = ETextures::Skybox;
-
-        mElementMap['^'] = ETextures::Crusader0;
-
+        mBitmaps.insert(mBitmaps.end(), begin(textures), end(textures));
     }
 
     void DungeonGLES2Renderer::shutdown() {
@@ -516,49 +468,48 @@ namespace odb {
         }
     }
 
-    void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
-        glMatrixMode(GL_MODELVIEW);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
+    void DungeonGLES2Renderer::resetTransformMatrices() {
 
-        glEnable( GL_TEXTURE_2D );
-        glEnable( GL_ALPHA_TEST );
-        glAlphaFunc(GL_GREATER,0.5);
+        glm::vec3 pos = mCurrentCharacterPosition;
+        glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+        glm::vec3 pos_front;
+        glm::mat4 eyeMatrixOriginal =
+                mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
+        glm::mat4 eyeMatrix = glm::mat4(1.0f);
 
-        for (auto &batch : batches) {
+        eyeMatrix[3][0] = eyeMatrixOriginal[3][0];
+        eyeMatrix[3][1] = eyeMatrixOriginal[3][1];
+        eyeMatrix[3][2] = eyeMatrixOriginal[3][2];
 
-            glBindTexture(GL_TEXTURE_2D, mTextures[batch.first]->mTextureId);
+        float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
+        float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
 
-            for (auto &element : batch.second) {
-                auto transform = element.getTransform();
-                auto shade = element.getShade();
-                auto amount = element.getAmount();
-                auto vboId = element.getVBOId();
-                auto vboIndicesId = element.getVBOIndicesId();
+        glm::vec3 mCameraDirection{0, 0, 0};
 
+        mCameraDirection = glm::rotate(
+                glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
+                angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
 
-                drawGeometry(vboId,
-                             vboIndicesId,
-                             amount,
-                             transform
-                );
-            }
-        }
+        pos_front = mCameraDirection;
+
+        mViewMatrix = glm::lookAt(
+                pos,
+                pos_front + pos,
+                glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
     }
 
-    void DungeonGLES2Renderer::produceRenderingBatches(CharMap map, CharMap actors,
+    void DungeonGLES2Renderer::produceRenderingBatches(IntMap map, CharMap actors,
                                                        IntMap splats,
                                                        IntMap lightMap, IntMap ids,
                                                        AnimationList movingCharacters,
                                                        long animationTime) {
 
-        ETextures chosenTexture;
         glm::vec3 pos;
 
         batches.clear();
-        batches[ETextures::Skybox].emplace_back( std::get<0>(mSkyVBO),
-                                                 std::get<1>(mSkyVBO),
-                                                 std::get<2>(mSkyVBO),
+        batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
+                                                std::get<1>(mSkyVBO),
+                                                std::get<2>(mSkyVBO),
                                                 getSkyTransform(animationTime),
                                                 1.0f);
 
@@ -572,177 +523,89 @@ namespace odb {
         for (int z = 0; z < Knights::kMapSize; ++z) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
 
-                char tile = map[z][x];
-                char actor = actors[z][x];
+                auto tile = map[z][x];
+                auto actor = actors[z][x];
                 int splatFrame = splats[z][x];
 
-                Shade placeShade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
-                Shade shade = placeShade;
+                Shade shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
 
-                if (x == mCursorPosition.x && (z) == static_cast<int>(mCursorPosition.y)) {
+                if (x == static_cast<int>(mCursorPosition.x) &&
+                    z == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
 
-                if (tile == '.' || tile == '_' || tile == '=' || tile == '-' || tile == ')' ||
-                    tile == '(' || tile == '}' || tile == '{') {
-                    chosenTexture = mElementMap[tile];
-                } else if (tile == '#' || tile == '~' || tile == '|' || tile == '%') {
-                    chosenTexture = mElementMap['_'];
-                } else if (tile == '\\') {
-                    chosenTexture = mElementMap['('];
-                } else if (tile == '/') {
-                    chosenTexture = mElementMap[')'];
-                } else if (tile == '>') {
-                    chosenTexture = mElementMap['{'];
-                } else if (tile == '<') {
-                    chosenTexture = mElementMap['}'];
-                } else {
-                    chosenTexture = mElementMap['.'];
+                if (mTileProperties.count(tile) <= 0) {
+                    continue;
                 }
 
-                if (tile == '=' || tile == '-') {
-                    shade -= 0.25f;
+                auto tileProperties = mTileProperties[tile];
+                auto tileVBO = VBORegisterFrom( tileProperties.mVBOToRender );
+
+                if (tileProperties.mCeilingTexture != mNullTexture) {
+                    pos = glm::vec3(x * 2, -5.0f + (2.0 * tileProperties.mCeilingHeight), z * 2);
+                    batches[textureIndexFrom(tileProperties.mCeilingTexture)].emplace_back(std::get<0>(mFloorVBO),
+                                                                         std::get<1>(mFloorVBO),
+                                                                         std::get<2>(mFloorVBO),
+                                                                         getFloorTransform(pos),
+                                                                         shade);
                 }
 
-                pos = glm::vec3(x * 2, -5.0f, z * 2);
-                batches[chosenTexture].emplace_back(std::get<0>(mFloorVBO),
-                                                    std::get<1>(mFloorVBO),
-                                                    std::get<2>(mFloorVBO),
-                                                    getFloorTransform(pos), shade);
+                if (tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
 
-                shade = placeShade;
+                    for (float y = 0; y < tileProperties.mCeilingRepetitions; ++y) {
 
-                //walls
-                if (tile == '\\' || tile == '<' || tile == '|' || tile == 'S') {
-                    pos = glm::vec3(x * 2, -4.0f,z * 2);
+                        pos = glm::vec3(x * 2,
+                                        -4.0f + (2.0f * tileProperties.mCeilingHeight) + (2.0 * y),
+                                        z * 2);
 
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftFarVBO),
-                            std::get<1>(mCornerLeftFarVBO),
-                            std::get<2>(mCornerLeftFarVBO),
-                            getCornerLeftFarTransform(pos),
-                            shade);
+                        batches[textureIndexFrom(tileProperties.mCeilingRepeatedWallTexture)].emplace_back(
+                                std::get<0>(tileVBO),
+                                std::get<1>(tileVBO),
+                                std::get<2>(tileVBO),
+                                getCubeTransform(pos),
+                                shade);
+                    }
+                }
 
-                    pos = glm::vec3(x * 2, -2.0f,z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftFarVBO),
-                            std::get<1>(mCornerLeftFarVBO),
-                            std::get<2>(mCornerLeftFarVBO),
-                            getCornerLeftFarTransform(pos),
-                            shade);
-
-                    pos = glm::vec3(x * 2, 0.0f,z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftFarVBO),
-                            std::get<1>(mCornerLeftFarVBO),
-                            std::get<2>(mCornerLeftFarVBO),
-                            getCornerLeftFarTransform(pos),
-                            shade);
-
-
-                } else if (tile == '/' || tile == '>' || tile == '%' || tile == 'Z') {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftNearVBO),
-                            std::get<1>(mCornerLeftNearVBO),
-                            std::get<2>(mCornerLeftNearVBO),
-                            getCornerLeftNearTransform(pos),
-                            shade);
-
-                    pos = glm::vec3(x * 2, -2.0f, z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftNearVBO),
-                            std::get<1>(mCornerLeftNearVBO),
-                            std::get<2>(mCornerLeftNearVBO),
-                            getCornerLeftNearTransform(pos),
-                            shade);
-
-                    pos = glm::vec3(x * 2, 0.0f, z * 2);
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCornerLeftNearVBO),
-                            std::get<1>(mCornerLeftNearVBO),
-                            std::get<2>(mCornerLeftNearVBO),
-                            getCornerLeftNearTransform(pos),
-                            shade);
-
-                } else if (tile != '.' && tile != '_' && tile != '=' && tile != '-' &&
-                           tile != ')' && tile != '(' && tile != '}' && tile != '{') {
-
+                if (tileProperties.mMainWallTexture != mNullTexture) {
                     pos = glm::vec3(x * 2, -4.0f, z * 2);
 
-                    batches[static_cast<ETextures >(mElementMap[tile])].emplace_back(
-                            std::get<0>(mCubeVBO),
-                            std::get<1>(mCubeVBO),
-                            std::get<2>(mCubeVBO),
-                            getCubeTransform(pos),
-                            shade);
+                    batches[textureIndexFrom(tileProperties.mMainWallTexture)].emplace_back(
+                            std::get<0>(tileVBO),
+                            std::get<1>(tileVBO),
+                            std::get<2>(tileVBO),
+                            getCubeTransform(pos), shade);
+                }
 
-                    //top of walls cube
-                    ETextures textureForCeling = ETextures::Ceiling;
+                if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
 
-                    if (tile == 'B') {
-                        textureForCeling = ETextures::CeilingBegin;
-                    } else if (tile == 'E') {
-                        textureForCeling = ETextures::CeilingEnd;
-                    } else if (tile == '~') {
-                        textureForCeling = ETextures::CeilingDoor;
-                    } else if (tile == '#') {
-                        textureForCeling = ETextures::CeilingBars;
-                    } else {
-                        textureForCeling = ETextures::Ceiling;
-                    }
+                    for (float y = 0; y < tileProperties.mFloorRepetitions; ++y) {
 
-                    if (tile != 'E') {
-                        pos = glm::vec3(x * 2, -2.0f, z * 2);
-                        batches[(tile == 'b') ? ETextures::CeilingEnd
-                                              : mElementMap['1']].emplace_back(
-                                std::get<0>(mCubeVBO),
-                                std::get<1>(mCubeVBO),
-                                std::get<2>(mCubeVBO),
+                        //the final -1.0f in y is for accounting fore the block's length
+                        pos = glm::vec3(x * 2,
+                                        -5.0f + (2.0f * tileProperties.mFloorHeight) - (2.0 * y) -
+                                        1.0f, z * 2);
+
+                        batches[textureIndexFrom(tileProperties.mFloorRepeatedWallTexture)].emplace_back(
+                                std::get<0>(tileVBO),
+                                std::get<1>(tileVBO),
+                                std::get<2>(tileVBO),
                                 getCubeTransform(pos),
                                 shade);
-
-                        pos = glm::vec3(x * 2, 0.0f, z * 2);
-                        batches[(tile == 'b') ? ETextures::CeilingEnd
-                                              : mElementMap['1']].emplace_back(
-                                std::get<0>(mCubeVBO),
-                                std::get<1>(mCubeVBO),
-                                std::get<2>(mCubeVBO),
-                                getCubeTransform(pos),
-                                shade);
-
                     }
+                }
 
-
-                } else {
-                    if (tile == '=' || tile == '-') {
-
-                        pos = glm::vec3(x * 2, 0.0f, z * 2);
-
-                        batches[Floor].emplace_back(
-                                std::get<0>(mCubeVBO),
-                                std::get<1>(mCubeVBO),
-                                std::get<2>(mCubeVBO),
-                                getCubeTransform(pos),
-                                                    shade);
-                        shade -= 0.375f;
-
-                        pos = glm::vec3(x * 2, -1.0f, z * 2);
-
-                        batches[Floor].emplace_back(
-                                std::get<0>(mFloorVBO),
-                                std::get<1>(mFloorVBO),
-                                std::get<2>(mFloorVBO),
-                                getFloorTransform(pos),
-                                shade);
-
-                        shade = placeShade;
-
-                    }
+                if (tileProperties.mFloorTexture != mNullTexture) {
+                    pos = glm::vec3(x * 2, -5.0f + (2.0f * tileProperties.mFloorHeight), z * 2);
+                    batches[textureIndexFrom(tileProperties.mFloorTexture)].emplace_back(std::get<0>(mFloorVBO),
+                                                                       std::get<1>(mFloorVBO),
+                                                                       std::get<2>(mFloorVBO),
+                                                                       getFloorTransform(pos),
+                                                                       shade);
                 }
 
                 //characters
-                if (actor != '.') {
+                if (actor != EActorsSnapshotElement::kNothing) {
 
                     int id = ids[z][x];
                     float fx, fz;
@@ -756,7 +619,7 @@ namespace odb {
                     if (id != 0 && movingCharacters.count(id) > 0) {
                         auto animation = movingCharacters[id];
                         step = (((float) ((animationTime - std::get<2>(animation)))) /
-                                      ((float) kAnimationLength));
+                                ((float) kAnimationLength));
 
                         if (!mLongPressing) {
                             if (step < 0.5f) {
@@ -776,10 +639,18 @@ namespace odb {
                     pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
 
 
-                    if (actor == '@' || actor == '?') {
+                    if (actor == EActorsSnapshotElement::kDemonAttacking0  ||
+                            actor == EActorsSnapshotElement::kDemonAttacking1 ||
+                            actor == EActorsSnapshotElement::kDemonStanding0 ||
+                            actor == EActorsSnapshotElement::kDemonStanding1) {
 
+                        TextureId frame = mElementMap[actor];
 
-                        batches[static_cast<ETextures >(mElementMap[actor])].emplace_back(
+                        if (splatFrame > -1) {
+                            frame = ETextures::Foe2a;
+                        }
+
+                        batches[static_cast<ETextures >(frame) ].emplace_back(
                                 std::get<0>(mBillboardVBO),
                                 std::get<1>(mBillboardVBO),
                                 std::get<2>(mBillboardVBO),
@@ -803,8 +674,66 @@ namespace odb {
         }
     }
 
+    void DungeonGLES2Renderer::initTileProperties() {
+        mElementMap[EActorsSnapshotElement::kDemonAttacking0] = ETextures::Foe1a;
+        mElementMap[EActorsSnapshotElement::kDemonAttacking1] = ETextures::Foe1b;
+        mElementMap[EActorsSnapshotElement::kDemonStanding0] = ETextures::Foe0a;
+        mElementMap[EActorsSnapshotElement::kDemonStanding1] = ETextures::Foe0b;
+        mElementMap[EActorsSnapshotElement::kHeroStanding0] = ETextures::Crusader0;
+        mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::Crusader0;
+        mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::Crusader1;
+        mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::Crusader1;
+    }
+
     void DungeonGLES2Renderer::invalidateCachedBatches() {
         batches.clear();
+    }
+
+    void DungeonGLES2Renderer::render(IntMap map, CharMap actors, IntMap splats,
+                                      IntMap lightMap, IntMap ids,
+                                      AnimationList movingCharacters,
+                                      long animationTime) {
+
+        if (mBitmaps.empty()) {
+            return;
+        }
+
+        clearBuffers();
+        prepareShaderProgram();
+        setPerspective();
+        resetTransformMatrices();
+
+        invalidateCachedBatches();
+
+        if ( batches.size() == 0 ) {
+            produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
+                                    animationTime);
+        }
+        consumeRenderingBatches(animationTime);
+    }
+
+    void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
+
+        for (auto &batch : batches) {
+
+            auto textureId = mTextures[batch.first]->mTextureId;
+
+            for (auto &element : batch.second) {
+                auto transform = element.getTransform();
+                auto shade = element.getShade();
+                auto amount = element.getAmount();
+                auto vboId = element.getVBOId();
+                auto vboIndicesId = element.getVBOIndicesId();
+
+                drawGeometry(textureId,
+                             vboId,
+                             vboIndicesId,
+                             amount,
+                             transform,
+                             shade
+                );
+            }
+        }
     }
 
     void DungeonGLES2Renderer::rotateLeft() {
@@ -897,31 +826,39 @@ namespace odb {
         mCursorPosition = {x, y};
     }
 
-    VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
-                                                unsigned short *indexData,
-                                                unsigned int indices) {
-
-        unsigned int dataIndex = GeometryBatches.size();
-        unsigned int indicesIndex = IndicesBatches.size();
-
-
-        GeometryBatches.push_back( { data, vertices } );
-        IndicesBatches.push_back( { indexData, indices });
-
-        return VBORegister(dataIndex, indicesIndex, indices);
-    }
-
     void DungeonGLES2Renderer::setPlayerHealth(float health) {
         mPlayerHealth = health;
     }
-    
+
     void DungeonGLES2Renderer::resetCamera() {
         mAngleXZ = 0;
         mAngleYZ = 0;
         mCameraRotation = 0;
         mRotationTarget = 0;
     }
-    
+
+    void DungeonGLES2Renderer::setTurn(int turn) {
+        mTurn = turn;
+    }
+
+    VBORegister DungeonGLES2Renderer::VBORegisterFrom(VBORegisterId id) {
+        return mVBORegisters[ id ];
+    }
+
+    ETextures DungeonGLES2Renderer::textureIndexFrom( TextureName name ) {
+        return mTextureRegistry[ name ];
+    }
+
+    void DungeonGLES2Renderer::setTileProperties(CTilePropertyMap map ) {
+
+        auto it = std::begin( map );
+        auto mapEnd = std::end( map );
+
+        while ( it != mapEnd ) {
+            mTileProperties[ it->first ] = it->second;
+            it = std::next( it );
+        }
+    }
 }
 
 #endif
