@@ -57,6 +57,8 @@ void gameLoopTick( long ms );
 
 void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener );
 
+void setMeshes( std::vector< std::tuple< std::string, std::string, std::string >> meshes );
+
 void forceDirection( int direction );
 
 void setTileProperties( std::string tileProperties );

@@ -94,6 +94,7 @@ namespace odb {
         glm::mat4 mViewMatrix = glm::mat4( 1.0f );
         std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
         std::map<EActorsSnapshotElement, ETextures> mElementMap;
+        std::map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
         std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
         std::vector<std::shared_ptr<Texture>> mTextures;
 
@@ -169,6 +170,8 @@ namespace odb {
                     IntMap ids, AnimationList movingCharacters, long animationTime);
 
         void shutdown();
+
+        void setMesh( std::string id, std::shared_ptr<odb::Scene> mesh );
 
         void invalidateCachedBatches();
 

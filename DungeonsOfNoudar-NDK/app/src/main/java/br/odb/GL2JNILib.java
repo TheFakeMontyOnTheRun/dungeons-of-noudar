@@ -49,4 +49,6 @@ public class GL2JNILib {
 	public static native void loadSounds(AssetManager assetManager, String[] soundFiles);
 
 	public static native void forcePlayerDirection(int direction);
+
+	public static native void setMeshes(AssetManager assets, String[] ids, String[] objFiles, String[] materialFiles);
 }

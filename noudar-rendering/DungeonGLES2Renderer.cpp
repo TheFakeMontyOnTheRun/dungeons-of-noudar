@@ -43,6 +43,12 @@
 #include "ETextures.h"
 #include "VBORegister.h"
 #include "CTile3DProperties.h"
+#include "Material.h"
+#include "Trig.h"
+#include "TrigBatch.h"
+#include "MeshObject.h"
+#include "MaterialList.h"
+#include "Scene.h"
 #include "DungeonGLES2Renderer.h"
 
 
@@ -924,6 +930,28 @@ namespace odb {
         while ( it != mapEnd ) {
             mTileProperties[ it->first ] = it->second;
             it = std::next( it );
+        }
+    }
+
+    void DungeonGLES2Renderer::setMesh(std::string id, std::shared_ptr<odb::Scene> mesh) {
+
+        auto m = std::begin( mesh->meshObjects );
+        auto mEnd = std::end( mesh->meshObjects );
+
+        while ( m != mEnd ) {
+            auto& meshData = m->second->trigBatches[0];
+
+            auto floatData = meshData.getVertexData();
+            auto vertexCount = meshData.getVertexCount();
+            auto indexData = meshData.getIndices();
+            auto indicesCount = meshData.getIndicesCount();
+
+            mVBORegisters[ m->first ] = submitVBO( floatData,
+                                                    vertexCount,
+                                                    indexData,
+                                                    indicesCount );
+
+            m = std::next( m );
         }
     }
 }

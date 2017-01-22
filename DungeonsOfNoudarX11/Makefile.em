@@ -40,7 +40,9 @@ OBJS = X11-version/main.o \
                ../gles2-renderer/Trig.o \
                ../gles2-renderer/TrigBatch.o \
                ../gles2-renderer/NativeBitmap.o \
+               ../gles2-renderer/WavefrontOBJReader.o \
                ../gles2-renderer/VBORenderingJob.o \
+               ../gles2-renderer/WavefrontMaterialReader.o \
                ../gles2-renderer/Texture.o \
                 ../gles2-renderer/Common.o \
                 ../nanovg/src/nanovg.o \
@@ -60,3 +62,6 @@ clean:
 	rm -f $(OBJS) $(TARGET)
 	rm *~
 	rm *.js
+	rm *.mem
+	rm *.html
+	rm *.data

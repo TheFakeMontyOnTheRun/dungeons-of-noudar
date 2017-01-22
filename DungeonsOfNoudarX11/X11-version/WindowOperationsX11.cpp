@@ -27,7 +27,7 @@
 #include "SoundEmitter.h"
 
 #include "IFileLoaderDelegate.h"
-
+#include "CPlainFileLoader.h"
 #include "Vec2i.h"
 #include "NativeBitmap.h"
 #include "IMapElement.h"
@@ -44,6 +44,7 @@
 #include "x11.h"
 #include "Common.h"
 #include "LoadPNG.h"
+#include "Logger.h"
 
 const int winWidth = 640, winHeight = 480;
 
@@ -153,7 +154,26 @@ void initWindow() {
     std::string gFragmentShader = readToString(fd);
     fclose(fd);
 
-   setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
+	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>();
+	std::vector< std::tuple<std::string, std::string, std::string >> meshes;
+
+	{
+		auto cubeMesh = fileLoader->loadFileFromPath("res/cube.obj");
+		auto cubeMaterial = fileLoader->loadFileFromPath("res/cube.mtl");
+
+		meshes.push_back(std::make_tuple("Cube", cubeMesh, cubeMaterial));
+	}
+
+	{
+		auto cubeMesh = fileLoader->loadFileFromPath("res/x_victory.obj");
+		auto cubeMaterial = fileLoader->loadFileFromPath("res/x_victory.mtl");
+
+		meshes.push_back(std::make_tuple("XVictory", cubeMesh, cubeMaterial));
+	}
+
+	setMeshes( meshes );
+
+	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 

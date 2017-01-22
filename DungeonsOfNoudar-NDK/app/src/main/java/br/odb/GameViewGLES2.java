@@ -30,7 +30,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-
 	}
 
 	@Override
@@ -197,7 +196,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		synchronized (renderingLock) {
 			GL2JNILib.onCreate(assets);
 			loadTextures(assets);
-
+			loadMeshes(assets);
 			final Activity activity = ((Activity) getContext());
 
 			GL2JNILib.loadSounds( activity.getAssets(), new String[] {
@@ -211,6 +210,10 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 					"swing.wav" //7
 			});
 		}
+	}
+
+	private void loadMeshes(AssetManager assets) {
+		GL2JNILib.setMeshes( assets, new String[] {"cube_obj"}, new String[]{"cube.obj"}, new String[]{"cube.mtl"} );
 	}
 
 	public void setTextures(Bitmap[] bitmaps) {
