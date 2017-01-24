@@ -11,6 +11,7 @@ OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
     ../noudar-core/noudar-core/src/CElixirFountain.o \
+    ../noudar-core/noudar-core/src/Common.o \
     ../noudar-core/noudar-core/src/CDoorway.o \
     ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
     ../noudar-core/noudar-core/src/IMapElement.o \
@@ -44,7 +45,6 @@ OBJS = X11-version/main.o \
                ../gles2-renderer/VBORenderingJob.o \
                ../gles2-renderer/WavefrontMaterialReader.o \
                ../gles2-renderer/Texture.o \
-                ../gles2-renderer/Common.o \
                 ../nanovg/src/nanovg.o \
                 ../OpenALSoundSystem/SoundClip.o \
                 ../OpenALSoundSystem/SoundEmitter.o \

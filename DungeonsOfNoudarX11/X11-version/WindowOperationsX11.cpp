@@ -147,11 +147,11 @@ void initWindow() {
 
     FILE *fd;
     fd = fopen("res/vertex.glsl", "r");
-    std::string gVertexShader = readToString(fd);
+    std::string gVertexShader = Knights::readToString(fd);
     fclose(fd);
 
     fd = fopen("res/fragment.glsl", "r");
-    std::string gFragmentShader = readToString(fd);
+    std::string gFragmentShader = Knights::readToString(fd);
     fclose(fd);
 
 	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>("res/");

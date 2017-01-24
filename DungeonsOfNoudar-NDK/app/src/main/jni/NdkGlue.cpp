@@ -39,6 +39,8 @@
 #include "GameNativeAPI.h"
 #include "AndroidAudioSink.h"
 
+using Knights::readToString;
+
 long currentDelta = 0;
 std::vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
 std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;

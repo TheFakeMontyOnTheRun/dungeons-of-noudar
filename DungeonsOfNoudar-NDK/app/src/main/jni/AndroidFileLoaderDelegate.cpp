@@ -18,6 +18,9 @@
 #include "AndroidFileLoaderDelegate.h"
 #include "android_asset_operations.h"
 
+using Knights::readToBuffer;
+using Knights::readToString;
+
 namespace odb {
     AndroidFileLoaderDelegate::AndroidFileLoaderDelegate(AAssetManager *assetManager) : mAssetManager( assetManager ) {
     }
