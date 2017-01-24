@@ -98,7 +98,7 @@ namespace odb {
 
     void OverlayNanoVGRenderer::loadFonts(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 
-        mFontData = fileLoaderDelegate->loadBinaryFileFromPath( fileLoaderDelegate->getFilePathPrefix() + "MedievalSharp.ttf" );
+        mFontData = fileLoaderDelegate->loadBinaryFileFromPath( "MedievalSharp.ttf" );
     }
 
 

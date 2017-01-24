@@ -154,8 +154,8 @@ void initWindow() {
     std::string gFragmentShader = readToString(fd);
     fclose(fd);
 
-	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>();
 	std::vector< std::tuple<std::string, std::string, std::string >> meshes;
+	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>("res/");
 
 	{
 		auto cubeMesh = fileLoader->loadFileFromPath("res/cube.obj");

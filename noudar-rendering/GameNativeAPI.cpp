@@ -431,10 +431,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
 
-	std::stringstream ss;
-	ss << fileLoaderDelegate->getFilePathPrefix();
-	ss << "tiles.properties";
-	auto tilesData = fileLoaderDelegate->loadFileFromPath(ss.str());
+	auto tilesData = fileLoaderDelegate->loadFileFromPath("tiles.properties");
 
 	setTileProperties( tilesData );
 
