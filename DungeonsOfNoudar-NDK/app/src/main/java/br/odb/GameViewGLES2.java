@@ -213,7 +213,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	}
 
 	private void loadMeshes(AssetManager assets) {
-		GL2JNILib.setMeshes( assets, new String[] {"cube_obj"}, new String[]{"cube.obj"}, new String[]{"cube.mtl"} );
+		GL2JNILib.setMeshes( assets, new String[]{"cube.obj"});
 	}
 
 	public void setTextures(Bitmap[] bitmaps) {

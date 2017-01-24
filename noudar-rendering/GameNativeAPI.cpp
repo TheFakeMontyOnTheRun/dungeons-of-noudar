@@ -90,7 +90,7 @@ std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 std::shared_ptr<odb::SoundListener> mainListener;
 odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
-std::vector< std::pair< std::string, std::shared_ptr<odb::Scene>>> loadedMeshes;
+std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
 	textures = textureList;
@@ -122,8 +122,10 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	gles2Renderer->setTileProperties( tileProperties );
 
 	for  ( const auto& mesh : loadedMeshes ) {
-		gles2Renderer->setMesh( mesh.first, mesh.second );
+		gles2Renderer->setMesh( mesh );
 	}
+
+	loadedMeshes.clear();
 
 	return toReturn;
 }
@@ -528,12 +530,10 @@ void setTileProperties( std::string tilePropertiesData ) {
 	tileProperties = odb::CTile3DProperties::parsePropertyList( tilePropertiesData );
 }
 
-void setMeshes( std::vector< std::tuple< std::string, std::string, std::string >> meshes ) {
-	for ( const auto& meshPair : meshes ) {
-		auto id = std::get<0>(meshPair);
-		std::istringstream meshStream( std::get<1>(meshPair) );
-		std::istringstream materialStream( std::get<2>(meshPair) );
-		auto mesh = readScene( meshStream, materialStream );
-		loadedMeshes.emplace_back( id, mesh );
+void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
+	for ( const auto& mesh : meshes ) {
+
+		std::istringstream meshStream( fileLoaderDelegate->loadFileFromPath( mesh));
+		loadedMeshes.emplace_back( readScene( meshStream, fileLoaderDelegate ) );
 	}
 }

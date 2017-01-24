@@ -933,7 +933,7 @@ namespace odb {
         }
     }
 
-    void DungeonGLES2Renderer::setMesh(std::string id, std::shared_ptr<odb::Scene> mesh) {
+    void DungeonGLES2Renderer::setMesh(std::shared_ptr<odb::Scene> mesh) {
 
         auto m = std::begin( mesh->meshObjects );
         auto mEnd = std::end( mesh->meshObjects );

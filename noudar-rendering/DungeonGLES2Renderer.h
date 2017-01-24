@@ -171,7 +171,7 @@ namespace odb {
 
         void shutdown();
 
-        void setMesh( std::string id, std::shared_ptr<odb::Scene> mesh );
+        void setMesh( std::shared_ptr<odb::Scene> mesh );
 
         void invalidateCachedBatches();
 

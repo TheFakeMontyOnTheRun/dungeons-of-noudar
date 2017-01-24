@@ -42,7 +42,7 @@
 long currentDelta = 0;
 std::vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
 std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
-std::vector< std::tuple< std::string, std::string, std::string >> meshes;
+std::vector< std::string> meshes;
 std::string gVertexShader;
 std::string gFragmentShader;
 
@@ -175,8 +175,7 @@ JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setActorIdPositions(JNIEnv *env, jclass type, jintArray ids_);
 
 JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setMeshes(JNIEnv *env, jclass type, jobject assets, jobjectArray ids,
-										jobjectArray objFiles, jobjectArray materialFiles);
+		Java_br_odb_GL2JNILib_setMeshes(JNIEnv *env, jclass type, jobject assets, jobjectArray objFiles);
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_tick(JNIEnv *env, jclass type, jlong delta);
 
@@ -358,24 +357,18 @@ Java_br_odb_GL2JNILib_forcePlayerDirection(JNIEnv *env, jclass type, jint direct
 }
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setMeshes(JNIEnv *env, jclass type, jobject assets, jobjectArray ids,
-								jobjectArray objFiles, jobjectArray materialFiles) {
+Java_br_odb_GL2JNILib_setMeshes(JNIEnv *env, jclass type, jobject assets, jobjectArray objFiles) {
 
 
-	int length = env->GetArrayLength(ids);
+	int length = env->GetArrayLength(objFiles);
 	AAssetManager *assetManager = AAssetManager_fromJava(env, assets);
 	auto loader = std::make_shared<odb::AndroidFileLoaderDelegate>(assetManager);
 
 	for (int c = 0; c < length; ++c) {
-
-		auto id = std::string(  env->GetStringUTFChars((jstring) env->GetObjectArrayElement(ids, c), 0) );
-		auto objFile = std::string(  loader->loadFileFromPath( env->GetStringUTFChars((jstring) env->GetObjectArrayElement(objFiles, c), 0) ) );
-		auto materialFile = std::string(  loader->loadFileFromPath( env->GetStringUTFChars((jstring) env->GetObjectArrayElement(materialFiles, c), 0) ) );
-
-
-		meshes.emplace_back( id, objFile, materialFile );
+		auto objFile = std::string(  env->GetStringUTFChars((jstring) env->GetObjectArrayElement(objFiles, c), 0) );
+		meshes.emplace_back( objFile );
 	}
 
-	setMeshes( meshes );
+	loadMeshList( meshes, loader );
 	meshes.clear();
 }

@@ -154,24 +154,14 @@ void initWindow() {
     std::string gFragmentShader = readToString(fd);
     fclose(fd);
 
-	std::vector< std::tuple<std::string, std::string, std::string >> meshes;
 	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>("res/");
 
-	{
-		auto cubeMesh = fileLoader->loadFileFromPath("res/cube.obj");
-		auto cubeMaterial = fileLoader->loadFileFromPath("res/cube.mtl");
+	std::vector<std::string> meshList = {
+		"cube.obj",
+		"x_victory.obj",
+	};
 
-		meshes.push_back(std::make_tuple("Cube", cubeMesh, cubeMaterial));
-	}
-
-	{
-		auto cubeMesh = fileLoader->loadFileFromPath("res/x_victory.obj");
-		auto cubeMaterial = fileLoader->loadFileFromPath("res/x_victory.mtl");
-
-		meshes.push_back(std::make_tuple("XVictory", cubeMesh, cubeMaterial));
-	}
-
-	setMeshes( meshes );
+	loadMeshList( meshList, fileLoader );
 
 	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
 
