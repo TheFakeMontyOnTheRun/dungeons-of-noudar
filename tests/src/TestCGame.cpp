@@ -18,6 +18,7 @@
 #include "IRenderer.h"
 #include "CGame.h"
 
+
 using ::testing::Return;
 using ::testing::_;
 
@@ -36,16 +37,47 @@ public:
   MOCK_METHOD0( getFilePathPrefix, std::string());
 };
 
+std::string getMap() {
+  std::string toReturn;
+
+  toReturn += "40000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000\n";
+  toReturn += "00000000000000000000";
+
+  return toReturn;
+}
 
 TEST(TestCGame, GameWillRefreshUponValidMoveTest ) {
   
   auto mockFileLoader = std::make_shared<MockFileLoader>();
   auto renderer = std::make_shared<MockRenderer>(); 
   auto delegate = std::make_shared<Knights::CGameDelegate>();
-  auto game = std::make_shared<Knights::CGame>( mockFileLoader, renderer, delegate );
 
+  std::string mockMapContents = getMap();
+
+  ON_CALL(*mockFileLoader, loadFileFromPath(_)).WillByDefault(Return(mockMapContents));
   ON_CALL(*renderer, getInput()).WillByDefault(Return(Knights::kMovePlayerNorthCommand));
+  EXPECT_CALL(*mockFileLoader, loadFileFromPath(_));
+  auto game = std::make_shared<Knights::CGame>( mockFileLoader, renderer, delegate );
   EXPECT_CALL(*renderer, drawMap(_,_));
+  EXPECT_CALL(*renderer, getInput());
   game->tick();
 }
 
@@ -57,7 +89,9 @@ TEST(TestCGame, GameWillNotTryToLoadFileFromBinaryTest ) {
   auto renderer = std::make_shared<MockRenderer>(); 
   auto delegate = std::make_shared<Knights::CGameDelegate>();
 
-  EXPECT_CALL(*mockFileLoader, loadBinaryFileFromPath(_));
-  auto game = std::make_shared<Knights::CGame>( mockFileLoader, renderer, delegate );
+  std::string mockMapContents = getMap();
+  ON_CALL(*mockFileLoader, loadFileFromPath(_)).WillByDefault(Return(mockMapContents));
+  EXPECT_CALL(*mockFileLoader, loadFileFromPath(_));
+  std::make_shared<Knights::CGame>( mockFileLoader, renderer, delegate );
 }
 
