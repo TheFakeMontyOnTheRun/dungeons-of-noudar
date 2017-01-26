@@ -7,8 +7,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
+#include <sstream>
 #include <string.h>
 #include <memory>
+#include <iterator>
 #include <iostream>
 #include <map>
 #include <array>
@@ -156,10 +158,10 @@ void initWindow() {
 
 	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>("res/");
 
-	std::vector<std::string> meshList = {
-		"cube.obj",
-		"x_victory.obj",
-	};
+	std::istringstream meshListData( fileLoader->loadFileFromPath( "mesh.list" ) );
+
+	std::vector<std::string> meshList{std::istream_iterator<std::string>(meshListData),
+	                                   std::istream_iterator<std::string>{}};
 
 	loadMeshList( meshList, fileLoader );
 
