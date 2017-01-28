@@ -19,6 +19,7 @@ OBJS = ../noudar-core/noudar-core/src/CActor.o \
 	../noudar-core/noudar-core/src/CCharacterArchetype.o \
 	../noudar-core/noudar-core/src/CMonster.o \
 	../noudar-core/noudar-core/src/CMap.o \
+	../noudar-core/noudar-core/src/Common.o \
 	../noudar-core/noudar-core/src/CHuntApproach.o \
 	../noudar-core/noudar-core/src/CElixirFountain.o \
 	../noudar-core/noudar-core/src/CDoorway.o \

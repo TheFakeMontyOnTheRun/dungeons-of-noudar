@@ -153,6 +153,7 @@ namespace odb {
         VBORegisterId  mNullVBO = "null";
         TextureName mSkyBoxTextureName = "sky";
         TextureName mNullTexture = "null";
+	    int mCameraId = 0;
     public:
         //basic bookeeping
         DungeonGLES2Renderer();
@@ -160,6 +161,8 @@ namespace odb {
         ~DungeonGLES2Renderer();
 
         void setTurn( int turn );
+
+        void setCameraId( int id );
 
         bool init(float w, float h, const std::string &vertexShader,
                   const std::string &fragmentShader);

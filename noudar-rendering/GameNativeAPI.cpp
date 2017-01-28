@@ -126,7 +126,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	}
 
 	loadedMeshes.clear();
-
+	gles2Renderer->setCameraId( game->getCurrentActorId());
 	return toReturn;
 }
 
@@ -520,6 +520,7 @@ void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
 
 	if (gles2Renderer != nullptr ) {
 		gles2Renderer->setTurn( game->getTurn() );
+		gles2Renderer->setCameraId( game->getCurrentActorId());
 	}
 
 	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat);

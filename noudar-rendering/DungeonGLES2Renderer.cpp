@@ -712,10 +712,11 @@ namespace odb {
                     pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
 
 
-                    if (actor == EActorsSnapshotElement::kDemonAttacking0  ||
-                            actor == EActorsSnapshotElement::kDemonAttacking1 ||
-                            actor == EActorsSnapshotElement::kDemonStanding0 ||
-                            actor == EActorsSnapshotElement::kDemonStanding1) {
+
+	                if (id == mCameraId) {
+		                mCurrentCharacterPosition = pos;
+	                } else {
+
 
                         TextureId frame = mElementMap[actor];
 
@@ -728,9 +729,6 @@ namespace odb {
                                 std::get<1>(mBillboardVBO),
                                 std::get<2>(mBillboardVBO),
                                 getBillboardTransform(pos), shade);
-
-                    } else {
-                        mCurrentCharacterPosition = pos;
                     }
                 }
 
@@ -954,4 +952,8 @@ namespace odb {
             m = std::next( m );
         }
     }
+
+	void DungeonGLES2Renderer::setCameraId(int id) {
+		mCameraId = id;
+	}
 }
