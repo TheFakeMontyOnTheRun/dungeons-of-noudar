@@ -37,6 +37,13 @@
 #include "ETextures.h"
 #include "VBORegister.h"
 #include "CTile3DProperties.h"
+#include "Material.h"
+#include "Trig.h"
+#include "TrigBatch.h"
+#include "MeshObject.h"
+#include "MaterialList.h"
+#include "Scene.h"
+
 #include "DungeonGLES2Renderer.h"
 
 
@@ -604,62 +611,60 @@ namespace odb {
                                                                        shade);
                 }
 
-                //characters
-                if (actor != EActorsSnapshotElement::kNothing) {
+	            //characters
+	            if (actor != EActorsSnapshotElement::kNothing) {
 
-                    int id = ids[z][x];
-                    float fx, fz;
+		            int id = ids[z][x];
+		            float fx, fz;
 
-                    fx = x;
-                    fz = z;
+		            fx = x;
+		            fz = z;
 
-                    float step = 0.0f;
-                    float curve = 0.0f;
+		            float step = 0.0f;
+		            float curve = 0.0f;
 
-                    if (id != 0 && movingCharacters.count(id) > 0) {
-                        auto animation = movingCharacters[id];
-                        step = (((float) ((animationTime - std::get<2>(animation)))) /
-                                ((float) kAnimationLength));
+		            if (id != 0 && movingCharacters.count(id) > 0) {
+			            auto animation = movingCharacters[id];
+			            step = (((float) ((animationTime - std::get<2>(animation)))) /
+			                    ((float) kAnimationLength));
 
-                        if (!mLongPressing) {
-                            if (step < 0.5f) {
-                                curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
-                            } else {
-                                curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
-                            }
-                        }
+			            if (!mLongPressing) {
+				            if (step < 0.5f) {
+					            curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
+				            } else {
+					            curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
+				            }
+			            }
 
-                        auto prevPosition = std::get<0>(animation);
-                        auto destPosition = std::get<1>(animation);
+			            auto prevPosition = std::get<0>(animation);
+			            auto destPosition = std::get<1>(animation);
 
-                        fx = (curve * (destPosition.x - prevPosition.x)) + prevPosition.x;
-                        fz = (curve * (destPosition.y - prevPosition.y)) + prevPosition.y;
-                    }
+			            fx = (curve * (destPosition.x - prevPosition.x)) + prevPosition.x;
+			            fz = (curve * (destPosition.y - prevPosition.y)) + prevPosition.y;
+		            }
 
-                    pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
+		            pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
 
 
-                    if (actor == EActorsSnapshotElement::kDemonAttacking0  ||
-                            actor == EActorsSnapshotElement::kDemonAttacking1 ||
-                            actor == EActorsSnapshotElement::kDemonStanding0 ||
-                            actor == EActorsSnapshotElement::kDemonStanding1) {
 
-                        TextureId frame = mElementMap[actor];
+		            if (id == mCameraId) {
+			            mCurrentCharacterPosition = pos;
+		            } else {
 
-                        if (splatFrame > -1) {
-                            frame = ETextures::Foe2a;
-                        }
 
-                        batches[static_cast<ETextures >(frame) ].emplace_back(
-                                std::get<0>(mBillboardVBO),
-                                std::get<1>(mBillboardVBO),
-                                std::get<2>(mBillboardVBO),
-                                getBillboardTransform(pos), shade);
+			            TextureId frame = mElementMap[actor];
 
-                    } else {
-                        mCurrentCharacterPosition = pos;
-                    }
-                }
+			            if (splatFrame > -1) {
+				            frame = ETextures::Foe2a;
+			            }
+
+			            batches[static_cast<ETextures >(frame) ].emplace_back(
+					            std::get<0>(mBillboardVBO),
+					            std::get<1>(mBillboardVBO),
+					            std::get<2>(mBillboardVBO),
+					            getBillboardTransform(pos), shade);
+		            }
+	            }
 
                 if (splatFrame > -1) {
                     pos = glm::vec3(x * 2, -4.0f, z * 2);
@@ -858,6 +863,32 @@ namespace odb {
             mTileProperties[ it->first ] = it->second;
             it = std::next( it );
         }
+    }
+
+    void DungeonGLES2Renderer::setMesh(std::shared_ptr<odb::Scene> mesh) {
+
+        auto m = std::begin( mesh->meshObjects );
+        auto mEnd = std::end( mesh->meshObjects );
+
+        while ( m != mEnd ) {
+            auto& meshData = m->second->trigBatches[0];
+
+            auto floatData = meshData.getVertexData();
+            auto vertexCount = meshData.getVertexCount();
+            auto indexData = meshData.getIndices();
+            auto indicesCount = meshData.getIndicesCount();
+
+            mVBORegisters[ m->first ] = submitVBO( floatData,
+                                                   vertexCount,
+                                                   indexData,
+                                                   indicesCount );
+
+            m = std::next( m );
+        }
+    }
+
+    void DungeonGLES2Renderer::setCameraId(int id) {
+        mCameraId = id;
     }
 }
 

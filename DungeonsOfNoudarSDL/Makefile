@@ -6,6 +6,7 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/CMonster.o \
     ../noudar-core/noudar-core/src/CTeam.o \
     ../noudar-core/noudar-core/src/CMap.o \
+    ../noudar-core/noudar-core/src/Common.o \
     ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
@@ -35,11 +36,13 @@ OBJS = SDL-version/main.o \
         SDL-version/WindowOperationsSDL.o \
         ../gles2-renderer/Logger.o \
         ../gles2-renderer/Trig.o \
+        ../gles2-renderer/Scene.o \
+        ../gles2-renderer/WavefrontOBJReader.o \
+        ../gles2-renderer/WavefrontMaterialReader.o \
         ../gles2-renderer/TrigBatch.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \
         ../gles2-renderer/Texture.o \
-        ../gles2-renderer/Common.o \
         ../OpenALSoundSystem/SoundClip.o \
         ../OpenALSoundSystem/SoundEmitter.o \
         ../OpenALSoundSystem/SoundListener.o \
