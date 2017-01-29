@@ -43,7 +43,7 @@ void setAngleYZ( float YZAngle );
 
 void loadMapData( std::string geoFile, std::string petFile );
 
-void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate  );
+void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, std::string tilePropertiesFile );
 
 void moveUp();
 

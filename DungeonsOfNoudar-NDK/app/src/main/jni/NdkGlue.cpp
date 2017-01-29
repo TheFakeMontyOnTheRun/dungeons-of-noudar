@@ -217,7 +217,7 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 	gFragmentShader = readToString(fd);
 	fclose(fd);
 
-	readMap(std::make_shared<odb::AndroidFileLoaderDelegate>(asset_manager));
+	readMap(std::make_shared<odb::AndroidFileLoaderDelegate>(asset_manager), "tiles.properties");
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,

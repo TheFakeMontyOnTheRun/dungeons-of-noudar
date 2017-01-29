@@ -371,7 +371,7 @@ void setAngleYZ( float YZAngle ) {
 void loadMapData( std::string geoFile, std::string petFile ) {
 }
 
-void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
+void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, std::string tilePropertiesFile ) {
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 	if ( overlayRenderer == nullptr ) {
@@ -433,7 +433,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
 
-	auto tilesData = fileLoaderDelegate->loadFileFromPath("tiles.properties");
+	auto tilesData = fileLoaderDelegate->loadFileFromPath(tilePropertiesFile);
 
 	setTileProperties( tilesData );
 

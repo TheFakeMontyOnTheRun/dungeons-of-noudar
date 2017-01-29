@@ -3,6 +3,7 @@
 //
 #ifndef __ANDROID__
 
+#define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -11,7 +12,13 @@
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
 #else
+
+#ifndef OSMESA
 #include <GL/gl.h>
+#else
+# include <osmesa.h>     // For everything OpenGL, but done all in software.
+#endif
+
 #endif
 
 #include <memory>
@@ -493,9 +500,11 @@ namespace odb {
 
         glm::vec3 mCameraDirection{0, 0, 0};
 
-        mCameraDirection = glm::rotate(
-                glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
-                angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
+	    auto result = (glm::rotate(
+			    glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
+			    angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4 );
+
+        mCameraDirection = glm::vec3( result.x, result.y, result.z );
 
         pos_front = mCameraDirection;
 
