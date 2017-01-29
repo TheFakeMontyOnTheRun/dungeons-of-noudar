@@ -28,7 +28,7 @@ import javax.microedition.khronos.egl.EGLConfig;
  */
 public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 
-	public static final int TICK_INTERVAL = 500;
+	public static final int TICK_INTERVAL = 20;
 
 	@Override
 	public void onNewFrame(HeadTransform headTransform) {
@@ -263,6 +263,11 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 					"swing.wav" //7
 			});
 		}
+	}
+
+
+	private void loadMeshes(AssetManager assets) {
+		GL2JNILib.setMeshes( assets, new String[]{"cube.obj"});
 	}
 
 	public void setTextures(Bitmap[] bitmaps) {

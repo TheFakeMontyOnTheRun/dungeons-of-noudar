@@ -159,7 +159,7 @@ void initWindow() {
 	auto gVertexShader = "";
 	auto gFragmentShader = "";
 
-   setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
+	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 

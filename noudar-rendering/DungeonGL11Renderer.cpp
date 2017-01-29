@@ -3,7 +3,6 @@
 //
 #ifndef __ANDROID__
 
-#define GLM_FORCE_RADIANS
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -212,6 +211,8 @@ namespace odb {
         // Set the filtering mode - surprisingly, this is needed.
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         odb::Logger::log("textureId:%d\n", textureId);
 
@@ -225,9 +226,11 @@ namespace odb {
     }
 
     extern void checkGlError(const char *op) {
+#ifndef OSMESA
         for (GLint error = glGetError(); error; error = glGetError()) {
             odb::Logger::log("after %s() glError (0x%x)\n", op, error);
         }
+#endif
     }
 
     GLuint DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
@@ -248,10 +251,14 @@ namespace odb {
         createVBOs();
 
         glEnable(GL_TEXTURE_2D);
-        glShadeModel(GL_SMOOTH);
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+        glShadeModel(GL_FLAT);
+        glDisable(GL_DITHER);
+        glDisable(GL_MULTISAMPLE);
+#ifdef OSMESA
+        glViewport(w/4, h/2, w/2, h/2);
+#else
         glViewport(0, 0, w, h);
+#endif
         glMatrixMode( GL_PROJECTION );
         glLoadIdentity( );
 
@@ -261,8 +268,8 @@ namespace odb {
         glDepthFunc(GL_LEQUAL);
 
         glEnable( GL_TEXTURE_2D );
-        glEnable( GL_ALPHA_TEST );
-        glAlphaFunc(GL_GREATER,0.5);
+
+	    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );
 
         gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
 
@@ -376,11 +383,16 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::clearBuffers() {
-        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
         checkGlError("glClearColor");
         glClearDepth(1.0f);
         checkGlError("glClearDepthf");
+#ifndef OSMESA
+        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+#else
+        glClear(GL_DEPTH_BUFFER_BIT );
+#endif
         checkGlError("glClear");
     }
 
@@ -469,11 +481,20 @@ namespace odb {
         cameraPosition.x += ms * (mCameraTarget.x - cameraPosition.x) / 1000.0f;
         cameraPosition.y += ms * (mCameraTarget.y - cameraPosition.y) / 1000.0f;
 
+#ifndef OSMESA
         if (mRotationTarget > mCameraRotation) {
             mCameraRotation += 5;
         } else if (mRotationTarget < mCameraRotation) {
             mCameraRotation -= 5;
         }
+#else
+	    if (mRotationTarget > mCameraRotation) {
+            mCameraRotation += 45;
+        } else if (mRotationTarget < mCameraRotation) {
+            mCameraRotation -= 45;
+        }
+
+#endif
     }
 
     void DungeonGLES2Renderer::resetTransformMatrices() {
@@ -516,34 +537,41 @@ namespace odb {
 
         glm::vec3 pos;
 
-        batches.clear();
+#ifndef OSMESA
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(animationTime),
-                                                1.0f);
+                                                1.0f, false);
 
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
-                                                1.0f);
-
+                                                1.0f, false);
+#else
+	    batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
+                                                std::get<1>(mSkyVBO),
+                                                std::get<2>(mSkyVBO),
+                                                getSkyTransform(1000 + kSkyTextureLength * 1000),
+                                                1.0f, false);
+#endif
         for (int z = 0; z < Knights::kMapSize; ++z) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
 
                 auto tile = map[z][x];
                 auto actor = actors[z][x];
                 int splatFrame = splats[z][x];
-
-                Shade shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
+	            Shade shade = 0;
+#ifndef OSMESA
+                shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
 
                 if (x == static_cast<int>(mCursorPosition.x) &&
                     z == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
-
+#endif
                 if (mTileProperties.count(tile) <= 0) {
                     continue;
                 }
@@ -557,7 +585,8 @@ namespace odb {
                                                                          std::get<1>(mFloorVBO),
                                                                          std::get<2>(mFloorVBO),
                                                                          getFloorTransform(pos),
-                                                                         shade);
+                                                                         shade,
+																		tileProperties.mNeedsAlphaTest);
                 }
 
                 if (tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
@@ -573,7 +602,8 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade,
+                                tileProperties.mNeedsAlphaTest);
                     }
                 }
 
@@ -584,7 +614,10 @@ namespace odb {
                             std::get<0>(tileVBO),
                             std::get<1>(tileVBO),
                             std::get<2>(tileVBO),
-                            getCubeTransform(pos), shade);
+                            getCubeTransform(pos),
+                            shade,
+                            tileProperties.mNeedsAlphaTest);
+
                 }
 
                 if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
@@ -601,7 +634,9 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade,
+                                tileProperties.mNeedsAlphaTest);
+
                     }
                 }
 
@@ -611,14 +646,16 @@ namespace odb {
                                                                        std::get<1>(mFloorVBO),
                                                                        std::get<2>(mFloorVBO),
                                                                        getFloorTransform(pos),
-                                                                       shade);
+                                                                       shade,
+                                                                       tileProperties.mNeedsAlphaTest);
+
                 }
 
 	            //characters
 	            if (actor != EActorsSnapshotElement::kNothing) {
-
 		            int id = ids[z][x];
-		            float fx, fz;
+
+                    float fx, fz;
 
 		            fx = x;
 		            fz = z;
@@ -665,7 +702,7 @@ namespace odb {
 					            std::get<0>(mBillboardVBO),
 					            std::get<1>(mBillboardVBO),
 					            std::get<2>(mBillboardVBO),
-					            getBillboardTransform(pos), shade);
+					            getBillboardTransform(pos), shade, true);
 		            }
 	            }
 
@@ -676,7 +713,7 @@ namespace odb {
                             std::get<0>(mBillboardVBO),
                             std::get<1>(mBillboardVBO),
                             std::get<2>(mBillboardVBO),
-                            getBillboardTransform(pos), shade);
+                            getBillboardTransform(pos), shade, true);
                 }
             }
         }
@@ -735,6 +772,13 @@ namespace odb {
                 auto amount = element.getAmount();
                 auto vboId = element.getVBOId();
                 auto vboIndicesId = element.getVBOIndicesId();
+
+	            if ( element.mNeedsAlphaTest ) {
+					glEnable( GL_ALPHA_TEST );
+		            glAlphaFunc(GL_GREATER,0.5f);
+	            } else {
+		            glDisable( GL_ALPHA_TEST );
+	            }
 
                 drawGeometry(textureId,
                              vboId,

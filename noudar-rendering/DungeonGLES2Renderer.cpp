@@ -584,14 +584,14 @@ namespace odb {
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(animationTime),
-                                                1.0f);
+                                                1.0f, true);
 
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
-                                                1.0f);
+                                                1.0f, true);
 
         for (int z = 0; z < Knights::kMapSize; ++z) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
@@ -620,7 +620,7 @@ namespace odb {
                                                                          std::get<1>(mFloorVBO),
                                                                          std::get<2>(mFloorVBO),
                                                                          getFloorTransform(pos),
-                                                                         shade);
+                                                                         shade, true);
                 }
 
                 if (tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
@@ -636,7 +636,7 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade, true);
                     }
                 }
 
@@ -647,7 +647,7 @@ namespace odb {
                             std::get<0>(tileVBO),
                             std::get<1>(tileVBO),
                             std::get<2>(tileVBO),
-                            getCubeTransform(pos), shade);
+                            getCubeTransform(pos), shade, true);
                 }
 
                 if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
@@ -664,7 +664,7 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade, true);
                     }
                 }
 
@@ -674,7 +674,7 @@ namespace odb {
                                                                        std::get<1>(mFloorVBO),
                                                                        std::get<2>(mFloorVBO),
                                                                        getFloorTransform(pos),
-                                                                       shade);
+                                                                       shade, true);
                 }
 
                 //characters
@@ -728,7 +728,7 @@ namespace odb {
                                 std::get<0>(mBillboardVBO),
                                 std::get<1>(mBillboardVBO),
                                 std::get<2>(mBillboardVBO),
-                                getBillboardTransform(pos), shade);
+                                getBillboardTransform(pos), shade, true);
                     }
                 }
 
@@ -739,7 +739,7 @@ namespace odb {
                             std::get<0>(mBillboardVBO),
                             std::get<1>(mBillboardVBO),
                             std::get<2>(mBillboardVBO),
-                            getBillboardTransform(pos), shade);
+                            getBillboardTransform(pos), shade, true);
                 }
             }
         }
