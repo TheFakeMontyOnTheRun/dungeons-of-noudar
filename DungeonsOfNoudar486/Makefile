@@ -1,9 +1,9 @@
-CXXFLAGS = -g -c -std=c++11 -DOSMESA -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -Imesa -w -march=i486
+CXXFLAGS = -g -c -std=c++11 -DOSMESA -DGLM_FORCE_RADIANS -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -Imesa -march=i486
 LDFLAGS = -lGLU -Lmesa -lOSMesa
 
 CXXFLAGS += -O3 -fomit-frame-pointer -ffast-math
 CPPFLAGS += $(OPT)
-OPT += -Wall -W -pedantic -std=gnu++0x
+OPT += -Wall -W  -std=gnu++0x
 L=-lOSMesa -I/usr/local/include/GL -L/usr/local/lib -I/usr/include/GL
 
 CXX = i586-pc-msdosdjgpp-g++

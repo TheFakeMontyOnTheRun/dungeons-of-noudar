@@ -11,7 +11,7 @@
 
 std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
 
-	std::cout << "opening " << filename << std::endl;
+   std::cout << "opening " << filename << std::endl;
    std::ifstream file(filename);
 
 	if (!file.is_open()) {
@@ -42,7 +42,12 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
 		val += ( b & 0xFF );
 		val += ( g & 0xFF ) << 8;
 		val += ( r & 0xFF ) << 16;
-		val += ( 0xFF ) << 24;
+
+		if ( (r == b) && (b == 255) ) {
+		  val = ( 0x00FFFFFF & val );
+		} else {
+		  val += ( 0xFF ) << 24;
+		}
 
 		*pos = val;
 		++pos;
@@ -50,7 +55,7 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
 
 
 
-	odb::Logger::log( "texture: %d, %d\n", width, height );
+
     	std::shared_ptr<odb::NativeBitmap> toReturn = std::make_shared<odb::NativeBitmap>( width, height, data );
 
     return toReturn;
