@@ -1,0 +1,66 @@
+CXXFLAGS = -g -c -std=c++11 -DOSMESA -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -Imesa -w -march=i486
+LDFLAGS = -lGLU -Lmesa -lOSMesa
+
+CXXFLAGS += -O3 -fomit-frame-pointer -ffast-math
+CPPFLAGS += $(OPT)
+OPT += -Wall -W -pedantic -std=gnu++0x
+L=-lOSMesa -I/usr/local/include/GL -L/usr/local/lib -I/usr/include/GL
+
+CXX = i586-pc-msdosdjgpp-g++
+OBJS = DOS-version/main.o \
+   ../noudar-core/noudar-core/src/CActor.o \
+    ../noudar-core/noudar-core/src/CMonster.o \
+    ../noudar-core/noudar-core/src/CTeam.o \
+    ../noudar-core/noudar-core/src/CMap.o \
+    ../noudar-core/noudar-core/src/Common.o \
+    ../noudar-core/noudar-core/src/CHuntApproach.o \
+    ../noudar-core/noudar-core/src/CCharacter.o \
+    ../noudar-core/noudar-core/src/CCharacterArchetype.o \
+    ../noudar-core/noudar-core/src/CElixirFountain.o \
+    ../noudar-core/noudar-core/src/CDoorway.o \
+    ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
+    ../noudar-core/noudar-core/src/IMapElement.o \
+    ../noudar-core/noudar-core/src/CGame.o \
+    ../noudar-core/noudar-core/src/CPlainFileLoader.o \
+    ../noudar-core/noudar-core/src/CGameDelegate.o \
+    ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
+    ../noudar-core/noudar-core/src/commands/IGameCommand.o \
+    ../noudar-core/noudar-core/src/commands/CMoveActorCommand.o \
+    ../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.o \
+    ../noudar-core/noudar-core/src/commands/CTurnActorCommand.o \
+    ../noudar-core/noudar-core/src/commands/CQuitCommand.o \
+    ../noudar-core/noudar-core/src/commands/CNullCommand.o \
+    ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
+        ../noudar-rendering/DungeonGL11Renderer.o \
+        ../noudar-rendering/LightningStrategy.o \
+	../noudar-rendering/GameNativeAPI.o \
+        ../noudar-rendering/NoudarDungeonSnapshot.o \
+        ../noudar-rendering/SplatAnimation.o \
+        ../noudar-rendering/CTile3DProperties.o \
+        ../noudar-rendering/NoudarGLES2Bridge.o \
+        DOS-version/LoadPNG.o \
+        DOS-version/WindowOperationsDOS.o \
+        ../gles2-renderer/Logger.o \
+        ../gles2-renderer/Trig.o \
+        ../gles2-renderer/Scene.o \
+        ../gles2-renderer/WavefrontOBJReader.o \
+        ../gles2-renderer/WavefrontMaterialReader.o \
+        ../gles2-renderer/TrigBatch.o \
+        ../gles2-renderer/VBORenderingJob.o \
+        ../gles2-renderer/NativeBitmap.o \
+        ../gles2-renderer/Texture.o \
+        ../NullSoundSystem/SoundClip.o \
+        ../NullSoundSystem/SoundEmitter.o \
+        ../NullSoundSystem/SoundListener.o \
+        ../NullSoundSystem/SoundUtils.o
+
+TARGET = NOUDAR.exe
+
+$(TARGET):	$(OBJS)
+	$(CXX) -o $(TARGET) $(OBJS) $(LDFLAGS)
+
+all:	$(TARGET)
+
+clean:
+	rm -f $(OBJS) $(TARGET)
+	rm *~
