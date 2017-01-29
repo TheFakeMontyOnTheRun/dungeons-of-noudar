@@ -257,6 +257,13 @@ namespace odb {
 
         printVerboseDriverInformation();
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+
+        glEnable( GL_TEXTURE_2D );
+        glEnable( GL_ALPHA_TEST );
+        glAlphaFunc(GL_GREATER,0.5);
+
         gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
 
         if (!gProgram) {
@@ -326,19 +333,6 @@ namespace odb {
     void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
                                             int vertexCount,
                                             const glm::mat4 &transform, float shade) {
-
-
-        glMatrixMode(GL_MODELVIEW);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
-
-        glEnable( GL_TEXTURE_2D );
-        glEnable( GL_ALPHA_TEST );
-        glAlphaFunc(GL_GREATER,0.5);
-
-
-        glBindTexture(GL_TEXTURE_2D, textureId);
-
 
         auto geometryBatch = GeometryBatches[ vertexVbo ];
         auto indicesBatch = IndicesBatches[ indexVbo ];
@@ -727,10 +721,13 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
+	    glMatrixMode(GL_MODELVIEW);
+
 
         for (auto &batch : batches) {
 
             auto textureId = mTextures[batch.first]->mTextureId;
+	        glBindTexture(GL_TEXTURE_2D, textureId);
 
             for (auto &element : batch.second) {
                 auto transform = element.getTransform();
