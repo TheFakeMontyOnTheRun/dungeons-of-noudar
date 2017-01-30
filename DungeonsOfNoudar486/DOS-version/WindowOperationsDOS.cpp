@@ -85,9 +85,10 @@ namespace PC {
     void Render() // Update the displayed screen
     {
       int fullSize = 320 * 200;
-
-      std::reverse_copy(ImageBuffer + fullSize / 2, ImageBuffer + fullSize, reverseBuffer );
-      movedata( _my_ds(), (long)(&reverseBuffer), selector, 0, sizeof(reverseBuffer) / 2 );
+      for ( int y = 100; y < 200; ++y ) {
+	std::copy(ImageBuffer + (320/4) + (320*(y-1)), ImageBuffer - (320/4) + (320*(y)), reverseBuffer + (320/4) + ( fullSize ) - (320 * y ) ) ;
+      }
+      movedata( _my_ds(), (long)(&reverseBuffer) + (320/4), selector, 0, -(320/4 ) + sizeof(reverseBuffer) / 2 );
     }
     void Close() // End graphics
     {
@@ -199,16 +200,16 @@ void setMainLoop() {
       case 's':
 	moveDown(); 
 	break;
-      case 'a':
+      case 'd':
 	moveRight();
 	break;
-      case 'd':
+      case 'a':
 	moveLeft(); 
 	break;
-      case 'q':
+      case 'e':
 	rotateCameraRight();
 	break; 
-      case 'e':
+      case 'q':
 	rotateCameraLeft();
 	break;
       }
