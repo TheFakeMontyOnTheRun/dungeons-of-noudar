@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-# include <osmesa.h>
+#include <osmesa.h>
 #include <conio.h>        // For kbhit, getch, textmode (console access)
 #include <dpmi.h>         // For __dpmi_int (mouse access)
 #include <go32.h>         // For _dos_ds (VRAM access)
@@ -86,9 +86,11 @@ namespace PC {
     {
       int fullSize = 320 * 200;
       for ( int y = 100; y < 200; ++y ) {
-	std::copy(ImageBuffer + (320/4) + (320*(y-1)), ImageBuffer - (320/4) + (320*(y)), reverseBuffer + (320/4) + ( fullSize ) - (320 * y ) ) ;
+	std::copy(ImageBuffer + (320/4) + (320*(y-1)), ImageBuffer - (320/4) + (320*(y)), reverseBuffer + (20) + ( fullSize ) - (320 * 2 * (y-100) ) ) ;
+	std::copy(ImageBuffer + (320/4) + (320*(y-1)), ImageBuffer - (320/4) + (320*(y)), reverseBuffer + (20) + ( fullSize ) + 320 - (320 * 2 * (y-100) ) ) ;
       }
-      movedata( _my_ds(), (long)(&reverseBuffer) + (320/4), selector, 0, -(320/4 ) + sizeof(reverseBuffer) / 2 );
+
+      movedata( _my_ds(), (long)(&reverseBuffer) + (320/4), selector, 0, -(320/4 ) + sizeof(reverseBuffer)  );
     }
     void Close() // End graphics
     {
