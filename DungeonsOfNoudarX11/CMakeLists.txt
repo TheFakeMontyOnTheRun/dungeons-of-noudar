@@ -63,6 +63,8 @@ set(SOURCE_FILES
         ../noudar-rendering/OverlayNanoVGRenderer.cpp
         ../noudar-rendering/DungeonGLES2Renderer.cpp
         ../noudar-rendering/LightningStrategy.cpp
+        ../noudar-rendering/VisibilityStrategy.h
+        ../noudar-rendering/VisibilityStrategy.cpp
         ../noudar-rendering/NoudarDungeonSnapshot.cpp
         ../noudar-rendering/SplatAnimation.cpp
         ../noudar-rendering/CTile3DProperties.cpp

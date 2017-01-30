@@ -33,6 +33,7 @@ OBJS = DOS-version/main.o \
     ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
         ../noudar-rendering/DungeonGL11Renderer.o \
         ../noudar-rendering/LightningStrategy.o \
+        ../noudar-rendering/VisibilityStrategy.o \
 	../noudar-rendering/GameNativeAPI.o \
         ../noudar-rendering/NoudarDungeonSnapshot.o \
         ../noudar-rendering/SplatAnimation.o \
