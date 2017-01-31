@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-
+#include <pc.h>
 #include "NativeBitmap.h"
 
 #include "SoundClip.h"
@@ -59,6 +59,8 @@
 #include "WindowOperations.h"
 #include "Common.h"
 #include "LoadPNG.h"
+
+bool inGraphics = true;
 
 namespace PC {
     const unsigned W = 320, H = 200, mode = 0x10F; // resolution & BIOS mode#
@@ -86,8 +88,13 @@ namespace PC {
     {
       int fullSize = 320 * 200;
       for ( int y = 100; y < 200; ++y ) {
-	std::copy(ImageBuffer + (320/4) + (320*(y-1)), ImageBuffer - (320/4) + (320*(y)), reverseBuffer + (20) + ( fullSize ) - (320 * 2 * (y-100) ) ) ;
-	std::copy(ImageBuffer + (320/4) + (320*(y-1)), ImageBuffer - (320/4) + (320*(y)), reverseBuffer + (20) + ( fullSize ) + 320 - (320 * 2 * (y-100) ) ) ;
+	for ( int x = 80; x < 240; ++x ) {
+	  auto origin = ImageBuffer[ (320 * y ) + x];
+	  reverseBuffer[ 160 + ( (200 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 20 ] = origin;
+	  reverseBuffer[ 160 + ( (199 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 19 ] = origin;
+	  reverseBuffer[ 160 + ( (200 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 19 ] = origin;
+	  reverseBuffer[ 160 + ( (199 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 20 ] = origin;
+	}
       }
 
       movedata( _my_ds(), (long)(&reverseBuffer) + (320/4), selector, 0, -(320/4 ) + sizeof(reverseBuffer)  );
@@ -96,6 +103,20 @@ namespace PC {
     {
         textmode(C80); // Set textmode again.
     }
+}
+
+void setGraphics() {
+  inGraphics = true;
+  PC::Init();
+}
+
+void setTextMode() {
+  inGraphics = false;
+
+  __dpmi_regs r;
+
+  r.x.ax = 3;
+  __dpmi_int(0x10, &r);
 }
 
 const int winWidth = 320, winHeight = 200;
@@ -184,9 +205,11 @@ void initWindow() {
 
 void tick() {
   //if I want at least 10fps, I need my rendering and updates to take no more than 100ms, combined
-  gameLoopTick( 250 );
-  renderFrame( 250 );
-  PC::Render();
+  if ( inGraphics ) {
+    gameLoopTick( 250 );
+    renderFrame( 250 );
+    PC::Render();
+  }
 }
 
 
@@ -196,6 +219,12 @@ void setMainLoop() {
     while(kbhit())
       switch(getch()) {
       case 27: done = true; break;
+      case '1':
+	setGraphics();
+	break;
+      case '2':
+	setTextMode();
+	break;
       case 'w':     
 	moveUp();   
 	break;
