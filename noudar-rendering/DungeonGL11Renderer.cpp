@@ -780,7 +780,7 @@ namespace odb {
 		            glDisable( GL_ALPHA_TEST );
 	            }
 
-	            if ( vboId == std::get<0>(mCubeVBO) ) {
+	            if ( vboId == std::get<0>(mCubeVBO) && !element.mNeedsAlphaTest ) {
 		            glEnable( GL_CULL_FACE );
 	            } else {
 		            glDisable( GL_CULL_FACE );
