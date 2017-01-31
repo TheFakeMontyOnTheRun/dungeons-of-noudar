@@ -772,7 +772,7 @@ namespace odb {
                 auto amount = element.getAmount();
                 auto vboId = element.getVBOId();
                 auto vboIndicesId = element.getVBOIndicesId();
-
+#ifdef OSMESA
 	            if ( element.mNeedsAlphaTest ) {
 					glEnable( GL_ALPHA_TEST );
 		            glAlphaFunc(GL_GREATER,0.5f);
@@ -785,7 +785,7 @@ namespace odb {
 	            } else {
 		            glDisable( GL_CULL_FACE );
 	            }
-
+#endif
                 drawGeometry(textureId,
                              vboId,
                              vboIndicesId,
