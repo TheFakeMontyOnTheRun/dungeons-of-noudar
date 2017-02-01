@@ -560,12 +560,6 @@ namespace odb {
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
                                                 1.0f, false);
-#else
-	    batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
-                                                std::get<1>(mSkyVBO),
-                                                std::get<2>(mSkyVBO),
-                                                getSkyTransform(1000 + kSkyTextureLength * 1000),
-                                                1.0f, false);
 #endif
 
 		int lowerX = 0;
