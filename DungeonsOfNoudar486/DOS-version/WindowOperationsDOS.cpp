@@ -221,12 +221,12 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
     toReturn.push_back( loadPNG( "res/exit.ppm") );
     toReturn.push_back( loadPNG( "res/bricks2.ppm") );
     toReturn.push_back( loadPNG( "res/bricks3.ppm") );
-    toReturn.push_back( loadPNG( "res/foe0.ppm") );
-    toReturn.push_back( loadPNG( "res/foe1.ppm") );
-    toReturn.push_back( loadPNG( "res/foe2.ppm") );
-    toReturn.push_back( loadPNG( "res/foe3.ppm") );
-    toReturn.push_back( loadPNG( "res/foe4.ppm") );
-    toReturn.push_back( loadPNG( "res/foe5.ppm") );
+    toReturn.push_back( loadPNG( "res/turtle0.ppm") );
+    toReturn.push_back( loadPNG( "res/turtle0.ppm") );
+    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
+    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
+    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
+    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
     toReturn.push_back( loadPNG( "res/crusad0.ppm") );
     toReturn.push_back( loadPNG( "res/crusad1.ppm") );
     toReturn.push_back( loadPNG( "res/crusad2.ppm") );
