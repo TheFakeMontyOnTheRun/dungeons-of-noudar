@@ -9,8 +9,7 @@
 #include "LoadPNG.h"
 #include "Logger.h"
 
-std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
-
+std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename, int width, int height ) {
    std::cout << "opening " << filename << std::endl;
    std::ifstream file(filename);
 
@@ -19,9 +18,8 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
 		exit(0);
 		return nullptr;
 	}
-    std::string line;
- 	int width = 64;
-	int height = 64;
+	
+	std::string line;
 	int* data = new int[  width * height ];
 	int* pos = data;   
 
@@ -29,7 +27,7 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
 		std::getline(file,line); 
 	}
 
-        for (int i=0;i< 64 * 64;i++) {
+        for (int i=0;i< width * height;i++) {
 		int r;
 		int g;
 		int b;
@@ -57,6 +55,9 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
 
 
     	std::shared_ptr<odb::NativeBitmap> toReturn = std::make_shared<odb::NativeBitmap>( width, height, data );
+	return toReturn;
+}
 
-    return toReturn;
+std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
+  return loadPNG( filename, 64, 64 );
 }
