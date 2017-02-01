@@ -6,5 +6,6 @@
 #define NOUDAR_CORE_LOADPNG_H
 
 std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename);
+std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename, int w, int h);
 
 #endif //NOUDAR_CORE_LOADPNG_H
