@@ -317,6 +317,7 @@ void tick() {
 
 
 void setMainLoop() {
+
   while ( !done ) {
     while(kbhit())
       switch(getch()) {
@@ -357,4 +358,7 @@ void setMainLoop() {
 
 void destroyWindow() {
    shutdown();
+  setTextMode();
+  clrscr();
+  std::cout << "Thank you for playing!" << std::endl;
 }
