@@ -63,4 +63,5 @@ void forceDirection( int direction );
 
 void setTileProperties( std::string tileProperties );
 
+void interact();
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

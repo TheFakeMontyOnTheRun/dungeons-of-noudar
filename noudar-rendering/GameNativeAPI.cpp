@@ -539,3 +539,11 @@ void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IF
 		loadedMeshes.emplace_back( readScene( meshStream, fileLoaderDelegate ) );
 	}
 }
+
+void interact() {
+	if (game != nullptr) {
+		render->setNextCommand('h');
+		game->tick();
+		render->setNextCommand('.');
+	}
+}
