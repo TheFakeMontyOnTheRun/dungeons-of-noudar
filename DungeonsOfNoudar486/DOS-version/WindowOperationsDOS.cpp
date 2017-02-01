@@ -180,14 +180,6 @@ namespace PC {
 	{
 		textmode(C80); // Set textmode again.
 	}
-      }
-
-      movedata( _my_ds(), (long)(&reverseBuffer) + (320/4), selector, 0, -(320/4 ) + sizeof(reverseBuffer)  );
-    }
-    void Close() // End graphics
-    {
-        textmode(C80); // Set textmode again.
-    }
 }
 
 void setGraphics() {
