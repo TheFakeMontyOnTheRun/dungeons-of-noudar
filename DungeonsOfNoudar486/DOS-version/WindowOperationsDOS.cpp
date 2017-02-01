@@ -62,6 +62,8 @@
 
 bool inGraphics = true;
 
+std::vector<std::shared_ptr<odb::NativeBitmap>> gunStates;
+std::vector<std::shared_ptr<odb::NativeBitmap>>::iterator gunState;
 namespace PC {
 	const unsigned W = 320, H = 200;
 
@@ -244,6 +246,10 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 void initWindow() {
 
   auto textures = loadTextures();
+  gunStates.push_back( loadPNG( "res/shotgun0.ppm", 320, 200) );
+  gunStates.push_back( loadPNG( "res/shotgun1.ppm", 320, 200) );
+  gunState = std::begin( gunStates );
+
   OSMesaContext om  = OSMesaCreateContext(OSMESA_RGBA, NULL);
   OSMesaMakeCurrent(om, PC::ImageBuffer, GL_UNSIGNED_BYTE, PC::W, PC::H);
   
@@ -286,6 +292,11 @@ void tick() {
     gameLoopTick( 250 );
     renderFrame( 250 );
     PC::Render();
+
+    if ( gunState != std::begin( gunStates ) ) {
+      gunState = std::prev( gunState );
+    }
+
   }
 }
 
@@ -316,6 +327,7 @@ void setMainLoop() {
 	break;
       case 'h':
 	interact(); 
+	gunState = std::prev(std::end(gunStates));
 	break;
       case 'e':
 	rotateCameraRight();
