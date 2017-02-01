@@ -20,6 +20,7 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
     ../noudar-core/noudar-core/src/commands/IGameCommand.o \
     ../noudar-core/noudar-core/src/commands/CMoveActorCommand.o \
+    ../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.o \
     ../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.o \
     ../noudar-core/noudar-core/src/commands/CTurnActorCommand.o \
     ../noudar-core/noudar-core/src/commands/CQuitCommand.o \
