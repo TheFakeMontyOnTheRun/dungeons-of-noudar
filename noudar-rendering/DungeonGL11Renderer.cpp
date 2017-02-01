@@ -341,6 +341,7 @@ namespace odb {
                                             int vertexCount,
                                             const glm::mat4 &transform, float shade) {
 
+
         auto geometryBatch = GeometryBatches[ vertexVbo ];
         auto indicesBatch = IndicesBatches[ indexVbo ];
 
@@ -529,11 +530,9 @@ namespace odb {
                 glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
     }
 
-    void DungeonGLES2Renderer::produceRenderingBatches(IntMap map, CharMap actors,
-                                                       IntMap splats,
-                                                       IntMap lightMap, IntMap ids,
-                                                       AnimationList movingCharacters,
-                                                       long animationTime) {
+    void
+    DungeonGLES2Renderer::produceRenderingBatches(const IntMap& map,const CharMap& actors,const IntMap& splats,const IntMap& lightMap,const IntMap& ids,
+                                                      const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap) {
 
         glm::vec3 pos;
 
@@ -653,7 +652,7 @@ namespace odb {
 
 	            //characters
 	            if (actor != EActorsSnapshotElement::kNothing) {
-		            int id = ids[z][x];
+		            const int id = ids[z][x];
 
                     float fx, fz;
 
@@ -664,7 +663,9 @@ namespace odb {
 		            float curve = 0.0f;
 
 		            if (id != 0 && movingCharacters.count(id) > 0) {
-			            auto animation = movingCharacters[id];
+
+			            auto animation = movingCharacters.at(id);
+
 			            step = (((float) ((animationTime - std::get<2>(animation)))) /
 			                    ((float) kAnimationLength));
 
@@ -734,10 +735,10 @@ namespace odb {
         batches.clear();
     }
 
-    void DungeonGLES2Renderer::render(IntMap map, CharMap actors, IntMap splats,
-                                      IntMap lightMap, IntMap ids,
-                                      AnimationList movingCharacters,
-                                      long animationTime) {
+    void DungeonGLES2Renderer::render(const IntMap& map, const CharMap& actors, const IntMap& splats,
+                                      const IntMap& lightMap, const IntMap& ids,
+                                      const AnimationList& movingCharacters,
+                                      long animationTime, const IntMap& visibilityMap) {
 
         if (mBitmaps.empty()) {
             return;
@@ -750,9 +751,9 @@ namespace odb {
 
         invalidateCachedBatches();
 
-        if ( batches.size() == 0 ) {
+	    if ( batches.size() == 0 ) {
             produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
-                                    animationTime);
+                                    animationTime, visibilityMap);
         }
         consumeRenderingBatches(animationTime);
     }
@@ -785,6 +786,9 @@ namespace odb {
 	            } else {
 		            glDisable( GL_CULL_FACE );
 	            }
+#else
+	            glEnable( GL_ALPHA_TEST );
+	            glAlphaFunc(GL_GREATER,0.5f);
 #endif
                 drawGeometry(textureId,
                              vboId,

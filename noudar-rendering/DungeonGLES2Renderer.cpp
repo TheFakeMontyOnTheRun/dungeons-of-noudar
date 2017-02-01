@@ -571,11 +571,9 @@ namespace odb {
                 glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
     }
 
-    void DungeonGLES2Renderer::produceRenderingBatches(IntMap map, CharMap actors,
-                                                       IntMap splats,
-                                                       IntMap lightMap, IntMap ids,
-                                                       AnimationList movingCharacters,
-                                                       long animationTime) {
+    void
+    DungeonGLES2Renderer::produceRenderingBatches(const IntMap& map, const CharMap& actors, const IntMap& splats, const IntMap& lightMap, const IntMap& ids,
+                                                      const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap) {
 
         glm::vec3 pos;
 
@@ -606,6 +604,13 @@ namespace odb {
                     z == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
+
+	            if ( visibilityMap[ z ][ x ] ) {
+		            shade = 1.5f;
+	            } else {
+		            shade = 0.75f;
+	            }
+
 
                 if (mTileProperties.count(tile) <= 0) {
                     continue;
@@ -690,7 +695,7 @@ namespace odb {
                     float curve = 0.0f;
 
                     if (id != 0 && movingCharacters.count(id) > 0) {
-                        auto animation = movingCharacters[id];
+                        auto animation = movingCharacters.at(id);
                         step = (((float) ((animationTime - std::get<2>(animation)))) /
                                 ((float) kAnimationLength));
 
@@ -760,10 +765,10 @@ namespace odb {
         batches.clear();
     }
 
-    void DungeonGLES2Renderer::render(IntMap map, CharMap actors, IntMap splats,
-                                      IntMap lightMap, IntMap ids,
-                                      AnimationList movingCharacters,
-                                      long animationTime) {
+    void DungeonGLES2Renderer::render(const IntMap& map, const CharMap& actors, const IntMap& splats,
+                                      const IntMap& lightMap, const IntMap& ids,
+                                      const AnimationList& movingCharacters,
+                                      long animationTime, const IntMap& visibilityMap) {
 
         if (mBitmaps.empty()) {
             return;
@@ -777,8 +782,8 @@ namespace odb {
         invalidateCachedBatches();
 
         if ( batches.size() == 0 ) {
-            produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
-                                    animationTime);
+            produceRenderingBatches(map, actors, splats, lightMap, ids,
+                                    movingCharacters, animationTime, visibilityMap);
         }
         consumeRenderingBatches(animationTime);
     }

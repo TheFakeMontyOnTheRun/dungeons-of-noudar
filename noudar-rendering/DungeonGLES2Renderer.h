@@ -69,16 +69,14 @@ namespace odb {
 
         void consumeRenderingBatches(long animationTime);
 
-        void produceRenderingBatches(IntMap map, CharMap actors, IntMap splats,
-                                     IntMap lightmap, IntMap ids,
-                                     AnimationList movingCharacters, long animationTime);
+        void produceRenderingBatches(const IntMap& map,const CharMap& actors, const IntMap& splats,const IntMap& lightmap,const IntMap& ids,
+                                             const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap);
 
         glm::vec3 transformToMapPosition(const glm::vec3 &pos);
 
         void initTileProperties();
 
     private:
-
         const static int kSkyTextureLength = 400;
 
         int vertexAttributePosition;
@@ -169,8 +167,8 @@ namespace odb {
 
         void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
-        void render(IntMap map, CharMap actors, IntMap splats, IntMap lightmap,
-                    IntMap ids, AnimationList movingCharacters, long animationTime);
+        void render(const IntMap& map, const CharMap& actors, const IntMap& splats, const IntMap& lightmap,
+                    const IntMap& ids, const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap);
 
         void shutdown();
 

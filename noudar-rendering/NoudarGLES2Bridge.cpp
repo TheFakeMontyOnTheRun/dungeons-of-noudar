@@ -44,6 +44,7 @@
 #include "GameNativeAPI.h"
 
 #include "Logger.h"
+#include "VisibilityStrategy.h"
 
 namespace odb {
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
@@ -66,7 +67,7 @@ namespace odb {
 
 	            auto actor = map.getActorAt({ x, y } );
 
-	            if ( actor != nullptr) {
+	            if ( actor != nullptr && actor->isAlive()) {
 
                     snapshot.ids[ y ][ x ] = actor->getId();
                     bool alternate = (actor->getMoves() % 2) == 0;
@@ -90,6 +91,8 @@ namespace odb {
 
         auto cameraPosition = current->getPosition();
         setCameraPosition(cameraPosition.x, cameraPosition.y);
+
+	    odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition);
         setSnapshot( snapshot );
     }
 

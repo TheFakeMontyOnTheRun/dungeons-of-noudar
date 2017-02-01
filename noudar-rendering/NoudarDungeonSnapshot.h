@@ -32,6 +32,7 @@ namespace odb {
 
     public:
         odb::IntMap map;
+        odb::IntMap mVisibilityMap;
         odb::CharMap snapshot;
         odb::IntMap splat;
         odb::IntMap ids;
