@@ -64,6 +64,13 @@ bool inGraphics = true;
 
 std::vector<std::shared_ptr<odb::NativeBitmap>> gunStates;
 std::vector<std::shared_ptr<odb::NativeBitmap>>::iterator gunState;
+
+std::array< int, 4 > soundSource = {
+  100,
+};
+
+std::array<int, 10>::iterator soundPos = std::end( soundSource );
+
 namespace PC {
 	const unsigned W = 320, H = 200;
 
@@ -297,6 +304,13 @@ void tick() {
       gunState = std::prev( gunState );
     }
 
+    if ( soundPos != std::end( soundSource ) ) {
+      sound( *soundPos );
+      soundPos = std::next( soundPos );
+    } else {
+      nosound();
+    }
+
   }
 }
 
@@ -328,6 +342,7 @@ void setMainLoop() {
       case 'h':
 	interact(); 
 	gunState = std::prev(std::end(gunStates));
+	soundPos = std::begin( soundSource );
 	break;
       case 'e':
 	rotateCameraRight();
