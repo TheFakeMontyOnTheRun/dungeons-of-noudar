@@ -314,6 +314,9 @@ void setMainLoop() {
       case 'a':
 	moveLeft(); 
 	break;
+      case 'h':
+	interact(); 
+	break;
       case 'e':
 	rotateCameraRight();
 	break; 
