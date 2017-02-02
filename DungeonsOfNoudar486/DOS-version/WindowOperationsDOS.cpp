@@ -16,7 +16,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <go32.h>
+#include <sys/farptr.h>
 #include <cstdio>
 #include <assert.h>
 #include <math.h>
@@ -65,11 +66,11 @@ bool inGraphics = true;
 std::vector<std::shared_ptr<odb::NativeBitmap>> gunStates;
 std::vector<std::shared_ptr<odb::NativeBitmap>>::iterator gunState;
 
-std::array< int, 4 > soundSource = {
-  100,
+std::array<int, 4> soundSource = {
+		100,
 };
 
-std::array<int, 10>::iterator soundPos = std::end( soundSource );
+std::array<int, 10>::iterator soundPos = std::end(soundSource);
 
 namespace PC {
 	const unsigned W = 320, H = 200;
@@ -192,173 +193,174 @@ namespace PC {
 }
 
 void setGraphics() {
-  inGraphics = true;
-  PC::Init();
+	inGraphics = true;
+	PC::Init();
 }
 
 void setTextMode() {
-  inGraphics = false;
+	inGraphics = false;
 
-  __dpmi_regs r;
+	__dpmi_regs r;
 
-  r.x.ax = 3;
-  __dpmi_int(0x10, &r);
+	r.x.ax = 3;
+	__dpmi_int(0x10, &r);
 }
 
 const int winWidth = 320, winHeight = 200;
 bool done = false;
 bool isActive = false;
 
-std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
-    std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
+std::vector<std::shared_ptr<odb::NativeBitmap>> loadTextures() {
+	std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
 
-    toReturn.push_back( loadPNG( "res/grass.ppm") );
-    toReturn.push_back( loadPNG( "res/stonef1.ppm") );
-    toReturn.push_back( loadPNG( "res/bricks.ppm") );
-    toReturn.push_back( loadPNG( "res/arch.ppm") );
-    toReturn.push_back( loadPNG( "res/bars.ppm") );
-    toReturn.push_back( loadPNG( "res/begin.ppm") );
-    toReturn.push_back( loadPNG( "res/exit.ppm") );
-    toReturn.push_back( loadPNG( "res/bricks2.ppm") );
-    toReturn.push_back( loadPNG( "res/bricks3.ppm") );
-    toReturn.push_back( loadPNG( "res/turtle0.ppm") );
-    toReturn.push_back( loadPNG( "res/turtle0.ppm") );
-    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
-    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
-    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
-    toReturn.push_back( loadPNG( "res/turtle1.ppm") );
-    toReturn.push_back( loadPNG( "res/crusad0.ppm") );
-    toReturn.push_back( loadPNG( "res/crusad1.ppm") );
-    toReturn.push_back( loadPNG( "res/crusad2.ppm") );
-    toReturn.push_back( loadPNG( "res/shadow.ppm") );
-    toReturn.push_back( loadPNG( "res/ceilin.ppm") );
-    toReturn.push_back( loadPNG( "res/ceigdr.ppm") );
-    toReturn.push_back( loadPNG( "res/ceigbgn.ppm") );
-    toReturn.push_back( loadPNG( "res/ceilend.ppm") );
-    toReturn.push_back( loadPNG( "res/splat0.ppm") );
-    toReturn.push_back( loadPNG( "res/splat1.ppm") );
-    toReturn.push_back( loadPNG( "res/splat2.ppm") );
-    toReturn.push_back( loadPNG( "res/ceilbar.ppm") );
-    toReturn.push_back( loadPNG( "res/clouds.ppm"));
-    toReturn.push_back( loadPNG( "res/stngrsf.ppm"));
-    toReturn.push_back( loadPNG( "res/grsstnf.ppm"));
-    toReturn.push_back( loadPNG( "res/stngrsn.ppm"));
-    toReturn.push_back( loadPNG( "res/grsstnn.ppm"));
-    toReturn.push_back( loadPNG( "res/cross.ppm"));
+	toReturn.push_back(loadPNG("res/grass.ppm"));
+	toReturn.push_back(loadPNG("res/stonef1.ppm"));
+	toReturn.push_back(loadPNG("res/bricks.ppm"));
+	toReturn.push_back(loadPNG("res/arch.ppm"));
+	toReturn.push_back(loadPNG("res/bars.ppm"));
+	toReturn.push_back(loadPNG("res/begin.ppm"));
+	toReturn.push_back(loadPNG("res/exit.ppm"));
+	toReturn.push_back(loadPNG("res/bricks2.ppm"));
+	toReturn.push_back(loadPNG("res/bricks3.ppm"));
+	toReturn.push_back(loadPNG("res/turtle0.ppm"));
+	toReturn.push_back(loadPNG("res/turtle0.ppm"));
+	toReturn.push_back(loadPNG("res/turtle1.ppm"));
+	toReturn.push_back(loadPNG("res/turtle1.ppm"));
+	toReturn.push_back(loadPNG("res/turtle1.ppm"));
+	toReturn.push_back(loadPNG("res/turtle1.ppm"));
+	toReturn.push_back(loadPNG("res/crusad0.ppm"));
+	toReturn.push_back(loadPNG("res/crusad1.ppm"));
+	toReturn.push_back(loadPNG("res/crusad2.ppm"));
+	toReturn.push_back(loadPNG("res/shadow.ppm"));
+	toReturn.push_back(loadPNG("res/ceilin.ppm"));
+	toReturn.push_back(loadPNG("res/ceigdr.ppm"));
+	toReturn.push_back(loadPNG("res/ceigbgn.ppm"));
+	toReturn.push_back(loadPNG("res/ceilend.ppm"));
+	toReturn.push_back(loadPNG("res/splat0.ppm"));
+	toReturn.push_back(loadPNG("res/splat1.ppm"));
+	toReturn.push_back(loadPNG("res/splat2.ppm"));
+	toReturn.push_back(loadPNG("res/ceilbar.ppm"));
+	toReturn.push_back(loadPNG("res/clouds.ppm"));
+	toReturn.push_back(loadPNG("res/stngrsf.ppm"));
+	toReturn.push_back(loadPNG("res/grsstnf.ppm"));
+	toReturn.push_back(loadPNG("res/stngrsn.ppm"));
+	toReturn.push_back(loadPNG("res/grsstnn.ppm"));
+	toReturn.push_back(loadPNG("res/cross.ppm"));
 
 
-    return toReturn;
+	return toReturn;
 }
 
 void initWindow() {
 
-  auto textures = loadTextures();
-  gunStates.push_back( loadPNG( "res/shotgun0.ppm", 320, 200) );
-  gunStates.push_back( loadPNG( "res/shotgun1.ppm", 320, 200) );
-  gunState = std::begin( gunStates );
+	auto textures = loadTextures();
+	gunStates.push_back(loadPNG("res/shotgun0.ppm", 320, 200));
+	gunStates.push_back(loadPNG("res/shotgun1.ppm", 320, 200));
+	gunState = std::begin(gunStates);
 
-  OSMesaContext om  = OSMesaCreateContext(OSMESA_RGBA, NULL);
-  OSMesaMakeCurrent(om, PC::ImageBuffer, GL_UNSIGNED_BYTE, PC::W, PC::H);
-  
-  PC::Init();
+	OSMesaContext om = OSMesaCreateContext(OSMESA_RGBA, NULL);
+	OSMesaMakeCurrent(om, PC::ImageBuffer, GL_UNSIGNED_BYTE, PC::W, PC::H);
 
-   
-  auto gVertexShader = "";
-  auto gFragmentShader = "";
+	PC::Init();
 
-  setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, textures);
-  
-  auto soundListener = std::make_shared<odb::SoundListener>();
-  
-  std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
-  
-  std::string filenames[] {
-    "res/grasssteps.wav",
-      "res/stepsstones.wav",
-      "res/bgnoise.wav",
-      "res/monsterdamage.wav",
-      "res/monsterdead.wav",
-      "res/playerdamage.wav",
-      "res/playerdead.wav",
-      "res/swing.wav"
-      };
-  
-  for ( auto filename : filenames ) {
-    FILE *file = fopen( filename.c_str(), "r");
-    auto soundClip = odb::makeSoundClipFrom( file );
-    
-    sounds.push_back( std::make_shared<odb::SoundEmitter>(soundClip) );
-  }
-  
-  setSoundEmitters( sounds, soundListener );
+
+	auto gVertexShader = "";
+	auto gFragmentShader = "";
+
+	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, textures);
+
+	auto soundListener = std::make_shared<odb::SoundListener>();
+
+	std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+
+	std::string filenames[]{
+			"res/grasssteps.wav",
+			"res/stepsstones.wav",
+			"res/bgnoise.wav",
+			"res/monsterdamage.wav",
+			"res/monsterdead.wav",
+			"res/playerdamage.wav",
+			"res/playerdead.wav",
+			"res/swing.wav"
+	};
+
+	for (auto filename : filenames) {
+		FILE *file = fopen(filename.c_str(), "r");
+		auto soundClip = odb::makeSoundClipFrom(file);
+
+		sounds.push_back(std::make_shared<odb::SoundEmitter>(soundClip));
+	}
+
+	setSoundEmitters(sounds, soundListener);
 }
 
 void tick() {
-  //if I want at least 10fps, I need my rendering and updates to take no more than 100ms, combined
-  if ( inGraphics ) {
-    gameLoopTick( 250 );
-    renderFrame( 250 );
-    PC::Render();
+	//if I want at least 10fps, I need my rendering and updates to take no more than 100ms, combined
+	if (inGraphics) {
+		gameLoopTick(250);
+		renderFrame(250);
+		PC::Render();
 
-    if ( gunState != std::begin( gunStates ) ) {
-      gunState = std::prev( gunState );
-    }
+		if (gunState != std::begin(gunStates)) {
+			gunState = std::prev(gunState);
+		}
 
-    if ( soundPos != std::end( soundSource ) ) {
-      sound( *soundPos );
-      soundPos = std::next( soundPos );
-    } else {
-      nosound();
-    }
+		if (soundPos != std::end(soundSource)) {
+			sound(*soundPos);
+			soundPos = std::next(soundPos);
+		} else {
+			nosound();
+		}
 
-  }
+	}
 }
-
 
 
 void setMainLoop() {
 
-  while ( !done ) {
-    while(kbhit())
-      switch(getch()) {
-      case 27: done = true; break;
-      case '1':
-	setGraphics();
-	break;
-      case '2':
-	setTextMode();
-	break;
-      case 'w':     
-	moveUp();   
-	break;
-      case 's':
-	moveDown(); 
-	break;
-      case 'd':
-	moveRight();
-	break;
-      case 'a':
-	moveLeft(); 
-	break;
-      case 'h':
-	interact(); 
-	gunState = std::prev(std::end(gunStates));
-	soundPos = std::begin( soundSource );
-	break;
-      case 'e':
-	rotateCameraRight();
-	break; 
-      case 'q':
-	rotateCameraLeft();
-	break;
-      }
-    tick();
-  }
+	while (!done) {
+		while (kbhit())
+			switch (getch()) {
+				case 27:
+					done = true;
+					break;
+				case '1':
+					setGraphics();
+					break;
+				case '2':
+					setTextMode();
+					break;
+				case 'w':
+					moveUp();
+					break;
+				case 's':
+					moveDown();
+					break;
+				case 'd':
+					moveRight();
+					break;
+				case 'a':
+					moveLeft();
+					break;
+				case 'h':
+					interact();
+					gunState = std::prev(std::end(gunStates));
+					soundPos = std::begin(soundSource);
+					break;
+				case 'e':
+					rotateCameraRight();
+					break;
+				case 'q':
+					rotateCameraLeft();
+					break;
+			}
+		tick();
+	}
 }
 
 void destroyWindow() {
-   shutdown();
-  setTextMode();
-  clrscr();
-  std::cout << "Thank you for playing!" << std::endl;
+	shutdown();
+	setTextMode();
+	clrscr();
+	std::cout << "Thank you for playing!" << std::endl;
 }
