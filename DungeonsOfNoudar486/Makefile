@@ -8,6 +8,7 @@ L=-lOSMesa -I/usr/local/include/GL -L/usr/local/lib -I/usr/include/GL
 
 CXX = i586-pc-msdosdjgpp-g++
 OBJS = DOS-version/main.o \
+   ../noudar-core/noudar-core/src/Vec2i.o \
    ../noudar-core/noudar-core/src/CActor.o \
     ../noudar-core/noudar-core/src/CMonster.o \
     ../noudar-core/noudar-core/src/CTeam.o \
