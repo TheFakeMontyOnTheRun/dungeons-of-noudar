@@ -92,7 +92,7 @@ namespace odb {
         auto cameraPosition = current->getPosition();
         setCameraPosition(cameraPosition.x, cameraPosition.y);
 
-	    odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition);
+	    odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition, current->getDirection());
         setSnapshot( snapshot );
     }
 
