@@ -63,6 +63,7 @@
 bool inGraphics = true;
 
 namespace PC {
+<<<<<<< Updated upstream
     const unsigned W = 320, H = 200, mode = 0x10F; // resolution & BIOS mode#
 
     unsigned ImageBuffer[W*H];
@@ -94,6 +95,124 @@ namespace PC {
 	  reverseBuffer[ 160 + ( (199 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 19 ] = origin;
 	  reverseBuffer[ 160 + ( (200 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 19 ] = origin;
 	  reverseBuffer[ 160 + ( (199 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 20 ] = origin;
+=======
+	const unsigned W = 320, H = 200;
+
+	unsigned ImageBuffer[W * H];
+	int selector;
+
+	void Init() {
+		__dpmi_regs r;
+
+		r.x.ax = 0x13;
+		__dpmi_int(0x10, &r);
+
+
+		outp(0x03c8, 0);
+
+
+		for ( int r = 0; r < 4; ++r ) {
+			for ( int g = 0; g < 4; ++g ) {
+				for ( int b = 0; b < 4; ++b ) {
+					outp(0x03c9, (r * 85));
+					outp(0x03c9, (g * 85));
+					outp(0x03c9, (b * 85));
+				}
+			}
+		}
+	}
+
+	void renderPalette() {
+		_farsetsel(_dos_ds);
+		int offset = 0;
+		int fullSize = 320 * 200;
+
+		for (int r = 0; r < 255; ++r) {
+			for (int x = 0; x < 50; ++x) {
+				int shade = 0;
+
+				int origin = r << 16;
+				shade += (((((origin & 0x0000FF))) / 85));
+				shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
+				shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
+
+				_farnspokeb(0xA0000 + (320 * x) + r, shade);
+			}
+		}
+
+		for (int g = 0; g < 255; ++g) {
+			for (int x = 50; x < 100; ++x) {
+				int shade = 0;
+
+				int origin = g << 8;
+				shade += (((((origin & 0x0000FF))) / 85));
+				shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
+				shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
+
+				_farnspokeb(0xA0000 + (320 * x) + g, shade);
+			}
+		}
+
+		for (int b = 0; b < 255; ++b) {
+			for (int x = 100; x < 150; ++x) {
+				int shade = 0;
+
+				int origin = b;
+				shade += (((((origin & 0x0000FF))) / 85));
+				shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
+				shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
+
+				_farnspokeb(0xA0000 + (320 * x) + b, shade);
+			}
+		}
+
+		for (int b = 0; b < 255; ++b) {
+			for (int x = 150; x < 200; ++x) {
+				_farnspokeb(0xA0000 + (320 * x) + b, b);
+			}
+		}
+
+		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), 0x0);
+
+	}
+
+	void Render() {
+		_farsetsel(_dos_ds);
+		auto pixelData = (*gunState)->getPixelData();
+		int offset = 0;
+		int fullSize = 320 * 200;
+
+		for (int y = 100; y < 200; ++y) {
+			for (int x = 80; x < 240; ++x) {
+
+				offset = (320 * y) + x;
+				auto origin = ImageBuffer[offset];
+				offset = (320 * (200 - (2 * (y - 100)))) + (((x - 80) * 320) / 160);
+
+				if (pixelData[offset] & 0xFF000000) {
+					origin = pixelData[offset];
+				}
+
+				int shade = 0;
+				shade += (((((origin & 0x0000FF)      )  ) / 85 ) );
+				shade += (((((origin & 0x00FF00) >> 8 )  ) / 85 ) ) << 2;
+				shade += (((((origin & 0xFF0000) >> 16)  ) / 85 ) ) << 4;
+
+
+				_farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
+				_farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
+				_farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
+				_farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
+			}
+		}
+
+		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), 0x0);
+	}
+
+	void Close() // End graphics
+	{
+		textmode(C80); // Set textmode again.
+>>>>>>> Stashed changes
 	}
       }
 
