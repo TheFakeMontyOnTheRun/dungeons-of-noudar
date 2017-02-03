@@ -37,6 +37,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/CHuntApproach.h
         ../noudar-core/noudar-core/include/CCharacter.h
         X11-version/main.cpp
+        ../noudar-core/noudar-core/src/Vec2i.cpp
         ../noudar-core/noudar-core/src/CActor.cpp
         ../noudar-core/noudar-core/src/CMonster.cpp
         ../noudar-core/noudar-core/src/CTeam.cpp
