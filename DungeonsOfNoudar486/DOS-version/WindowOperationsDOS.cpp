@@ -63,39 +63,6 @@
 bool inGraphics = true;
 
 namespace PC {
-<<<<<<< Updated upstream
-    const unsigned W = 320, H = 200, mode = 0x10F; // resolution & BIOS mode#
-
-    unsigned ImageBuffer[W*H];
-    unsigned reverseBuffer[W*H];
-    int selector;
-    void Init() // Initialize graphics
-    {
-        __dpmi_regs regs = { };
-        regs.x.ax = 0x4F02;
-        regs.x.bx = 0x4000 | mode;
-        __dpmi_int(0x10, &regs);
-        // Map the video memory into memory
-        __dpmi_meminfo meminfo;
-        meminfo.address = 0xC0000000ul; // DOSBox's S3 video memory
-        meminfo.size    = PC::W * PC::H * 4;
-        __dpmi_physical_address_mapping(&meminfo);
-        __dpmi_lock_linear_region(&meminfo);
-        selector = __dpmi_allocate_ldt_descriptors(1);
-        __dpmi_set_segment_base_address(selector, meminfo.address);
-        __dpmi_set_segment_limit(selector, ((meminfo.size+4095)&~4095)-1);
-    }
-    void Render() // Update the displayed screen
-    {
-      int fullSize = 320 * 200;
-      for ( int y = 100; y < 200; ++y ) {
-	for ( int x = 80; x < 240; ++x ) {
-	  auto origin = ImageBuffer[ (320 * y ) + x];
-	  reverseBuffer[ 160 + ( (200 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 20 ] = origin;
-	  reverseBuffer[ 160 + ( (199 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 19 ] = origin;
-	  reverseBuffer[ 160 + ( (200 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 19 ] = origin;
-	  reverseBuffer[ 160 + ( (199 - (2 * ( (y - 100)) )) * 320 ) + (( 2 * x) ) + 20 ] = origin;
-=======
 	const unsigned W = 320, H = 200;
 
 	unsigned ImageBuffer[W * H];
@@ -212,7 +179,6 @@ namespace PC {
 	void Close() // End graphics
 	{
 		textmode(C80); // Set textmode again.
->>>>>>> Stashed changes
 	}
       }
 
