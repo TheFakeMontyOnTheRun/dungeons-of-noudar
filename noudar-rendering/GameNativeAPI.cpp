@@ -61,7 +61,7 @@
 #include "CTile3DProperties.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
-
+#include "VisibilityStrategy.h"
 
 
 
@@ -137,7 +137,7 @@ void renderFrame(long delta) {
 		auto cursor = game->getCursorPosition();
 		gles2Renderer->setCursorPosition( cursor.x, cursor.y );
 		gles2Renderer->setPlayerHealth( game->getMap()->getAvatar()->getHP() );
-		gles2Renderer->render(snapshot.map, snapshot.snapshot, snapshot.splat, lightMap, snapshot.ids, animationList, animationTime);
+		gles2Renderer->render(snapshot.map, snapshot.snapshot, snapshot.splat, lightMap, snapshot.ids, animationList, animationTime, snapshot.mVisibilityMap);
 		gles2Renderer->updateCamera(delta);
 }
 
@@ -256,7 +256,7 @@ void setCameraPosition( int x, int y ) {
 	}
 }
 
-void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats) {
+void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats, const odb::VisMap& visibilityMap) {
 	hasActiveSplats = false;
 
 	for (int y = 0; y < Knights::kMapSize; ++y) {
@@ -264,6 +264,7 @@ void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, c
 			snapshot.map[y][x] = level[y][x];
 			snapshot.snapshot[y][x] = actors[y][x];
 			snapshot.splat[y][x] = -1;
+			snapshot.mVisibilityMap[y][x] = visibilityMap[y][x];
 			lightMap[y][x] = lightMapCache[y][x];
 		}
 	}
@@ -371,7 +372,7 @@ void setAngleYZ( float YZAngle ) {
 void loadMapData( std::string geoFile, std::string petFile ) {
 }
 
-void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
+void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, std::string tilePropertiesFile ) {
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 	if ( overlayRenderer == nullptr ) {
@@ -433,7 +434,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
 
-	auto tilesData = fileLoaderDelegate->loadFileFromPath("tiles.properties");
+	auto tilesData = fileLoaderDelegate->loadFileFromPath(tilePropertiesFile);
 
 	setTileProperties( tilesData );
 
@@ -523,7 +524,7 @@ void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
 		gles2Renderer->setCameraId( game->getCurrentActorId());
 	}
 
-	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat);
+	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat, snapshot.mVisibilityMap);
 	updateCharacterMovements( snapshot.ids );
 }
 
@@ -536,5 +537,13 @@ void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IF
 
 		std::istringstream meshStream( fileLoaderDelegate->loadFileFromPath( mesh));
 		loadedMeshes.emplace_back( readScene( meshStream, fileLoaderDelegate ) );
+	}
+}
+
+void interact() {
+	if (game != nullptr) {
+		render->setNextCommand('h');
+		game->tick();
+		render->setNextCommand('.');
 	}
 }

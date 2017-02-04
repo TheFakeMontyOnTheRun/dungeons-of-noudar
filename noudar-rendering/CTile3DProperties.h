@@ -16,6 +16,7 @@ namespace odb {
 
     class CTile3DProperties {
     public:
+        bool mNeedsAlphaTest = true;
         TextureName mCeilingTexture;
         TextureName mFloorTexture;
         TextureName mMainWallTexture;

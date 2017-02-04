@@ -23,15 +23,22 @@ namespace odb {
         kDemonAttacking1,
     };
 
+    enum class EVisibility {
+        kInvisible,
+        kVisible,
+    };
+
     using CCharacterId = int;
 
     using IntMap = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
     using CharMap = std::array<std::array<EActorsSnapshotElement, Knights::kMapSize>, Knights::kMapSize>;
+    using VisMap = std::array<std::array<EVisibility, Knights::kMapSize>, Knights::kMapSize>;
 
     class NoudarDungeonSnapshot {
 
     public:
         odb::IntMap map;
+        odb::VisMap mVisibilityMap;
         odb::CharMap snapshot;
         odb::IntMap splat;
         odb::IntMap ids;

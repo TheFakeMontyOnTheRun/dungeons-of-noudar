@@ -571,11 +571,9 @@ namespace odb {
                 glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
     }
 
-    void DungeonGLES2Renderer::produceRenderingBatches(IntMap map, CharMap actors,
-                                                       IntMap splats,
-                                                       IntMap lightMap, IntMap ids,
-                                                       AnimationList movingCharacters,
-                                                       long animationTime) {
+    void
+    DungeonGLES2Renderer::produceRenderingBatches(const IntMap& map, const CharMap& actors, const IntMap& splats, const IntMap& lightMap, const IntMap& ids,
+                                                      const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap) {
 
         glm::vec3 pos;
 
@@ -584,14 +582,14 @@ namespace odb {
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(animationTime),
-                                                1.0f);
+                                                1.0f, true);
 
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
-                                                1.0f);
+                                                1.0f, true);
 
         for (int z = 0; z < Knights::kMapSize; ++z) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
@@ -607,6 +605,13 @@ namespace odb {
                     shade = 1.5f;
                 }
 
+	            if ( visibilityMap[ z ][ x ] ) {
+		            shade = 1.5f;
+	            } else {
+		            shade = 0.75f;
+	            }
+
+
                 if (mTileProperties.count(tile) <= 0) {
                     continue;
                 }
@@ -620,7 +625,7 @@ namespace odb {
                                                                          std::get<1>(mFloorVBO),
                                                                          std::get<2>(mFloorVBO),
                                                                          getFloorTransform(pos),
-                                                                         shade);
+                                                                         shade, true);
                 }
 
                 if (tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
@@ -636,7 +641,7 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade, true);
                     }
                 }
 
@@ -647,7 +652,7 @@ namespace odb {
                             std::get<0>(tileVBO),
                             std::get<1>(tileVBO),
                             std::get<2>(tileVBO),
-                            getCubeTransform(pos), shade);
+                            getCubeTransform(pos), shade, true);
                 }
 
                 if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
@@ -664,7 +669,7 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade, true);
                     }
                 }
 
@@ -674,7 +679,7 @@ namespace odb {
                                                                        std::get<1>(mFloorVBO),
                                                                        std::get<2>(mFloorVBO),
                                                                        getFloorTransform(pos),
-                                                                       shade);
+                                                                       shade, true);
                 }
 
                 //characters
@@ -690,7 +695,7 @@ namespace odb {
                     float curve = 0.0f;
 
                     if (id != 0 && movingCharacters.count(id) > 0) {
-                        auto animation = movingCharacters[id];
+                        auto animation = movingCharacters.at(id);
                         step = (((float) ((animationTime - std::get<2>(animation)))) /
                                 ((float) kAnimationLength));
 
@@ -728,7 +733,7 @@ namespace odb {
                                 std::get<0>(mBillboardVBO),
                                 std::get<1>(mBillboardVBO),
                                 std::get<2>(mBillboardVBO),
-                                getBillboardTransform(pos), shade);
+                                getBillboardTransform(pos), shade, true);
                     }
                 }
 
@@ -739,7 +744,7 @@ namespace odb {
                             std::get<0>(mBillboardVBO),
                             std::get<1>(mBillboardVBO),
                             std::get<2>(mBillboardVBO),
-                            getBillboardTransform(pos), shade);
+                            getBillboardTransform(pos), shade, true);
                 }
             }
         }
@@ -760,10 +765,10 @@ namespace odb {
         batches.clear();
     }
 
-    void DungeonGLES2Renderer::render(IntMap map, CharMap actors, IntMap splats,
-                                      IntMap lightMap, IntMap ids,
-                                      AnimationList movingCharacters,
-                                      long animationTime) {
+    void DungeonGLES2Renderer::render(const IntMap& map, const CharMap& actors, const IntMap& splats,
+                                      const IntMap& lightMap, const IntMap& ids,
+                                      const AnimationList& movingCharacters,
+                                      long animationTime, const IntMap& visibilityMap) {
 
         if (mBitmaps.empty()) {
             return;
@@ -777,8 +782,8 @@ namespace odb {
         invalidateCachedBatches();
 
         if ( batches.size() == 0 ) {
-            produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
-                                    animationTime);
+            produceRenderingBatches(map, actors, splats, lightMap, ids,
+                                    movingCharacters, animationTime, visibilityMap);
         }
         consumeRenderingBatches(animationTime);
     }

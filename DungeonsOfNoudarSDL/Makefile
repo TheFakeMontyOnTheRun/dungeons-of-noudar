@@ -1,7 +1,8 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -ISDL-version -I../glm `sdl-config --cflags`
+CXXFLAGS = -O2 -g -c -std=c++0x -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -ISDL-version -I../glm `sdl-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1 
 LDFLAGS = -lpng -lopenal -lGL -lGLU `sdl-config --libs`
 CXX = clang++
 OBJS = SDL-version/main.o \
+   ../noudar-core/noudar-core/src/Vec2i.o \
    ../noudar-core/noudar-core/src/CActor.o \
     ../noudar-core/noudar-core/src/CMonster.o \
     ../noudar-core/noudar-core/src/CTeam.o \
@@ -20,6 +21,7 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
     ../noudar-core/noudar-core/src/commands/IGameCommand.o \
     ../noudar-core/noudar-core/src/commands/CMoveActorCommand.o \
+    ../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.o \
     ../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.o \
     ../noudar-core/noudar-core/src/commands/CTurnActorCommand.o \
     ../noudar-core/noudar-core/src/commands/CQuitCommand.o \
@@ -27,6 +29,7 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
         ../noudar-rendering/DungeonGL11Renderer.o \
         ../noudar-rendering/LightningStrategy.o \
+        ../noudar-rendering/VisibilityStrategy.o \
 	../noudar-rendering/GameNativeAPI.o \
         ../noudar-rendering/NoudarDungeonSnapshot.o \
         ../noudar-rendering/SplatAnimation.o \

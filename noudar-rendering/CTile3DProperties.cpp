@@ -1,7 +1,6 @@
 //
 // Created by monty on 14/01/17.
 //
-
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -62,6 +61,8 @@ namespace odb {
         CTile3DProperties properties;
 
         pos = std::next(pos);
+        properties.mNeedsAlphaTest = std::atoi(pos->c_str()) == 1;
+        pos = std::next(pos);
         properties.mCeilingTexture = *pos;
         pos = std::next(pos);
         properties.mFloorTexture = *pos;
@@ -102,7 +103,8 @@ namespace odb {
 
         while (pos != fileEnd) {
             CTileId id = pos->c_str()[0];
-            map[id] = readPropertiesLine(pos);
+            auto props = readPropertiesLine(pos);
+	        map[id] = props;
             pos = std::next(pos);
         }
 

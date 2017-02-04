@@ -209,6 +209,11 @@ event_loop(Display *dpy, Window win,
                         moveRight();
                     }
 
+                    else if (code == XK_space) {
+	                    interact();
+                    }
+
+
                     else {
                         r = XLookupString(&event.xkey, buffer, sizeof(buffer),
                                           NULL, NULL);

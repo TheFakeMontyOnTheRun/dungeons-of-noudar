@@ -115,6 +115,9 @@ void handleKeyPress( SDL_keysym *keysym ) {
 	case SDLK_DOWN:
 		moveDown();
 		break;
+	case SDLK_SPACE:
+		interact();
+		break;
 	case SDLK_z:
 		moveLeft();
 		break;
@@ -159,7 +162,7 @@ void initWindow() {
 	auto gVertexShader = "";
 	auto gFragmentShader = "";
 
-   setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
+	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 
@@ -189,8 +192,7 @@ void initWindow() {
 void tick() {
     gameLoopTick( 20 );
     renderFrame( 20 );
-        SDL_GL_SwapBuffers();
-
+    SDL_GL_SwapBuffers();
 }
 
 void setMainLoop() {

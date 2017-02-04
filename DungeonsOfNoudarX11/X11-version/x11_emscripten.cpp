@@ -84,7 +84,10 @@ EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *
         moveLeft();
     } else if (code == "KeyX") {
         moveRight();
+    } else if (code == "KeyH") {
+        interact();
     }
+
 
     std::cout << "key code: " << e->code << std::endl;
 

@@ -11,7 +11,13 @@
 #import <OpenGL/OpenGL.h>
 #import <OpenGL/gl.h>
 #else
+
+#ifndef OSMESA
 #include <GL/gl.h>
+#else
+# include <osmesa.h>     // For everything OpenGL, but done all in software.
+#endif
+
 #endif
 
 #include <memory>
@@ -63,6 +69,7 @@ namespace odb {
     std::vector<TIndicesBatch> IndicesBatches; //bitches!
     const static int kGeometryLineStride = 5;
     const static bool kShouldDestroyThingsManually = false;
+	const static bool kFogEnabled = false;
 
     //OpenGL specific stuff
 
@@ -155,8 +162,8 @@ namespace odb {
     };
 
     const unsigned short DungeonGLES2Renderer::skyIndices[]{
-            0, 1, 2,
-            0, 2, 3
+            2, 1, 0,
+		    3, 2, 0
     };
 
 
@@ -205,6 +212,8 @@ namespace odb {
         // Set the filtering mode - surprisingly, this is needed.
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
         odb::Logger::log("textureId:%d\n", textureId);
 
@@ -218,9 +227,11 @@ namespace odb {
     }
 
     extern void checkGlError(const char *op) {
+#ifndef OSMESA
         for (GLint error = glGetError(); error; error = glGetError()) {
             odb::Logger::log("after %s() glError (0x%x)\n", op, error);
         }
+#endif
     }
 
     GLuint DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
@@ -241,15 +252,36 @@ namespace odb {
         createVBOs();
 
         glEnable(GL_TEXTURE_2D);
-        glShadeModel(GL_SMOOTH);
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+        glShadeModel(GL_FLAT);
+        glDisable(GL_DITHER);
+        glDisable(GL_MULTISAMPLE);
+#ifdef OSMESA
+        glViewport(w/4, h/2, w/2, h/2);
+#else
         glViewport(0, 0, w, h);
+#endif
         glMatrixMode( GL_PROJECTION );
         glLoadIdentity( );
 
         printVerboseDriverInformation();
 
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+
+        glEnable( GL_TEXTURE_2D );
+
+	    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );
+
+	    if (kFogEnabled) {
+		    glFogi(GL_FOG_MODE, GL_LINEAR);        // Fog Mode
+		    float fogColor[4] = {0.5f, 0.5f, 0.5f};
+		    glFogfv(GL_FOG_COLOR, fogColor);            // Set Fog Color
+		    glFogf(GL_FOG_DENSITY, 0.35f);              // How Dense Will The Fog Be
+		    glHint(GL_FOG_HINT, GL_FASTEST);          // Fog Hint Value
+		    glFogf(GL_FOG_START, 1.0f);             // Fog Start Depth
+		    glFogf(GL_FOG_END, 5.0f);               // Fog End Depth
+		    glEnable(GL_FOG);                   // Enables GL_FOG
+	    }
         gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
 
         if (!gProgram) {
@@ -321,18 +353,6 @@ namespace odb {
                                             const glm::mat4 &transform, float shade) {
 
 
-        glMatrixMode(GL_MODELVIEW);
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LEQUAL);
-
-        glEnable( GL_TEXTURE_2D );
-        glEnable( GL_ALPHA_TEST );
-        glAlphaFunc(GL_GREATER,0.5);
-
-
-        glBindTexture(GL_TEXTURE_2D, textureId);
-
-
         auto geometryBatch = GeometryBatches[ vertexVbo ];
         auto indicesBatch = IndicesBatches[ indexVbo ];
 
@@ -375,11 +395,16 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::clearBuffers() {
-        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
         checkGlError("glClearColor");
         glClearDepth(1.0f);
         checkGlError("glClearDepthf");
+#ifndef OSMESA
+        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+#else
+        glClear(GL_DEPTH_BUFFER_BIT );
+#endif
         checkGlError("glClear");
     }
 
@@ -468,11 +493,20 @@ namespace odb {
         cameraPosition.x += ms * (mCameraTarget.x - cameraPosition.x) / 1000.0f;
         cameraPosition.y += ms * (mCameraTarget.y - cameraPosition.y) / 1000.0f;
 
+#ifndef OSMESA
         if (mRotationTarget > mCameraRotation) {
             mCameraRotation += 5;
         } else if (mRotationTarget < mCameraRotation) {
             mCameraRotation -= 5;
         }
+#else
+	    if (mRotationTarget > mCameraRotation) {
+            mCameraRotation += 45;
+        } else if (mRotationTarget < mCameraRotation) {
+            mCameraRotation -= 45;
+        }
+
+#endif
     }
 
     void DungeonGLES2Renderer::resetTransformMatrices() {
@@ -493,9 +527,11 @@ namespace odb {
 
         glm::vec3 mCameraDirection{0, 0, 0};
 
-        mCameraDirection = glm::rotate(
-                glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
-                angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
+	    auto result = (glm::rotate(
+			    glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
+			    angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4 );
+
+        mCameraDirection = glm::vec3( result.x, result.y, result.z );
 
         pos_front = mCameraDirection;
 
@@ -505,42 +541,60 @@ namespace odb {
                 glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
     }
 
-    void DungeonGLES2Renderer::produceRenderingBatches(IntMap map, CharMap actors,
-                                                       IntMap splats,
-                                                       IntMap lightMap, IntMap ids,
-                                                       AnimationList movingCharacters,
-                                                       long animationTime) {
+    void
+    DungeonGLES2Renderer::produceRenderingBatches(const IntMap& map,const CharMap& actors,const IntMap& splats,const IntMap& lightMap,const IntMap& ids,
+                                                      const AnimationList& movingCharacters, long animationTime, const VisMap& visibilityMap) {
 
         glm::vec3 pos;
 
-        batches.clear();
+#ifndef OSMESA
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(animationTime),
-                                                1.0f);
+                                                1.0f, false);
 
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
-                                                1.0f);
+                                                1.0f, false);
+#else
+	    batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
+                                                std::get<1>(mSkyVBO),
+                                                std::get<2>(mSkyVBO),
+                                                getSkyTransform(1000 + kSkyTextureLength * 1000),
+                                                1.0f, false);
+#endif
 
-        for (int z = 0; z < Knights::kMapSize; ++z) {
-            for (int x = 0; x < Knights::kMapSize; ++x) {
+		int lowerX = 0;
+	    int lowerZ = 0;
+	    int higherX = Knights::kMapSize;
+	    int higherZ = Knights::kMapSize;
+
+	    if (kFogEnabled ) {
+		    lowerX = std::min<int>(std::max<int>(cameraPosition.x - 5, 0), Knights::kMapSize);
+		    lowerZ = std::min<int>(std::max<int>(cameraPosition.y - 5, 0), Knights::kMapSize);
+		    higherX = std::min<int>(std::max<int>(cameraPosition.x + 5, 0), Knights::kMapSize);
+		    higherZ = std::min<int>(std::max<int>(cameraPosition.y + 5, 0), Knights::kMapSize);
+	    }
+
+        for (int z = lowerZ; z < higherZ; ++z) {
+            for (int x = lowerX; x < higherX; ++x) {
 
                 auto tile = map[z][x];
                 auto actor = actors[z][x];
                 int splatFrame = splats[z][x];
-
-                Shade shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
+	            Shade shade = 0;
+#ifndef OSMESA
+                shade = (0.25f * std::min(255, lightMap[z][x]) / 255.0f) + 0.75f;
 
                 if (x == static_cast<int>(mCursorPosition.x) &&
                     z == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
-
+#endif
                 if (mTileProperties.count(tile) <= 0) {
                     continue;
                 }
@@ -554,7 +608,8 @@ namespace odb {
                                                                          std::get<1>(mFloorVBO),
                                                                          std::get<2>(mFloorVBO),
                                                                          getFloorTransform(pos),
-                                                                         shade);
+                                                                         shade,
+																		tileProperties.mNeedsAlphaTest);
                 }
 
                 if (tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
@@ -570,7 +625,8 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade,
+                                tileProperties.mNeedsAlphaTest);
                     }
                 }
 
@@ -581,7 +637,10 @@ namespace odb {
                             std::get<0>(tileVBO),
                             std::get<1>(tileVBO),
                             std::get<2>(tileVBO),
-                            getCubeTransform(pos), shade);
+                            getCubeTransform(pos),
+                            shade,
+                            tileProperties.mNeedsAlphaTest);
+
                 }
 
                 if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
@@ -598,7 +657,9 @@ namespace odb {
                                 std::get<1>(tileVBO),
                                 std::get<2>(tileVBO),
                                 getCubeTransform(pos),
-                                shade);
+                                shade,
+                                tileProperties.mNeedsAlphaTest);
+
                     }
                 }
 
@@ -608,14 +669,16 @@ namespace odb {
                                                                        std::get<1>(mFloorVBO),
                                                                        std::get<2>(mFloorVBO),
                                                                        getFloorTransform(pos),
-                                                                       shade);
+                                                                       shade,
+                                                                       tileProperties.mNeedsAlphaTest);
+
                 }
 
 	            //characters
 	            if (actor != EActorsSnapshotElement::kNothing) {
+		            const int id = ids[z][x];
 
-		            int id = ids[z][x];
-		            float fx, fz;
+                    float fx, fz;
 
 		            fx = x;
 		            fz = z;
@@ -624,7 +687,9 @@ namespace odb {
 		            float curve = 0.0f;
 
 		            if (id != 0 && movingCharacters.count(id) > 0) {
-			            auto animation = movingCharacters[id];
+
+			            auto animation = movingCharacters.at(id);
+
 			            step = (((float) ((animationTime - std::get<2>(animation)))) /
 			                    ((float) kAnimationLength));
 
@@ -662,7 +727,7 @@ namespace odb {
 					            std::get<0>(mBillboardVBO),
 					            std::get<1>(mBillboardVBO),
 					            std::get<2>(mBillboardVBO),
-					            getBillboardTransform(pos), shade);
+					            getBillboardTransform(pos), shade, true);
 		            }
 	            }
 
@@ -673,7 +738,7 @@ namespace odb {
                             std::get<0>(mBillboardVBO),
                             std::get<1>(mBillboardVBO),
                             std::get<2>(mBillboardVBO),
-                            getBillboardTransform(pos), shade);
+                            getBillboardTransform(pos), shade, true);
                 }
             }
         }
@@ -694,10 +759,10 @@ namespace odb {
         batches.clear();
     }
 
-    void DungeonGLES2Renderer::render(IntMap map, CharMap actors, IntMap splats,
-                                      IntMap lightMap, IntMap ids,
-                                      AnimationList movingCharacters,
-                                      long animationTime) {
+    void DungeonGLES2Renderer::render(const IntMap& map, const CharMap& actors, const IntMap& splats,
+                                      const IntMap& lightMap, const IntMap& ids,
+                                      const AnimationList& movingCharacters,
+                                      long animationTime, const VisMap& visibilityMap) {
 
         if (mBitmaps.empty()) {
             return;
@@ -710,18 +775,21 @@ namespace odb {
 
         invalidateCachedBatches();
 
-        if ( batches.size() == 0 ) {
+	    if ( batches.size() == 0 ) {
             produceRenderingBatches(map, actors, splats, lightMap, ids, movingCharacters,
-                                    animationTime);
+                                    animationTime, visibilityMap);
         }
         consumeRenderingBatches(animationTime);
     }
 
     void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
+	    glMatrixMode(GL_MODELVIEW);
+
 
         for (auto &batch : batches) {
 
             auto textureId = mTextures[batch.first]->mTextureId;
+	        glBindTexture(GL_TEXTURE_2D, textureId);
 
             for (auto &element : batch.second) {
                 auto transform = element.getTransform();
@@ -729,7 +797,23 @@ namespace odb {
                 auto amount = element.getAmount();
                 auto vboId = element.getVBOId();
                 auto vboIndicesId = element.getVBOIndicesId();
+#ifdef OSMESA
+	            if ( element.mNeedsAlphaTest ) {
+					glEnable( GL_ALPHA_TEST );
+		            glAlphaFunc(GL_GREATER,0.5f);
+	            } else {
+		            glDisable( GL_ALPHA_TEST );
+	            }
 
+	            if ( vboId == std::get<0>(mCubeVBO) && !element.mNeedsAlphaTest ) {
+		            glEnable( GL_CULL_FACE );
+	            } else {
+		            glDisable( GL_CULL_FACE );
+	            }
+#else
+	            glEnable( GL_ALPHA_TEST );
+	            glAlphaFunc(GL_GREATER,0.5f);
+#endif
                 drawGeometry(textureId,
                              vboId,
                              vboIndicesId,

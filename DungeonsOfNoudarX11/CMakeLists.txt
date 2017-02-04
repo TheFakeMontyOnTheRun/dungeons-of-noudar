@@ -21,6 +21,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/CQuitCommand.h
         ../noudar-core/noudar-core/include/commands/CTurnActorCommand.h
         ../noudar-core/noudar-core/include/commands/IGameCommand.h
+        ../noudar-core/noudar-core/include/commands/CHitscanAttackCommand.h
         ../noudar-core/noudar-core/include/CPlainFileLoader.h
         ../noudar-core/noudar-core/include/CActor.h
         ../noudar-core/noudar-core/include/CElixirFountain.h
@@ -36,6 +37,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/CHuntApproach.h
         ../noudar-core/noudar-core/include/CCharacter.h
         X11-version/main.cpp
+        ../noudar-core/noudar-core/src/Vec2i.cpp
         ../noudar-core/noudar-core/src/CActor.cpp
         ../noudar-core/noudar-core/src/CMonster.cpp
         ../noudar-core/noudar-core/src/CTeam.cpp
@@ -59,10 +61,13 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CQuitCommand.cpp
         ../noudar-core/noudar-core/src/commands/CNullCommand.cpp
         ../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.cpp
         ../noudar-rendering/GameNativeAPI.cpp
         ../noudar-rendering/OverlayNanoVGRenderer.cpp
         ../noudar-rendering/DungeonGLES2Renderer.cpp
         ../noudar-rendering/LightningStrategy.cpp
+        ../noudar-rendering/VisibilityStrategy.h
+        ../noudar-rendering/VisibilityStrategy.cpp
         ../noudar-rendering/NoudarDungeonSnapshot.cpp
         ../noudar-rendering/SplatAnimation.cpp
         ../noudar-rendering/CTile3DProperties.cpp

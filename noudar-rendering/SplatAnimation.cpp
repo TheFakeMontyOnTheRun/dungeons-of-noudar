@@ -1,6 +1,11 @@
 //
 // Created by monty on 22/10/16.
 //
+#include <string>
+#include <memory>
+#include <utility>
+#include <iostream>
+
 #include <utility>
 #include "Vec2i.h"
 #include "SplatAnimation.h"
