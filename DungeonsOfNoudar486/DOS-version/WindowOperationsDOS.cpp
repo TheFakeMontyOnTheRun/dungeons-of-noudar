@@ -149,7 +149,7 @@ namespace PC {
 			}
 		}
 
-		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), 0x0);
+		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), 0xFFAAAA);
 
 	}
 
@@ -183,7 +183,7 @@ namespace PC {
 			}
 		}
 
-		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), 0x0);
+		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), 0xFFAAAA);
 	}
 
 	void Close() // End graphics
