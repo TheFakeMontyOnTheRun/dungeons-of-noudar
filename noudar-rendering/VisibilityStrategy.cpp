@@ -52,9 +52,11 @@ namespace odb {
 		return false;
 	}
 
-	void VisibilityStrategy::castVisibility(VisMap &visMap, const IntMap &occluders, Knights::Vec2i pos, Knights::EDirection direction) {
-		for (auto &line : visMap) {
-			std::fill(std::begin(line), std::end(line), EVisibility::kInvisible);
+	void VisibilityStrategy::castVisibility(VisMap &visMap, const IntMap &occluders, Knights::Vec2i pos, Knights::EDirection direction, bool cleanPrevious) {
+		if ( cleanPrevious ) {
+			for (auto &line : visMap) {
+				std::fill(std::begin(line), std::end(line), EVisibility::kInvisible);
+			}
 		}
 
 		castVisibility(direction, visMap, occluders, pos, {0, 0});

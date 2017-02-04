@@ -17,7 +17,7 @@ namespace odb {
 		static Knights::EDirection getRightOf( Knights::EDirection d );
 		static Knights::EDirection getOposite( Knights::EDirection d );
 	public:
-		static void castVisibility(VisMap &visMap, const IntMap& occluders, Knights::Vec2i pos, Knights::EDirection direction);
+		static void castVisibility(VisMap &visMap, const IntMap& occluders, Knights::Vec2i pos, Knights::EDirection direction, bool cleanPrevious);
 	};
 }
 
