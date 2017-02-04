@@ -105,9 +105,6 @@ namespace odb {
 	    }
 
         setSnapshot( snapshot );
-
-	    previousPosition = cameraPosition;
-	    previousDirection = current->getDirection();
     }
 
     char NoudarGLES2Bridge::getInput() {
