@@ -223,11 +223,11 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	
 	FILE *fd;
 	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"vertex" ofType:@"glsl"] UTF8String ], "r");
-	std::string gVertexShader = readToString(fd);
+	std::string gVertexShader = Knights::readToString(fd);
 	fclose(fd);
 	
 	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"fragment" ofType:@"glsl"] UTF8String ], "r");
-	std::string gFragmentShader = readToString(fd);
+	std::string gFragmentShader = Knights::readToString(fd);
 	fclose(fd);
 	
 	auto frameDimensions = [self frame];
