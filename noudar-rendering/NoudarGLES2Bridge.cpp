@@ -92,6 +92,9 @@ namespace odb {
         auto cameraPosition = current->getPosition();
         setCameraPosition(cameraPosition.x, cameraPosition.y);
 
+#ifdef OSMESA
+//	    odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition, current->getDirection());
+#endif
         setSnapshot( snapshot );
     }
 

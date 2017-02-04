@@ -272,6 +272,7 @@ namespace odb {
 
 	    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );
 
+#ifndef OSMESA
 	    if (kFogEnabled) {
 		    glFogi(GL_FOG_MODE, GL_LINEAR);        // Fog Mode
 		    float fogColor[4] = {0.5f, 0.5f, 0.5f};
@@ -282,6 +283,7 @@ namespace odb {
 		    glFogf(GL_FOG_END, 5.0f);               // Fog End Depth
 		    glEnable(GL_FOG);                   // Enables GL_FOG
 	    }
+#endif
         gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
 
         if (!gProgram) {
@@ -576,6 +578,12 @@ namespace odb {
 
         for (int z = lowerZ; z < higherZ; ++z) {
             for (int x = lowerX; x < higherX; ++x) {
+
+#ifdef OSMESA
+				if ( !visibilityMap[z][x]) {
+//					continue;
+				}
+#endif
 
                 auto tile = map[z][x];
                 auto actor = actors[z][x];
