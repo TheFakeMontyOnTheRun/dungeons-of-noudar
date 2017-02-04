@@ -63,6 +63,12 @@
 		F13558691DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
 		F135586A1DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
 		F13883621E00AE3A004F50EA /* DungeonGL11Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */; };
+		F13B35B01E3D6F9500743FE3 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B35AF1E3D6F9500743FE3 /* Common.cpp */; };
+		F13B35B11E3D6F9500743FE3 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B35AF1E3D6F9500743FE3 /* Common.cpp */; };
+		F13B35B41E3D712600743FE3 /* map0.txt in Resources */ = {isa = PBXBuildFile; fileRef = F13B35B21E3D712600743FE3 /* map0.txt */; };
+		F13B35B51E3D712600743FE3 /* map0.txt in Resources */ = {isa = PBXBuildFile; fileRef = F13B35B21E3D712600743FE3 /* map0.txt */; };
+		F13B35B61E3D712600743FE3 /* map1.txt in Resources */ = {isa = PBXBuildFile; fileRef = F13B35B31E3D712600743FE3 /* map1.txt */; };
+		F13B35B71E3D712600743FE3 /* map1.txt in Resources */ = {isa = PBXBuildFile; fileRef = F13B35B31E3D712600743FE3 /* map1.txt */; };
 		F13B87B11DD8B84600BF256E /* SoundClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87A51DD8B84600BF256E /* SoundClip.cpp */; };
 		F13B87B31DD8B84600BF256E /* SoundEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87A81DD8B84600BF256E /* SoundEmitter.cpp */; };
 		F13B87B51DD8B84600BF256E /* SoundListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87AB1DD8B84600BF256E /* SoundListener.cpp */; };
@@ -161,8 +167,6 @@
 		F140E8F21DCFA64D00B28CCA /* lady1.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E8821DCFA64C00B28CCA /* lady1.png */; };
 		F140E8F31DCFA64D00B28CCA /* lady2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E8831DCFA64C00B28CCA /* lady2.png */; };
 		F140E8F41DCFA64D00B28CCA /* lady2.png in Resources */ = {isa = PBXBuildFile; fileRef = F140E8831DCFA64C00B28CCA /* lady2.png */; };
-		F140E8F51DCFA64D00B28CCA /* map_tiles0.txt in Resources */ = {isa = PBXBuildFile; fileRef = F140E8841DCFA64C00B28CCA /* map_tiles0.txt */; };
-		F140E8F61DCFA64D00B28CCA /* map_tiles0.txt in Resources */ = {isa = PBXBuildFile; fileRef = F140E8841DCFA64C00B28CCA /* map_tiles0.txt */; };
 		F140E8F71DCFA64D00B28CCA /* monsterdamage.wav in Resources */ = {isa = PBXBuildFile; fileRef = F140E8851DCFA64C00B28CCA /* monsterdamage.wav */; };
 		F140E8F81DCFA64D00B28CCA /* monsterdamage.wav in Resources */ = {isa = PBXBuildFile; fileRef = F140E8851DCFA64C00B28CCA /* monsterdamage.wav */; };
 		F140E8F91DCFA64D00B28CCA /* monsterdead.wav in Resources */ = {isa = PBXBuildFile; fileRef = F140E8861DCFA64C00B28CCA /* monsterdead.wav */; };
@@ -242,8 +246,6 @@
 		F187558D1DC90ECC001188C5 /* IGameCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18755471DC90ECC001188C5 /* IGameCommand.cpp */; };
 		F18755901DC90ECC001188C5 /* IMapElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18755491DC90ECC001188C5 /* IMapElement.cpp */; };
 		F18755911DC90ECC001188C5 /* IMapElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18755491DC90ECC001188C5 /* IMapElement.cpp */; };
-		F1875E751DC91137001188C5 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E581DC91136001188C5 /* Common.cpp */; };
-		F1875E761DC91137001188C5 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E581DC91136001188C5 /* Common.cpp */; };
 		F1875E791DC91137001188C5 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E5C1DC91136001188C5 /* Logger.cpp */; };
 		F1875E7A1DC91137001188C5 /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E5C1DC91136001188C5 /* Logger.cpp */; };
 		F1875E7B1DC91137001188C5 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1875E5E1DC91136001188C5 /* Material.cpp */; };
@@ -351,6 +353,10 @@
 		F127A31A1E2B8723005FCEEC /* foe7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe7.png; sourceTree = "<group>"; };
 		F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBORenderingJob.cpp; sourceTree = "<group>"; };
 		F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DungeonGL11Renderer.cpp; sourceTree = "<group>"; };
+		F13B35AE1E3D6F8400743FE3 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		F13B35AF1E3D6F9500743FE3 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
+		F13B35B21E3D712600743FE3 /* map0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = map0.txt; sourceTree = "<group>"; };
+		F13B35B31E3D712600743FE3 /* map1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = map1.txt; sourceTree = "<group>"; };
 		F13B87A41DD8B84600BF256E /* AudioSink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSink.h; sourceTree = "<group>"; };
 		F13B87A51DD8B84600BF256E /* SoundClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundClip.cpp; sourceTree = "<group>"; };
 		F13B87A61DD8B84600BF256E /* SoundClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundClip.h; sourceTree = "<group>"; };
@@ -416,7 +422,6 @@
 		F140E8811DCFA64C00B28CCA /* lady0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lady0.png; sourceTree = "<group>"; };
 		F140E8821DCFA64C00B28CCA /* lady1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lady1.png; sourceTree = "<group>"; };
 		F140E8831DCFA64C00B28CCA /* lady2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lady2.png; sourceTree = "<group>"; };
-		F140E8841DCFA64C00B28CCA /* map_tiles0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = map_tiles0.txt; sourceTree = "<group>"; };
 		F140E8851DCFA64C00B28CCA /* monsterdamage.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = monsterdamage.wav; sourceTree = "<group>"; };
 		F140E8861DCFA64C00B28CCA /* monsterdead.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = monsterdead.wav; sourceTree = "<group>"; };
 		F140E8871DCFA64C00B28CCA /* monty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = monty.png; sourceTree = "<group>"; };
@@ -475,8 +480,6 @@
 		F18755451DC90ECC001188C5 /* CTurnActorCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTurnActorCommand.cpp; sourceTree = "<group>"; };
 		F18755471DC90ECC001188C5 /* IGameCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IGameCommand.cpp; sourceTree = "<group>"; };
 		F18755491DC90ECC001188C5 /* IMapElement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IMapElement.cpp; sourceTree = "<group>"; };
-		F1875E581DC91136001188C5 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
-		F1875E591DC91136001188C5 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		F1875E5B1DC91136001188C5 /* GLES2Lesson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLES2Lesson.h; sourceTree = "<group>"; };
 		F1875E5C1DC91136001188C5 /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
 		F1875E5D1DC91136001188C5 /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
@@ -661,9 +664,10 @@
 				F140E8811DCFA64C00B28CCA /* lady0.png */,
 				F140E8821DCFA64C00B28CCA /* lady1.png */,
 				F140E8831DCFA64C00B28CCA /* lady2.png */,
-				F140E8841DCFA64C00B28CCA /* map_tiles0.txt */,
 				F140E8851DCFA64C00B28CCA /* monsterdamage.wav */,
 				F140E8861DCFA64C00B28CCA /* monsterdead.wav */,
+				F13B35B21E3D712600743FE3 /* map0.txt */,
+				F13B35B31E3D712600743FE3 /* map1.txt */,
 				F140E8871DCFA64C00B28CCA /* monty.png */,
 				F140E8881DCFA64C00B28CCA /* path8_resized.png */,
 				F140E8891DCFA64C00B28CCA /* playerdamage.wav */,
@@ -856,6 +860,7 @@
 		F18755171DC90ECC001188C5 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				F13B35AE1E3D6F8400743FE3 /* Common.h */,
 				F1AA95461E21A14B00759076 /* CCharacter.h */,
 				F1AA95471E21A14B00759076 /* CCharacterArchetype.h */,
 				F1AA95481E21A14B00759076 /* CElixirFountain.h */,
@@ -898,6 +903,7 @@
 		F187552B1DC90ECC001188C5 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				F13B35AF1E3D6F9500743FE3 /* Common.cpp */,
 				F1AA95341E21A0F900759076 /* CCharacter.cpp */,
 				F1AA95351E21A0F900759076 /* CCharacterArchetype.cpp */,
 				F1AA95361E21A0F900759076 /* CElixirFountain.cpp */,
@@ -943,8 +949,6 @@
 				F1875EAB1DC9153D001188C5 /* WavefrontMaterialReader.h */,
 				F1875EAC1DC9153D001188C5 /* WavefrontOBJReader.cpp */,
 				F1875EAD1DC9153D001188C5 /* WavefrontOBJReader.h */,
-				F1875E581DC91136001188C5 /* Common.cpp */,
-				F1875E591DC91136001188C5 /* Common.h */,
 				F1875E5B1DC91136001188C5 /* GLES2Lesson.h */,
 				F1875E5C1DC91136001188C5 /* Logger.cpp */,
 				F1875E5D1DC91136001188C5 /* Logger.h */,
@@ -1118,7 +1122,6 @@
 				F140E8B71DCFA64D00B28CCA /* ceiling.png in Resources */,
 				F140E8D11DCFA64D00B28CCA /* cursorgood0.png in Resources */,
 				F140E8EB1DCFA64D00B28CCA /* grassstonefar.png in Resources */,
-				F140E8F51DCFA64D00B28CCA /* map_tiles0.txt in Resources */,
 				F140E91B1DCFA64D00B28CCA /* swing.wav in Resources */,
 				F1180B8F1DC8F76D00BDC97D /* info.plist in Resources */,
 				F127A3231E2B8723005FCEEC /* foe4.png in Resources */,
@@ -1136,6 +1139,7 @@
 				F1AA95CA1E21A94300759076 /* regular.ttf in Resources */,
 				F140E8BF1DCFA64D00B28CCA /* ceilingend.png in Resources */,
 				F140E90D1DCFA64D00B28CCA /* stoneceiling.png in Resources */,
+				F13B35B41E3D712600743FE3 /* map0.txt in Resources */,
 				F127A3291E2B8723005FCEEC /* foe7.png in Resources */,
 				F140E9011DCFA64D00B28CCA /* playerdead.wav in Resources */,
 				F140E9191DCFA64D00B28CCA /* stoneshadow.png in Resources */,
@@ -1179,6 +1183,7 @@
 				F17238DF1DF4B5CC00194CF0 /* crusader0.png in Resources */,
 				F140E9171DCFA64D00B28CCA /* stonegrassnear.png in Resources */,
 				F140E8CD1DCFA64D00B28CCA /* cursorbad1.png in Resources */,
+				F13B35B61E3D712600743FE3 /* map1.txt in Resources */,
 				F140E90B1DCFA64D00B28CCA /* stepsstones.wav in Resources */,
 				F140E8B51DCFA64D00B28CCA /* bull2.png in Resources */,
 				F127A31B1E2B8723005FCEEC /* foe0.png in Resources */,
@@ -1258,6 +1263,7 @@
 				F140E91E1DCFA64D00B28CCA /* test.wav in Resources */,
 				F140E8BE1DCFA64D00B28CCA /* ceilingdoor.png in Resources */,
 				F140E8B21DCFA64D00B28CCA /* bull0.png in Resources */,
+				F13B35B51E3D712600743FE3 /* map0.txt in Resources */,
 				F140E9161DCFA64D00B28CCA /* stonegrassfar.png in Resources */,
 				F140E8D41DCFA64D00B28CCA /* cursorgood1.png in Resources */,
 				F140E8EE1DCFA64D00B28CCA /* grassstonenear.png in Resources */,
@@ -1285,6 +1291,7 @@
 				F140E8FA1DCFA64D00B28CCA /* monsterdead.wav in Resources */,
 				3A0574031A89808F001A7683 /* reflect.fsh in Resources */,
 				F140E8A61DCFA64D00B28CCA /* boss0.png in Resources */,
+				F13B35B71E3D712600743FE3 /* map1.txt in Resources */,
 				F140E8CA1DCFA64D00B28CCA /* cuco2.png in Resources */,
 				F127A3221E2B8723005FCEEC /* foe3.png in Resources */,
 				F140E9221DCFA64D00B28CCA /* turtle1.png in Resources */,
@@ -1298,7 +1305,6 @@
 				F140E8B01DCFA64D00B28CCA /* bricks.png in Resources */,
 				F127A31E1E2B8723005FCEEC /* foe1.png in Resources */,
 				F140E8A01DCFA64D00B28CCA /* bars.png in Resources */,
-				F140E8F61DCFA64D00B28CCA /* map_tiles0.txt in Resources */,
 				F140E8E81DCFA64D00B28CCA /* grass.png in Resources */,
 				F140E8D01DCFA64D00B28CCA /* cursorbad2.png in Resources */,
 				F140E8C21DCFA64D00B28CCA /* clouds.png in Resources */,
@@ -1346,7 +1352,6 @@
 				F13B87B31DD8B84600BF256E /* SoundEmitter.cpp in Sources */,
 				F1180B841DC8F67000BDC97D /* matrixUtil.c in Sources */,
 				F18755841DC90ECC001188C5 /* CQuitCommand.cpp in Sources */,
-				F1875E751DC91137001188C5 /* Common.cpp in Sources */,
 				F18A6EBF1DFC6D490036AB6E /* CPlainFileLoader.cpp in Sources */,
 				F1875EB41DC9153D001188C5 /* WavefrontOBJReader.cpp in Sources */,
 				F1875EA21DC9124C001188C5 /* NoudarGLES2Bridge.cpp in Sources */,
@@ -1356,6 +1361,7 @@
 				F1875E891DC91137001188C5 /* Trig.cpp in Sources */,
 				F1875EB01DC9153D001188C5 /* TrigBatch.cpp in Sources */,
 				F127A30E1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */,
+				F13B35B01E3D6F9500743FE3 /* Common.cpp in Sources */,
 				F18755681DC90ECC001188C5 /* CGameDelegate.cpp in Sources */,
 				F18755581DC90ECC001188C5 /* CActor.cpp in Sources */,
 				F1AA95421E21A0F900759076 /* CMonster.cpp in Sources */,
@@ -1404,7 +1410,6 @@
 				F13B87C31DD8B86800BF256E /* SoundClip.cpp in Sources */,
 				F1875E7A1DC91137001188C5 /* Logger.cpp in Sources */,
 				F1AA95451E21A0F900759076 /* CTeam.cpp in Sources */,
-				F1875E761DC91137001188C5 /* Common.cpp in Sources */,
 				F18755791DC90ECC001188C5 /* CEndTurnCommand.cpp in Sources */,
 				F1B23EAD1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m in Sources */,
 				F18755911DC90ECC001188C5 /* IMapElement.cpp in Sources */,
@@ -1416,6 +1421,7 @@
 				F1875EA11DC9124C001188C5 /* LightningStrategy.cpp in Sources */,
 				F18755611DC90ECC001188C5 /* CDoorway.cpp in Sources */,
 				F1AA953F1E21A0F900759076 /* CElixirFountain.cpp in Sources */,
+				F13B35B11E3D6F9500743FE3 /* Common.cpp in Sources */,
 				F18755691DC90ECC001188C5 /* CGameDelegate.cpp in Sources */,
 				F18755811DC90ECC001188C5 /* CNullCommand.cpp in Sources */,
 				F1875EB31DC9153D001188C5 /* WavefrontMaterialReader.cpp in Sources */,
