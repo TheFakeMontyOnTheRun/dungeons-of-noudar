@@ -47,6 +47,10 @@
 #include "VisibilityStrategy.h"
 
 namespace odb {
+
+	Knights::Vec2i previousPosition = {-1,-1};
+	Knights::EDirection previousDirection = Knights::EDirection::kNorth;
+
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
         odb::NoudarDungeonSnapshot snapshot;
@@ -93,9 +97,19 @@ namespace odb {
         setCameraPosition(cameraPosition.x, cameraPosition.y);
 
 #ifdef OSMESA
-//	    odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition, current->getDirection());
+		if ( previousPosition.x == cameraPosition.x && previousPosition.y == cameraPosition.y ) {
+			if ( previousDirection != current->getDirection() ) {
+				odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition, current->getDirection(), true);
+				odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition, previousDirection, false);
+			}
+		} else {
+			odb::VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map, cameraPosition, current->getDirection(), true);
+		}
 #endif
         setSnapshot( snapshot );
+
+	    previousPosition = cameraPosition;
+	    previousDirection = current->getDirection();
     }
 
     char NoudarGLES2Bridge::getInput() {

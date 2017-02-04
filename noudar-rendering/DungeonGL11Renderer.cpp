@@ -580,8 +580,8 @@ namespace odb {
             for (int x = lowerX; x < higherX; ++x) {
 
 #ifdef OSMESA
-				if ( !visibilityMap[z][x]) {
-//					continue;
+				if ( visibilityMap[z][x] == EVisibility::kInvisible) {
+					continue;
 				}
 #endif
 
