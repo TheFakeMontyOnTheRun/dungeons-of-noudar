@@ -48,9 +48,6 @@
 
 namespace odb {
 
-	Knights::Vec2i previousPosition = {-1,-1};
-	Knights::EDirection previousDirection = Knights::EDirection::kNorth;
-
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
         odb::NoudarDungeonSnapshot snapshot;
@@ -97,9 +94,6 @@ namespace odb {
         setCameraPosition(cameraPosition.x, cameraPosition.y);
 
         setSnapshot( snapshot );
-
-	    previousPosition = cameraPosition;
-	    previousDirection = current->getDirection();
     }
 
     char NoudarGLES2Bridge::getInput() {
