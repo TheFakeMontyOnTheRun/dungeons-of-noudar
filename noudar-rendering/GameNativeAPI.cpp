@@ -256,7 +256,7 @@ void setCameraPosition( int x, int y ) {
 	}
 }
 
-void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats, const odb::IntMap& visibilityMap) {
+void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats, const odb::VisMap& visibilityMap) {
 	hasActiveSplats = false;
 
 	for (int y = 0; y < Knights::kMapSize; ++y) {

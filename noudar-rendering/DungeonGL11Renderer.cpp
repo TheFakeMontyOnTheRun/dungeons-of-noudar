@@ -543,7 +543,7 @@ namespace odb {
 
     void
     DungeonGLES2Renderer::produceRenderingBatches(const IntMap& map,const CharMap& actors,const IntMap& splats,const IntMap& lightMap,const IntMap& ids,
-                                                      const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap) {
+                                                      const AnimationList& movingCharacters, long animationTime, const VisMap& visibilityMap) {
 
         glm::vec3 pos;
 
@@ -762,7 +762,7 @@ namespace odb {
     void DungeonGLES2Renderer::render(const IntMap& map, const CharMap& actors, const IntMap& splats,
                                       const IntMap& lightMap, const IntMap& ids,
                                       const AnimationList& movingCharacters,
-                                      long animationTime, const IntMap& visibilityMap) {
+                                      long animationTime, const VisMap& visibilityMap) {
 
         if (mBitmaps.empty()) {
             return;

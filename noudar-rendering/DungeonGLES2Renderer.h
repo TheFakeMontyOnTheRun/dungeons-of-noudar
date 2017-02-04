@@ -70,7 +70,7 @@ namespace odb {
         void consumeRenderingBatches(long animationTime);
 
         void produceRenderingBatches(const IntMap& map,const CharMap& actors, const IntMap& splats,const IntMap& lightmap,const IntMap& ids,
-                                             const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap);
+                                             const AnimationList& movingCharacters, long animationTime, const VisMap& visibilityMap);
 
         glm::vec3 transformToMapPosition(const glm::vec3 &pos);
 
@@ -168,7 +168,7 @@ namespace odb {
         void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
         void render(const IntMap& map, const CharMap& actors, const IntMap& splats, const IntMap& lightmap,
-                    const IntMap& ids, const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap);
+                    const IntMap& ids, const AnimationList& movingCharacters, long animationTime, const VisMap& visibilityMap);
 
         void shutdown();
 
