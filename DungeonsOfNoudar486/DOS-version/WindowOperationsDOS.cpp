@@ -186,11 +186,7 @@ namespace PC {
 			}
 		}
 
-<<<<<<< HEAD
 		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xAAAAAA));
-=======
-		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), 0xFFAAAA);
->>>>>>> paint the sky pinkish
 	}
 
 	void Close() // End graphics
