@@ -149,13 +149,7 @@ namespace PC {
 			}
 		}
 
-		int shade = 0;
-		int origin = 0xAAAAAA;
-		shade += (((((origin & 0x0000FF))) / 85));
-		shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
-		shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
-
-		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), shade);
+		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), 0x0);
 	}
 
   int getPaletteEntry( int origin ) {
@@ -192,7 +186,11 @@ namespace PC {
 			}
 		}
 
+<<<<<<< HEAD
 		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xAAAAAA));
+=======
+		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), 0xFFAAAA);
+>>>>>>> paint the sky pinkish
 	}
 
 	void Close() // End graphics
