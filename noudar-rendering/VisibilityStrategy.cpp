@@ -39,6 +39,18 @@ namespace odb {
 		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
 	}
 
+	void VisibilityStrategy::mergeInto(const VisMap &map1, const VisMap &map2, VisMap &result) {
+		for ( int y = 0; y < Knights::kMapSize; ++y ) {
+			for ( int x = 0; x < Knights::kMapSize; ++x ) {
+				if ( map1[ y ][ x ] == EVisibility::kVisible || map2[ y ][ x ] == EVisibility::kVisible ) {
+					result[ y ][ x ] = EVisibility::kVisible;
+				} else {
+					result[ y ][ x ] = EVisibility::kInvisible;
+				}
+			}
+		}
+	}
+
 	bool VisibilityStrategy::isBlock(const IntMap& occluders, int x, int y) {
 
 		auto tile = occluders[y][x];
@@ -58,6 +70,8 @@ namespace odb {
 				std::fill(std::begin(line), std::end(line), EVisibility::kInvisible);
 			}
 		}
+
+		std::cout << "during for " << pos << " looking down " << direction << std::endl;
 
 		castVisibility(direction, visMap, occluders, pos, {0, 0});
 	}
