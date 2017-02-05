@@ -557,10 +557,10 @@ namespace odb {
 	    int higherZ = Knights::kMapSize;
 
 	    if (kFogEnabled ) {
-		    lowerX = std::min<int>(std::max<int>(cameraPosition.x - 5, 0), Knights::kMapSize);
-		    lowerZ = std::min<int>(std::max<int>(cameraPosition.y - 5, 0), Knights::kMapSize);
-		    higherX = std::min<int>(std::max<int>(cameraPosition.x + 5, 0), Knights::kMapSize);
-		    higherZ = std::min<int>(std::max<int>(cameraPosition.y + 5, 0), Knights::kMapSize);
+		    lowerX = std::min<int>(std::max<int>(cameraPosition.x - 7, 0), Knights::kMapSize);
+		    lowerZ = std::min<int>(std::max<int>(cameraPosition.y - 7, 0), Knights::kMapSize);
+		    higherX = std::min<int>(std::max<int>(cameraPosition.x + 7, 0), Knights::kMapSize);
+		    higherZ = std::min<int>(std::max<int>(cameraPosition.y + 7, 0), Knights::kMapSize);
 	    }
 
         for (int z = lowerZ; z < higherZ; ++z) {
