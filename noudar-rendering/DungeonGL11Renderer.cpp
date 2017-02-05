@@ -271,18 +271,7 @@ namespace odb {
         glEnable( GL_TEXTURE_2D );
 
 	    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST );
-
-	    if (kFogEnabled) {
-		    glFogi(GL_FOG_MODE, GL_LINEAR);        // Fog Mode
-		    float fogColor[4] = {0.5f, 0.5f, 0.5f};
-		    glFogfv(GL_FOG_COLOR, fogColor);            // Set Fog Color
-		    glFogf(GL_FOG_DENSITY, 0.35f);              // How Dense Will The Fog Be
-		    glHint(GL_FOG_HINT, GL_FASTEST);          // Fog Hint Value
-		    glFogf(GL_FOG_START, 1.0f);             // Fog Start Depth
-		    glFogf(GL_FOG_END, 5.0f);               // Fog End Depth
-		    glEnable(GL_FOG);                   // Enables GL_FOG
-	    }
-        gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
+	    gProgram = createProgram(vertexShader.c_str(), fragmentShader.c_str());
 
         if (!gProgram) {
             odb::Logger::log("Could not create program.");
@@ -547,7 +536,6 @@ namespace odb {
 
         glm::vec3 pos;
 
-#ifndef OSMESA
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
@@ -560,13 +548,6 @@ namespace odb {
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
                                                 1.0f, false);
-#else
-	    batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
-                                                std::get<1>(mSkyVBO),
-                                                std::get<2>(mSkyVBO),
-                                                getSkyTransform(1000 + kSkyTextureLength * 1000),
-                                                1.0f, false);
-#endif
 
 		int lowerX = 0;
 	    int lowerZ = 0;
@@ -574,14 +555,18 @@ namespace odb {
 	    int higherZ = Knights::kMapSize;
 
 	    if (kFogEnabled ) {
-		    lowerX = std::min<int>(std::max<int>(cameraPosition.x - 5, 0), Knights::kMapSize);
-		    lowerZ = std::min<int>(std::max<int>(cameraPosition.y - 5, 0), Knights::kMapSize);
-		    higherX = std::min<int>(std::max<int>(cameraPosition.x + 5, 0), Knights::kMapSize);
-		    higherZ = std::min<int>(std::max<int>(cameraPosition.y + 5, 0), Knights::kMapSize);
+		    lowerX = std::min<int>(std::max<int>(cameraPosition.x - 7, 0), Knights::kMapSize);
+		    lowerZ = std::min<int>(std::max<int>(cameraPosition.y - 7, 0), Knights::kMapSize);
+		    higherX = std::min<int>(std::max<int>(cameraPosition.x + 7, 0), Knights::kMapSize);
+		    higherZ = std::min<int>(std::max<int>(cameraPosition.y + 7, 0), Knights::kMapSize);
 	    }
 
         for (int z = lowerZ; z < higherZ; ++z) {
             for (int x = lowerX; x < higherX; ++x) {
+
+//				if ( visibilityMap[z][x] == EVisibility::kInvisible) {
+//					continue;
+//				}
 
                 auto tile = map[z][x];
                 auto actor = actors[z][x];
