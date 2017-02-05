@@ -47,6 +47,11 @@
 #include "VisibilityStrategy.h"
 
 namespace odb {
+
+	Knights::EDirection previousDirection = Knights::EDirection::kNorth;
+	Knights::Vec2i previousPosition = { 0, 0 };
+	VisMap previousMap;
+
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
         odb::NoudarDungeonSnapshot snapshot;
@@ -92,7 +97,18 @@ namespace odb {
         auto cameraPosition = current->getPosition();
         setCameraPosition(cameraPosition.x, cameraPosition.y);
 
+	    VisMap previous;
+        VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+
+	    if ( previousPosition.x == cameraPosition.x && previousPosition.y == cameraPosition.y && current->getDirection() != previousDirection ) {
+		    VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
+		    VisibilityStrategy::mergeInto( snapshot.mVisibilityMap, previous, snapshot.mVisibilityMap);
+	    }
+
         setSnapshot( snapshot );
+
+	    previousPosition = cameraPosition;
+	    previousDirection = current->getDirection();
     }
 
     char NoudarGLES2Bridge::getInput() {
