@@ -536,7 +536,6 @@ namespace odb {
 
         glm::vec3 pos;
 
-#ifndef OSMESA
         batches[ETextures::Skybox].emplace_back(std::get<0>(mSkyVBO),
                                                 std::get<1>(mSkyVBO),
                                                 std::get<2>(mSkyVBO),
@@ -549,7 +548,6 @@ namespace odb {
                                                 getSkyTransform(
                                                         animationTime + kSkyTextureLength * 1000),
                                                 1.0f, false);
-#endif
 
 		int lowerX = 0;
 	    int lowerZ = 0;

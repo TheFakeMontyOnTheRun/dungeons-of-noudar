@@ -61,17 +61,6 @@
 #include "Common.h"
 #include "LoadPNG.h"
 
-bool inGraphics = true;
-
-std::vector<std::shared_ptr<odb::NativeBitmap>> gunStates;
-std::vector<std::shared_ptr<odb::NativeBitmap>>::iterator gunState;
-
-std::array<int, 4> soundSource = {
-		100,
-};
-
-std::array<int, 10>::iterator soundPos = std::end(soundSource);
-
 namespace PC {
 	const unsigned W = 320, H = 200;
 
@@ -162,51 +151,31 @@ namespace PC {
 
 	void Render() {
 		_farsetsel(_dos_ds);
-		auto pixelData = (*gunState)->getPixelData();
 		int offset = 0;
 		int fullSize = 320 * 200;
 
 		for (int y = 100; y < 200; ++y) {
 			for (int x = 80; x < 240; ++x) {
 
-				offset = (320 * y) + x;
-				auto origin = ImageBuffer[offset];
-				offset = (320 * (200 - (2 * (y - 100)))) + (((x - 80) * 320) / 160);
-
-				if (pixelData[offset] & 0xFF000000) {
-					origin = pixelData[offset];
-				}
-
-				int shade = getPaletteEntry( origin );
-
-				_farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
-				_farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
-				_farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
-				_farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
+			  offset = (320 * y) + x;
+			  auto origin = ImageBuffer[offset];
+			  
+			  int shade = getPaletteEntry( origin );
+			  
+			  _farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
+			  _farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
+			  _farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
+			  _farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
 			}
 		}
 
-		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xAAAAAA));
+		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xDDDDDD));
 	}
 
 	void Close() // End graphics
 	{
 		textmode(C80); // Set textmode again.
 	}
-}
-
-void setGraphics() {
-	inGraphics = true;
-	PC::Init();
-}
-
-void setTextMode() {
-	inGraphics = false;
-
-	__dpmi_regs r;
-
-	r.x.ax = 3;
-	__dpmi_int(0x10, &r);
 }
 
 const int winWidth = 320, winHeight = 200;
@@ -225,12 +194,12 @@ std::vector<std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	toReturn.push_back(loadPNG("res/exit.ppm"));
 	toReturn.push_back(loadPNG("res/bricks2.ppm"));
 	toReturn.push_back(loadPNG("res/bricks3.ppm"));
-	toReturn.push_back(loadPNG("res/turtle0.ppm"));
-	toReturn.push_back(loadPNG("res/turtle0.ppm"));
-	toReturn.push_back(loadPNG("res/turtle1.ppm"));
-	toReturn.push_back(loadPNG("res/turtle1.ppm"));
-	toReturn.push_back(loadPNG("res/turtle1.ppm"));
-	toReturn.push_back(loadPNG("res/turtle1.ppm"));
+	toReturn.push_back(loadPNG("res/foe0.ppm"));
+	toReturn.push_back(loadPNG("res/foe1.ppm"));
+	toReturn.push_back(loadPNG("res/foe2.ppm"));
+	toReturn.push_back(loadPNG("res/foe3.ppm"));
+	toReturn.push_back(loadPNG("res/foe4.ppm"));
+	toReturn.push_back(loadPNG("res/foe5.ppm"));
 	toReturn.push_back(loadPNG("res/crusad0.ppm"));
 	toReturn.push_back(loadPNG("res/crusad1.ppm"));
 	toReturn.push_back(loadPNG("res/crusad2.ppm"));
@@ -257,9 +226,6 @@ std::vector<std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 void initWindow() {
 
 	auto textures = loadTextures();
-	gunStates.push_back(loadPNG("res/shotgun0.ppm", 320, 200));
-	gunStates.push_back(loadPNG("res/shotgun1.ppm", 320, 200));
-	gunState = std::begin(gunStates);
 
 	OSMesaContext om = OSMesaCreateContext(OSMESA_RGBA, NULL);
 	OSMesaMakeCurrent(om, PC::ImageBuffer, GL_UNSIGNED_BYTE, PC::W, PC::H);
@@ -298,24 +264,9 @@ void initWindow() {
 }
 
 void tick() {
-	//if I want at least 10fps, I need my rendering and updates to take no more than 100ms, combined
-	if (inGraphics) {
-		gameLoopTick(250);
-		renderFrame(250);
-		PC::Render();
-
-		if (gunState != std::begin(gunStates)) {
-			gunState = std::prev(gunState);
-		}
-
-		if (soundPos != std::end(soundSource)) {
-			sound(*soundPos);
-			soundPos = std::next(soundPos);
-		} else {
-			nosound();
-		}
-
-	}
+  gameLoopTick(250);
+  renderFrame(250);
+  PC::Render();
 }
 
 
@@ -326,12 +277,6 @@ void setMainLoop() {
 			switch (getch()) {
 				case 27:
 					done = true;
-					break;
-				case '1':
-					setGraphics();
-					break;
-				case '2':
-					setTextMode();
 					break;
 				case 'w':
 					moveUp();
@@ -347,8 +292,6 @@ void setMainLoop() {
 					break;
 				case 'h':
 					interact();
-					gunState = std::prev(std::end(gunStates));
-					soundPos = std::begin(soundSource);
 					break;
 				case 'e':
 					rotateCameraRight();
@@ -362,8 +305,8 @@ void setMainLoop() {
 }
 
 void destroyWindow() {
-	shutdown();
-	setTextMode();
+	shutdown();	
+	PC::Close();
 	clrscr();
 	std::cout << "Thank you for playing!" << std::endl;
 }
