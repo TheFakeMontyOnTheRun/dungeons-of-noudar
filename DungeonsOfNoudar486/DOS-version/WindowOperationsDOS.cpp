@@ -149,9 +149,22 @@ namespace PC {
 			}
 		}
 
-		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), 0x0);
+		int shade = 0;
+		int origin = 0xAAAAAA;
+		shade += (((((origin & 0x0000FF))) / 85));
+		shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
+		shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
 
+		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), shade);
 	}
+
+  int getPaletteEntry( int origin ) {
+    int shade = 0;
+    shade += (((((origin & 0x0000FF)      )  ) / 85 ) );
+    shade += (((((origin & 0x00FF00) >> 8 )  ) / 85 ) ) << 2;
+    shade += (((((origin & 0xFF0000) >> 16)  ) / 85 ) ) << 4;
+    return shade;
+  }
 
 	void Render() {
 		_farsetsel(_dos_ds);
@@ -170,11 +183,7 @@ namespace PC {
 					origin = pixelData[offset];
 				}
 
-				int shade = 0;
-				shade += (((((origin & 0x0000FF)      )  ) / 85 ) );
-				shade += (((((origin & 0x00FF00) >> 8 )  ) / 85 ) ) << 2;
-				shade += (((((origin & 0xFF0000) >> 16)  ) / 85 ) ) << 4;
-
+				int shade = getPaletteEntry( origin );
 
 				_farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
 				_farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
@@ -183,7 +192,7 @@ namespace PC {
 			}
 		}
 
-		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), 0x0);
+		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xAAAAAA));
 	}
 
 	void Close() // End graphics
