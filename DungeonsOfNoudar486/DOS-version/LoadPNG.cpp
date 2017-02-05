@@ -1,10 +1,13 @@
 //
 // Created by monty on 06/10/16.
 //
+#include <vector>
+#include <array>
 #include <memory>
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "NativeBitmap.h"
 #include "LoadPNG.h"
 #include "Logger.h"
@@ -61,3 +64,30 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename, int width
 std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
   return loadPNG( filename, 64, 64 );
 }
+
+VGApalette extractPalette( std::shared_ptr<odb::NativeBitmap> bitmap ) {
+  VGApalette toReturn;
+
+  int used = 0;
+
+  int height = bitmap->getHeight();
+  int width = bitmap->getWidth();
+  int* data = bitmap->getPixelData();
+
+  for ( int y = 0; y < height; ++y ) {
+    for ( int x = 0; x < width; ++x ) {
+      int pixel = *( data + ( y * width ) + x );
+      if ( std::find( std::begin(toReturn), std::begin( toReturn) + used, pixel ) == 0 ) {
+	toReturn[ ++used ] = pixel;
+      }
+    }
+  }
+
+  return toReturn;
+}
+
+VGApalette mergePalettes( std::vector< VGApalette > palettes ) {
+  VGApalette toReturn;
+  return toReturn;
+}
+
