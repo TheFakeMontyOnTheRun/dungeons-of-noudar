@@ -71,8 +71,6 @@ namespace odb {
 			}
 		}
 
-		std::cout << "during for " << pos << " looking down " << direction << std::endl;
-
 		castVisibility(direction, visMap, occluders, pos, {0, 0});
 	}
 
