@@ -136,6 +136,10 @@ namespace odb {
 				continue;
 			}
 
+			if ( std::abs(offset.x) > 7 || std::abs(offset.y) > 7 ) {
+				continue;
+			}
+
 			if (visMap[currentPos.y][currentPos.x] == EVisibility::kVisible) {
 				continue;
 			}
