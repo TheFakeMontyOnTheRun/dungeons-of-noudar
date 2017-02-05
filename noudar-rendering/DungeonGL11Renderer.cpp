@@ -566,6 +566,10 @@ namespace odb {
         for (int z = lowerZ; z < higherZ; ++z) {
             for (int x = lowerX; x < higherX; ++x) {
 
+//				if ( visibilityMap[z][x] == EVisibility::kInvisible) {
+//					continue;
+//				}
+
                 auto tile = map[z][x];
                 auto actor = actors[z][x];
                 int splatFrame = splats[z][x];

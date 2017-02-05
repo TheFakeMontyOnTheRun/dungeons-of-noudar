@@ -49,8 +49,7 @@
 namespace odb {
 
 	Knights::EDirection previousDirection = Knights::EDirection::kNorth;
-	Knights::Vec2i previousPosition = { 0, 0 };
-	VisMap previousMap;
+	Knights::Vec2i previousPosition = {0,0};
 
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
