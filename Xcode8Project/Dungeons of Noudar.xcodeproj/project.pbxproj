@@ -62,6 +62,12 @@
 		F127A32A1E2B8723005FCEEC /* foe7.png in Resources */ = {isa = PBXBuildFile; fileRef = F127A31A1E2B8723005FCEEC /* foe7.png */; };
 		F13558691DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
 		F135586A1DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */; };
+		F13829581E46A30E0089E1EC /* Vec2i.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13829571E46A30E0089E1EC /* Vec2i.cpp */; };
+		F13829591E46A30E0089E1EC /* Vec2i.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13829571E46A30E0089E1EC /* Vec2i.cpp */; };
+		F138295B1E46A3180089E1EC /* CHitscanAttackCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F138295A1E46A3180089E1EC /* CHitscanAttackCommand.cpp */; };
+		F138295C1E46A3180089E1EC /* CHitscanAttackCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F138295A1E46A3180089E1EC /* CHitscanAttackCommand.cpp */; };
+		F138295F1E46A44E0089E1EC /* CTeam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F138295E1E46A44E0089E1EC /* CTeam.cpp */; };
+		F13829601E46A44E0089E1EC /* CTeam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F138295E1E46A44E0089E1EC /* CTeam.cpp */; };
 		F13883621E00AE3A004F50EA /* DungeonGL11Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */; };
 		F13B35B01E3D6F9500743FE3 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B35AF1E3D6F9500743FE3 /* Common.cpp */; };
 		F13B35B11E3D6F9500743FE3 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B35AF1E3D6F9500743FE3 /* Common.cpp */; };
@@ -73,10 +79,6 @@
 		F13B87B31DD8B84600BF256E /* SoundEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87A81DD8B84600BF256E /* SoundEmitter.cpp */; };
 		F13B87B51DD8B84600BF256E /* SoundListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87AB1DD8B84600BF256E /* SoundListener.cpp */; };
 		F13B87B71DD8B84600BF256E /* SoundUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87AE1DD8B84600BF256E /* SoundUtils.cpp */; };
-		F13B87C31DD8B86800BF256E /* SoundClip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87BB1DD8B86800BF256E /* SoundClip.cpp */; };
-		F13B87C41DD8B86800BF256E /* SoundEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87BD1DD8B86800BF256E /* SoundEmitter.cpp */; };
-		F13B87C51DD8B86800BF256E /* SoundListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87BF1DD8B86800BF256E /* SoundListener.cpp */; };
-		F13B87C61DD8B86800BF256E /* SoundUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F13B87C11DD8B86800BF256E /* SoundUtils.cpp */; };
 		F13B87C91DD8BD4900BF256E /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F13B87C81DD8BD4800BF256E /* OpenAL.framework */; };
 		F140E8561DCF9B4500B28CCA /* imageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = F140E8551DCF9B4500B28CCA /* imageUtil.m */; };
 		F140E8571DCF9B4500B28CCA /* imageUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = F140E8551DCF9B4500B28CCA /* imageUtil.m */; };
@@ -352,6 +354,11 @@
 		F127A3191E2B8723005FCEEC /* foe6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe6.png; sourceTree = "<group>"; };
 		F127A31A1E2B8723005FCEEC /* foe7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foe7.png; sourceTree = "<group>"; };
 		F13558681DD7C587004F1E22 /* VBORenderingJob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBORenderingJob.cpp; sourceTree = "<group>"; };
+		F13829561E46A3030089E1EC /* CHitscanAttackCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHitscanAttackCommand.h; sourceTree = "<group>"; };
+		F13829571E46A30E0089E1EC /* Vec2i.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vec2i.cpp; sourceTree = "<group>"; };
+		F138295A1E46A3180089E1EC /* CHitscanAttackCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CHitscanAttackCommand.cpp; sourceTree = "<group>"; };
+		F138295D1E46A4410089E1EC /* CTeam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTeam.h; sourceTree = "<group>"; };
+		F138295E1E46A44E0089E1EC /* CTeam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTeam.cpp; sourceTree = "<group>"; };
 		F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DungeonGL11Renderer.cpp; sourceTree = "<group>"; };
 		F13B35AE1E3D6F8400743FE3 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		F13B35AF1E3D6F9500743FE3 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
@@ -366,15 +373,6 @@
 		F13B87AC1DD8B84600BF256E /* SoundListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundListener.h; sourceTree = "<group>"; };
 		F13B87AE1DD8B84600BF256E /* SoundUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundUtils.cpp; sourceTree = "<group>"; };
 		F13B87AF1DD8B84600BF256E /* SoundUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundUtils.h; sourceTree = "<group>"; };
-		F13B87BA1DD8B86800BF256E /* AudioSink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioSink.h; sourceTree = "<group>"; };
-		F13B87BB1DD8B86800BF256E /* SoundClip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundClip.cpp; sourceTree = "<group>"; };
-		F13B87BC1DD8B86800BF256E /* SoundClip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundClip.h; sourceTree = "<group>"; };
-		F13B87BD1DD8B86800BF256E /* SoundEmitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundEmitter.cpp; sourceTree = "<group>"; };
-		F13B87BE1DD8B86800BF256E /* SoundEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundEmitter.h; sourceTree = "<group>"; };
-		F13B87BF1DD8B86800BF256E /* SoundListener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundListener.cpp; sourceTree = "<group>"; };
-		F13B87C01DD8B86800BF256E /* SoundListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundListener.h; sourceTree = "<group>"; };
-		F13B87C11DD8B86800BF256E /* SoundUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundUtils.cpp; sourceTree = "<group>"; };
-		F13B87C21DD8B86800BF256E /* SoundUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundUtils.h; sourceTree = "<group>"; };
 		F13B87C81DD8BD4800BF256E /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		F140E8541DCF9B4500B28CCA /* imageUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = imageUtil.h; path = "Dungeons of Noudar/Source/Utility/imageUtil.h"; sourceTree = SOURCE_ROOT; };
 		F140E8551DCF9B4500B28CCA /* imageUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = imageUtil.m; path = "Dungeons of Noudar/Source/Utility/imageUtil.m"; sourceTree = SOURCE_ROOT; };
@@ -734,7 +732,6 @@
 			isa = PBXGroup;
 			children = (
 				F1AA954F1E21A84300759076 /* nanovg */,
-				F13B87B91DD8B86800BF256E /* AppleSoundSystem */,
 				F13B87A31DD8B84600BF256E /* OpenALSoundSystem */,
 				F1875E911DC9124C001188C5 /* noudar-rendering */,
 				F1875E561DC91136001188C5 /* gles2-renderer */,
@@ -814,23 +811,6 @@
 			path = ../../../OpenALSoundSystem;
 			sourceTree = "<group>";
 		};
-		F13B87B91DD8B86800BF256E /* AppleSoundSystem */ = {
-			isa = PBXGroup;
-			children = (
-				F13B87BA1DD8B86800BF256E /* AudioSink.h */,
-				F13B87BB1DD8B86800BF256E /* SoundClip.cpp */,
-				F13B87BC1DD8B86800BF256E /* SoundClip.h */,
-				F13B87BD1DD8B86800BF256E /* SoundEmitter.cpp */,
-				F13B87BE1DD8B86800BF256E /* SoundEmitter.h */,
-				F13B87BF1DD8B86800BF256E /* SoundListener.cpp */,
-				F13B87C01DD8B86800BF256E /* SoundListener.h */,
-				F13B87C11DD8B86800BF256E /* SoundUtils.cpp */,
-				F13B87C21DD8B86800BF256E /* SoundUtils.h */,
-			);
-			name = AppleSoundSystem;
-			path = ../../../AppleSoundSystem;
-			sourceTree = "<group>";
-		};
 		F13B87C71DD8BD4700BF256E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -863,6 +843,7 @@
 				F13B35AE1E3D6F8400743FE3 /* Common.h */,
 				F1AA95461E21A14B00759076 /* CCharacter.h */,
 				F1AA95471E21A14B00759076 /* CCharacterArchetype.h */,
+				F138295D1E46A4410089E1EC /* CTeam.h */,
 				F1AA95481E21A14B00759076 /* CElixirFountain.h */,
 				F1AA95491E21A14B00759076 /* CHuntApproach.h */,
 				F1AA954A1E21A14B00759076 /* CMonster.h */,
@@ -888,6 +869,7 @@
 		F18755201DC90ECC001188C5 /* commands */ = {
 			isa = PBXGroup;
 			children = (
+				F13829561E46A3030089E1EC /* CHitscanAttackCommand.h */,
 				F18A6EC91DFC70CA0036AB6E /* CLoadNewLevelCommand.h */,
 				F18755211DC90ECC001188C5 /* CActorMeleeAttackCommand.h */,
 				F18755221DC90ECC001188C5 /* CEndTurnCommand.h */,
@@ -905,8 +887,10 @@
 			children = (
 				F13B35AF1E3D6F9500743FE3 /* Common.cpp */,
 				F1AA95341E21A0F900759076 /* CCharacter.cpp */,
+				F138295E1E46A44E0089E1EC /* CTeam.cpp */,
 				F1AA95351E21A0F900759076 /* CCharacterArchetype.cpp */,
 				F1AA95361E21A0F900759076 /* CElixirFountain.cpp */,
+				F13829571E46A30E0089E1EC /* Vec2i.cpp */,
 				F1AA954C1E21A7E300759076 /* OverlayNanoVGRenderer.cpp */,
 				F1AA95371E21A0F900759076 /* CHuntApproach.cpp */,
 				F1AA95381E21A0F900759076 /* CMonster.cpp */,
@@ -927,6 +911,7 @@
 		F187553A1DC90ECC001188C5 /* commands */ = {
 			isa = PBXGroup;
 			children = (
+				F138295A1E46A3180089E1EC /* CHitscanAttackCommand.cpp */,
 				F18A6ECA1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp */,
 				F187553B1DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp */,
 				F187553D1DC90ECC001188C5 /* CEndTurnCommand.cpp */,
@@ -1353,11 +1338,14 @@
 				F1180B841DC8F67000BDC97D /* matrixUtil.c in Sources */,
 				F18755841DC90ECC001188C5 /* CQuitCommand.cpp in Sources */,
 				F18A6EBF1DFC6D490036AB6E /* CPlainFileLoader.cpp in Sources */,
+				F13829581E46A30E0089E1EC /* Vec2i.cpp in Sources */,
+				F138295F1E46A44E0089E1EC /* CTeam.cpp in Sources */,
 				F1875EB41DC9153D001188C5 /* WavefrontOBJReader.cpp in Sources */,
 				F1875EA21DC9124C001188C5 /* NoudarGLES2Bridge.cpp in Sources */,
 				F18755741DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */,
 				F1AA954D1E21A7E300759076 /* OverlayNanoVGRenderer.cpp in Sources */,
 				F18755701DC90ECC001188C5 /* CMap.cpp in Sources */,
+				F138295B1E46A3180089E1EC /* CHitscanAttackCommand.cpp in Sources */,
 				F1875E891DC91137001188C5 /* Trig.cpp in Sources */,
 				F1875EB01DC9153D001188C5 /* TrigBatch.cpp in Sources */,
 				F127A30E1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */,
@@ -1383,6 +1371,7 @@
 				F187557D1DC90ECC001188C5 /* CMoveActorCommand.cpp in Sources */,
 				F1AA953D1E21A0F900759076 /* CCharacterArchetype.cpp in Sources */,
 				F18755751DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */,
+				F138295C1E46A3180089E1EC /* CHitscanAttackCommand.cpp in Sources */,
 				F13883621E00AE3A004F50EA /* DungeonGL11Renderer.cpp in Sources */,
 				F18755891DC90ECC001188C5 /* CTurnActorCommand.cpp in Sources */,
 				F1875E801DC91137001188C5 /* MeshObject.cpp in Sources */,
@@ -1391,7 +1380,6 @@
 				F1B23EA21DCF5E60009E807B /* GL3NoudarView.mm in Sources */,
 				F1875E821DC91137001188C5 /* NativeBitmap.cpp in Sources */,
 				F127A30F1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */,
-				F13B87C61DD8B86800BF256E /* SoundUtils.cpp in Sources */,
 				F1875EA31DC9124C001188C5 /* NoudarGLES2Bridge.cpp in Sources */,
 				F1180B851DC8F67000BDC97D /* matrixUtil.c in Sources */,
 				F1875EB51DC9153D001188C5 /* WavefrontOBJReader.cpp in Sources */,
@@ -1400,15 +1388,15 @@
 				F1875E7C1DC91137001188C5 /* Material.cpp in Sources */,
 				F18A6ECC1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp in Sources */,
 				F1875E8A1DC91137001188C5 /* Trig.cpp in Sources */,
-				F13B87C51DD8B86800BF256E /* SoundListener.cpp in Sources */,
+				F13829591E46A30E0089E1EC /* Vec2i.cpp in Sources */,
 				F187558D1DC90ECC001188C5 /* IGameCommand.cpp in Sources */,
 				F1875EB11DC9153D001188C5 /* TrigBatch.cpp in Sources */,
 				F18A6EC01DFC6D490036AB6E /* CPlainFileLoader.cpp in Sources */,
 				F140E8571DCF9B4500B28CCA /* imageUtil.m in Sources */,
 				F18755851DC90ECC001188C5 /* CQuitCommand.cpp in Sources */,
 				F1AA954E1E21A7E300759076 /* OverlayNanoVGRenderer.cpp in Sources */,
-				F13B87C31DD8B86800BF256E /* SoundClip.cpp in Sources */,
 				F1875E7A1DC91137001188C5 /* Logger.cpp in Sources */,
+				F13829601E46A44E0089E1EC /* CTeam.cpp in Sources */,
 				F1AA95451E21A0F900759076 /* CTeam.cpp in Sources */,
 				F18755791DC90ECC001188C5 /* CEndTurnCommand.cpp in Sources */,
 				F1B23EAD1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m in Sources */,
@@ -1430,7 +1418,6 @@
 				F1AA95C41E21A84400759076 /* nanovg.c in Sources */,
 				F1180B831DC8F67000BDC97D /* AppleImageLoader.mm in Sources */,
 				F1875EA51DC9124C001188C5 /* SplatAnimation.cpp in Sources */,
-				F13B87C41DD8B86800BF256E /* SoundEmitter.cpp in Sources */,
 				F1180B6F1DC8F62500BDC97D /* AppDelegate.mm in Sources */,
 				F1180B891DC8F67000BDC97D /* sourceUtil.c in Sources */,
 				F1180B8B1DC8F67000BDC97D /* vectorUtil.c in Sources */,

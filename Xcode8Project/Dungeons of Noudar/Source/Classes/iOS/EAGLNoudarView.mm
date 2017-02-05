@@ -259,7 +259,7 @@ std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
 	auto path = std::string( [ [ [ NSBundle mainBundle] resourcePath ] UTF8String ] ) + "/";
 	
 	
-	readMap( std::make_shared<Knights::CPlainFileLoader>( path ) );
+	readMap( std::make_shared<Knights::CPlainFileLoader>( path ), "tiles.properties" );
 	
 	setupGraphics( frameDimensions.size.width, frameDimensions.size.height, gVertexShader, gFragmentShader, loadTextures());
 	

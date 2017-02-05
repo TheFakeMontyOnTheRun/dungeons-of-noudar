@@ -78,11 +78,11 @@
 #include "Vec2i.h"
 #include "NativeBitmap.h"
 #include "IMapElement.h"
+#include "CTeam.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
 #include "IRenderer.h"
-#include "CKnight.h"
 
 #include "NoudarDungeonSnapshot.h"
 
@@ -300,11 +300,11 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	
 	FILE *fd;
 	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"vertex_OSX" ofType:@"glsl"] UTF8String ], "r");
-	std::string gVertexShader = readToString(fd);
+	std::string gVertexShader = Knights::readToString(fd);
 	fclose(fd);
 	
 	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"fragment_OSX" ofType:@"glsl"] UTF8String ], "r");
-	std::string gFragmentShader = readToString(fd);
+	std::string gFragmentShader = Knights::readToString(fd);
 	fclose(fd);
 	
 	setupGraphics(viewRectPixels.size.width, viewRectPixels.size.height, gVertexShader, gFragmentShader, loadTextures());
@@ -338,7 +338,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	auto path = std::string( [ [ [ NSBundle mainBundle] resourcePath ] UTF8String ] ) + "/";
 	
 	
-	readMap( std::make_shared<Knights::CPlainFileLoader>( path ) );
+	readMap( std::make_shared<Knights::CPlainFileLoader>( path ), "tiles.properties" );
 
 
 	

@@ -573,7 +573,7 @@ namespace odb {
 
     void
     DungeonGLES2Renderer::produceRenderingBatches(const IntMap& map, const CharMap& actors, const IntMap& splats, const IntMap& lightMap, const IntMap& ids,
-                                                      const AnimationList& movingCharacters, long animationTime, const IntMap& visibilityMap) {
+                                                      const AnimationList& movingCharacters, long animationTime, const VisMap& visibilityMap) {
 
         glm::vec3 pos;
 
@@ -604,13 +604,6 @@ namespace odb {
                     z == static_cast<int>(mCursorPosition.y)) {
                     shade = 1.5f;
                 }
-
-	            if ( visibilityMap[ z ][ x ] ) {
-		            shade = 1.5f;
-	            } else {
-		            shade = 0.75f;
-	            }
-
 
                 if (mTileProperties.count(tile) <= 0) {
                     continue;
@@ -768,7 +761,7 @@ namespace odb {
     void DungeonGLES2Renderer::render(const IntMap& map, const CharMap& actors, const IntMap& splats,
                                       const IntMap& lightMap, const IntMap& ids,
                                       const AnimationList& movingCharacters,
-                                      long animationTime, const IntMap& visibilityMap) {
+                                      long animationTime, const VisMap& visibilityMap) {
 
         if (mBitmaps.empty()) {
             return;
