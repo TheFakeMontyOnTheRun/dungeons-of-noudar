@@ -472,11 +472,7 @@ void moveDown() {
 void moveLeft() {
 
 	if ( game != nullptr && !isAnimating() ) {
-		render->setNextCommand('i');
-		game->tick();
-		render->setNextCommand('o');
-		game->tick();
-		render->setNextCommand('p');
+		render->setNextCommand('k');
 		game->tick();
 		render->setNextCommand('.');
 	}
@@ -485,11 +481,7 @@ void moveLeft() {
 void moveRight() {
 
 	if ( game != nullptr && !isAnimating() ) {
-		render->setNextCommand('p');
-		game->tick();
-		render->setNextCommand('o');
-		game->tick();
-		render->setNextCommand('i');
+		render->setNextCommand('l');
 		game->tick();
 		render->setNextCommand('.');
 	}
