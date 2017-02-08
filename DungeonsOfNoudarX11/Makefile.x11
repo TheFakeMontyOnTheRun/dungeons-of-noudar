@@ -3,6 +3,7 @@ LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng -lopenal
 CXX = clang++
 CC = clang
 OBJS = X11-version/main.o \
+    ../noudar-core/noudar-core/src/Vec2i.o \
     ../noudar-core/noudar-core/src/CActor.o \
     ../noudar-core/noudar-core/src/CMonster.o \
     ../noudar-core/noudar-core/src/CTeam.o \
