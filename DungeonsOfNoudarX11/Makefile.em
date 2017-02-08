@@ -3,6 +3,7 @@ LDFLAGS =  -O2 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload
 CXX = em++
 CC = emcc
 OBJS = X11-version/main.o \
+    ../noudar-core/noudar-core/src/Vec2i.o \
     ../noudar-core/noudar-core/src/CActor.o \
     ../noudar-core/noudar-core/src/CMonster.o \
     ../noudar-core/noudar-core/src/CTeam.o \
