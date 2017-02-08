@@ -55,7 +55,7 @@ namespace odb {
 
 		auto tile = occluders[y][x];
 
-		for (auto candidate : {'1', 'Y', 'X', '9', '*', '\\', '/', 'S', 'Z', '|', '%', '<', '>'}) {
+		for (auto candidate : {'1', 'Y', 'X', '\\', '/', 'S', 'Z', '|', '%', '<', '>'}) {
 			if (candidate == tile) {
 				return true;
 			}
