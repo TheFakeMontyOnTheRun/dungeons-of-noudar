@@ -74,32 +74,6 @@ namespace odb {
 		castVisibility(direction, visMap, occluders, pos, {0, 0});
 	}
 
-	Knights::EDirection VisibilityStrategy::getLeftOf(Knights::EDirection d) {
-		switch (d) {
-			case Knights::EDirection::kNorth:
-				return Knights::EDirection::kWest;
-			case Knights::EDirection::kSouth:
-				return Knights::EDirection::kEast;
-			case Knights::EDirection::kEast:
-				return Knights::EDirection::kNorth;
-			case Knights::EDirection::kWest:
-				return Knights::EDirection::kSouth;
-		}
-	}
-
-	Knights::EDirection VisibilityStrategy::getRightOf(Knights::EDirection d) {
-		switch (d) {
-			case Knights::EDirection::kNorth:
-				return Knights::EDirection::kEast;
-			case Knights::EDirection::kSouth:
-				return Knights::EDirection::kWest;
-			case Knights::EDirection::kEast:
-				return Knights::EDirection::kSouth;
-			case Knights::EDirection::kWest:
-				return Knights::EDirection::kNorth;
-		}
-	}
-
 	Knights::EDirection VisibilityStrategy::getOposite(Knights::EDirection d) {
 		switch (d) {
 			case Knights::EDirection::kNorth:
@@ -153,14 +127,14 @@ namespace odb {
 			}
 
 			if (0 >= currentOffset.x && stackPos < offsets.size() - 1) {
-				auto leftDirection = getLeftOf(from);
+				auto leftDirection = leftOf(from);
 				auto leftOffset = Knights::mapOffsetForDirerction(leftDirection);
 				offsets[stackPos] = Knights::Vec2i{currentOffset.x + leftOffset.x, currentOffset.y + leftOffset.y};
 				++stackPos;
 			}
 
 			if (currentOffset.x >= 0 && stackPos < offsets.size() - 1) {
-				auto rightDirection = getRightOf(from);
+				auto rightDirection = rightOf(from);
 				auto rightOffset = Knights::mapOffsetForDirerction(rightDirection);
 				offsets[stackPos] = Knights::Vec2i{currentOffset.x + rightOffset.x, currentOffset.y + rightOffset.y};
 				++stackPos;
