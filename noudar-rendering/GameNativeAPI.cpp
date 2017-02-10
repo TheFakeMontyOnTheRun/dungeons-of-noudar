@@ -134,7 +134,6 @@ void renderFrame(long delta) {
 
 		gles2Renderer->updateFadeState(delta);
 		auto cursor = game->getCursorPosition();
-		gles2Renderer->setCursorPosition( cursor.x, cursor.y );
 		gles2Renderer->setPlayerHealth( game->getMap()->getAvatar()->getHP() );
 
 		snapshot.movingCharacters = animationList;
@@ -334,18 +333,6 @@ void rotateCameraRight() {
 		render->setNextCommand('p');
 		game->tick();
 		render->setNextCommand('.');
-	}
-}
-
-void onReleasedLongPressingMove() {
-	if (gles2Renderer != nullptr) {
-		gles2Renderer->onReleasedLongPressingMove();
-	}
-}
-
-void onLongPressingMove() {
-	if (gles2Renderer != nullptr) {
-		gles2Renderer->onLongPressingMove();
 	}
 }
 
