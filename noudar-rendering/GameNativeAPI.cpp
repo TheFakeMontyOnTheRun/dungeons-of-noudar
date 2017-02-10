@@ -59,6 +59,7 @@
 #include "VBORegister.h"
 #include "VBORenderingJob.h"
 #include "CTile3DProperties.h"
+#include "RenderingJobSnapshotAdapter.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 #include "VisibilityStrategy.h"
@@ -81,7 +82,6 @@ odb::AnimationList animationList;
 long animationTime = 0;
 bool hasCache = false;
 odb::IntMap lightMapCache;
-
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
@@ -126,7 +126,6 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	}
 
 	loadedMeshes.clear();
-	gles2Renderer->setCameraId( game->getCurrentActorId());
 	return toReturn;
 }
 
@@ -137,7 +136,13 @@ void renderFrame(long delta) {
 		auto cursor = game->getCursorPosition();
 		gles2Renderer->setCursorPosition( cursor.x, cursor.y );
 		gles2Renderer->setPlayerHealth( game->getMap()->getAvatar()->getHP() );
-		gles2Renderer->render(snapshot.map, snapshot.snapshot, snapshot.splat, lightMap, snapshot.ids, animationList, animationTime, snapshot.mVisibilityMap);
+
+		snapshot.movingCharacters = animationList;
+		snapshot.mTimestamp = animationTime;
+		snapshot.mCursorPosition = cursor;
+		snapshot.mCameraId = game->getCurrentActorId();
+
+		gles2Renderer->render(snapshot);
 		gles2Renderer->updateCamera(delta);
 }
 
@@ -510,11 +515,6 @@ void forceDirection( int direction ) {
 
 
 void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
-
-	if (gles2Renderer != nullptr ) {
-		gles2Renderer->setTurn( game->getTurn() );
-		gles2Renderer->setCameraId( game->getCurrentActorId());
-	}
 
 	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat, snapshot.mVisibilityMap);
 	updateCharacterMovements( snapshot.ids );

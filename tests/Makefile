@@ -1,7 +1,7 @@
 GTEST_DIR = ../googletest/googletest
 GMOCK_DIR = ../googletest/googlemock
 
-CXXFLAGS = -I../noudar-core/noudar-core/include \
+CXXFLAGS = -I../noudar-core/noudar-core/include -I../glm -I../gles2-renderer -I../noudar-rendering \
 		-I$(GTEST_DIR)/include \
 		-I$(GTEST_DIR) \
 		-I$(GTEST_DIR)/include/gtest \
@@ -13,7 +13,8 @@ CXXFLAGS = -I../noudar-core/noudar-core/include \
 		-O2 -g -c -std=c++0x 
 CXX = clang++
 
-OBJS = ../noudar-core/noudar-core/src/CActor.o \
+OBJS =  ../noudar-core/noudar-core/src/CActor.o \
+	../noudar-core/noudar-core/src/Vec2i.o \
 	../noudar-core/noudar-core/src/CTeam.o \
 	../noudar-core/noudar-core/src/CCharacter.o \
 	../noudar-core/noudar-core/src/CCharacterArchetype.o \
@@ -31,16 +32,20 @@ OBJS = ../noudar-core/noudar-core/src/CActor.o \
 	../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
 	../noudar-core/noudar-core/src/commands/IGameCommand.o \
 	../noudar-core/noudar-core/src/commands/CMoveActorCommand.o \
+	../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.o \
 	../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.o \
 	../noudar-core/noudar-core/src/commands/CTurnActorCommand.o \
 	../noudar-core/noudar-core/src/commands/CQuitCommand.o \
 	../noudar-core/noudar-core/src/commands/CNullCommand.o \
 	../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
+	../noudar-rendering/RenderingJobSnapshotAdapter.o \
+	../gles2-renderer/VBORenderingJob.o \
 	$(GTEST_DIR)/src/gtest-all.o \
 	$(GMOCK_DIR)/src/gmock-all.o \
 	$(GMOCK_DIR)/src/gmock_main.o \
 	src/TestCCharacter.o \
-	src/TestCGame.o 
+	src/TestCGame.o \
+	src/TestRenderingJobSnapshotAdapter.o
 
 TARGET = test
 LDFLAGS = -lpthread

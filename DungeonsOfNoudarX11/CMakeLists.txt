@@ -12,6 +12,7 @@ include_directories(../glm)
 include_directories(../nanovg/src)
 include_directories(../gsl)
 
+
 set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/CMoveActorCommand.h
         ../noudar-core/noudar-core/include/commands/CActorMeleeAttackCommand.h
@@ -62,6 +63,8 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CNullCommand.cpp
         ../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
         ../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.cpp
+        ../noudar-rendering/RenderingJobSnapshotAdapter.h
+        ../noudar-rendering/RenderingJobSnapshotAdapter.cpp
         ../noudar-rendering/GameNativeAPI.cpp
         ../noudar-rendering/OverlayNanoVGRenderer.cpp
         ../noudar-rendering/DungeonGLES2Renderer.cpp
@@ -75,8 +78,14 @@ set(SOURCE_FILES
         X11-version/LoadPNG.cpp
         X11-version/WindowOperationsX11.cpp
         X11-version/x11_native.cpp
+        ../gles2-renderer/CLerp.cpp
+        ../gles2-renderer/CLerp.h
         ../gles2-renderer/Logger.cpp
         ../gles2-renderer/Trig.cpp
+        ../gles2-renderer/Camera.cpp
+        ../gles2-renderer/Camera.h
+        ../gles2-renderer/Animation.cpp
+        ../gles2-renderer/Animation.h
         ../gles2-renderer/TrigBatch.cpp
         ../gles2-renderer/VBORenderingJob.cpp
         ../gles2-renderer/NativeBitmap.cpp
@@ -88,7 +97,9 @@ set(SOURCE_FILES
         ../NullSoundSystem/SoundClip.cpp
         ../NullSoundSystem/SoundEmitter.cpp
         ../NullSoundSystem/SoundListener.cpp
-        ../NullSoundSystem/SoundUtils.cpp)
+        ../NullSoundSystem/SoundUtils.cpp
+        )
+
 
 find_package(OpenGL REQUIRED)
 find_package(X11 REQUIRED)

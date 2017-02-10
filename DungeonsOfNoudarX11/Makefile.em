@@ -28,6 +28,7 @@ OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/commands/CQuitCommand.o \
     ../noudar-core/noudar-core/src/commands/CNullCommand.o \
     ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
+    	       ../noudar-rendering/RenderingJobSnapshotAdapter.o \
                ../noudar-rendering/GameNativeAPI.o \
                ../noudar-rendering/OverlayNanoVGRenderer.o \
                ../noudar-rendering/DungeonGLES2Renderer.o \

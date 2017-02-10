@@ -35,13 +35,17 @@ OBJS = X11-version/main.o \
         ../noudar-rendering/VisibilityStrategy.o \
         ../noudar-rendering/NoudarDungeonSnapshot.o \
         ../noudar-rendering/SplatAnimation.o \
+        ../noudar-rendering/RenderingJobSnapshotAdapter.o \
         ../noudar-rendering/CTile3DProperties.o \
         ../noudar-rendering/NoudarGLES2Bridge.o \
         X11-version/LoadPNG.o \
         X11-version/WindowOperationsX11.o \
         X11-version/x11_native.o \
         ../gles2-renderer/Logger.o \
+        ../gles2-renderer/CLerp.o \
         ../gles2-renderer/Trig.o \
+        ../gles2-renderer/Camera.o \
+        ../gles2-renderer/Animation.o \
         ../gles2-renderer/TrigBatch.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \

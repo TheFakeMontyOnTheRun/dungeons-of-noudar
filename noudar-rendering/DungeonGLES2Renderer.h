@@ -19,12 +19,6 @@ namespace odb {
         kFragmentShader,
     };
 
-    using Shade = float;
-    using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
-    using TextureId = int;
-
-    static const long kAnimationLength = 500;
-
     class DungeonGLES2Renderer {
 
     private:
@@ -69,15 +63,13 @@ namespace odb {
 
         void consumeRenderingBatches(long animationTime);
 
-        void produceRenderingBatches(const IntMap& map,const CharMap& actors, const IntMap& splats,const IntMap& lightmap,const IntMap& ids,
-                                             const AnimationList& movingCharacters, long animationTime, const VisMap& visibilityMap);
+        void produceRenderingBatches(const NoudarDungeonSnapshot& snapshot);
 
         glm::vec3 transformToMapPosition(const glm::vec3 &pos);
 
         void initTileProperties();
 
     private:
-        const static int kSkyTextureLength = 400;
 
         int vertexAttributePosition;
         int modelMatrixAttributePosition;
@@ -102,10 +94,6 @@ namespace odb {
         EFadeState mFadeState = EFadeState::kNormal;
 
         //interaction
-        bool mLongPressing = false;
-
-        glm::vec2 mCursorPosition{0, 0};
-
         glm::vec3 mCurrentCharacterPosition;
 
         //camera
@@ -120,13 +108,6 @@ namespace odb {
         int mRotationTarget = 0;
 
         //VBOs
-
-        VBORegister mCubeVBO;
-        VBORegister mBillboardVBO;
-        VBORegister mCornerLeftFarVBO;
-        VBORegister mCornerLeftNearVBO;
-        VBORegister mFloorVBO;
-        VBORegister mSkyVBO;
 
         const static float cubeVertices[16 * 5];
         const static unsigned short cubeIndices[6 * 4];
@@ -151,24 +132,20 @@ namespace odb {
         VBORegisterId  mNullVBO = "null";
         TextureName mSkyBoxTextureName = "sky";
         TextureName mNullTexture = "null";
-	    int mCameraId = 0;
+
+	    RenderingJobSnapshotAdapter mSnapshotAdapter;
     public:
         //basic bookeeping
         DungeonGLES2Renderer();
 
         ~DungeonGLES2Renderer();
 
-        void setTurn( int turn );
-
-        void setCameraId( int id );
-
         bool init(float w, float h, const std::string &vertexShader,
                   const std::string &fragmentShader);
 
         void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
-        void render(const IntMap& map, const CharMap& actors, const IntMap& splats, const IntMap& lightmap,
-                    const IntMap& ids, const AnimationList& movingCharacters, long animationTime, const VisMap& visibilityMap);
+        void render(const NoudarDungeonSnapshot& snapshot);
 
         void shutdown();
 
@@ -190,6 +167,7 @@ namespace odb {
 
         VBORegister VBORegisterFrom( VBORegisterId id );
         ETextures textureIndexFrom( TextureName name );
+
         void rotateLeft();
 
         void rotateRight();
@@ -223,9 +201,6 @@ namespace odb {
         void setPlayerHealth( float health );
 
         void resetCamera();
-
-        float mWidth{ 0.0f };
-        float mHeight{ 0.0f };
     };
 }
 #endif //NOUDARRENDERING_DUNGEONRENDERER_H
