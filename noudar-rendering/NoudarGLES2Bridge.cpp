@@ -95,7 +95,6 @@ namespace odb {
         }
 
         auto cameraPosition = current->getPosition();
-        setCameraPosition(cameraPosition.x, cameraPosition.y);
 
 	    VisMap currentVisMap;
         VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );

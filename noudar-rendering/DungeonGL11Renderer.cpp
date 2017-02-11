@@ -437,10 +437,6 @@ namespace odb {
 		odb::Logger::log("Shutdown!\n");
 	}
 
-	void DungeonGLES2Renderer::setCameraPosition(float x, float y) {
-		this->mCameraTarget = glm::vec2{x, y};
-	}
-
 	void DungeonGLES2Renderer::startFadingIn() {
 		if (mFadeState == kFadingIn) {
 			return;

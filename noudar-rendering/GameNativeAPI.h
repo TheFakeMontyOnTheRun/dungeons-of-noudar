@@ -17,8 +17,6 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 
 void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot );
 
-void setCameraPosition( int x, int y );
-
 void startFadingIn();
 
 void startFadingOut();

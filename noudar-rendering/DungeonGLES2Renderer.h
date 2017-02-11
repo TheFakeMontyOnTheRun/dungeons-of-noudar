@@ -156,8 +156,6 @@ namespace odb {
 
 		void setEyeView(float *eyeView);
 
-		void setCameraPosition(float x, float y);
-
 		void setAngleXZ(float xz);
 
 		void setAngleYZ(float yz);

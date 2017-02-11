@@ -253,12 +253,6 @@ void updateCharacterMovements(const odb::IntMap& idsLocal) {
 	}
 }
 
-void setCameraPosition( int x, int y ) {
-	if (gles2Renderer != nullptr) {
-		gles2Renderer->setCameraPosition(x, y);
-	}
-}
-
 void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats, const odb::VisMap& visibilityMap) {
 	hasActiveSplats = false;
 
