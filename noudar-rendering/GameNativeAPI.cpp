@@ -134,7 +134,6 @@ void renderFrame(long delta) {
 
 		gles2Renderer->updateFadeState(delta);
 		auto cursor = game->getCursorPosition();
-		gles2Renderer->setPlayerHealth( game->getMap()->getAvatar()->getHP() );
 
 		snapshot.movingCharacters = animationList;
 		snapshot.mTimestamp = animationTime;

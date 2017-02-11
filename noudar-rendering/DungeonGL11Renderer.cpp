@@ -407,15 +407,6 @@ namespace odb {
 		gProgram = 0;
 	}
 
-
-	glm::mat4 DungeonGLES2Renderer::getCubeTransform(glm::vec3 translation) {
-		glm::mat4 identity = glm::mat4(1.0f);
-		glm::mat4 translated = glm::translate(identity, translation);
-
-		return translated;
-	}
-
-
 	void DungeonGLES2Renderer::updateFadeState(long ms) {
 		if (mFadeState == kFadingIn) {
 			mFadeColour.a -= (ms / 1000.0f);
@@ -723,39 +714,8 @@ namespace odb {
 		                   glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
-	glm::mat4 DungeonGLES2Renderer::getFloorTransform(glm::vec3 translation) {
-		glm::mat4 identity = glm::mat4(1.0f);
-		glm::mat4 translated = glm::translate(identity, translation);
-
-		return translated;
-	}
-
 	bool DungeonGLES2Renderer::isAnimating() {
 		return mRotationTarget != mCameraRotation;
-	}
-
-	glm::mat4 DungeonGLES2Renderer::getSkyTransform(long animationTime) {
-		glm::mat4 identity = glm::mat4(1.0f);
-
-		long offset = animationTime;
-		int integerPart = offset % ((kSkyTextureLength * 2) * 1000);
-		float finalOffset = integerPart / 1000.0f;
-
-		return glm::translate(identity, glm::vec3(finalOffset, 0.0f, 0.0f));
-	}
-
-	glm::mat4 DungeonGLES2Renderer::getCornerLeftFarTransform(glm::vec3 translation) {
-		glm::mat4 identity = glm::mat4(1.0f);
-		glm::mat4 translated = glm::translate(identity, translation);
-
-		return translated;
-	}
-
-	glm::mat4 DungeonGLES2Renderer::getCornerLeftNearTransform(glm::vec3 translation) {
-		glm::mat4 identity = glm::mat4(1.0f);
-		glm::mat4 translated = glm::translate(identity, translation);
-
-		return translated;
 	}
 
 	void DungeonGLES2Renderer::setEyeView(float *eyeView) {
@@ -779,23 +739,11 @@ namespace odb {
 		                 -(Knights::kMapSize / 2.0f) + (-pos.z * 2));
 	}
 
-	void DungeonGLES2Renderer::setPlayerHealth(float health) {
-		mPlayerHealth = health;
-	}
-
 	void DungeonGLES2Renderer::resetCamera() {
 		mAngleXZ = 0;
 		mAngleYZ = 0;
 		mCameraRotation = 0;
 		mRotationTarget = 0;
-	}
-
-	VBORegister DungeonGLES2Renderer::VBORegisterFrom(VBORegisterId id) {
-		return mVBORegisters[id];
-	}
-
-	ETextures DungeonGLES2Renderer::textureIndexFrom(TextureName name) {
-		return mTextureRegistry[name];
 	}
 
 	void DungeonGLES2Renderer::setTileProperties(CTilePropertyMap map) {

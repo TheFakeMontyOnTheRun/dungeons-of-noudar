@@ -49,17 +49,7 @@ namespace odb {
 
 		unsigned int loadShader(EShaderType shaderType, const char *pSource);
 
-		glm::mat4 getSkyTransform(long offset);
-
-		glm::mat4 getFloorTransform(glm::vec3 translation);
-
 		glm::mat4 getBillboardTransform(glm::vec3 translation);
-
-		glm::mat4 getCornerLeftFarTransform(glm::vec3 translation);
-
-		glm::mat4 getCornerLeftNearTransform(glm::vec3 translation);
-
-		glm::mat4 getCubeTransform(glm::vec3 translation);
 
 		void consumeRenderingBatches(long animationTime);
 
@@ -79,7 +69,6 @@ namespace odb {
 		unsigned int gProgram;
 		unsigned int uView;
 		unsigned int uMod;
-		int mTurn = 0;
 		glm::mat4 projectionMatrix;
 		glm::mat4 mViewMatrix = glm::mat4(1.0f);
 		std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
@@ -127,12 +116,6 @@ namespace odb {
 		static const float skyVertices[20];
 		static const unsigned short skyIndices[6];
 
-
-		float mPlayerHealth = 0.0f;
-		VBORegisterId mNullVBO = "null";
-		TextureName mSkyBoxTextureName = "sky";
-		TextureName mNullTexture = "null";
-
 		RenderingJobSnapshotAdapter mSnapshotAdapter;
 	public:
 		//basic bookeeping
@@ -165,10 +148,6 @@ namespace odb {
 
 		void updateCamera(long ms);
 
-		VBORegister VBORegisterFrom(VBORegisterId id);
-
-		ETextures textureIndexFrom(TextureName name);
-
 		void rotateLeft();
 
 		void rotateRight();
@@ -191,8 +170,6 @@ namespace odb {
 		void updateFadeState(long ms);
 
 		//interactions
-		void setPlayerHealth(float health);
-
 		void resetCamera();
 	};
 }
