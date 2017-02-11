@@ -55,8 +55,6 @@ namespace odb {
 
 		void produceRenderingBatches(const NoudarDungeonSnapshot &snapshot);
 
-		glm::vec3 transformToMapPosition(const glm::vec3 &pos);
-
 		void initTileProperties();
 
 	private:

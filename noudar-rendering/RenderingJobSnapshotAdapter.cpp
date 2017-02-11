@@ -61,6 +61,25 @@ namespace odb {
 		return translated;
 	}
 
+	glm::vec2 RenderingJobSnapshotAdapter::easingAnimationCurveStep(glm::vec2 prevPosition,
+	                                                                glm::vec2 destPosition,
+	                                                                long animationTime,
+	                                                                long timestamp) {
+		float step = (((float) ((timestamp - animationTime))) /
+		              ((float) kAnimationLength));
+
+		float curve = 0.0f;
+
+		if (step < 0.5f) {
+			curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
+		} else {
+			curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
+		}
+
+		return {(curve * (destPosition.x - prevPosition.x)) + prevPosition.x,
+		        (curve * (destPosition.y - prevPosition.y)) + prevPosition.y};
+	}
+
 	void RenderingJobSnapshotAdapter::readSnapshot(const NoudarDungeonSnapshot &snapshot,
 	                                               std::map<ETextures, std::vector<VBORenderingJob>> &batches,
 	                                               const CTilePropertyMap &tilePropertiesRegistry,

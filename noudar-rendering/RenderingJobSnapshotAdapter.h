@@ -37,6 +37,10 @@ namespace odb {
 		             const std::map<VBORegisterId, VBORegister> &VBORegisters,
 		             const std::map<std::string, ETextures> &textureRegistry
 		);
+
+		static glm::vec2
+		easingAnimationCurveStep(glm::vec2 prevPosition, glm::vec2 destPosition, long animationTime, long timestamp
+		                         );
 	};
 }
 

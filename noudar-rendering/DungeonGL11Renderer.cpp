@@ -550,32 +550,19 @@ namespace odb {
 					if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
 
 						auto animation = snapshot.movingCharacters.at(id);
+						auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation),
+						                                                     std::get<1>(animation),
+						                                                     std::get<2>(animation),
+						                                                     snapshot.mTimestamp);
 
-						step = (((float) ((snapshot.mTimestamp - std::get<2>(animation)))) /
-						        ((float) kAnimationLength));
-
-//                        if (!mLongPressing) {
-						if (step < 0.5f) {
-							curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
-						} else {
-							curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
-						}
-//                        }
-
-						auto prevPosition = std::get<0>(animation);
-						auto destPosition = std::get<1>(animation);
-
-						fx = (curve * (destPosition.x - prevPosition.x)) + prevPosition.x;
-						fz = (curve * (destPosition.y - prevPosition.y)) + prevPosition.y;
+						fx = pos.x;
+						fz = pos.y;
 					}
 
 					pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
 
 
-					if (id == snapshot.mCameraId) {
-						mCurrentCharacterPosition = pos;
-					} else {
-
+					if (id != snapshot.mCameraId) {
 
 						TextureId frame = mElementMap[actor];
 
@@ -599,6 +586,39 @@ namespace odb {
 							std::get<1>(billboardVBO),
 							std::get<2>(billboardVBO),
 							getBillboardTransform(pos), shade, true);
+				}
+			}
+		}
+
+
+		for (int z = 0; z < Knights::kMapSize; ++z) {
+			for (int x = 0; x < Knights::kMapSize; ++x) {
+
+				int id = snapshot.ids[z][x];
+
+				float fx, fz;
+
+				fx = x;
+				fz = z;
+
+				float step = 0.0f;
+				float curve = 0.0f;
+
+				if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
+
+					auto animation = snapshot.movingCharacters.at(id);
+					auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation), std::get<1>(animation),
+					                                                     std::get<2>(animation), snapshot.mTimestamp);
+
+					fx = pos.x;
+					fz = pos.y;
+				}
+
+				pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
+
+				if (id == snapshot.mCameraId) {
+					mCurrentCharacterPosition = pos;
+					return;
 				}
 			}
 		}
@@ -728,11 +748,6 @@ namespace odb {
 
 	void DungeonGLES2Renderer::setAngleYZ(float yz) {
 		mAngleYZ = yz;
-	}
-
-	glm::vec3 DungeonGLES2Renderer::transformToMapPosition(const glm::vec3 &pos) {
-		return glm::vec3(-(Knights::kMapSize / 2.0f) + (pos.x * 2), -5.0f + pos.y,
-		                 -(Knights::kMapSize / 2.0f) + (-pos.z * 2));
 	}
 
 	void DungeonGLES2Renderer::resetCamera() {
