@@ -6,6 +6,7 @@
 #include <android/asset_manager.h>
 #include "NdkGlue.h"
 
+#include <map>
 #include <string>
 #include <memory>
 #include <vector>
@@ -266,12 +267,11 @@ Java_br_odb_GL2JNILib_rotateRight(JNIEnv *env, jclass type) {
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_onReleasedLongPressingMove(JNIEnv *env, jclass type) {
-	onReleasedLongPressingMove();
 }
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_onLongPressingMove(JNIEnv *env, jclass type) {
-	onLongPressingMove();
+
 }
 
 JNIEXPORT void JNICALL

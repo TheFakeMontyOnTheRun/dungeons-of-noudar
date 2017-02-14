@@ -27,10 +27,6 @@ void rotateCameraLeft();
 
 void rotateCameraRight();
 
-void onReleasedLongPressingMove();
-
-void onLongPressingMove();
-
 void setEyeViewMatrix( float *eyeView );
 
 void setPerspectiveMatrix( float *perspectiveMatrix );
