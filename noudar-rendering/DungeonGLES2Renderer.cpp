@@ -561,8 +561,6 @@ namespace odb {
 				int splatFrame = snapshot.splat[z][x];
 				Shade shade = (0.25f * std::min(255, snapshot.mLightMap[z][x]) / 255.0f) + 0.75f;
 
-				auto tile = snapshot.map[z][x];
-
 				if (x == static_cast<int>(snapshot.mCursorPosition.x) &&
 				    z == static_cast<int>(snapshot.mCursorPosition.y)) {
 					shade = 1.5f;
@@ -576,9 +574,6 @@ namespace odb {
 
 					fx = x;
 					fz = z;
-
-					float step = 0.0f;
-					float curve = 0.0f;
 
 					if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
 
@@ -633,9 +628,6 @@ namespace odb {
 
 				fx = x;
 				fz = z;
-
-				float step = 0.0f;
-				float curve = 0.0f;
 
 				if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
 

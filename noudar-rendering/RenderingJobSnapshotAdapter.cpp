@@ -88,8 +88,6 @@ namespace odb {
 	) {
 
 		glm::vec3 pos;
-		const auto &cubeVBO = VBORegisters.at("cube");
-		const auto &billboardVBO = VBORegisters.at("billboard");
 		const auto &floorVBO = VBORegisters.at("floor");
 		const auto &skyVBO = VBORegisters.at("sky");
 
@@ -115,8 +113,6 @@ namespace odb {
 				}
 
 				auto tile = snapshot.map[z][x];
-				auto actor = snapshot.snapshot[z][x];
-				int splatFrame = snapshot.splat[z][x];
 
 				Shade shade = (0.25f * std::min(255, snapshot.mLightMap[z][x]) / 255.0f) + 0.75f;
 

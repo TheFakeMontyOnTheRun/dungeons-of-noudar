@@ -150,26 +150,23 @@ namespace PC {
   }
 
 	void Render() {
-		_farsetsel(_dos_ds);
-		int offset = 0;
-		int fullSize = 320 * 200;
-
-		for (int y = 100; y < 200; ++y) {
-			for (int x = 80; x < 240; ++x) {
-
-			  offset = (320 * y) + x;
-			  auto origin = ImageBuffer[offset];
-			  
-			  int shade = getPaletteEntry( origin );
-			  
-			  _farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
-			  _farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
-			  _farnspokeb( 0xA0000 + 160 + ((200 - (2 * ((y - 100)))) * 320) + ((2 * x)), shade);
-			  _farnspokeb( 0xA0000 + 160 + ((199 - (2 * ((y - 100)))) * 320) + ((2 * x)) + 1, shade);
-			}
-		}
-
-		std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xDDDDDD));
+	  _farsetsel(_dos_ds);
+	  int offset = 0;
+	  int fullSize = 320 * 200;
+	  
+	  for (int y = 0; y < 200; ++y) {
+	    for (int x = 0; x < 320; ++x) {
+	      
+	      offset = (320 * y) + x;
+	      auto origin = ImageBuffer[offset];
+	      
+	      int shade = getPaletteEntry( origin );
+	      
+	      _farnspokeb( 0xA0000 + (320 * (200 - y ) ) + x, shade);
+	    }
+	  }
+	  
+	  std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xDDDDDD));
 	}
 
 	void Close() // End graphics

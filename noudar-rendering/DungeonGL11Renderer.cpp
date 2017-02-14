@@ -609,7 +609,6 @@ namespace odb {
 					auto animation = snapshot.movingCharacters.at(id);
 					auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation), std::get<1>(animation),
 					                                                     std::get<2>(animation), snapshot.mTimestamp);
-
 					fx = pos.x;
 					fz = pos.y;
 				}
@@ -673,6 +672,10 @@ namespace odb {
 		glMatrixMode(GL_MODELVIEW);
 
 
+#ifdef OSMESA
+	auto cubeVBO = mVBORegisters["cube"];
+#endif
+
 		for (const auto &batch : batches) {
 
 			auto textureId = mTextures[batch.first]->mTextureId;
@@ -692,7 +695,7 @@ namespace odb {
 					glDisable( GL_ALPHA_TEST );
 				}
 
-				if ( vboId == std::get<0>(mCubeVBO) && !element.mNeedsAlphaTest ) {
+				if ( vboId == std::get<0>(cubeVBO) && !element.mNeedsAlphaTest ) {
 					glEnable( GL_CULL_FACE );
 				} else {
 					glDisable( GL_CULL_FACE );
