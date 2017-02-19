@@ -25,6 +25,7 @@
 #include "Vec2i.h"
 #include "IMapElement.h"
 #include "CTeam.h"
+#include "CItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
@@ -121,21 +122,21 @@ namespace odb {
 			}
 
 			if (currentOffset.y <= 0 && stackPos < offsets.size() - 1 ) {
-				auto mapOffset = Knights::mapOffsetForDirerction(from);
+				auto mapOffset = Knights::mapOffsetForDirection(from);
 				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + mapOffset.x, currentOffset.y + mapOffset.y};
 				++stackPos;
 			}
 
 			if (0 >= currentOffset.x && stackPos < offsets.size() - 1) {
 				auto leftDirection = leftOf(from);
-				auto leftOffset = Knights::mapOffsetForDirerction(leftDirection);
+				auto leftOffset = Knights::mapOffsetForDirection(leftDirection);
 				offsets[stackPos] = Knights::Vec2i{currentOffset.x + leftOffset.x, currentOffset.y + leftOffset.y};
 				++stackPos;
 			}
 
 			if (currentOffset.x >= 0 && stackPos < offsets.size() - 1) {
 				auto rightDirection = rightOf(from);
-				auto rightOffset = Knights::mapOffsetForDirerction(rightDirection);
+				auto rightOffset = Knights::mapOffsetForDirection(rightDirection);
 				offsets[stackPos] = Knights::Vec2i{currentOffset.x + rightOffset.x, currentOffset.y + rightOffset.y};
 				++stackPos;
 			}

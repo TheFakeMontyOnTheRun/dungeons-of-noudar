@@ -16,6 +16,7 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
     ../noudar-core/noudar-core/src/IMapElement.o \
     ../noudar-core/noudar-core/src/CGame.o \
+    ../noudar-core/noudar-core/src/CItem.o \
     ../noudar-core/noudar-core/src/CPlainFileLoader.o \
     ../noudar-core/noudar-core/src/CGameDelegate.o \
     ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
@@ -27,6 +28,11 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/commands/CQuitCommand.o \
     ../noudar-core/noudar-core/src/commands/CNullCommand.o \
     ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
+    ../noudar-core/noudar-core/src/commands/CPickItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CDropItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \
         ../noudar-rendering/DungeonGL11Renderer.o \
         ../noudar-rendering/LightningStrategy.o \
         ../noudar-rendering/VisibilityStrategy.o \

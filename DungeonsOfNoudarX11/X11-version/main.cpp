@@ -25,7 +25,7 @@
 #include "Vec2i.h"
 #include "IMapElement.h"
 #include "CTeam.h"
-
+#include "CItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"

@@ -14,6 +14,11 @@ include_directories(../gsl)
 
 
 set(SOURCE_FILES
+        ../noudar-core/noudar-core/include/commands/CPickItemCommand.h
+        ../noudar-core/noudar-core/include/commands/CDropItemCommand.h
+        ../noudar-core/noudar-core/include/commands/CUseCurrentItemCommand.h
+        ../noudar-core/noudar-core/include/commands/CCycleNextItemCommand.h
+        ../noudar-core/noudar-core/include/commands/CCyclePreviousItemCommand.h
         ../noudar-core/noudar-core/include/commands/CMoveActorCommand.h
         ../noudar-core/noudar-core/include/commands/CActorMeleeAttackCommand.h
         ../noudar-core/noudar-core/include/commands/CEndTurnCommand.h
@@ -30,6 +35,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/CMonster.h
         ../noudar-core/noudar-core/include/CDoorway.h
         ../noudar-core/noudar-core/include/CGame.h
+        ../noudar-core/noudar-core/include/CItem.h
         ../noudar-core/noudar-core/include/CMap.h
         ../noudar-core/noudar-core/include/IRenderer.h
         ../noudar-core/noudar-core/include/Vec2i.h
@@ -52,6 +58,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/IFileLoaderDelegate.cpp
         ../noudar-core/noudar-core/src/IMapElement.cpp
         ../noudar-core/noudar-core/src/CGame.cpp
+        ../noudar-core/noudar-core/src/CItem.cpp
         ../noudar-core/noudar-core/src/CPlainFileLoader.cpp
         ../noudar-core/noudar-core/src/CGameDelegate.cpp
         ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.cpp
@@ -63,6 +70,11 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CNullCommand.cpp
         ../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
         ../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CPickItemCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CDropItemCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.cpp
         ../noudar-rendering/RenderingJobSnapshotAdapter.h
         ../noudar-rendering/RenderingJobSnapshotAdapter.cpp
         ../noudar-rendering/GameNativeAPI.cpp
