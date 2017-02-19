@@ -48,6 +48,8 @@ OBJS = X11-version/main.o \
                X11-version/WindowOperationsX11.o \
                X11-version/x11_emscripten.o \
                ../gles2-renderer/Logger.o \
+               ../gles2-renderer/CLerp.o \
+               ../gles2-renderer/Camera.o \
                ../gles2-renderer/Trig.o \
                ../gles2-renderer/TrigBatch.o \
                ../gles2-renderer/NativeBitmap.o \
