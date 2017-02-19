@@ -62,6 +62,7 @@
 #include "CTile3DProperties.h"
 #include "RenderingJobSnapshotAdapter.h"
 #include "Camera.h"
+#include "CLerp.h"
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 #include "VisibilityStrategy.h"

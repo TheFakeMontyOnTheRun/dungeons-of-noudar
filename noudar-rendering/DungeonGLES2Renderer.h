@@ -8,16 +8,12 @@
 
 namespace odb {
 
-	enum EFadeState {
-		kNormal,
-		kFadingIn,
-		kFadingOut
-	};
-
 	enum EShaderType {
 		kVertexShader,
 		kFragmentShader,
 	};
+
+	const CLerp kNoFade = CLerp( 1000, 1000, 0 );;
 
 	class DungeonGLES2Renderer {
 
@@ -76,12 +72,11 @@ namespace odb {
 		std::vector<std::shared_ptr<Texture>> mTextures;
 
 		//fade state
-		glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		int fadeUniform;
-		EFadeState mFadeState = EFadeState::kNormal;
 
 		//interaction
 		glm::vec3 mCurrentCharacterPosition;
+
 
 		//VBOs
 
@@ -105,6 +100,7 @@ namespace odb {
 
 		RenderingJobSnapshotAdapter mSnapshotAdapter;
 		Camera mCamera;
+		CLerp mFadeLerp = kNoFade;
 	public:
 		//basic bookeeping
 		DungeonGLES2Renderer();

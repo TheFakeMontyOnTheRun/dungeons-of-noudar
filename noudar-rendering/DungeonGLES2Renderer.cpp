@@ -27,6 +27,7 @@
 #include <unordered_set>
 #include <map>
 #include <array>
+#include <CLerp.h>
 
 #include "Vec2i.h"
 #include "IMapElement.h"
@@ -373,6 +374,7 @@ namespace odb {
 
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glEnable(GL_DEPTH_TEST);
+		glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, mFadeLerp.getCurrentValue() / 1000.0f);
 		glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
 		glUniform4f(uMod, shade, shade, shade, 1.0f);
 		glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
@@ -454,24 +456,7 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::updateFadeState(long ms) {
-		if (mFadeState == kFadingIn) {
-			mFadeColour.a -= (ms / 1000.0f);
-			mFadeColour.r = mFadeColour.g = mFadeColour.b = 1.0f - mFadeColour.a;
-		} else if (mFadeState == kFadingOut) {
-			mFadeColour.a += (ms / 1000.0f);
-			mFadeColour.r = mFadeColour.g = mFadeColour.b = 1.0f - mFadeColour.a;
-		} else {
-			mFadeColour.a = 0.0f;
-		}
-
-		if ((mFadeState == kFadingIn) && (mFadeColour.a >= 1.0)) {
-			mFadeColour.a = 0.0f;
-			mFadeState = kNormal;
-		}
-
-		if ((mFadeState == kFadingOut) && (mFadeColour.a <= 0.1f)) {
-			mFadeState = kNormal;
-		}
+		mFadeLerp.update( ms );
 	}
 
 	void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
@@ -484,21 +469,11 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::startFadingIn() {
-		if (mFadeState == kFadingIn) {
-			return;
-		}
-
-		mFadeState = kFadingIn;
-		mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		mFadeLerp = CLerp( 0, 1000, 1000 );
 	}
 
 	void DungeonGLES2Renderer::startFadingOut() {
-		if (mFadeState == kFadingOut) {
-			return;
-		}
-
-		mFadeState = kFadingOut;
-		mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, 0.1f);
+		mFadeLerp = CLerp( 1000, 0, 1000 );
 	}
 
 	void DungeonGLES2Renderer::updateCamera(long ms) {
