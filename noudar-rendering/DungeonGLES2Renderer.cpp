@@ -223,7 +223,7 @@ namespace odb {
 		}
 	}
 
-	GLuint DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
+	int DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
 
 		GLenum shaderSourceType =
 				shaderType == EShaderType::kFragmentShader ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
@@ -252,7 +252,7 @@ namespace odb {
 		return shader;
 	}
 
-	GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource,
+	int DungeonGLES2Renderer::createProgram(const char *pVertexSource,
 	                                           const char *pFragmentSource) {
 		auto vertexShader = loadShader(EShaderType::kVertexShader, pVertexSource);
 		if (!vertexShader) {

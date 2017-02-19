@@ -18,9 +18,6 @@ namespace odb {
 	class DungeonGLES2Renderer {
 
 	private:
-		CTilePropertyMap mTileProperties;
-		std::map<VBORegisterId, VBORegister> mVBORegisters;
-		std::map<std::string, ETextures> mTextureRegistry;
 
 		void fetchShaderLocations();
 
@@ -41,9 +38,9 @@ namespace odb {
 		void drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo, int vertexCount,
 		                  const glm::mat4 &transform, float shade);
 
-		unsigned int createProgram(const char *pVertexSource, const char *pFragmentSource);
+		int createProgram(const char *pVertexSource, const char *pFragmentSource);
 
-		unsigned int loadShader(EShaderType shaderType, const char *pSource);
+		int loadShader(EShaderType shaderType, const char *pSource);
 
 		glm::mat4 getBillboardTransform(glm::vec3 translation);
 
@@ -60,9 +57,10 @@ namespace odb {
 		int samplerUniformPosition;
 		int textureCoordinatesAttributePosition;
 		int projectionMatrixAttributePosition;
-		unsigned int gProgram;
-		unsigned int uView;
-		unsigned int uMod;
+		int gProgram;
+		int uView;
+		int uMod;
+		int fadeUniform;
 		glm::mat4 projectionMatrix;
 		glm::mat4 mViewMatrix = glm::mat4(1.0f);
 		std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
@@ -70,13 +68,12 @@ namespace odb {
 		std::map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
 		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
 		std::vector<std::shared_ptr<Texture>> mTextures;
-
-		//fade state
-		int fadeUniform;
+		std::map<VBORegisterId, VBORegister> mVBORegisters;
+		std::map<std::string, ETextures> mTextureRegistry;
+		CTilePropertyMap mTileProperties;
 
 		//interaction
 		glm::vec3 mCurrentCharacterPosition;
-
 
 		//VBOs
 
