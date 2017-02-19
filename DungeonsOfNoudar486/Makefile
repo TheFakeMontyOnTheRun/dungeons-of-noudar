@@ -52,6 +52,8 @@ OBJS = DOS-version/main.o \
         DOS-version/WindowOperationsDOS.o \
         ../gles2-renderer/Logger.o \
         ../gles2-renderer/Trig.o \
+        ../gles2-renderer/Camera.o \
+        ../gles2-renderer/CLerp.o \
         ../gles2-renderer/Scene.o \
         ../gles2-renderer/WavefrontOBJReader.o \
         ../gles2-renderer/WavefrontMaterialReader.o \
