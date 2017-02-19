@@ -51,6 +51,7 @@
 #include "MaterialList.h"
 #include "Scene.h"
 #include "RenderingJobSnapshotAdapter.h"
+#include "Camera.h"
 #include "DungeonGLES2Renderer.h"
 
 
@@ -501,44 +502,11 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::updateCamera(long ms) {
-		cameraPosition.x += ms * (mCameraTarget.x - cameraPosition.x) / 1000.0f;
-		cameraPosition.y += ms * (mCameraTarget.y - cameraPosition.y) / 1000.0f;
-
-		if (mRotationTarget > mCameraRotation) {
-			mCameraRotation += 5;
-		} else if (mRotationTarget < mCameraRotation) {
-			mCameraRotation -= 5;
-		}
+		mCamera.update(ms);
 	}
 
 	void DungeonGLES2Renderer::resetTransformMatrices() {
-
-		glm::vec3 pos = mCurrentCharacterPosition;
-		glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
-		glm::vec3 pos_front;
-		glm::mat4 eyeMatrixOriginal =
-				mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
-		glm::mat4 eyeMatrix = glm::mat4(1.0f);
-
-		eyeMatrix[3][0] = eyeMatrixOriginal[3][0];
-		eyeMatrix[3][1] = eyeMatrixOriginal[3][1];
-		eyeMatrix[3][2] = eyeMatrixOriginal[3][2];
-
-		float angleInRadiansYZ = mAngleYZ * (3.14159f / 180.0f);
-		float angleInRadiansXZ = (mAngleXZ - mCameraRotation) * (3.14159f / 180.0f);
-
-		glm::vec3 mCameraDirection{0, 0, 0};
-
-		mCameraDirection = glm::rotate(
-				glm::rotate(glm::mat4(1.0f), angleInRadiansXZ, glm::vec3(0.0f, 1.0f, 0.0f)),
-				angleInRadiansYZ, glm::vec3(1.0f, 0.0f, 0.0f)) * pos_front4;
-
-		pos_front = mCameraDirection;
-
-		mViewMatrix = glm::lookAt(
-				pos,
-				pos_front + pos,
-				glm::vec3(0.0f, 1.0, 0.0f)) * eyeMatrix;
+		mViewMatrix = mCamera.getViewMatrix( mCurrentCharacterPosition );
 	}
 
 	void
@@ -710,11 +678,11 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::rotateLeft() {
-		this->mRotationTarget -= 90;
+		mCamera.incrementRotateTarget( -90 );
 	}
 
 	void DungeonGLES2Renderer::rotateRight() {
-		this->mRotationTarget += 90;
+		mCamera.incrementRotateTarget( 90 );
 	}
 
 	glm::mat4 DungeonGLES2Renderer::getBillboardTransform(glm::vec3 translation) {
@@ -723,16 +691,16 @@ namespace odb {
 
 
 		return glm::rotate(translated,
-		                   (360 - (mCameraRotation) + mAngleXZ) * (3.141592f / 180.0f),
+		                   (360 - mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
 		                   glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 
 	bool DungeonGLES2Renderer::isAnimating() {
-		return mRotationTarget != mCameraRotation;
+		return mCamera.isAnimating();
 	}
 
 	void DungeonGLES2Renderer::setEyeView(float *eyeView) {
-		mEyeView = eyeView;
+		mCamera.setEyeView( eyeView );
 	}
 
 	void DungeonGLES2Renderer::setPerspectiveMatrix(float *perspectiveMatrix) {
@@ -740,18 +708,15 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::setAngleXZ(float xz) {
-		mAngleXZ = xz;
+		mCamera.setRotationXZ( xz );
 	}
 
 	void DungeonGLES2Renderer::setAngleYZ(float yz) {
-		mAngleYZ = yz;
+		mCamera.setRotationYZ( yz );
 	}
 
 	void DungeonGLES2Renderer::resetCamera() {
-		mAngleXZ = 0;
-		mAngleYZ = 0;
-		mCameraRotation = 0;
-		mRotationTarget = 0;
+		mCamera.reset();
 	}
 
 	void DungeonGLES2Renderer::setTileProperties(CTilePropertyMap map) {

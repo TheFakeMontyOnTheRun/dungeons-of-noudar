@@ -92,6 +92,8 @@ set(SOURCE_FILES
         X11-version/x11_native.cpp
         ../gles2-renderer/CLerp.cpp
         ../gles2-renderer/CLerp.h
+        ../gles2-renderer/Camera.cpp
+        ../gles2-renderer/Camera.h
         ../gles2-renderer/Logger.cpp
         ../gles2-renderer/Trig.cpp
         ../gles2-renderer/Camera.cpp

@@ -83,17 +83,6 @@ namespace odb {
 		//interaction
 		glm::vec3 mCurrentCharacterPosition;
 
-		//camera
-		glm::vec2 mCameraTarget;
-		glm::vec2 cameraPosition;
-		float *mEyeView = nullptr;
-
-		float mAngleXZ = 0;
-		float mAngleYZ = 0;
-
-		int mCameraRotation = 0;
-		int mRotationTarget = 0;
-
 		//VBOs
 
 		const static float cubeVertices[16 * 5];
@@ -115,6 +104,7 @@ namespace odb {
 		static const unsigned short skyIndices[6];
 
 		RenderingJobSnapshotAdapter mSnapshotAdapter;
+		Camera mCamera;
 	public:
 		//basic bookeeping
 		DungeonGLES2Renderer();
