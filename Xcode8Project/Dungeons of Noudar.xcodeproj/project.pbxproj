@@ -234,8 +234,6 @@
 		F18755711DC90ECC001188C5 /* CMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18755381DC90ECC001188C5 /* CMap.cpp */; };
 		F18755741DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187553B1DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp */; };
 		F18755751DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187553B1DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp */; };
-		F18755781DC90ECC001188C5 /* CEndTurnCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187553D1DC90ECC001188C5 /* CEndTurnCommand.cpp */; };
-		F18755791DC90ECC001188C5 /* CEndTurnCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187553D1DC90ECC001188C5 /* CEndTurnCommand.cpp */; };
 		F187557C1DC90ECC001188C5 /* CMoveActorCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187553F1DC90ECC001188C5 /* CMoveActorCommand.cpp */; };
 		F187557D1DC90ECC001188C5 /* CMoveActorCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187553F1DC90ECC001188C5 /* CMoveActorCommand.cpp */; };
 		F18755801DC90ECC001188C5 /* CNullCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18755411DC90ECC001188C5 /* CNullCommand.cpp */; };
@@ -293,8 +291,6 @@
 		F1AA95411E21A0F900759076 /* CHuntApproach.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95371E21A0F900759076 /* CHuntApproach.cpp */; };
 		F1AA95421E21A0F900759076 /* CMonster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95381E21A0F900759076 /* CMonster.cpp */; };
 		F1AA95431E21A0F900759076 /* CMonster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95381E21A0F900759076 /* CMonster.cpp */; };
-		F1AA95441E21A0F900759076 /* CTeam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95391E21A0F900759076 /* CTeam.cpp */; };
-		F1AA95451E21A0F900759076 /* CTeam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95391E21A0F900759076 /* CTeam.cpp */; };
 		F1AA954D1E21A7E300759076 /* OverlayNanoVGRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA954C1E21A7E300759076 /* OverlayNanoVGRenderer.cpp */; };
 		F1AA954E1E21A7E300759076 /* OverlayNanoVGRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA954C1E21A7E300759076 /* OverlayNanoVGRenderer.cpp */; };
 		F1AA95C31E21A84400759076 /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = F1AA957B1E21A84400759076 /* nanovg.c */; };
@@ -307,6 +303,28 @@
 		F1B23EA21DCF5E60009E807B /* GL3NoudarView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EA11DCF5E60009E807B /* GL3NoudarView.mm */; };
 		F1B23EAA1DCF5ED0009E807B /* GL3NoudarWindowController.mm in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.mm */; };
 		F1B23EAD1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F1B23EAC1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m */; };
+		F1E8665E1E5A5E5600A60721 /* VisibilityStrategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E8665D1E5A5E5600A60721 /* VisibilityStrategy.cpp */; };
+		F1E8665F1E5A5E5600A60721 /* VisibilityStrategy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E8665D1E5A5E5600A60721 /* VisibilityStrategy.cpp */; };
+		F1E866611E5A613B00A60721 /* CItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866601E5A613B00A60721 /* CItem.cpp */; };
+		F1E866621E5A613B00A60721 /* CItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866601E5A613B00A60721 /* CItem.cpp */; };
+		F1E866691E5A615900A60721 /* CCycleNextItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866631E5A615900A60721 /* CCycleNextItemCommand.cpp */; };
+		F1E8666A1E5A615900A60721 /* CCycleNextItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866631E5A615900A60721 /* CCycleNextItemCommand.cpp */; };
+		F1E8666B1E5A615900A60721 /* CCyclePreviousItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866641E5A615900A60721 /* CCyclePreviousItemCommand.cpp */; };
+		F1E8666C1E5A615900A60721 /* CCyclePreviousItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866641E5A615900A60721 /* CCyclePreviousItemCommand.cpp */; };
+		F1E8666D1E5A615900A60721 /* CDropItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866651E5A615900A60721 /* CDropItemCommand.cpp */; };
+		F1E8666E1E5A615900A60721 /* CDropItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866651E5A615900A60721 /* CDropItemCommand.cpp */; };
+		F1E8666F1E5A615900A60721 /* CEndTurnCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866661E5A615900A60721 /* CEndTurnCommand.cpp */; };
+		F1E866701E5A615900A60721 /* CEndTurnCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866661E5A615900A60721 /* CEndTurnCommand.cpp */; };
+		F1E866711E5A615900A60721 /* CPickItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866671E5A615900A60721 /* CPickItemCommand.cpp */; };
+		F1E866721E5A615900A60721 /* CPickItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866671E5A615900A60721 /* CPickItemCommand.cpp */; };
+		F1E866731E5A615900A60721 /* CUseCurrentItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866681E5A615900A60721 /* CUseCurrentItemCommand.cpp */; };
+		F1E866741E5A615900A60721 /* CUseCurrentItemCommand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866681E5A615900A60721 /* CUseCurrentItemCommand.cpp */; };
+		F1E866771E5A61DC00A60721 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866751E5A61DC00A60721 /* Camera.cpp */; };
+		F1E866781E5A61DC00A60721 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866751E5A61DC00A60721 /* Camera.cpp */; };
+		F1E866791E5A61DC00A60721 /* CLerp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866761E5A61DC00A60721 /* CLerp.cpp */; };
+		F1E8667A1E5A61DC00A60721 /* CLerp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E866761E5A61DC00A60721 /* CLerp.cpp */; };
+		F1E8667C1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E8667B1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp */; };
+		F1E8667D1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1E8667B1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp */; };
 		F1FD4E781DD3C20900B21A9D /* vertex_OSX.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F1FD4E771DD3C20900B21A9D /* vertex_OSX.glsl */; };
 		F1FD4E7A1DD3C43F00B21A9D /* fragment_OSX.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F1FD4E791DD3C43F00B21A9D /* fragment_OSX.glsl */; };
 /* End PBXBuildFile section */
@@ -471,7 +489,6 @@
 		F18755341DC90ECC001188C5 /* CGameDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CGameDelegate.cpp; sourceTree = "<group>"; };
 		F18755381DC90ECC001188C5 /* CMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CMap.cpp; sourceTree = "<group>"; };
 		F187553B1DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CActorMeleeAttackCommand.cpp; sourceTree = "<group>"; };
-		F187553D1DC90ECC001188C5 /* CEndTurnCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CEndTurnCommand.cpp; sourceTree = "<group>"; };
 		F187553F1DC90ECC001188C5 /* CMoveActorCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CMoveActorCommand.cpp; sourceTree = "<group>"; };
 		F18755411DC90ECC001188C5 /* CNullCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CNullCommand.cpp; sourceTree = "<group>"; };
 		F18755431DC90ECC001188C5 /* CQuitCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CQuitCommand.cpp; sourceTree = "<group>"; };
@@ -522,7 +539,6 @@
 		F1AA95361E21A0F900759076 /* CElixirFountain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CElixirFountain.cpp; sourceTree = "<group>"; };
 		F1AA95371E21A0F900759076 /* CHuntApproach.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CHuntApproach.cpp; sourceTree = "<group>"; };
 		F1AA95381E21A0F900759076 /* CMonster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CMonster.cpp; sourceTree = "<group>"; };
-		F1AA95391E21A0F900759076 /* CTeam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CTeam.cpp; sourceTree = "<group>"; };
 		F1AA95461E21A14B00759076 /* CCharacter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCharacter.h; sourceTree = "<group>"; };
 		F1AA95471E21A14B00759076 /* CCharacterArchetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCharacterArchetype.h; sourceTree = "<group>"; };
 		F1AA95481E21A14B00759076 /* CElixirFountain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CElixirFountain.h; sourceTree = "<group>"; };
@@ -547,6 +563,17 @@
 		F1B23EA91DCF5ED0009E807B /* GL3NoudarWindowController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GL3NoudarWindowController.mm; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarWindowController.mm"; sourceTree = SOURCE_ROOT; };
 		F1B23EAB1DCF5F64009E807B /* GL3NoudarFullscreenWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GL3NoudarFullscreenWindow.h; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarFullscreenWindow.h"; sourceTree = SOURCE_ROOT; };
 		F1B23EAC1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GL3NoudarFullscreenWindow.m; path = "Dungeons of Noudar/Source/Classes/OSX/GL3NoudarFullscreenWindow.m"; sourceTree = SOURCE_ROOT; };
+		F1E8665D1E5A5E5600A60721 /* VisibilityStrategy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VisibilityStrategy.cpp; sourceTree = "<group>"; };
+		F1E866601E5A613B00A60721 /* CItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CItem.cpp; sourceTree = "<group>"; };
+		F1E866631E5A615900A60721 /* CCycleNextItemCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCycleNextItemCommand.cpp; sourceTree = "<group>"; };
+		F1E866641E5A615900A60721 /* CCyclePreviousItemCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCyclePreviousItemCommand.cpp; sourceTree = "<group>"; };
+		F1E866651E5A615900A60721 /* CDropItemCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CDropItemCommand.cpp; sourceTree = "<group>"; };
+		F1E866661E5A615900A60721 /* CEndTurnCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CEndTurnCommand.cpp; sourceTree = "<group>"; };
+		F1E866671E5A615900A60721 /* CPickItemCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CPickItemCommand.cpp; sourceTree = "<group>"; };
+		F1E866681E5A615900A60721 /* CUseCurrentItemCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CUseCurrentItemCommand.cpp; sourceTree = "<group>"; };
+		F1E866751E5A61DC00A60721 /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		F1E866761E5A61DC00A60721 /* CLerp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CLerp.cpp; sourceTree = "<group>"; };
+		F1E8667B1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderingJobSnapshotAdapter.cpp; sourceTree = "<group>"; };
 		F1FD4E771DD3C20900B21A9D /* vertex_OSX.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = vertex_OSX.glsl; sourceTree = "<group>"; };
 		F1FD4E791DD3C43F00B21A9D /* fragment_OSX.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = fragment_OSX.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -894,7 +921,7 @@
 				F1AA954C1E21A7E300759076 /* OverlayNanoVGRenderer.cpp */,
 				F1AA95371E21A0F900759076 /* CHuntApproach.cpp */,
 				F1AA95381E21A0F900759076 /* CMonster.cpp */,
-				F1AA95391E21A0F900759076 /* CTeam.cpp */,
+				F1E866601E5A613B00A60721 /* CItem.cpp */,
 				F18A6EBD1DFC6D490036AB6E /* CPlainFileLoader.cpp */,
 				F18A6EBE1DFC6D490036AB6E /* IFileLoaderDelegate.cpp */,
 				F187552C1DC90ECC001188C5 /* CActor.cpp */,
@@ -914,7 +941,12 @@
 				F138295A1E46A3180089E1EC /* CHitscanAttackCommand.cpp */,
 				F18A6ECA1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp */,
 				F187553B1DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp */,
-				F187553D1DC90ECC001188C5 /* CEndTurnCommand.cpp */,
+				F1E866631E5A615900A60721 /* CCycleNextItemCommand.cpp */,
+				F1E866641E5A615900A60721 /* CCyclePreviousItemCommand.cpp */,
+				F1E866651E5A615900A60721 /* CDropItemCommand.cpp */,
+				F1E866661E5A615900A60721 /* CEndTurnCommand.cpp */,
+				F1E866671E5A615900A60721 /* CPickItemCommand.cpp */,
+				F1E866681E5A615900A60721 /* CUseCurrentItemCommand.cpp */,
 				F187553F1DC90ECC001188C5 /* CMoveActorCommand.cpp */,
 				F18755411DC90ECC001188C5 /* CNullCommand.cpp */,
 				F18755431DC90ECC001188C5 /* CQuitCommand.cpp */,
@@ -931,6 +963,8 @@
 				F1875EA81DC9153D001188C5 /* TrigBatch.cpp */,
 				F1875EA91DC9153D001188C5 /* TrigBatch.h */,
 				F1875EAA1DC9153D001188C5 /* WavefrontMaterialReader.cpp */,
+				F1E866751E5A61DC00A60721 /* Camera.cpp */,
+				F1E866761E5A61DC00A60721 /* CLerp.cpp */,
 				F1875EAB1DC9153D001188C5 /* WavefrontMaterialReader.h */,
 				F1875EAC1DC9153D001188C5 /* WavefrontOBJReader.cpp */,
 				F1875EAD1DC9153D001188C5 /* WavefrontOBJReader.h */,
@@ -962,7 +996,9 @@
 				F127A30D1E2B8248005FCEEC /* CTile3DProperties.cpp */,
 				F13883611E00AE3A004F50EA /* DungeonGL11Renderer.cpp */,
 				F1875E921DC9124C001188C5 /* DungeonGLES2Renderer.cpp */,
+				F1E8665D1E5A5E5600A60721 /* VisibilityStrategy.cpp */,
 				F1875E931DC9124C001188C5 /* DungeonGLES2Renderer.h */,
+				F1E8667B1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp */,
 				F1875E941DC9124C001188C5 /* GameNativeAPI.cpp */,
 				F1875E951DC9124C001188C5 /* GameNativeAPI.h */,
 				F1875E961DC9124C001188C5 /* LightningStrategy.cpp */,
@@ -1309,20 +1345,24 @@
 				F1AA953A1E21A0F900759076 /* CCharacter.cpp in Sources */,
 				F1AA953C1E21A0F900759076 /* CCharacterArchetype.cpp in Sources */,
 				F1B23E9F1DCF5E33009E807B /* EAGLNoudarView.mm in Sources */,
+				F1E8666F1E5A615900A60721 /* CEndTurnCommand.cpp in Sources */,
 				F1180B8D1DC8F68B00BDC97D /* main.mm in Sources */,
 				F1180B8A1DC8F67000BDC97D /* vectorUtil.c in Sources */,
+				F1E866611E5A613B00A60721 /* CItem.cpp in Sources */,
+				F1E866731E5A615900A60721 /* CUseCurrentItemCommand.cpp in Sources */,
 				F1875E811DC91137001188C5 /* NativeBitmap.cpp in Sources */,
 				F18755901DC90ECC001188C5 /* IMapElement.cpp in Sources */,
 				F1180B641DC8F5F500BDC97D /* AppDelegate.mm in Sources */,
+				F1E866691E5A615900A60721 /* CCycleNextItemCommand.cpp in Sources */,
 				F1875EA41DC9124C001188C5 /* SplatAnimation.cpp in Sources */,
 				F1875EB21DC9153D001188C5 /* WavefrontMaterialReader.cpp in Sources */,
-				F1AA95441E21A0F900759076 /* CTeam.cpp in Sources */,
 				F1AA95401E21A0F900759076 /* CHuntApproach.cpp in Sources */,
 				F1875E7B1DC91137001188C5 /* Material.cpp in Sources */,
+				F1E866711E5A615900A60721 /* CPickItemCommand.cpp in Sources */,
 				F1AA95C31E21A84400759076 /* nanovg.c in Sources */,
 				F18755601DC90ECC001188C5 /* CDoorway.cpp in Sources */,
 				F18755881DC90ECC001188C5 /* CTurnActorCommand.cpp in Sources */,
-				F18755781DC90ECC001188C5 /* CEndTurnCommand.cpp in Sources */,
+				F1E866791E5A61DC00A60721 /* CLerp.cpp in Sources */,
 				F1180B861DC8F67000BDC97D /* modelUtil.c in Sources */,
 				F140E8561DCF9B4500B28CCA /* imageUtil.m in Sources */,
 				F1875EA01DC9124C001188C5 /* LightningStrategy.cpp in Sources */,
@@ -1343,6 +1383,9 @@
 				F1875EB41DC9153D001188C5 /* WavefrontOBJReader.cpp in Sources */,
 				F1875EA21DC9124C001188C5 /* NoudarGLES2Bridge.cpp in Sources */,
 				F18755741DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */,
+				F1E8665E1E5A5E5600A60721 /* VisibilityStrategy.cpp in Sources */,
+				F1E866771E5A61DC00A60721 /* Camera.cpp in Sources */,
+				F1E8667C1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp in Sources */,
 				F1AA954D1E21A7E300759076 /* OverlayNanoVGRenderer.cpp in Sources */,
 				F18755701DC90ECC001188C5 /* CMap.cpp in Sources */,
 				F138295B1E46A3180089E1EC /* CHitscanAttackCommand.cpp in Sources */,
@@ -1360,7 +1403,9 @@
 				F18755801DC90ECC001188C5 /* CNullCommand.cpp in Sources */,
 				F1875E9E1DC9124C001188C5 /* GameNativeAPI.cpp in Sources */,
 				F1180B821DC8F67000BDC97D /* AppleImageLoader.mm in Sources */,
+				F1E8666B1E5A615900A60721 /* CCyclePreviousItemCommand.cpp in Sources */,
 				F187558C1DC90ECC001188C5 /* IGameCommand.cpp in Sources */,
+				F1E8666D1E5A615900A60721 /* CDropItemCommand.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1370,13 +1415,17 @@
 			files = (
 				F187557D1DC90ECC001188C5 /* CMoveActorCommand.cpp in Sources */,
 				F1AA953D1E21A0F900759076 /* CCharacterArchetype.cpp in Sources */,
+				F1E8667A1E5A61DC00A60721 /* CLerp.cpp in Sources */,
 				F18755751DC90ECC001188C5 /* CActorMeleeAttackCommand.cpp in Sources */,
 				F138295C1E46A3180089E1EC /* CHitscanAttackCommand.cpp in Sources */,
 				F13883621E00AE3A004F50EA /* DungeonGL11Renderer.cpp in Sources */,
 				F18755891DC90ECC001188C5 /* CTurnActorCommand.cpp in Sources */,
 				F1875E801DC91137001188C5 /* MeshObject.cpp in Sources */,
 				F135586A1DD7C587004F1E22 /* VBORenderingJob.cpp in Sources */,
+				F1E866701E5A615900A60721 /* CEndTurnCommand.cpp in Sources */,
+				F1E8666A1E5A615900A60721 /* CCycleNextItemCommand.cpp in Sources */,
 				F18A6EC21DFC6D490036AB6E /* IFileLoaderDelegate.cpp in Sources */,
+				F1E8666E1E5A615900A60721 /* CDropItemCommand.cpp in Sources */,
 				F1B23EA21DCF5E60009E807B /* GL3NoudarView.mm in Sources */,
 				F1875E821DC91137001188C5 /* NativeBitmap.cpp in Sources */,
 				F127A30F1E2B8248005FCEEC /* CTile3DProperties.cpp in Sources */,
@@ -1397,27 +1446,32 @@
 				F1AA954E1E21A7E300759076 /* OverlayNanoVGRenderer.cpp in Sources */,
 				F1875E7A1DC91137001188C5 /* Logger.cpp in Sources */,
 				F13829601E46A44E0089E1EC /* CTeam.cpp in Sources */,
-				F1AA95451E21A0F900759076 /* CTeam.cpp in Sources */,
-				F18755791DC90ECC001188C5 /* CEndTurnCommand.cpp in Sources */,
 				F1B23EAD1DCF5F64009E807B /* GL3NoudarFullscreenWindow.m in Sources */,
 				F18755911DC90ECC001188C5 /* IMapElement.cpp in Sources */,
 				F1AA95411E21A0F900759076 /* CHuntApproach.cpp in Sources */,
 				F18755651DC90ECC001188C5 /* CGame.cpp in Sources */,
+				F1E866721E5A615900A60721 /* CPickItemCommand.cpp in Sources */,
 				F1875E881DC91137001188C5 /* Texture.cpp in Sources */,
+				F1E866621E5A613B00A60721 /* CItem.cpp in Sources */,
 				F1AA95431E21A0F900759076 /* CMonster.cpp in Sources */,
 				F1B23EAA1DCF5ED0009E807B /* GL3NoudarWindowController.mm in Sources */,
 				F1875EA11DC9124C001188C5 /* LightningStrategy.cpp in Sources */,
+				F1E866741E5A615900A60721 /* CUseCurrentItemCommand.cpp in Sources */,
 				F18755611DC90ECC001188C5 /* CDoorway.cpp in Sources */,
 				F1AA953F1E21A0F900759076 /* CElixirFountain.cpp in Sources */,
+				F1E8667D1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp in Sources */,
 				F13B35B11E3D6F9500743FE3 /* Common.cpp in Sources */,
 				F18755691DC90ECC001188C5 /* CGameDelegate.cpp in Sources */,
 				F18755811DC90ECC001188C5 /* CNullCommand.cpp in Sources */,
 				F1875EB31DC9153D001188C5 /* WavefrontMaterialReader.cpp in Sources */,
 				F1875E7E1DC91137001188C5 /* MaterialList.cpp in Sources */,
+				F1E866781E5A61DC00A60721 /* Camera.cpp in Sources */,
+				F1E8666C1E5A615900A60721 /* CCyclePreviousItemCommand.cpp in Sources */,
 				F1875E9F1DC9124C001188C5 /* GameNativeAPI.cpp in Sources */,
 				F1AA95C41E21A84400759076 /* nanovg.c in Sources */,
 				F1180B831DC8F67000BDC97D /* AppleImageLoader.mm in Sources */,
 				F1875EA51DC9124C001188C5 /* SplatAnimation.cpp in Sources */,
+				F1E8665F1E5A5E5600A60721 /* VisibilityStrategy.cpp in Sources */,
 				F1180B6F1DC8F62500BDC97D /* AppDelegate.mm in Sources */,
 				F1180B891DC8F67000BDC97D /* sourceUtil.c in Sources */,
 				F1180B8B1DC8F67000BDC97D /* vectorUtil.c in Sources */,

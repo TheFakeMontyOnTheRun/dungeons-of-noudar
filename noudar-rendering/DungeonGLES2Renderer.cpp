@@ -27,7 +27,7 @@
 #include <unordered_set>
 #include <map>
 #include <array>
-#include <CLerp.h>
+#include "CLerp.h"
 
 #include "Vec2i.h"
 #include "IMapElement.h"

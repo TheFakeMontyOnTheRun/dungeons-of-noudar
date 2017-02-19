@@ -8,7 +8,7 @@
 #include <array>
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
-#include <VBORenderingJob.h>
+#include "VBORenderingJob.h"
 #include <vector>
 #include <utility>
 #include <map>
