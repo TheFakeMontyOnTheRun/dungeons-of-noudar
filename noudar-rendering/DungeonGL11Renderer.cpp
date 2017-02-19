@@ -237,11 +237,11 @@ namespace odb {
 #endif
 	}
 
-	GLuint DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
+	int DungeonGLES2Renderer::loadShader(EShaderType shaderType, const char *pSource) {
 		return 1;
 	}
 
-	GLuint DungeonGLES2Renderer::createProgram(const char *pVertexSource,
+	int DungeonGLES2Renderer::createProgram(const char *pVertexSource,
 	                                           const char *pFragmentSource) {
 		return 1;
 	}
