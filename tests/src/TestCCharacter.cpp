@@ -6,6 +6,7 @@
 #include "Vec2i.h"
 #include "CCharacterArchetype.h"
 #include "CTeam.h"
+#include "CItem.h"
 #include "CActor.h"
 #include "CCharacter.h"
 

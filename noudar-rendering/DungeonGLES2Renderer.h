@@ -76,7 +76,6 @@ namespace odb {
 		glm::vec3 mCurrentCharacterPosition;
 
 		//VBOs
-
 		const static float cubeVertices[16 * 5];
 		const static unsigned short cubeIndices[6 * 4];
 

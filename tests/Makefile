@@ -10,7 +10,7 @@ CXXFLAGS = -I../noudar-core/noudar-core/include -I../glm -I../gles2-renderer -I.
 		-I$(GMOCK_DIR) \
 		-I$(GMOCK_DIR)/include/gtest \
 		-I$(GMOCK_DIR)/include/gtest/internal \
-		-O2 -g -c -std=c++0x 
+		-c -std=c++0x -g -O0 -Wall
 CXX = clang++
 
 OBJS =  ../noudar-core/noudar-core/src/CActor.o \
@@ -20,6 +20,7 @@ OBJS =  ../noudar-core/noudar-core/src/CActor.o \
 	../noudar-core/noudar-core/src/CCharacterArchetype.o \
 	../noudar-core/noudar-core/src/CMonster.o \
 	../noudar-core/noudar-core/src/CMap.o \
+	../noudar-core/noudar-core/src/CItem.o \
 	../noudar-core/noudar-core/src/Common.o \
 	../noudar-core/noudar-core/src/CHuntApproach.o \
 	../noudar-core/noudar-core/src/CElixirFountain.o \
@@ -38,14 +39,19 @@ OBJS =  ../noudar-core/noudar-core/src/CActor.o \
 	../noudar-core/noudar-core/src/commands/CQuitCommand.o \
 	../noudar-core/noudar-core/src/commands/CNullCommand.o \
 	../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
+	../noudar-core/noudar-core/src/commands/CPickItemCommand.o \
+	../noudar-core/noudar-core/src/commands/CDropItemCommand.o \
+	../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.o \
+	../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.o \
+	../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \
 	../noudar-rendering/RenderingJobSnapshotAdapter.o \
 	../gles2-renderer/VBORenderingJob.o \
 	$(GTEST_DIR)/src/gtest-all.o \
 	$(GMOCK_DIR)/src/gmock-all.o \
 	$(GMOCK_DIR)/src/gmock_main.o \
-	src/TestCCharacter.o \
-	src/TestCGame.o \
-	src/TestRenderingJobSnapshotAdapter.o
+	src/TestCCharacter.o 
+
+#	src/TestRenderingJobSnapshotAdapter.o
 
 TARGET = test
 LDFLAGS = -lpthread

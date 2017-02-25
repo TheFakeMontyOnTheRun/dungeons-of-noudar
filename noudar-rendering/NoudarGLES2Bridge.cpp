@@ -64,6 +64,7 @@ namespace odb {
                 snapshot.snapshot[ y ][ x ] = EActorsSnapshotElement::kNothing;
                 snapshot.ids[ y ][ x ] = 0;
                 snapshot.splat[ y ][ x ] = -1;
+                snapshot.mVisibilityMap[ y ][ x ] = EVisibility::kVisible;
 
 	            auto element = map.getElementAt( x, y );
 
@@ -95,19 +96,17 @@ namespace odb {
             }
         }
 
-        auto cameraPosition = current->getPosition();
-
-	    VisMap currentVisMap;
-        VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
-
+//        auto cameraPosition = current->getPosition();
+//	    VisMap currentVisMap;
+//      VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
 //	    VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
-	    VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+//	    VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
 
         setSnapshot( snapshot );
 
-	    previousPosition = cameraPosition;
-	    previousDirection = current->getDirection();
-	    previous = snapshot.mVisibilityMap;
+//	    previousPosition = cameraPosition;
+//	    previousDirection = current->getDirection();
+//	    previous = snapshot.mVisibilityMap;
     }
 
     char NoudarGLES2Bridge::getInput() {
