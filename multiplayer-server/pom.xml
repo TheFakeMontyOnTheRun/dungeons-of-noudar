@@ -1,78 +1,84 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>br.odb</groupId>
-	<artifactId>multiplayer-server</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>multiplayer-server</name>
-	<url>www.montyprojects.com</url>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>br.odb</groupId>
+    <artifactId>multiplayer-server</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <name>multiplayer-server</name>
+    <url>www.montyprojects.com</url>
 
-	<!-- repositories>
-		<repository>
-			<id>java.net2</id>
-			<name>Repository hosting the jee6 artifacts</name>
-			<url>http://download.java.net/maven/2</url>
-		</repository>
-	</repositories-->
+    <repositories>
+        <repository>
+            <id>java.net2</id>
+            <name>Repository hosting the jee6 artifacts</name>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+    </repositories>
 
-	<dependencies>
-	  
-	  <dependency>
-	    <groupId>javax.servlet</groupId>
-	    <artifactId>javax.servlet-api</artifactId>
-	    <version>3.0.1</version>
-	    <scope>provided</scope>
-	  </dependency>
-	  
+    <dependencies>
 
-		<!-- dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-web-api</artifactId>
-			<version>6.0</version>
-			<scope>provided</scope>
-		</dependency -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.10</version>
-			<scope>test</scope>
-		</dependency>
 
-	</dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
+        </dependency>
 
-	<build>
-	  <plugins>
-	    
-	    <plugin>
-              <groupId>org.apache.tomcat.maven</groupId>
-              <artifactId>tomcat7-maven-plugin</artifactId>
-              <version>2.2</version>
-              <configuration>
-		<port>9090</port>
-		<!-- path>/</path -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
 
-		<url>http://192.168.1.8:9090/multiplayer-server</url>
+    </dependencies>
 
-              </configuration>
-	    </plugin>
-	  </plugins>
-	  
-	  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/</path>
+                    <url>http://192.168.1.6:8080/multiplayer-server</url>
 
-		<!--plugins> <plugin> <artifactId>maven-compiler-plugin</artifactId> <version>3.1</version> 
-			<configuration> <source>1.7</source> <target>1.7</target> </configuration> 
-			</plugin> <plugin> <artifactId>maven-war-plugin</artifactId> <version>2.4</version> 
-			<configuration> <warSourceDirectory>WebContent</warSourceDirectory> <failOnMissingWebXml>false</failOnMissingWebXml> 
-			</configuration> </plugin> </plugins -->
-		<finalName>multiplayer-server</finalName>
-	</build>
+                </configuration>
+            </plugin>
 
-        <properties>
-                <maven.compiler.source>1.7</maven.compiler.source>
-                <maven.compiler.target>1.7</maven.compiler.target>
-        </properties>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warSourceDirectory>WebContent</warSourceDirectory>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+        <finalName>multiplayer-server</finalName>
+    </build>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
 
 </project>

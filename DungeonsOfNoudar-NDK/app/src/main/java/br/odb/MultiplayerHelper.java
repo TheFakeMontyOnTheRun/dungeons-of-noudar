@@ -33,6 +33,8 @@ public class MultiplayerHelper {
         void setCurrentPlayerId(String playerId);
 
         void setPlayerInitialPosition(String posX, String posY);
+
+        void setGameId(String gameId);
     }
 
     public String gameId = "";
@@ -85,20 +87,20 @@ public class MultiplayerHelper {
 
 
     public String getServerUrl() {
-        return "http://192.168.1.5:8080/multiplayer-server";
+        return "http://192.168.1.6:8080/multiplayer-server";
     }
 
-    private void sendData( String posX, String posY, OnRequestResult handler ) {
+    private void sendData(String posX, String posY, OnRequestResult handler) {
         String toSend = getServerUrl() + "/SendMove?gameId=" + gameId + "&playerId=" + playerId;
         toSend += "&x=" + posX;
         toSend += "&y=" + posY;
 
-        request( toSend, handler );
+        request(toSend, handler);
     }
 
     public void connectToServer(final MultiplayerHelper.GameClient client) {
 
-        request( getServerUrl() + "/GetGameId", new MultiplayerHelper.OnRequestResult() {
+        request(getServerUrl() + "/GetGameId", new MultiplayerHelper.OnRequestResult() {
             @Override
             public void onDataResulting(String data) {
                 try {
@@ -128,7 +130,8 @@ public class MultiplayerHelper {
                         }
                     }
 
-                    client.setPlayerInitialPosition( playerId, playerId );
+                    client.setGameId(gameId);
+                    client.setPlayerInitialPosition(playerId, playerId);
 
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
@@ -144,7 +147,7 @@ public class MultiplayerHelper {
 
     public void updateServerState(final MultiplayerHelper.GameClient client) {
 
-        request( getServerUrl() + "/GetGameStatus?gameId=" + gameId, new MultiplayerHelper.OnRequestResult() {
+        request(getServerUrl() + "/GetGameStatus?gameId=" + gameId + "&playerId=" + playerId, new MultiplayerHelper.OnRequestResult() {
             @Override
             public void onDataResulting(String data) {
 
@@ -174,9 +177,9 @@ public class MultiplayerHelper {
                             data = node.getChildNodes().item(0).getNodeValue();
                             int p = 0;
 
-                            for ( int y = 0; y < 20; ++y ) {
-                                for ( int x = 0; x < 20; ++x ) {
-                                    newState += data.charAt( p );
+                            for (int y = 0; y < 20; ++y) {
+                                for (int x = 0; x < 20; ++x) {
+                                    newState += data.charAt(p);
                                     ++p;
                                 }
                                 newState += '\n';
@@ -206,10 +209,10 @@ public class MultiplayerHelper {
         toSend += "&x=" + posX;
         toSend += "&y=" + posY;
 
-        request( toSend, new MultiplayerHelper.OnRequestResult() {
+        request(toSend, new MultiplayerHelper.OnRequestResult() {
             @Override
             public void onDataResulting(String data) {
-                updateServerState( client );
+                updateServerState(client);
             }
         });
     }

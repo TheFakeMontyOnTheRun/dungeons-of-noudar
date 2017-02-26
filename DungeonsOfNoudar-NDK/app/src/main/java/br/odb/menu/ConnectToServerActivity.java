@@ -5,26 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import br.odb.MultiplayerHelper;
 import br.odb.noudar.R;
@@ -44,7 +26,11 @@ public class ConnectToServerActivity extends Activity {
                 public void run() {
                     EditText edtServerState = (EditText) findViewById(R.id.edtServerState);
                     edtServerState.setText(data);
-                    findViewById(R.id.btnSend).setEnabled(helper.currentPlayerId.equals(helper.playerId));
+                    int index = data.replace("\n", "" ).indexOf( helper.playerId );
+                    int y = ( index / 20 );
+                    int x = (index % 20 );
+                    ((EditText) findViewById(R.id.edtPosX)).setText("" + x );
+                    ((EditText) findViewById(R.id.edtPosY)).setText("" + y );
                 }
             });
         }
@@ -67,12 +53,23 @@ public class ConnectToServerActivity extends Activity {
                 }
             });
         }
+
+        @Override
+        public void setGameId(String gameId) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((EditText) findViewById(R.id.edtGameId)).setText("" + helper.gameId);
+                }
+            });
+        }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect_to_server);
+        findViewById(R.id.btnSend).setEnabled(true);
 
         findViewById(R.id.btnConnect).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +82,47 @@ public class ConnectToServerActivity extends Activity {
             @Override
             public void onClick(View view) {
                 String posX = getPosX();
+                String posY = getPosY();
+
+                helper.sendData(posX, posY, client);
+            }
+        });
+
+
+        findViewById(R.id.btnUp).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String posX = getPosX();
+                String posY = "" + ( Integer.parseInt( getPosY() ) - 1 );
+
+                helper.sendData(posX, posY, client);
+            }
+        });
+
+        findViewById(R.id.btnDown).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String posX = getPosX();
+                String posY = "" + ( Integer.parseInt( getPosY() ) + 1 );
+
+                helper.sendData(posX, posY, client);
+            }
+        });
+
+        findViewById(R.id.btnLeft).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String posX = "" + ( Integer.parseInt( getPosX() ) - 1 );
+                String posY = getPosY();
+
+                helper.sendData(posX, posY, client);
+            }
+        });
+
+        findViewById(R.id.btnRight).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String posX = "" + ( Integer.parseInt( getPosX() ) + 1 );
                 String posY = getPosY();
 
                 helper.sendData(posX, posY, client);

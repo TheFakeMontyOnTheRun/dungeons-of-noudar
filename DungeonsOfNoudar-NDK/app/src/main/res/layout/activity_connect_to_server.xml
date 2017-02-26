@@ -10,14 +10,7 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="match_parent">
-        <EditText
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:background="#ccc"
-            android:id="@+id/edtServerState" />
+
         <ScrollView
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -29,9 +22,17 @@
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
 
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text="2"
+                    android:ems="10"
+                    android:id="@+id/edtGameId"
+                    android:layout_weight="1" />
 
                 <Button
-                    android:text="Button"
+                    android:text="Connect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/btnConnect"
@@ -57,7 +58,7 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:text="Button"
+                    android:text="Send"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/btnSend"
@@ -69,6 +70,70 @@
 
         </ScrollView>
 
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:background="#ccc"
+            android:id="@+id/edtServerState" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Button
+                    android:text="Up"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnUp"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Button
+                    android:text="Left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnLeft"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:text="Right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnRight"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Button
+                    android:text="Down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnDown"
+                    android:layout_weight="1" />
+            </LinearLayout>
+        </LinearLayout>
 
 
     </LinearLayout>
