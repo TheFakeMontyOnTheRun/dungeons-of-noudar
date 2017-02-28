@@ -31,3 +31,6 @@
 [submodule "protobuf"]
 	path = protobuf
 	url = https://github.com/google/protobuf.git
+[submodule "asio"]
+	path = asio
+	url = https://github.com/TheFakeMontyOnTheRun/asio.git
