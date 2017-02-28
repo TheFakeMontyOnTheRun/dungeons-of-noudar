@@ -25,7 +25,19 @@ public class ConnectToServerActivity extends Activity {
                 @Override
                 public void run() {
                     EditText edtServerState = (EditText) findViewById(R.id.edtServerState);
-                    edtServerState.setText(data);
+
+                    int pos  = 0;
+                    String state = "";
+                    char[] dataState = data.toCharArray();
+                    for ( int y = 0; y < 20; ++y ) {
+                        for ( int x = 0; x < 20; ++x ) {
+                            state += dataState[ pos++ ];
+                        }
+                        state += '\n';
+                    }
+
+
+                    edtServerState.setText(state);
                     int index = data.replace("\n", "" ).indexOf( helper.playerId );
                     int y = ( index / 20 );
                     int x = (index % 20 );

@@ -18,21 +18,12 @@ import java.io.IOException;
 public class GetGameId extends HttpServlet {
 
     class GameIdResponse {
-        private int gameId;
+        private int gameId = 1;
         private int playerId;
 
         @Override
         public String toString() {
-
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("<?xml version='1.0'?>\n<game><gameId>");
-            sb.append(gameId);
-            sb.append("</gameId><playerId>");
-            sb.append(playerId);
-            sb.append("</playerId></game>");
-
-            return sb.toString();
+            return "" + playerId;
         }
     }
 

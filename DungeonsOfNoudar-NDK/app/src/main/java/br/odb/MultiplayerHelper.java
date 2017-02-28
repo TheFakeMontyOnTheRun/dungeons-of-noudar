@@ -1,21 +1,10 @@
 package br.odb;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by monty on 20/11/16.
@@ -87,7 +76,7 @@ public class MultiplayerHelper {
 
 
     public String getServerUrl() {
-        return "http://192.168.1.6:8080/multiplayer-server";
+        return "http://192.168.1.7:8080/multiplayer-server";
     }
 
     private void sendData(String posX, String posY, OnRequestResult handler) {
@@ -103,44 +92,10 @@ public class MultiplayerHelper {
         request(getServerUrl() + "/GetGameId", new MultiplayerHelper.OnRequestResult() {
             @Override
             public void onDataResulting(String data) {
-                try {
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder db = null;
-
-                    db = dbf.newDocumentBuilder();
-                    InputSource is = new InputSource(new StringReader(data));
-                    Document doc = db.parse(is);
-                    doc.getDocumentElement().normalize();
-
-                    NodeList nodeLst;
-                    nodeLst = doc.getElementsByTagName("game");
-                    Node gameNode = nodeLst.item(0);
-                    NodeList list = gameNode.getChildNodes();
-
-                    Node node;
-
-                    for (int c = 0; c < list.getLength(); ++c) {
-
-                        node = list.item(c);
-
-                        if ("playerId".equalsIgnoreCase(node.getNodeName())) {
-                            playerId = node.getChildNodes().item(0).getNodeValue().trim();
-                        } else if ("gameId".equalsIgnoreCase(node.getNodeName())) {
-                            gameId = node.getChildNodes().item(0).getNodeValue().trim();
-                        }
-                    }
-
-                    client.setGameId(gameId);
-                    client.setPlayerInitialPosition(playerId, playerId);
-
-                } catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+                playerId = data;
+                gameId = "1";
+                client.setGameId(gameId);
+                client.setPlayerInitialPosition(data, data);
             }
         });
     }
@@ -150,55 +105,6 @@ public class MultiplayerHelper {
         request(getServerUrl() + "/GetGameStatus?gameId=" + gameId + "&playerId=" + playerId, new MultiplayerHelper.OnRequestResult() {
             @Override
             public void onDataResulting(String data) {
-
-
-                try {
-                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder db = null;
-
-                    db = dbf.newDocumentBuilder();
-                    InputSource is = new InputSource(new StringReader(data));
-                    Document doc = db.parse(is);
-                    doc.getDocumentElement().normalize();
-
-                    NodeList nodeLst;
-                    nodeLst = doc.getElementsByTagName("game");
-                    Node gameNode = nodeLst.item(0);
-                    NodeList list = gameNode.getChildNodes();
-
-                    Node node;
-                    String newState = "";
-
-                    for (int c = 0; c < list.getLength(); ++c) {
-
-                        node = list.item(c);
-
-                        if ("state".equalsIgnoreCase(node.getNodeName())) {
-                            data = node.getChildNodes().item(0).getNodeValue();
-                            int p = 0;
-
-                            for (int y = 0; y < 20; ++y) {
-                                for (int x = 0; x < 20; ++x) {
-                                    newState += data.charAt(p);
-                                    ++p;
-                                }
-                                newState += '\n';
-                            }
-
-                            data = newState;
-                        } else if ("current".equalsIgnoreCase(node.getNodeName())) {
-                            client.setCurrentPlayerId(node.getChildNodes().item(0).getNodeValue().trim());
-                        }
-                    }
-
-                } catch (ParserConfigurationException e) {
-                    e.printStackTrace();
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
                 client.setServerStateText(data);
             }
         });

@@ -34,16 +34,9 @@ public class GetGameStatus extends HttpServlet {
 
         OutputStream os = response.getOutputStream();
 
-        String gameId = request.getParameter("gameId");
+        int parsedGameId = 1;
 
-        if (gameId == null || gameId.isEmpty()) {
-            System.out.println("gameId is invalid!");
-            return;
-        }
-
-        int parsedGameId = Integer.parseInt(gameId);
-
-        System.out.println("gameId is " + gameId + " and playerId is " + request.getParameter("playerId"));
+        System.out.println("gameId is " + parsedGameId + " and playerId is " + request.getParameter("playerId"));
 
         Game g = context.games.get(parsedGameId);
 

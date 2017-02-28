@@ -1,7 +1,6 @@
 package br.odb.multiplayer.model.noudar;
 
 import br.odb.multiplayer.model.Game;
-import br.odb.multiplayer.model.Player;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -68,7 +67,7 @@ public class NoudarGame extends Game {
     synchronized
     public void writeState(OutputStream os) {
 
-        StringBuilder sb = new StringBuilder("<?xml version='1.0'?><game><state>");
+        StringBuilder sb = new StringBuilder("");
 
 
         try {
@@ -78,17 +77,6 @@ public class NoudarGame extends Game {
                     sb.append(table[c][d]);
                 }
             }
-
-            Player p = players.get(currentPlayerId);
-
-            if (p != null) {
-                sb.append("</state><current>");
-                sb.append(currentPlayerId);
-                sb.append("</current><winner>");
-                sb.append(winnerPlayerId);
-                sb.append("</winner></game>");
-            }
-
             os.write(sb.toString().getBytes());
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -109,6 +97,6 @@ public class NoudarGame extends Game {
 
     @Override
     public int getNumberOfRequiredPlayers() {
-        return 2;
+        return 1000;
     }
 }
