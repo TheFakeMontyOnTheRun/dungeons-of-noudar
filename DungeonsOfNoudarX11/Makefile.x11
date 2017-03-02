@@ -51,7 +51,6 @@ OBJS = X11-version/main.o \
         ../gles2-renderer/CLerp.o \
         ../gles2-renderer/Trig.o \
         ../gles2-renderer/Camera.o \
-        ../gles2-renderer/Animation.o \
         ../gles2-renderer/TrigBatch.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \

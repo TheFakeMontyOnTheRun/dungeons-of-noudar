@@ -164,8 +164,6 @@ void initWindow() {
 	std::vector<std::string> meshList{std::istream_iterator<std::string>(meshListData),
 	                                   std::istream_iterator<std::string>{}};
 
-	loadMeshList( meshList, fileLoader );
-
 	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
 
     auto soundListener = std::make_shared<odb::SoundListener>();
