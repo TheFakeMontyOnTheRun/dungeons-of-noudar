@@ -32,7 +32,7 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <iostream>
-#include <html5.h>
+#include <emscripten.h>
 
 #include "SoundClip.h"
 #include "SoundUtils.h"
@@ -57,7 +57,7 @@
 
 #include "GameNativeAPI.h"
 
-#include <html5.h>
+
 #include <emscripten.h>
 #include <emscripten/html5.h>
 

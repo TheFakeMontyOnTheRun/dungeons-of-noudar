@@ -1,5 +1,5 @@
-CXXFLAGS = -O2 -Werror -Wall -g -c -std=c++0x -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src
-LDFLAGS =  -O2 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins
+CXXFLAGS = -O2 -Werror -Wall -g -c -std=c++0x -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -s ALLOW_MEMORY_GROWTH=1
+LDFLAGS =  -O2 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins  -s ALLOW_MEMORY_GROWTH=1
 CXX = em++
 CC = emcc
 OBJS = X11-version/main.o \
