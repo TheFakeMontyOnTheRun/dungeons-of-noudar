@@ -88,58 +88,89 @@ namespace odb {
 		}
 	}
 
+	bool VisibilityStrategy::isVisibleAt(const VisMap& visMap, Knights::EDirection from, Knights::Vec2i currentPos ) {
+		auto converted = transform( from, currentPos );
+		return visMap[ converted.y ][ converted.x ] == EVisibility::kVisible;
+	}
+
+	void VisibilityStrategy::setIsVisible(VisMap& visMap, Knights::EDirection from, Knights::Vec2i currentPos ) {
+		auto converted = transform( from, currentPos );
+		visMap[ converted.y ][ converted.x ] = EVisibility::kVisible;
+	}
+
+	Knights::Vec2i VisibilityStrategy::transform( Knights::EDirection from, Knights::Vec2i currentPos ) {
+		switch( from ) {
+			case Knights::EDirection::kNorth:
+				return currentPos;
+			case Knights::EDirection::kSouth:
+				return { Knights::kMapSize - currentPos.x, Knights::kMapSize - currentPos.y };
+			case Knights::EDirection::kEast:
+				return {currentPos.y, Knights::kMapSize - currentPos.x};
+			case Knights::EDirection::kWest:
+				return {Knights::kMapSize - currentPos.y, currentPos.x};
+		}
+	}
+
 	void VisibilityStrategy::castVisibility(Knights::EDirection from, VisMap &visMap, const IntMap &occluders,
 	                                        Knights::Vec2i originalPos, Knights::Vec2i offset) {
 
 		Knights::Vec2i pos = {offset.x + originalPos.x, offset.y + originalPos.y};
 
 		std::array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> offsets;
+		std::array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
 		int stackPos = 0;
 		Knights::Vec2i currentPos;
 		Knights::Vec2i currentOffset;
 
 		offsets[stackPos] = offset;
+		positions[stackPos] = pos;
 		++stackPos;
 
 		while (stackPos > 0) {
 			--stackPos;
 
 			currentOffset = offsets[stackPos];
-			currentPos = {currentOffset.x + pos.x, currentOffset.y + pos.y};
+			currentPos = positions[ stackPos ];
 
 			if (!isValid(currentPos)) {
 				continue;
 			}
 
-			if (visMap[currentPos.y][currentPos.x] == EVisibility::kVisible) {
+			if ( isVisibleAt( visMap, from, currentPos ) ) {
 				continue;
 			}
 
-			visMap[currentPos.y][currentPos.x] = EVisibility::kVisible;
+			setIsVisible( visMap, from, currentPos );
 
 			if (isBlock(occluders, currentPos.x, currentPos.y)) {
 				continue;
 			}
 
-			if (currentOffset.y <= 0 && stackPos < offsets.size() - 1 ) {
+			auto leftDirection = leftOf(from);
+			auto rightDirection = rightOf(from);
+			auto rightOffset = Knights::mapOffsetForDirection(rightDirection);
+			auto leftOffset = Knights::mapOffsetForDirection(leftDirection);
+
+
+			if ( ( originalPos.x - currentPos.x ) >= 0 && stackPos < positions.size() - 1) {
+				positions[stackPos] =  Knights::Vec2i{currentPos.x + leftOffset.x, currentPos.y + leftOffset.y};
+				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + leftOffset.x, currentOffset.y + leftOffset.y};
+				++stackPos;
+			}
+
+			if ( ( originalPos.x - currentPos.x ) <= 0 && stackPos < positions.size() - 1) {
+				positions[stackPos] =  Knights::Vec2i{currentPos.x + rightOffset.x, currentPos.y + rightOffset.y};
+				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + rightOffset.x, currentOffset.y + rightOffset.y};
+				++stackPos;
+			}
+
+			if (currentOffset.y <= 0 && stackPos < positions.size() - 1) {
 				auto mapOffset = Knights::mapOffsetForDirection(from);
 				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + mapOffset.x, currentOffset.y + mapOffset.y};
+				positions[stackPos] =  Knights::Vec2i{currentPos.x + mapOffset.x, currentPos.y + mapOffset.y};
 				++stackPos;
 			}
 
-			if (0 >= currentOffset.x && stackPos < offsets.size() - 1) {
-				auto leftDirection = leftOf(from);
-				auto leftOffset = Knights::mapOffsetForDirection(leftDirection);
-				offsets[stackPos] = Knights::Vec2i{currentOffset.x + leftOffset.x, currentOffset.y + leftOffset.y};
-				++stackPos;
-			}
-
-			if (currentOffset.x >= 0 && stackPos < offsets.size() - 1) {
-				auto rightDirection = rightOf(from);
-				auto rightOffset = Knights::mapOffsetForDirection(rightDirection);
-				offsets[stackPos] = Knights::Vec2i{currentOffset.x + rightOffset.x, currentOffset.y + rightOffset.y};
-				++stackPos;
-			}
 		}
 	}
 }
