@@ -152,6 +152,7 @@ namespace odb {
 			auto leftOffset = Knights::mapOffsetForDirection(leftDirection);
 
 
+            //The -1 is due to the fact I will add a new element.
 			if ( ( originalPos.x - currentPos.x ) >= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + leftOffset.x, currentPos.y + leftOffset.y};
 				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + leftOffset.x, currentOffset.y + leftOffset.y};
