@@ -52,9 +52,11 @@ namespace odb {
 		}
 	}
 
-	bool VisibilityStrategy::isBlock(const IntMap& occluders, int x, int y) {
+	bool VisibilityStrategy::isBlock(const IntMap& occluders, Knights::EDirection direction, Knights::Vec2i currentPos) {
 
-		auto tile = occluders[y][x];
+        auto transformed = transform( direction, currentPos );
+
+		auto tile = occluders[ transformed.y][transformed.x];
 
 		for (auto candidate : {'1', 'Y', 'X', '\\', '/', 'S', 'Z', '|', '%', '<', '>'}) {
 			if (candidate == tile) {
@@ -72,20 +74,7 @@ namespace odb {
 			}
 		}
 
-		castVisibility(direction, visMap, occluders, pos, {0, 0});
-	}
-
-	Knights::EDirection VisibilityStrategy::getOposite(Knights::EDirection d) {
-		switch (d) {
-			case Knights::EDirection::kNorth:
-				return Knights::EDirection::kSouth;
-			case Knights::EDirection::kSouth:
-				return Knights::EDirection::kNorth;
-			case Knights::EDirection::kEast:
-				return Knights::EDirection::kWest;
-			case Knights::EDirection::kWest:
-				return Knights::EDirection::kEast;
-		}
+		castVisibility(direction, visMap, occluders, transform( direction, pos ), {0, 0});
 	}
 
 	bool VisibilityStrategy::isVisibleAt(const VisMap& visMap, Knights::EDirection from, Knights::Vec2i currentPos ) {
@@ -99,40 +88,35 @@ namespace odb {
 	}
 
 	Knights::Vec2i VisibilityStrategy::transform( Knights::EDirection from, Knights::Vec2i currentPos ) {
+
 		switch( from ) {
 			case Knights::EDirection::kNorth:
 				return currentPos;
 			case Knights::EDirection::kSouth:
-				return { Knights::kMapSize - currentPos.x, Knights::kMapSize - currentPos.y };
+				return { Knights::kMapSize - currentPos.x - 1, Knights::kMapSize - currentPos.y - 1};
 			case Knights::EDirection::kEast:
-				return {currentPos.y, Knights::kMapSize - currentPos.x};
+				return { Knights::kMapSize - currentPos.y - 1, Knights::kMapSize - currentPos.x - 1};
 			case Knights::EDirection::kWest:
-				return {Knights::kMapSize - currentPos.y, currentPos.x};
+				return { currentPos.y, currentPos.x};
 		}
 	}
 
 	void VisibilityStrategy::castVisibility(Knights::EDirection from, VisMap &visMap, const IntMap &occluders,
 	                                        Knights::Vec2i originalPos, Knights::Vec2i offset) {
 
-		Knights::Vec2i pos = {offset.x + originalPos.x, offset.y + originalPos.y};
-
-		std::array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> offsets;
 		std::array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
 		int stackPos = 0;
 		Knights::Vec2i currentPos;
-		Knights::Vec2i currentOffset;
 
-		offsets[stackPos] = offset;
-		positions[stackPos] = pos;
+		positions[stackPos] = originalPos;
 		++stackPos;
 
 		while (stackPos > 0) {
 			--stackPos;
 
-			currentOffset = offsets[stackPos];
 			currentPos = positions[ stackPos ];
 
-			if (!isValid(currentPos)) {
+			if (!isValid(transform( from, currentPos))) {
 				continue;
 			}
 
@@ -142,35 +126,33 @@ namespace odb {
 
 			setIsVisible( visMap, from, currentPos );
 
-			if (isBlock(occluders, currentPos.x, currentPos.y)) {
+			if (isBlock(occluders, from, currentPos )) {
 				continue;
 			}
 
-			auto leftDirection = leftOf(from);
-			auto rightDirection = rightOf(from);
+			auto leftDirection = Knights::EDirection::kWest;
+			auto rightDirection = Knights::EDirection::kEast;
 			auto rightOffset = Knights::mapOffsetForDirection(rightDirection);
 			auto leftOffset = Knights::mapOffsetForDirection(leftDirection);
 
-
             //The -1 is due to the fact I will add a new element.
-			if ( ( originalPos.x - currentPos.x ) >= 0 && stackPos < positions.size() - 1) {
+
+			if ( ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + leftOffset.x, currentPos.y + leftOffset.y};
-				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + leftOffset.x, currentOffset.y + leftOffset.y};
 				++stackPos;
 			}
 
-			if ( ( originalPos.x - currentPos.x ) <= 0 && stackPos < positions.size() - 1) {
+			if ( ( currentPos.x - originalPos.x ) >= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + rightOffset.x, currentPos.y + rightOffset.y};
-				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + rightOffset.x, currentOffset.y + rightOffset.y};
 				++stackPos;
 			}
 
-			if (currentOffset.y <= 0 && stackPos < positions.size() - 1) {
-				auto mapOffset = Knights::mapOffsetForDirection(from);
-				offsets[stackPos] =  Knights::Vec2i{currentOffset.x + mapOffset.x, currentOffset.y + mapOffset.y};
-				positions[stackPos] =  Knights::Vec2i{currentPos.x + mapOffset.x, currentPos.y + mapOffset.y};
-				++stackPos;
-			}
+            if (( currentPos.y - originalPos.y ) <= 0 && stackPos < positions.size() - 1) {
+                auto mapOffset = Knights::mapOffsetForDirection(Knights::EDirection::kNorth);
+                positions[stackPos] =  Knights::Vec2i{currentPos.x + mapOffset.x, currentPos.y + mapOffset.y};
+                ++stackPos;
+            }
+
 
 		}
 	}

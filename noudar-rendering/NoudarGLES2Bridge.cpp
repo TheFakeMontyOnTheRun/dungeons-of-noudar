@@ -96,17 +96,17 @@ namespace odb {
             }
         }
 
-//        auto cameraPosition = current->getPosition();
-//	    VisMap currentVisMap;
-//      VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
-//	    VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
-//	    VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+        auto cameraPosition = current->getPosition();
+	    VisMap currentVisMap;
+        VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+	    VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
+	    VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
 
         setSnapshot( snapshot );
 
-//	    previousPosition = cameraPosition;
-//	    previousDirection = current->getDirection();
-//	    previous = snapshot.mVisibilityMap;
+	    previousPosition = cameraPosition;
+	    previousDirection = current->getDirection();
+	    previous = snapshot.mVisibilityMap;
     }
 
     char NoudarGLES2Bridge::getInput() {
