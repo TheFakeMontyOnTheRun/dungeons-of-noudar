@@ -114,8 +114,8 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	hasCache = false;
 
-	for (int y = 0; y < 20; ++y) {
-		for (int x = 0; x < 20; ++x) {
+	for (int y = 0; y < Knights::kMapSize; ++y) {
+		for (int x = 0; x < Knights::kMapSize; ++x) {
 			lightMapCache[ y ][ x ] = 0;
 		}
 	}
@@ -163,8 +163,8 @@ void shutdown() {
 	textures.clear();
 	hasCache = false;
 
-	for (int y = 0; y < 20; ++y) {
-		for (int x = 0; x < 20; ++x) {
+	for (int y = 0; y < Knights::kMapSize; ++y) {
+		for (int x = 0; x < Knights::kMapSize; ++x) {
 			lightMapCache[y][x] = 0;
 		}
 	}
@@ -274,8 +274,8 @@ void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, c
 		snapshot.splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
 	}
 
-	for (int y = 0; y < 20; ++y) {
-		for (int x = 0; x < 20; ++x) {
+	for (int y = 0; y < Knights::kMapSize; ++y) {
+		for (int x = 0; x < Knights::kMapSize; ++x) {
 
 			if (snapshot.map[y][x] == '|') {
 

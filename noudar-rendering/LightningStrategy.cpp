@@ -37,7 +37,7 @@
 namespace odb {
 
 	bool LightningStrategy::isValid(Vec2i pos) {
-		return 0 <= pos.first && pos.first < 20 && 0 <= pos.second && pos.second < 20;
+		return 0 <= pos.first && pos.first < Knights::kMapSize && 0 <= pos.second && pos.second < Knights::kMapSize;
 	}
 
 	void LightningStrategy::castPointLight(IntMap &lightMap, int emission, IntMap occluders,
