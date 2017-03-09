@@ -50,5 +50,9 @@ namespace odb {
 		long mTimestamp;
 		AnimationList movingCharacters;
 	};
+
+	std::ostream& operator<<(std::ostream& os, const NoudarDungeonSnapshot& aSnapshot );
+	std::string to_string( const NoudarDungeonSnapshot& aSnapshot );
+
 }
 #endif //DUNGEONSOFNOUDAR_NDK_NOUDARDUNGEONSNAPSHOT_H
