@@ -12,6 +12,22 @@ include_directories(../glm)
 include_directories(../nanovg/src)
 include_directories(../gsl)
 
+set(TEST_SOURCE_FILES
+        ../tests/src/TestVisibilityStrategy.cpp
+        ../tests/src/TestVec2i.cpp
+        ../tests/src/TestRenderingJobSnapshotAdapter.cpp
+        ../googletest/googlemock/src/gmock-all.cc
+        ../googletest/googlemock/src/gmock_main.cc
+        ../googletest/googletest/src/gtest-all.cc
+        )
+
+
+
+include_directories(../googletest/googletest/include)
+include_directories(../googletest/googlemock/include)
+include_directories(../googletest/googletest)
+include_directories(../googletest/googlemock)
+
 
 set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/CPickItemCommand.h
@@ -43,7 +59,6 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/CCharacterArchetype.h
         ../noudar-core/noudar-core/include/CHuntApproach.h
         ../noudar-core/noudar-core/include/CCharacter.h
-        X11-version/main.cpp
         ../noudar-core/noudar-core/src/Vec2i.cpp
         ../noudar-core/noudar-core/src/CActor.cpp
         ../noudar-core/noudar-core/src/CMonster.cpp
@@ -128,6 +143,10 @@ include_directories(
         ${PNG_INCLUDE_DIR}
 )
 
-add_executable(dungeons_of_noudar_x11 ${SOURCE_FILES})
+add_executable(dungeons_of_noudar_x11 ${SOURCE_FILES} X11-version/main.cpp)
+add_executable(dungeons_of_noudar_tests ${SOURCE_FILES} ${TEST_SOURCE_FILES} )
+
 
 target_link_libraries(dungeons_of_noudar_x11 ${OPENGL_LIBRARIES} ${X11_LIBRARIES}  ${PNG_LIBRARY} ${EGL_LIBRARIES} ${GLESV2_LIBRARIES}  )
+
+target_link_libraries(dungeons_of_noudar_tests ${OPENGL_LIBRARIES} ${X11_LIBRARIES}  ${PNG_LIBRARY} ${EGL_LIBRARIES} ${GLESV2_LIBRARIES} pthread )
