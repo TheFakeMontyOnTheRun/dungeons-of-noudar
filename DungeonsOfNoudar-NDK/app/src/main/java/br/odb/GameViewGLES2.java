@@ -157,15 +157,14 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 			@Override
 			public void onSwipeLeft() {
 				super.onSwipeLeft();
+				key = KB.ROTATE_RIGHT;
 
-				key = KB.ROTATE_LEFT;
 			}
 
 			@Override
 			public void onSwipeRight() {
 				super.onSwipeRight();
-
-				key = KB.ROTATE_RIGHT;
+				key = KB.ROTATE_LEFT;
 			}
 
 			@Override
