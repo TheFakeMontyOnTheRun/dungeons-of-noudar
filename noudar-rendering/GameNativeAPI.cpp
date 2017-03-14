@@ -256,8 +256,10 @@ void updateCharacterMovements(const odb::IntMap& idsLocal) {
 	}
 }
 
-void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats, const odb::VisMap& visibilityMap) {
+void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats, const odb::VisMap& visibilityMap, const odb::NoudarDungeonSnapshot& newSnapshot ) {
 	hasActiveSplats = false;
+
+    snapshot.mCurrentItem = newSnapshot.mCurrentItem;
 
 	for (int y = 0; y < Knights::kMapSize; ++y) {
 		for (int x = 0; x < Knights::kMapSize; ++x) {
@@ -499,7 +501,7 @@ void forceDirection( int direction ) {
 
 void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
 
-	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat, snapshot.mVisibilityMap);
+	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat, snapshot.mVisibilityMap, snapshot);
 	updateCharacterMovements( snapshot.ids );
 }
 
@@ -517,8 +519,40 @@ void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IF
 
 void interact() {
 	if (game != nullptr) {
-		render->setNextCommand('h');
+		render->setNextCommand('\t');
 		game->tick();
 		render->setNextCommand('.');
 	}
+}
+
+void pickupItem() {
+    if (game != nullptr) {
+        render->setNextCommand('[');
+        game->tick();
+        render->setNextCommand('.');
+    }
+}
+
+void dropItem() {
+    if (game != nullptr) {
+        render->setNextCommand(']');
+        game->tick();
+        render->setNextCommand('.');
+    }
+}
+
+void cycleNextItem() {
+    if (game != nullptr) {
+        render->setNextCommand('-');
+        game->tick();
+        render->setNextCommand('.');
+    }
+}
+
+void cyclePrevItem() {
+    if (game != nullptr) {
+        render->setNextCommand('=');
+        game->tick();
+        render->setNextCommand('.');
+    }
 }

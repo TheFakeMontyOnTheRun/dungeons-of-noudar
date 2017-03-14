@@ -125,7 +125,22 @@ void handleKeyPress( SDL_keysym *keysym ) {
 	case SDLK_x:
 		moveRight();
 		break;
-	default:
+    case SDLK_MINUS:
+      cyclePrevItem();
+      break;
+    case SDLK_EQUALS:
+      cycleNextItem();
+      break;
+
+    case SDLK_LEFTBRACKET:
+      pickupItem();
+      break;
+      
+    case SDLK_RIGHTBRACKET:
+      dropItem();
+      break;
+
+    default:
 	    break;
 	}
 

@@ -93,6 +93,8 @@ namespace odb {
                         }
                     }
                 }
+
+
             }
         }
 
@@ -101,6 +103,13 @@ namespace odb {
         VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
 	    VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
 	    VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+        auto item = current->getSelectedItem();
+
+        if ( item != nullptr ) {
+            snapshot.mCurrentItem = item->to_string();
+        } else {
+            snapshot.mCurrentItem = "";
+        }
 
         setSnapshot( snapshot );
 

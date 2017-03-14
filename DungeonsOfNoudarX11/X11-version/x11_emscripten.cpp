@@ -87,6 +87,14 @@ EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *
         moveRight();
     } else if (code == "KeyH") {
         interact();
+    } else if (code == "Equal") {
+        cycleNextItem();
+    } else if (code == "Minus") {
+        cyclePrevItem();
+    } else if (code == "BracketRight") {
+        pickupItem();
+    } else if (code == "Backslash") {
+        dropItem();
     }
 
 

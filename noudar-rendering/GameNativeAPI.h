@@ -47,6 +47,14 @@ void moveLeft();
 
 void moveRight();
 
+void pickupItem();
+
+void dropItem();
+
+void cycleNextItem();
+
+void cyclePrevItem();
+
 void gameLoopTick( long ms );
 
 void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener );

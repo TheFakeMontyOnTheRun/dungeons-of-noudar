@@ -187,41 +187,33 @@ event_loop(Display *dpy, Window win,
 
             switch (event.type) {
                 case KeyPress: {
-                    char buffer[10];
-                    int r, code;
+                    int code;
                     code = XLookupKeysym(&event.xkey, 0);
 
                     if (code == XK_Left) {
                         rotateCameraLeft();
-                    }
-                    else if (code == XK_Right) {
+                    } else if (code == XK_Right) {
                         rotateCameraRight();
-                    }
-                    else if (code == XK_Up) {
+                    } else if (code == XK_Up) {
                         moveUp();
-                    }
-                    else if (code == XK_Down) {
+                    } else if (code == XK_Down) {
                         moveDown();
-                    }
-                    else if (code == XK_z) {
+                    } else if (code == XK_braceleft || code == XK_bracketleft) {
+                        pickupItem();
+                    } else if (code == XK_braceright || code == XK_bracketright ) {
+                        dropItem();
+                    } else if (code == XK_z) {
                         moveLeft();
-                    }
-                    else if (code == XK_x) {
+                    } else if (code == XK_x) {
                         moveRight();
-                    }
-
-                    else if (code == XK_space) {
-	                    interact();
-                    }
-
-
-                    else {
-                        r = XLookupString(&event.xkey, buffer, sizeof(buffer),
-                                          NULL, NULL);
-                        if (buffer[0] == 27) {
-
-                            return;
-                        }
+                    } else if (code == XK_minus) {
+                        cyclePrevItem();
+                    } else if (code == XK_equal) {
+                        cycleNextItem();
+                    } else if (code == XK_space ) {
+                        interact();
+                    } else if (code == XK_Escape ) {
+                        return;
                     }
                 }
                 break;
