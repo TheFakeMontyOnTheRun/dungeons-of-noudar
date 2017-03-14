@@ -95,7 +95,7 @@ odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
 std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 
-bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList ) {
+bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 	textures = textureList;
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();

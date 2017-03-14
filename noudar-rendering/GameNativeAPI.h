@@ -5,7 +5,7 @@
 #ifndef DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H
 #define DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H
 
-bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textures );
+bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textures, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
 
 void renderFrame(long delta);
 
