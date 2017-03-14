@@ -83,8 +83,6 @@ bool hasActiveSplats;
 odb::IntMap lightMap;
 odb::AnimationList animationList;
 long animationTime = 0;
-bool hasCache = false;
-odb::IntMap lightMapCache;
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
@@ -111,14 +109,6 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	gles2Renderer->setTexture(textures);
 	animationTime = 0;
-
-	hasCache = false;
-
-	for (int y = 0; y < Knights::kMapSize; ++y) {
-		for (int x = 0; x < Knights::kMapSize; ++x) {
-			lightMapCache[ y ][ x ] = 0;
-		}
-	}
 
 	auto toReturn = gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
 
@@ -161,13 +151,6 @@ void shutdown() {
 	mPositions.clear();
 	animationTime = 0;
 	textures.clear();
-	hasCache = false;
-
-	for (int y = 0; y < Knights::kMapSize; ++y) {
-		for (int x = 0; x < Knights::kMapSize; ++x) {
-			lightMapCache[y][x] = 0;
-		}
-	}
 
 	gles2Renderer = nullptr;
 
@@ -255,43 +238,6 @@ void updateCharacterMovements(const odb::IntMap& idsLocal) {
 		}
 	}
 }
-
-void updateLevelSnapshot(const odb::IntMap& level, const odb::CharMap& actors, const odb::IntMap& splats, const odb::VisMap& visibilityMap, const odb::NoudarDungeonSnapshot& newSnapshot ) {
-	hasActiveSplats = false;
-
-    snapshot.mCurrentItem = newSnapshot.mCurrentItem;
-
-	for (int y = 0; y < Knights::kMapSize; ++y) {
-		for (int x = 0; x < Knights::kMapSize; ++x) {
-			snapshot.map[y][x] = level[y][x];
-			snapshot.snapshot[y][x] = actors[y][x];
-			snapshot.splat[y][x] = -1;
-			snapshot.mVisibilityMap[y][x] = visibilityMap[y][x];
-			lightMap[y][x] = lightMapCache[y][x];
-		}
-	}
-
-	for ( auto& splatAnim : splatAnimation ) {
-		auto pos = splatAnim->getPosition();
-		snapshot.splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
-	}
-
-	for (int y = 0; y < Knights::kMapSize; ++y) {
-		for (int x = 0; x < Knights::kMapSize; ++x) {
-
-			if (snapshot.map[y][x] == '|') {
-
-				if (!hasCache) {
-					odb::LightningStrategy::castLightInAllDirections(lightMapCache, 255, snapshot.map, x, y);
-					odb::LightningStrategy::castLightInAllDirections(lightMap, 255, snapshot.map, x, y);
-				}
-			}
-		}
-	}
-
-	hasCache = true;
-}
-
 
 void startFadingIn() {
 	if (gles2Renderer != nullptr) {
@@ -405,9 +351,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 	auto onLevelLoaded = [&]() {
 	    forceDirection( 0 );
 
-		hasCache = false;
-
-		if ( gles2Renderer != nullptr ) {
+        if ( gles2Renderer != nullptr ) {
 			gles2Renderer->resetCamera();
 		}
 	};
@@ -499,9 +443,23 @@ void forceDirection( int direction ) {
 }
 
 
-void setSnapshot(const odb::NoudarDungeonSnapshot& snapshot ) {
+void setSnapshot(const odb::NoudarDungeonSnapshot& newSnapshot ) {
 
-	updateLevelSnapshot( snapshot.map, snapshot.snapshot, snapshot.splat, snapshot.mVisibilityMap, snapshot);
+    hasActiveSplats = false;
+
+    snapshot = newSnapshot;
+
+    for (int y = 0; y < Knights::kMapSize; ++y) {
+        for (int x = 0; x < Knights::kMapSize; ++x) {
+            snapshot.splat[y][x] = -1;
+        }
+    }
+
+    for ( auto& splatAnim : splatAnimation ) {
+        auto pos = splatAnim->getPosition();
+        snapshot.splat[pos.y][pos.x] = static_cast<odb::ETextures >( splatAnim->getSplatFrame());
+    }
+
 	updateCharacterMovements( snapshot.ids );
 }
 
