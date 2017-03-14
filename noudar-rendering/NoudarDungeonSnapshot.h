@@ -50,6 +50,7 @@ namespace odb {
 		long mTimestamp;
 		AnimationList movingCharacters;
 		std::string mCurrentItem = "";
+		int mHP;
 	};
 
 	std::ostream& operator<<(std::ostream& os, const NoudarDungeonSnapshot& aSnapshot );

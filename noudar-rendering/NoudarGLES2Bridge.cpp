@@ -93,8 +93,6 @@ namespace odb {
                         }
                     }
                 }
-
-
             }
         }
 
@@ -110,6 +108,8 @@ namespace odb {
         } else {
             snapshot.mCurrentItem = "";
         }
+
+        snapshot.mHP = current->getHP();
 
         setSnapshot( snapshot );
 

@@ -117,7 +117,7 @@ namespace odb {
             mContext = 	nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES );
 #endif
 
-            if ( mContext ) {
+            if ( !mContext ) {
                 std::cout << "NVG context is faulty as salty" << std::endl;
             }
 
@@ -136,19 +136,15 @@ namespace odb {
 
         nvgFontSize(mContext, 18.0f);
         nvgFontFace(mContext, "font");
-        nvgFillColor(mContext, nvgRGBA(255,255,255,255));
-        nvgStrokeColor(mContext, nvgRGBA(255,0,0, 255));
-        nvgTextAlign(mContext,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-        nvgText(mContext, 10, 10, "Map", nullptr);
+        nvgFillColor(mContext, nvgRGBA(255, 255, 255, 255));
+        nvgStrokeColor(mContext, nvgRGBA(255, 0, 0, 255));
+        nvgTextAlign(mContext, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+        nvgText(mContext, 10, 10, snapshot.mCurrentItem.c_str(), nullptr);
 
-        for ( int y = 0; y < Knights::kMapSize; ++y ) {
-            for ( int x = 0; x < Knights::kMapSize; ++x ) {
+        std::stringstream ss;
+        ss << snapshot.mHP;
+        nvgText(mContext, 10, mHeight - 18, ss.str().c_str(), nullptr);
 
-                if ( snapshot.ids[ y ][ x ] > 0 ) {
-                    nvgRoundedRect(mContext, 10 + (10 * x), 10 + ( 10 * y ), 10, 10, 2.0f );
-                }
-            }
-        }
 
         nvgFill(mContext);
         nvgStroke(mContext);
