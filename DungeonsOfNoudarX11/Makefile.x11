@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -Werror -DMESA_GLES2 -Wall -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -I../gsl
+CXXFLAGS = -O2 -g -Werror -DMESA_GLES2 -Wall -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -I../gsl -DGLM_FORCE_RADIANS
 LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng -lopenal
 CXX = clang++
 CC = clang
