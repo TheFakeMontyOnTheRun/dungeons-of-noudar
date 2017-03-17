@@ -13,6 +13,7 @@ namespace odb {
         std::vector<char> mFontData;
         std::map<std::string, std::shared_ptr<odb::NativeBitmap>> mBitmaps;
         std::map<std::string, int> mFrames;
+        long mLastTimestamp;
 
     public:
         explicit OverlayNanoVGRenderer( std::vector<std::shared_ptr<odb::NativeBitmap>> bitmaps);

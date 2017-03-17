@@ -96,22 +96,50 @@ odb::Animation currentAnimation = {
         {
                 {{
                          std::make_shared<odb::GraphicNode>(
-                                 "bow2.png", glm::vec2{0.0f, 0.0f}
+                                 "hand0.png", glm::vec2{0.45f, 0.95f}
                          ),
-                            std::make_shared<odb::GraphicNode>(
+                         std::make_shared<odb::GraphicNode>(
+                                 "hand1.png", glm::vec2{0.55f, 0.95f}
+                         )
+                 },
+                        500
+                },
+
+                {{
+                         std::make_shared<odb::GraphicNode>(
+                                 "hand0.png", glm::vec2{0.45f, 0.75f}
+                         ),
+                         std::make_shared<odb::GraphicNode>(
+                                 "hand1.png", glm::vec2{0.55f, 0.75f}
+                         )
+                 },
+                        500
+                },
+
+
+                {{
+                         std::make_shared<odb::GraphicNode>(
                                  "hand0.png", glm::vec2{0.45f, 0.5f}
                          ),
                          std::make_shared<odb::GraphicNode>(
                                  "hand1.png", glm::vec2{0.55f, 0.5f}
-                         ),
+                         )
                  },
-                        200
+                        500
+                },
+
+                {{
+                         std::make_shared<odb::GraphicNode>(
+                                 "bow2.png", glm::vec2{0.0f, 0.0f}
+                         )
+                 },
+                        1000
                 }
         }
 };
 
 long timeUntilNextFrame = 0;
-int frame = 0;
+int frame = -1;
 
 std::vector< NVGpaint > paints;
 
@@ -165,6 +193,8 @@ namespace odb {
 
                 mFrames[ bitmapPair.first ] = nvgCreateImageRGBA(mContext, imgW, imgH, 0, (const unsigned char *) bitmap->getPixelData());
             }
+
+            mLastTimestamp = snapshot.mTimestamp;
         }
 
         glViewport(0, 0, mWidth, mHeight);
@@ -184,6 +214,14 @@ namespace odb {
         ss << snapshot.mHP;
         nvgText(mContext, 10, mHeight - 18, ss.str().c_str(), nullptr);
 
+        timeUntilNextFrame -= ( snapshot.mTimestamp - mLastTimestamp );
+        mLastTimestamp = snapshot.mTimestamp;
+
+        if ( timeUntilNextFrame <= 0 ) {
+            frame = ( frame + 1 ) % currentAnimation.mStepList.size();
+            timeUntilNextFrame = currentAnimation.mStepList[ frame ].mDelay;
+        }
+
         for ( const auto& node : currentAnimation.mStepList[frame].mNodes ) {
 
             auto nodeId = node->mFrameId;
@@ -191,16 +229,15 @@ namespace odb {
             auto bitmap = mBitmaps[node->mFrameId];
             int imgW = bitmap->getWidth();
             int imgH = bitmap->getHeight();
-            int offsetX = node->mRelativePosition.x * mWidth;
-            int offsetY = node->mRelativePosition.x * mHeight;
-
+            auto position = node->mRelativePosition;
+            float offsetX = position.x * mWidth;
+            float offsetY = position.y * mHeight;
             auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, frame, 1.0f );
             nvgBeginPath(mContext);
             nvgRect(mContext, offsetX, offsetY, imgW, imgH);
             nvgFillPaint(mContext, imgPaint);
             nvgFill(mContext);
         }
-
 
         nvgEndFrame(mContext);
 
