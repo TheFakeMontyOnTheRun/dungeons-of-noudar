@@ -19,7 +19,7 @@ set(TEST_SOURCE_FILES
         ../googletest/googlemock/src/gmock-all.cc
         ../googletest/googlemock/src/gmock_main.cc
         ../googletest/googletest/src/gtest-all.cc
-        )
+        ../noudar-rendering/Animation.cpp ../noudar-rendering/Animation.h ../noudar-rendering/AnimationStep.cpp ../noudar-rendering/AnimationStep.h)
 
 
 
@@ -143,7 +143,7 @@ include_directories(
         ${PNG_INCLUDE_DIR}
 )
 
-add_executable(dungeons_of_noudar_x11 ${SOURCE_FILES} X11-version/main.cpp)
+add_executable(dungeons_of_noudar_x11 ${SOURCE_FILES} X11-version/main.cpp ../noudar-rendering/GraphicNode.cpp ../noudar-rendering/GraphicNode.h ../noudar-rendering/Animation.cpp ../noudar-rendering/Animation.h ../noudar-rendering/AnimationStep.cpp ../noudar-rendering/AnimationStep.h)
 add_executable(dungeons_of_noudar_tests ${SOURCE_FILES} ${TEST_SOURCE_FILES} )
 
 

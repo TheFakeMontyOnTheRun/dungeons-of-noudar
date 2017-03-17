@@ -104,8 +104,6 @@ odb::Animation currentAnimation = {
                          std::make_shared<odb::GraphicNode>(
                                  "hand1.png", glm::vec2{0.55f, 0.5f}
                          ),
-
-
                  },
                         200
                 }
@@ -158,7 +156,7 @@ namespace odb {
             mFontData.clear();
         }
 
-        if ( mPaints.empty() ) {
+        if ( mFrames.empty() ) {
 
             for ( const auto& bitmapPair : mBitmaps ) {
                 auto bitmap = bitmapPair.second;
@@ -167,22 +165,7 @@ namespace odb {
 
                 mFrames[ bitmapPair.first ] = nvgCreateImageRGBA(mContext, imgW, imgH, 0, (const unsigned char *) bitmap->getPixelData());
             }
-
-            for ( const auto& step : currentAnimation.mStepList ) {
-                for ( const auto& node : step.mNodes ) {
-                    auto frame = mFrames[ node->mFrameId ];
-                    auto bitmap = mBitmaps[ node->mFrameId ];
-                    int imgW = bitmap->getWidth();
-                    int imgH = bitmap->getHeight();
-                    int offsetX = node->mRelativePosition.x * mWidth;
-                    int offsetY = node->mRelativePosition.x * mHeight;
-
-                    mPaints[ node ] = paints.size();
-                    paints.push_back( nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, frame, 1.0f ) );
-                }
-            }
         }
-
 
         glViewport(0, 0, mWidth, mHeight);
         glEnable(GL_BLEND);
@@ -210,11 +193,6 @@ namespace odb {
             int imgH = bitmap->getHeight();
             int offsetX = node->mRelativePosition.x * mWidth;
             int offsetY = node->mRelativePosition.x * mHeight;
-//            nvgFillPaint(mContext, paints[mPaints[node]]);
-//            nvgRect(mContext, offsetX, offsetY, imgW, imgH);
-//            nvgFill(mContext);
-
-
 
             auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, frame, 1.0f );
             nvgBeginPath(mContext);

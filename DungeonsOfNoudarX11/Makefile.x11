@@ -44,6 +44,9 @@ OBJS = X11-version/main.o \
         ../noudar-rendering/RenderingJobSnapshotAdapter.o \
         ../noudar-rendering/CTile3DProperties.o \
         ../noudar-rendering/NoudarGLES2Bridge.o \
+        ../noudar-rendering/Animation.o \
+        ../noudar-rendering/AnimationStep.o \
+        ../noudar-rendering/GraphicNode.o \
         X11-version/WindowOperationsX11.o \
         X11-version/x11_native.o \
         ../gles2-renderer/LoadPNG.o \

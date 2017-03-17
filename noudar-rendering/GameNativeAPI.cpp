@@ -78,9 +78,7 @@ std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 
 std::map<int, glm::vec2> mPositions;
 
-
 bool hasActiveSplats;
-odb::IntMap lightMap;
 odb::AnimationList animationList;
 long animationTime = 0;
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
@@ -136,7 +134,13 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 
 	if ( overlayRenderer == nullptr ) {
-		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>();
+		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
+				loadPNG( "hand0.png", fileLoader  ),
+				loadPNG( "hand1.png", fileLoader ),
+				loadPNG( "bow2.png", fileLoader ),
+		};
+
+		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>(bitmaps);
 	}
 
 	overlayRenderer->setFrame( w, h );
@@ -347,7 +351,14 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 	if ( overlayRenderer == nullptr ) {
-		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>();
+
+		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
+				loadPNG( "hand0.png", fileLoaderDelegate ),
+				loadPNG( "hand1.png", fileLoaderDelegate ),
+				loadPNG( "bow2.png", fileLoaderDelegate ),
+		};
+
+		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>( bitmaps );
 	}
 
 	overlayRenderer->loadFonts( fileLoaderDelegate );
