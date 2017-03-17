@@ -66,7 +66,7 @@
 #include "DungeonGLES2Renderer.h"
 #include "LightningStrategy.h"
 #include "VisibilityStrategy.h"
-
+#include "LoadPNG.h"
 
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
@@ -93,12 +93,47 @@ odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
 std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 
-bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::vector<std::shared_ptr<odb::NativeBitmap>> textureList, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
-	textures = textureList;
+bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
 
-    #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+	textures = {
+			loadPNG("grass.png", fileLoader),
+			loadPNG("stonefloor.png", fileLoader),
+			loadPNG("bricks.png", fileLoader),
+			loadPNG("arch.png", fileLoader),
+			loadPNG("bars.png", fileLoader),
+			loadPNG("begin.png", fileLoader),
+			loadPNG("exit.png", fileLoader),
+			loadPNG("bricks_blood.png", fileLoader),
+			loadPNG("bricks_candles.png", fileLoader),
+			loadPNG("foe0.png", fileLoader),
+			loadPNG("foe1.png", fileLoader),
+			loadPNG("foe2.png", fileLoader),
+			loadPNG("foe3.png", fileLoader),
+			loadPNG("foe4.png", fileLoader),
+			loadPNG("foe5.png", fileLoader),
+			loadPNG("crusader0.png", fileLoader),
+			loadPNG("crusader1.png", fileLoader),
+			loadPNG("crusader2.png", fileLoader),
+			loadPNG("shadow.png", fileLoader),
+			loadPNG("ceiling.png", fileLoader),
+			loadPNG("ceilingdoor.png", fileLoader),
+			loadPNG("ceilingbegin.png", fileLoader),
+			loadPNG("ceilingend.png", fileLoader),
+			loadPNG("splat0.png", fileLoader),
+			loadPNG("splat1.png", fileLoader),
+			loadPNG("splat2.png", fileLoader),
+			loadPNG("ceilingbars.png", fileLoader),
+			loadPNG("clouds.png", fileLoader),
+			loadPNG("stonegrassfar.png", fileLoader),
+			loadPNG("grassstonefar.png", fileLoader),
+			loadPNG("stonegrassnear.png", fileLoader),
+			loadPNG("grassstonenear.png", fileLoader),
+			loadPNG("cross.png", fileLoader),
+	};
+
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
 
 	if ( overlayRenderer == nullptr ) {
 		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>();

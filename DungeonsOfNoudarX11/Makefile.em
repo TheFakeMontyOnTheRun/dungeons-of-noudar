@@ -44,7 +44,6 @@ OBJS = X11-version/main.o \
                ../noudar-rendering/SplatAnimation.o \
     ../noudar-rendering/CTile3DProperties.o \
                ../noudar-rendering/NoudarGLES2Bridge.o \
-               X11-version/LoadPNG.o \
                X11-version/WindowOperationsX11.o \
                X11-version/x11_emscripten.o \
                ../gles2-renderer/Logger.o \
@@ -57,6 +56,7 @@ OBJS = X11-version/main.o \
                ../gles2-renderer/VBORenderingJob.o \
                ../gles2-renderer/WavefrontMaterialReader.o \
                ../gles2-renderer/Texture.o \
+               ../gles2-renderer/LoadPNG.o \
                 ../nanovg/src/nanovg.o \
                 ../OpenALSoundSystem/SoundClip.o \
                 ../OpenALSoundSystem/SoundEmitter.o \

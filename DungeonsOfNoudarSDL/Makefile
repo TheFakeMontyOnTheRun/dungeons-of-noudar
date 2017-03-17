@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -ISDL-version -I../glm `sdl-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1  -DGLM_FORCE_RADIANS
+CXXFLAGS = -O2 -g -c -std=c++0x -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1  -DGLM_FORCE_RADIANS
 LDFLAGS = -lpng -lopenal -lGL -lGLU `sdl-config --libs`
 CXX = clang++
 OBJS = SDL-version/main.o \
@@ -42,11 +42,12 @@ OBJS = SDL-version/main.o \
         ../noudar-rendering/SplatAnimation.o \
         ../noudar-rendering/CTile3DProperties.o \
         ../noudar-rendering/NoudarGLES2Bridge.o \
-        SDL-version/LoadPNG.o \
         SDL-version/WindowOperationsSDL.o \
         ../gles2-renderer/Logger.o \
         ../gles2-renderer/Trig.o \
         ../gles2-renderer/Camera.o \
+        ../gles2-renderer/LoadPNG.o \
+        ../nanovg/src/nanovg.o \
         ../gles2-renderer/CLerp.o \
         ../gles2-renderer/Scene.o \
         ../gles2-renderer/WavefrontOBJReader.o \

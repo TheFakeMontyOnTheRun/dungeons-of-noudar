@@ -89,7 +89,7 @@ std::shared_ptr<odb::NativeBitmap> makeNativeBitmapFromJObject(JNIEnv *env, jobj
 	int *pixels = new int[size];
 	memcpy(pixels, addr, size * sizeof(int));
 
-	auto toReturn = std::make_shared<odb::NativeBitmap>(info.width, info.height, pixels);
+	auto toReturn = std::make_shared<odb::NativeBitmap>("", info.width, info.height, pixels);
 
 	if ((errorCode = AndroidBitmap_unlockPixels(env, bitmap)) != 0) {
 		odb::Logger::log("error %d", errorCode);
@@ -196,7 +196,7 @@ JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_fadeIn(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
-                                                  jint width, jint height);
+                                                  jint width, jint height, jobject asset_manager);
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
@@ -223,9 +223,12 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
-                                                  jint width, jint height) {
+                                                  jint width, jint height, jobject assets) {
 
-	setupGraphics(width, height, gVertexShader, gFragmentShader, texturesToLoad);
+    AAssetManager *assetManager = AAssetManager_fromJava(env, assets);
+    auto loader = std::make_shared<odb::AndroidFileLoaderDelegate>(assetManager);
+
+    setupGraphics(width, height, gVertexShader, gFragmentShader, loader);
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type) {

@@ -29,7 +29,7 @@
 #include "SoundEmitter.h"
 
 #include "IFileLoaderDelegate.h"
-
+#include "CPlainFileLoader.h"
 #include "Vec2i.h"
 #include "NativeBitmap.h"
 #include "IMapElement.h"
@@ -54,47 +54,6 @@ bool isActive = false;
 SDL_Event event;
 const SDL_VideoInfo *videoInfo;
 int videoFlags;
-
-std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
-    std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
-
-    toReturn.push_back( loadPNG( "res/grass.png") );
-    toReturn.push_back( loadPNG( "res/stonefloor.png") );
-    toReturn.push_back( loadPNG( "res/bricks.png") );
-    toReturn.push_back( loadPNG( "res/arch.png") );
-    toReturn.push_back( loadPNG( "res/bars.png") );
-    toReturn.push_back( loadPNG( "res/begin.png") );
-    toReturn.push_back( loadPNG( "res/exit.png") );
-    toReturn.push_back( loadPNG( "res/bricks_blood.png") );
-    toReturn.push_back( loadPNG( "res/bricks_candles.png") );
-    toReturn.push_back( loadPNG( "res/foe0.png") );
-    toReturn.push_back( loadPNG( "res/foe1.png") );
-    toReturn.push_back( loadPNG( "res/foe2.png") );
-    toReturn.push_back( loadPNG( "res/foe3.png") );
-    toReturn.push_back( loadPNG( "res/foe4.png") );
-    toReturn.push_back( loadPNG( "res/foe5.png") );
-    toReturn.push_back( loadPNG( "res/crusader0.png") );
-    toReturn.push_back( loadPNG( "res/crusader1.png") );
-    toReturn.push_back( loadPNG( "res/crusader2.png") );
-    toReturn.push_back( loadPNG( "res/shadow.png") );
-    toReturn.push_back( loadPNG( "res/ceiling.png") );
-    toReturn.push_back( loadPNG( "res/ceilingdoor.png") );
-    toReturn.push_back( loadPNG( "res/ceilingbegin.png") );
-    toReturn.push_back( loadPNG( "res/ceilingend.png") );
-    toReturn.push_back( loadPNG( "res/splat0.png") );
-    toReturn.push_back( loadPNG( "res/splat1.png") );
-    toReturn.push_back( loadPNG( "res/splat2.png") );
-    toReturn.push_back( loadPNG( "res/ceilingbars.png") );
-    toReturn.push_back( loadPNG( "res/clouds.png"));
-    toReturn.push_back( loadPNG( "res/stonegrassfar.png"));
-    toReturn.push_back( loadPNG( "res/grassstonefar.png"));
-    toReturn.push_back( loadPNG( "res/stonegrassnear.png"));
-    toReturn.push_back( loadPNG( "res/grassstonenear.png"));
-    toReturn.push_back( loadPNG( "res/cross.png"));
-
-
-    return toReturn;
-}
 
 void handleKeyPress( SDL_keysym *keysym ) {
     switch ( keysym->sym ) 	{
@@ -178,7 +137,7 @@ void initWindow() {
 	auto gVertexShader = "";
 	auto gFragmentShader = "";
 
-	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures());
+	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, std::make_shared<Knights::CPlainFileLoader>());
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 

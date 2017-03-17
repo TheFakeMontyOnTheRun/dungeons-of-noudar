@@ -102,9 +102,9 @@ set(SOURCE_FILES
         ../noudar-rendering/SplatAnimation.cpp
         ../noudar-rendering/CTile3DProperties.cpp
         ../noudar-rendering/NoudarGLES2Bridge.cpp
-        X11-version/LoadPNG.cpp
         X11-version/WindowOperationsX11.cpp
         X11-version/x11_native.cpp
+        ../gles2-renderer/LoadPNG.cpp
         ../gles2-renderer/CLerp.cpp
         ../gles2-renderer/CLerp.h
         ../gles2-renderer/Camera.cpp

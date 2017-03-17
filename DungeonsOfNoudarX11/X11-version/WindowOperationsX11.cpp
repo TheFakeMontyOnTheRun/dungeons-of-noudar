@@ -60,48 +60,6 @@ EGLint egl_major, egl_minor;
 const char *s;
 
 
-std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
-    std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
-
-    toReturn.push_back( loadPNG( "grass.png", fileLoader) );
-    toReturn.push_back( loadPNG( "stonefloor.png", fileLoader) );
-    toReturn.push_back( loadPNG( "bricks.png", fileLoader) );
-    toReturn.push_back( loadPNG( "arch.png", fileLoader) );
-    toReturn.push_back( loadPNG( "bars.png", fileLoader) );
-    toReturn.push_back( loadPNG( "begin.png", fileLoader) );
-    toReturn.push_back( loadPNG( "exit.png", fileLoader) );
-    toReturn.push_back( loadPNG( "bricks_blood.png", fileLoader) );
-    toReturn.push_back( loadPNG( "bricks_candles.png", fileLoader) );
-    toReturn.push_back( loadPNG( "foe0.png", fileLoader) );
-    toReturn.push_back( loadPNG( "foe1.png", fileLoader) );
-    toReturn.push_back( loadPNG( "foe2.png", fileLoader) );
-    toReturn.push_back( loadPNG( "foe3.png", fileLoader) );
-    toReturn.push_back( loadPNG( "foe4.png", fileLoader) );
-    toReturn.push_back( loadPNG( "foe5.png", fileLoader) );
-    toReturn.push_back( loadPNG( "crusader0.png", fileLoader) );
-    toReturn.push_back( loadPNG( "crusader1.png", fileLoader) );
-    toReturn.push_back( loadPNG( "crusader2.png", fileLoader) );
-    toReturn.push_back( loadPNG( "shadow.png", fileLoader) );
-    toReturn.push_back( loadPNG( "ceiling.png", fileLoader) );
-    toReturn.push_back( loadPNG( "ceilingdoor.png", fileLoader) );
-    toReturn.push_back( loadPNG( "ceilingbegin.png", fileLoader) );
-    toReturn.push_back( loadPNG( "ceilingend.png", fileLoader) );
-    toReturn.push_back( loadPNG( "splat0.png", fileLoader) );
-    toReturn.push_back( loadPNG( "splat1.png", fileLoader) );
-    toReturn.push_back( loadPNG( "splat2.png", fileLoader) );
-    toReturn.push_back( loadPNG( "ceilingbars.png", fileLoader) );
-    toReturn.push_back( loadPNG( "clouds.png", fileLoader) );
-    toReturn.push_back( loadPNG( "stonegrassfar.png", fileLoader) );
-    toReturn.push_back( loadPNG( "grassstonefar.png", fileLoader) );
-    toReturn.push_back( loadPNG( "stonegrassnear.png", fileLoader) );
-    toReturn.push_back( loadPNG( "grassstonenear.png", fileLoader) );
-    toReturn.push_back( loadPNG( "cross.png", fileLoader) );
-    toReturn.push_back( loadPNG( "shotgun0.png", fileLoader) );
-    toReturn.push_back( loadPNG( "shotgun1.png", fileLoader) );
-
-    return toReturn;
-}
-
 void initWindow() {
    x_dpy = XOpenDisplay(nullptr);
 
@@ -166,7 +124,7 @@ void initWindow() {
 	std::vector<std::string> meshList{std::istream_iterator<std::string>(meshListData),
 	                                   std::istream_iterator<std::string>{}};
 
-	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, loadTextures(fileLoader), fileLoader);
+	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, fileLoader);
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 

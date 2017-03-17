@@ -84,10 +84,38 @@
 
 #include "NoudarDungeonSnapshot.h"
 
+#include "GraphicNode.h"
 #include "OverlayNanoVGRenderer.h"
+#include "AnimationStep.h"
+#include "Animation.h"
 
 
 NVGcontext* mContext;
+
+odb::Animation currentAnimation = {
+        {
+                {{
+                         std::make_shared<odb::GraphicNode>(
+                                 "bow2.png", glm::vec2{0.0f, 0.0f}
+                         ),
+                            std::make_shared<odb::GraphicNode>(
+                                 "hand0.png", glm::vec2{0.45f, 0.5f}
+                         ),
+                         std::make_shared<odb::GraphicNode>(
+                                 "hand1.png", glm::vec2{0.55f, 0.5f}
+                         ),
+
+
+                 },
+                        200
+                }
+        }
+};
+
+long timeUntilNextFrame = 0;
+int frame = 0;
+
+std::vector< NVGpaint > paints;
 
 namespace odb {
 
@@ -103,8 +131,11 @@ namespace odb {
     }
 
 
-    OverlayNanoVGRenderer::OverlayNanoVGRenderer() {
-
+    OverlayNanoVGRenderer::OverlayNanoVGRenderer(std::vector<std::shared_ptr<odb::NativeBitmap>> bitmaps) {
+        for ( const auto&  bitmap : bitmaps  ) {
+            auto id = bitmap->getId();
+            mBitmaps[ id ] = bitmap;
+        }
     }
 
     void OverlayNanoVGRenderer::render(const odb::NoudarDungeonSnapshot &snapshot) {
@@ -127,13 +158,38 @@ namespace odb {
             mFontData.clear();
         }
 
+        if ( mPaints.empty() ) {
+
+            for ( const auto& bitmapPair : mBitmaps ) {
+                auto bitmap = bitmapPair.second;
+                int imgW = bitmap->getWidth();
+                int imgH = bitmap->getHeight();
+
+                mFrames[ bitmapPair.first ] = nvgCreateImageRGBA(mContext, imgW, imgH, 0, (const unsigned char *) bitmap->getPixelData());
+            }
+
+            for ( const auto& step : currentAnimation.mStepList ) {
+                for ( const auto& node : step.mNodes ) {
+                    auto frame = mFrames[ node->mFrameId ];
+                    auto bitmap = mBitmaps[ node->mFrameId ];
+                    int imgW = bitmap->getWidth();
+                    int imgH = bitmap->getHeight();
+                    int offsetX = node->mRelativePosition.x * mWidth;
+                    int offsetY = node->mRelativePosition.x * mHeight;
+
+                    mPaints[ node ] = paints.size();
+                    paints.push_back( nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, frame, 1.0f ) );
+                }
+            }
+        }
+
+
         glViewport(0, 0, mWidth, mHeight);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glDisable(GL_DEPTH_TEST);
 
         nvgBeginFrame(mContext, mWidth, mHeight, mWidth / mHeight);
-
         nvgFontSize(mContext, 18.0f);
         nvgFontFace(mContext, "font");
         nvgFillColor(mContext, nvgRGBA(255, 255, 255, 255));
@@ -145,9 +201,28 @@ namespace odb {
         ss << snapshot.mHP;
         nvgText(mContext, 10, mHeight - 18, ss.str().c_str(), nullptr);
 
+        for ( const auto& node : currentAnimation.mStepList[frame].mNodes ) {
 
-        nvgFill(mContext);
-        nvgStroke(mContext);
+            auto nodeId = node->mFrameId;
+            auto frame = mFrames[ node->mFrameId ];
+            auto bitmap = mBitmaps[node->mFrameId];
+            int imgW = bitmap->getWidth();
+            int imgH = bitmap->getHeight();
+            int offsetX = node->mRelativePosition.x * mWidth;
+            int offsetY = node->mRelativePosition.x * mHeight;
+//            nvgFillPaint(mContext, paints[mPaints[node]]);
+//            nvgRect(mContext, offsetX, offsetY, imgW, imgH);
+//            nvgFill(mContext);
+
+
+
+            auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, frame, 1.0f );
+            nvgBeginPath(mContext);
+            nvgRect(mContext, offsetX, offsetY, imgW, imgH);
+            nvgFillPaint(mContext, imgPaint);
+            nvgFill(mContext);
+        }
+
 
         nvgEndFrame(mContext);
 

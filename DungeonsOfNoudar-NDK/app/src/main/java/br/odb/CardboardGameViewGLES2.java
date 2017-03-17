@@ -23,12 +23,15 @@ import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
+import static java.security.AccessController.getContext;
+
 /**
  * @author monty
  */
 public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 
 	public static final int TICK_INTERVAL = 20;
+	private AssetManager assets;
 
 	@Override
 	public void onNewFrame(HeadTransform headTransform) {
@@ -82,7 +85,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 
 	@Override
 	public void onSurfaceChanged(int width, int height) {
-		GL2JNILib.init(width, height);
+		GL2JNILib.init(width, height, this.assets);
 	}
 
 	@Override
@@ -247,6 +250,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 
 	public void onCreate(AssetManager assets) {
 		synchronized (renderingLock) {
+			this.assets = assets;
 			GL2JNILib.onCreate(assets);
 			loadTextures(assets);
 
@@ -271,7 +275,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 	}
 
 	public void setTextures(Bitmap[] bitmaps) {
-		GL2JNILib.setTextures(bitmaps);
+
 	}
 
 	public void loadTextures(AssetManager assets) {

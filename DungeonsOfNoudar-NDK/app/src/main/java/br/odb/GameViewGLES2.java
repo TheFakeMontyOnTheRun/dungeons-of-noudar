@@ -14,8 +14,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.google.vr.sdk.base.HeadTransform;
-
 import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -27,6 +25,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Renderer {
 
 	public static final int TICK_INTERVAL = 20;
+	private AssetManager assets;
 
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
@@ -34,7 +33,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 	@Override
 	public void onSurfaceChanged(GL10 gl10, int width, int height) {
-		GL2JNILib.init(width, height);
+		GL2JNILib.init(width, height, this.assets);
 	}
 
 	@Override
@@ -193,7 +192,9 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 	public void onCreate(AssetManager assets) {
 		synchronized (renderingLock) {
+			this.assets = assets;
 			GL2JNILib.onCreate(assets);
+
 			loadTextures(assets);
 			loadMeshes(assets);
 			final Activity activity = ((Activity) getContext());
@@ -216,7 +217,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	}
 
 	public void setTextures(Bitmap[] bitmaps) {
-		GL2JNILib.setTextures(bitmaps);
+
 	}
 
 	public void loadTextures(AssetManager assets) {

@@ -8,15 +8,13 @@ public class GL2JNILib {
 		System.loadLibrary("NdkGlue");
 	}
 
-	public static native void init(int width, int height);
+	public static native void init(int width, int height, AssetManager assets);
 
 	public static native void step();
 
 	public static native void onDestroy();
 
 	public static native void onCreate(AssetManager assetManager);
-
-	public static native void setTextures(Bitmap[] bitmaps);
 
 	public static native void rotateLeft();
 
