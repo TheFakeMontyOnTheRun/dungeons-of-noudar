@@ -506,7 +506,7 @@ namespace odb {
 				int splatFrame = snapshot.splat[z][x];
 				Shade shade = (0.25f * std::min(255, snapshot.mLightMap[z][x]) / 255.0f) + 0.75f;
 
-				if ( mapItem == '+') {
+				if ( mapItem == 't') {
 					pos = glm::vec3(x * 2, -4.0f, z * 2);
 					batches[ETextures::Falcata].emplace_back(
 							std::get<0>(billboardVBO),
@@ -515,7 +515,15 @@ namespace odb {
 							getBillboardTransform(pos), shade, true);
 
 				}
+				if ( mapItem == '+') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Cross].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(pos), shade, true);
 
+				}
 				if ( mapItem == 'y') {
 					pos = glm::vec3(x * 2, -4.0f, z * 2);
 					batches[ETextures::Crossbow].emplace_back(
