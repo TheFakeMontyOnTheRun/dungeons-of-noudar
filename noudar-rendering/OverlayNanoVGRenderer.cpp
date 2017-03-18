@@ -148,19 +148,39 @@ namespace odb {
                 std::vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
-                                         "bow0.png", glm::vec2{0.5125f, 0.85f}
+                                         "bow0.png", glm::vec2{0.512f, 0.8f}
                                  ),
                          },
-                                1000
+                                500
                         },
 
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow1.png", glm::vec2{0.512f, 0.8f}, glm::vec2{0.5125f, 0.85f}
+                                 ),
+                         },
+                                500
+                        },
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "bow1.png", glm::vec2{0.5125f, 0.85f}
                                  )
                          },
-                                1500
+                                500
                         },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow1.png", glm::vec2{0.5125f, 0.85f}, glm::vec2( 0.4f, 1.0f)
+                                 )
+                         },
+                                500
+                        },
+
+                        {{},
+                                200
+                        },
+
 
                 },
                 false,
@@ -168,48 +188,104 @@ namespace odb {
         );
 
         animations[ "crossbow-reload" ] = std::make_shared<odb::Animation>(
+                //arco-mão-esquerda-diff: 0.1, 0.65
                 std::vector<odb::AnimationStep>{
                         {{
-                                 std::make_shared<odb::GraphicNode>(
-                                         "hand0.png", glm::vec2{0.45f, 0.95f}
-                                 ),
-                                 std::make_shared<odb::GraphicNode>(
-                                         "hand1.png", glm::vec2{0.55f, 0.95f}
-                                 )
+                                 std::make_shared<odb::GraphicNode>( "bow2.png", glm::vec2(0.15f, 1.0f),  glm::vec2(0.15f, 0.2f) ),
+                                 std::make_shared<odb::GraphicNode>("hand1.png", glm::vec2(0.25f, 1.65f),  glm::vec2(0.25f, 0.85f) )
+                         },
+                                500
+                        },
+                        {{
+                                 std::make_shared<odb::GraphicNode>( "bow2.png", glm::vec2(0.15f, 0.2f) ),
+                                 std::make_shared<odb::GraphicNode>("hand1.png", glm::vec2(0.25f, 0.85f) )
                          },
                                 500
                         },
 
                         {{
                                  std::make_shared<odb::GraphicNode>(
-                                         "hand0.png", glm::vec2{0.45f, 0.75f}
+                                         "bow2.png", glm::vec2{0.2f, 0.15f}
                                  ),
                                  std::make_shared<odb::GraphicNode>(
-                                         "hand1.png", glm::vec2{0.55f, 0.75f}
+                                         "hand1.png", glm::vec2{0.3f, 0.8f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand0.png", glm::vec2(0.55f, 1.0f) , glm::vec2{0.55f, 0.65f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                 "dart0.png", glm::vec2(0.55f, 1.0f), glm::vec2{0.55f, 0.65f}
                                  )
+
                          },
                                 500
                         },
-
-
                         {{
                                  std::make_shared<odb::GraphicNode>(
-                                         "hand0.png", glm::vec2{0.45f, 0.5f}
+                                         "bow2.png", glm::vec2{0.2f, 0.15f}
                                  ),
                                  std::make_shared<odb::GraphicNode>(
-                                         "hand1.png", glm::vec2{0.55f, 0.5f}
+                                         "hand1.png", glm::vec2{0.3f, 0.8f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand0.png", glm::vec2{0.45f, 0.65f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "dart0.png", glm::vec2{0.45f, 0.65f}
                                  )
-                         },
-                                500
-                        },
 
+                         },
+                                2000
+                        },
                         {{
                                  std::make_shared<odb::GraphicNode>(
-                                         "bow2.png", glm::vec2{0.0f, 0.0f}
-                                 )
+                                         "bow2.png", glm::vec2{0.1f, 0.3f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.2f, 0.95f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "dart0.png", glm::vec2{0.35f, 0.8f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand0.png", glm::vec2(0.55f, 0.8f), glm::vec2( 0.5f, 1.0f )
+                                 ),
+
                          },
                                 1000
-                        }
+                        },
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow2.png", glm::vec2{0.1f, 0.3f}, glm::vec2( 0.1f, 1.0f )
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.2f, 0.95f}, glm::vec2( 0.2f, 1.65f )
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "dart0.png", glm::vec2{0.35f, 0.8f}, glm::vec2( 0.35f, 1.5f )
+                                 )
+
+
+                         },
+                                1000
+                        },
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow0.png", glm::vec2{0.35f, 1.0f}, glm::vec2{0.45f, 0.8f}
+                                 ),
+                         },
+                                500
+                        },
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow0.png", glm::vec2{0.45f, 0.8f}, glm::vec2{0.5125f, 0.85f}
+                                 ),
+                         },
+                                500
+                        },
+
+
+
                 },
                 false,
                 "crossbow-still"
@@ -295,7 +371,7 @@ namespace odb {
                 auto bitmap = mBitmaps[node->mFrameId];
                 int imgW = bitmap->getWidth();
                 int imgH = bitmap->getHeight();
-                auto position = node->mRelativePosition;
+                auto position = node->getPositionForTime( 1.0f - ((float) timeUntilNextFrame ) / ( (float) currentAnimation->mStepList[frame].mDelay ) );
                 float offsetX = position.x * mWidth;
                 float offsetY = position.y * mHeight;
                 auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, registeredTexture, 1.0f);

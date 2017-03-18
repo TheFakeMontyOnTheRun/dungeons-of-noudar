@@ -135,6 +135,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	if ( overlayRenderer == nullptr ) {
 		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
+                loadPNG( "dart0.png", fileLoader  ),
 				loadPNG( "hand0.png", fileLoader  ),
 				loadPNG( "hand1.png", fileLoader ),
                 loadPNG( "bow0.png", fileLoader ),
@@ -146,6 +147,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	}
 
 	overlayRenderer->setFrame( w, h );
+    overlayRenderer->playAnimation( animationTime, "crossbow-still" );
     #endif
 
 	gles2Renderer->setTexture(textures);
@@ -355,6 +357,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 	if ( overlayRenderer == nullptr ) {
 
 		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
+                loadPNG( "dart0.png", fileLoaderDelegate ),
 				loadPNG( "hand0.png", fileLoaderDelegate ),
 				loadPNG( "hand1.png", fileLoaderDelegate ),
                 loadPNG( "bow0.png", fileLoaderDelegate ),

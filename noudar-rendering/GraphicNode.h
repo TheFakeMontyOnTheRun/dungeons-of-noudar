@@ -8,9 +8,13 @@
 namespace odb {
     class GraphicNode {
     public:
-        GraphicNode(std::string aFrameId, glm::vec2 aRelativePosition );
+        explicit GraphicNode(std::string aFrameId, glm::vec2 aRelativePosition, glm::vec2 aFinalPosition );
+        explicit GraphicNode(std::string aFrameId, glm::vec2 aRelativePosition );
         std::string mFrameId;
         glm::vec2 mRelativePosition;
+        glm::vec2 mFinalPosition;
+
+        glm::vec2 getPositionForTime( float progress );
     };
 }
 
