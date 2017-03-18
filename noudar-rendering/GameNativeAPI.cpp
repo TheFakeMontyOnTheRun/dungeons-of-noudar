@@ -129,6 +129,8 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 			loadPNG("stonegrassnear.png", fileLoader),
 			loadPNG("grassstonenear.png", fileLoader),
 			loadPNG("cross.png", fileLoader),
+            loadPNG("crossbow.png", fileLoader),
+            loadPNG("falcata.png", fileLoader),
 	};
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)

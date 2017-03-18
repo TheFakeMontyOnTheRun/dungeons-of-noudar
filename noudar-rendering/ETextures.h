@@ -42,7 +42,9 @@ namespace odb {
         GrassStoneFar,
         StoneGrassNear,
         GrassStoneNear,
-        Cross
+        Cross,
+        Crossbow,
+        Falcata
     };
 }
 #endif //DUNGEONSOFNOUDAR_NDK_ETEXTURES_H

@@ -125,18 +125,18 @@ namespace odb {
                 std::vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
-                                         "bow0.png", glm::vec2{0.5125f, 0.85f}
+                                         "bow0.png", glm::vec2{0.5125f, 0.85f}, glm::vec2{0.512f, 0.8f}
                                  ),
                          },
-                                10000
+                                20000
                         },
 
                         {{
                                  std::make_shared<odb::GraphicNode>(
-                                         "bow0.png", glm::vec2{0.512f, 0.8f}
+                                         "bow0.png", glm::vec2{0.512f, 0.8f}, glm::vec2{0.5125f, 0.85f}
                                  )
                          },
-                                10000
+                                20000
                         },
 
                 },
