@@ -526,6 +526,7 @@ void interact() {
 		render->setNextCommand('\t');
 		game->tick();
 		render->setNextCommand('.');
+        overlayRenderer->playAnimation( animationTime, "crossbow-reload" );
 	}
 }
 

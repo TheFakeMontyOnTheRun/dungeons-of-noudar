@@ -92,53 +92,8 @@
 
 
 NVGcontext *mContext;
-
-odb::Animation currentAnimation = {
-        {
-                {{
-                         std::make_shared<odb::GraphicNode>(
-                                 "hand0.png", glm::vec2{0.45f, 0.95f}
-                         ),
-                         std::make_shared<odb::GraphicNode>(
-                                 "hand1.png", glm::vec2{0.55f, 0.95f}
-                         )
-                 },
-                        500
-                },
-
-                {{
-                         std::make_shared<odb::GraphicNode>(
-                                 "hand0.png", glm::vec2{0.45f, 0.75f}
-                         ),
-                         std::make_shared<odb::GraphicNode>(
-                                 "hand1.png", glm::vec2{0.55f, 0.75f}
-                         )
-                 },
-                        500
-                },
-
-
-                {{
-                         std::make_shared<odb::GraphicNode>(
-                                 "hand0.png", glm::vec2{0.45f, 0.5f}
-                         ),
-                         std::make_shared<odb::GraphicNode>(
-                                 "hand1.png", glm::vec2{0.55f, 0.5f}
-                         )
-                 },
-                        500
-                },
-
-                {{
-                         std::make_shared<odb::GraphicNode>(
-                                 "bow2.png", glm::vec2{0.0f, 0.0f}
-                         )
-                 },
-                        1000
-                }
-        },
-        false
-};
+std::shared_ptr<odb::Animation> currentAnimation = nullptr;
+std::map<std::string, std::shared_ptr<odb::Animation>> animations;
 
 long timeUntilNextFrame = 0;
 int frame = 0;
@@ -164,6 +119,57 @@ namespace odb {
             auto id = bitmap->getId();
             mBitmaps[id] = bitmap;
         }
+
+
+        animations[ "crossbow-reload" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand0.png", glm::vec2{0.45f, 0.95f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.55f, 0.95f}
+                                 )
+                         },
+                                500
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand0.png", glm::vec2{0.45f, 0.75f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.55f, 0.75f}
+                                 )
+                         },
+                                500
+                        },
+
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand0.png", glm::vec2{0.45f, 0.5f}
+                                 ),
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.55f, 0.5f}
+                                 )
+                         },
+                                500
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow2.png", glm::vec2{0.0f, 0.0f}
+                                 )
+                         },
+                                1000
+                        }
+                },
+                false
+        );
+
+
+        currentAnimation = nullptr;
     }
 
     void OverlayNanoVGRenderer::render(const odb::NoudarDungeonSnapshot &snapshot) {
@@ -196,8 +202,6 @@ namespace odb {
                 mFrames[bitmapPair.first] = nvgCreateImageRGBA(mContext, imgW, imgH, 0,
                                                                (const unsigned char *) bitmap->getPixelData());
             }
-
-            mLastTimestamp = snapshot.mTimestamp - currentAnimation.mStepList[frame].mDelay;
         }
 
         glViewport(0, 0, mWidth, mHeight);
@@ -220,33 +224,37 @@ namespace odb {
         timeUntilNextFrame -= (snapshot.mTimestamp - mLastTimestamp);
         mLastTimestamp = snapshot.mTimestamp;
 
-        auto animationSize = currentAnimation.mStepList.size();
-        if ( timeUntilNextFrame <= 0 && frame < animationSize ) {
+        if ( currentAnimation != nullptr ) {
 
-            if ( currentAnimation.mRepeatedPlayback ) {
-                frame = (frame + 1) % currentAnimation.mStepList.size();
-            } else if (frame < animationSize - 1 ){
-                ++frame;
+
+            auto animationSize = currentAnimation->mStepList.size();
+            if (timeUntilNextFrame <= 0 && frame < animationSize) {
+
+                if (currentAnimation->mRepeatedPlayback) {
+                    frame = (frame + 1) % currentAnimation->mStepList.size();
+                } else if (frame < animationSize - 1) {
+                    ++frame;
+                }
+
+                timeUntilNextFrame = currentAnimation->mStepList[frame].mDelay;
             }
 
-            timeUntilNextFrame = currentAnimation.mStepList[frame].mDelay;
-        }
+            for (const auto &node : currentAnimation->mStepList[frame].mNodes) {
 
-        for (const auto &node : currentAnimation.mStepList[frame].mNodes) {
-
-            auto nodeId = node->mFrameId;
-            auto registeredTexture = mFrames[node->mFrameId];
-            auto bitmap = mBitmaps[node->mFrameId];
-            int imgW = bitmap->getWidth();
-            int imgH = bitmap->getHeight();
-            auto position = node->mRelativePosition;
-            float offsetX = position.x * mWidth;
-            float offsetY = position.y * mHeight;
-            auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, registeredTexture, 1.0f);
-            nvgBeginPath(mContext);
-            nvgRect(mContext, offsetX, offsetY, imgW, imgH);
-            nvgFillPaint(mContext, imgPaint);
-            nvgFill(mContext);
+                auto nodeId = node->mFrameId;
+                auto registeredTexture = mFrames[node->mFrameId];
+                auto bitmap = mBitmaps[node->mFrameId];
+                int imgW = bitmap->getWidth();
+                int imgH = bitmap->getHeight();
+                auto position = node->mRelativePosition;
+                float offsetX = position.x * mWidth;
+                float offsetY = position.y * mHeight;
+                auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, registeredTexture, 1.0f);
+                nvgBeginPath(mContext);
+                nvgRect(mContext, offsetX, offsetY, imgW, imgH);
+                nvgFillPaint(mContext, imgPaint);
+                nvgFill(mContext);
+            }
         }
 
         nvgEndFrame(mContext);
@@ -257,5 +265,15 @@ namespace odb {
 
     OverlayNanoVGRenderer::~OverlayNanoVGRenderer() {
         nvgDeleteGLES2(mContext);
+    }
+
+    void OverlayNanoVGRenderer::playAnimation( long currentTimestamp, std::string animationName ) {
+        currentAnimation = animations[ animationName ];
+
+        if ( currentAnimation != nullptr ) {
+            mLastTimestamp = currentTimestamp - currentAnimation->mStepList[frame].mDelay;
+            timeUntilNextFrame = currentAnimation->mStepList[frame].mDelay;
+            frame = 0;
+        }
     }
 }

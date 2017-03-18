@@ -21,6 +21,7 @@ namespace odb {
         void loadFonts(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate );
         ~OverlayNanoVGRenderer();
         void render( const odb::NoudarDungeonSnapshot& snapshot );
+        void playAnimation( long currentTimestamp, std::string animationName );
     };
 }
 #endif //NOUDARRENDERING_OVERLAYNANOVGRENDERER_H

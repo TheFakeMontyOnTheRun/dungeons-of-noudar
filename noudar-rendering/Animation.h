@@ -10,6 +10,7 @@ namespace odb {
 
     class Animation {
     public:
+        Animation(std::vector<AnimationStep> aStepList, bool aRepeatedPlayback );
         std::vector<AnimationStep> mStepList;
         bool mRepeatedPlayback;
     };
