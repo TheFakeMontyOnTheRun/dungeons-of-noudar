@@ -121,6 +121,52 @@ namespace odb {
         }
 
 
+        animations[ "crossbow-still" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow0.png", glm::vec2{0.5125f, 0.85f}
+                                 ),
+                         },
+                                10000
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow0.png", glm::vec2{0.512f, 0.8f}
+                                 )
+                         },
+                                10000
+                        },
+
+                },
+                true,
+                ""
+        );
+
+        animations[ "crossbow-fire" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow0.png", glm::vec2{0.5125f, 0.85f}
+                                 ),
+                         },
+                                1000
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow1.png", glm::vec2{0.5125f, 0.85f}
+                                 )
+                         },
+                                1500
+                        },
+
+                },
+                false,
+                "crossbow-reload"
+        );
+
         animations[ "crossbow-reload" ] = std::make_shared<odb::Animation>(
                 std::vector<odb::AnimationStep>{
                         {{
@@ -165,7 +211,8 @@ namespace odb {
                                 1000
                         }
                 },
-                false
+                false,
+                "crossbow-still"
         );
 
 
@@ -234,6 +281,8 @@ namespace odb {
                     frame = (frame + 1) % currentAnimation->mStepList.size();
                 } else if (frame < animationSize - 1) {
                     ++frame;
+                } else {
+                    playAnimation( snapshot.mTimestamp, currentAnimation->mNextAnimation );
                 }
 
                 timeUntilNextFrame = currentAnimation->mStepList[frame].mDelay;

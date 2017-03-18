@@ -10,6 +10,6 @@
 #include "Animation.h"
 
 namespace odb {
-    Animation::Animation(std::vector<AnimationStep> aStepList, bool aRepeatedPlayback ) : mStepList(aStepList), mRepeatedPlayback(aRepeatedPlayback) {
+    Animation::Animation(std::vector<AnimationStep> aStepList, bool aRepeatedPlayback, std::string aNextAnimation ) : mStepList(aStepList), mRepeatedPlayback(aRepeatedPlayback), mNextAnimation(aNextAnimation) {
     }
 }

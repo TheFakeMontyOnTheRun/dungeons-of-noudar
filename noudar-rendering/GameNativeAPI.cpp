@@ -137,6 +137,8 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
 				loadPNG( "hand0.png", fileLoader  ),
 				loadPNG( "hand1.png", fileLoader ),
+                loadPNG( "bow0.png", fileLoader ),
+                loadPNG( "bow1.png", fileLoader ),
 				loadPNG( "bow2.png", fileLoader ),
 		};
 
@@ -355,6 +357,8 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
 				loadPNG( "hand0.png", fileLoaderDelegate ),
 				loadPNG( "hand1.png", fileLoaderDelegate ),
+                loadPNG( "bow0.png", fileLoaderDelegate ),
+                loadPNG( "bow1.png", fileLoaderDelegate ),
 				loadPNG( "bow2.png", fileLoaderDelegate ),
 		};
 
@@ -526,7 +530,7 @@ void interact() {
 		render->setNextCommand('\t');
 		game->tick();
 		render->setNextCommand('.');
-        overlayRenderer->playAnimation( animationTime, "crossbow-reload" );
+        overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
 	}
 }
 
