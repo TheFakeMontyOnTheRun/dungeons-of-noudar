@@ -135,11 +135,12 @@ odb::Animation currentAnimation = {
                  },
                         1000
                 }
-        }
+        },
+        false
 };
 
 long timeUntilNextFrame = 0;
-int frame = -1;
+int frame = 0;
 
 std::vector< NVGpaint > paints;
 
@@ -194,7 +195,7 @@ namespace odb {
                 mFrames[ bitmapPair.first ] = nvgCreateImageRGBA(mContext, imgW, imgH, 0, (const unsigned char *) bitmap->getPixelData());
             }
 
-            mLastTimestamp = snapshot.mTimestamp;
+            mLastTimestamp = snapshot.mTimestamp - currentAnimation.mStepList[frame].mDelay;
         }
 
         glViewport(0, 0, mWidth, mHeight);
@@ -217,22 +218,29 @@ namespace odb {
         timeUntilNextFrame -= ( snapshot.mTimestamp - mLastTimestamp );
         mLastTimestamp = snapshot.mTimestamp;
 
-        if ( timeUntilNextFrame <= 0 ) {
-            frame = ( frame + 1 ) % currentAnimation.mStepList.size();
-            timeUntilNextFrame = currentAnimation.mStepList[ frame ].mDelay;
+        auto animationSize = currentAnimation.mStepList.size();
+        if ( timeUntilNextFrame <= 0 && frame < animationSize ) {
+
+            if ( currentAnimation.mRepeatedPlayback ) {
+                frame = (frame + 1) % currentAnimation.mStepList.size();
+            } else if (frame < animationSize - 1 ){
+                ++frame;
+            }
+
+            timeUntilNextFrame = currentAnimation.mStepList[frame].mDelay;
         }
 
         for ( const auto& node : currentAnimation.mStepList[frame].mNodes ) {
 
             auto nodeId = node->mFrameId;
-            auto frame = mFrames[ node->mFrameId ];
+            auto registeredTexture = mFrames[node->mFrameId];
             auto bitmap = mBitmaps[node->mFrameId];
             int imgW = bitmap->getWidth();
             int imgH = bitmap->getHeight();
             auto position = node->mRelativePosition;
             float offsetX = position.x * mWidth;
             float offsetY = position.y * mHeight;
-            auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, frame, 1.0f );
+            auto imgPaint = nvgImagePattern(mContext, offsetX, offsetY, imgW, imgH, 0, registeredTexture, 1.0f);
             nvgBeginPath(mContext);
             nvgRect(mContext, offsetX, offsetY, imgW, imgH);
             nvgFillPaint(mContext, imgPaint);

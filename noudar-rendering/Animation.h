@@ -11,6 +11,7 @@ namespace odb {
     class Animation {
     public:
         std::vector<AnimationStep> mStepList;
+        bool mRepeatedPlayback;
     };
 }
 
