@@ -31,6 +31,7 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
+
 #else
 
 #define NANOVG_GL2_IMPLEMENTATION
@@ -90,7 +91,7 @@
 #include "Animation.h"
 
 
-NVGcontext* mContext;
+NVGcontext *mContext;
 
 odb::Animation currentAnimation = {
         {
@@ -142,57 +143,58 @@ odb::Animation currentAnimation = {
 long timeUntilNextFrame = 0;
 int frame = 0;
 
-std::vector< NVGpaint > paints;
+std::vector<NVGpaint> paints;
 
 namespace odb {
 
 
-    void OverlayNanoVGRenderer::setFrame(float width, float height){
+    void OverlayNanoVGRenderer::setFrame(float width, float height) {
         mWidth = width;
         mHeight = height;
     }
 
-    void OverlayNanoVGRenderer::loadFonts(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
+    void OverlayNanoVGRenderer::loadFonts(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate) {
 
-        mFontData = fileLoaderDelegate->loadBinaryFileFromPath( "MedievalSharp.ttf" );
+        mFontData = fileLoaderDelegate->loadBinaryFileFromPath("MedievalSharp.ttf");
     }
 
 
     OverlayNanoVGRenderer::OverlayNanoVGRenderer(std::vector<std::shared_ptr<odb::NativeBitmap>> bitmaps) {
-        for ( const auto&  bitmap : bitmaps  ) {
+        for (const auto &bitmap : bitmaps) {
             auto id = bitmap->getId();
-            mBitmaps[ id ] = bitmap;
+            mBitmaps[id] = bitmap;
         }
     }
 
     void OverlayNanoVGRenderer::render(const odb::NoudarDungeonSnapshot &snapshot) {
 
-        if ( mFontData.size() > 0 ) {
+        if (mFontData.size() > 0) {
 
 #ifdef NANOVG_GLES2_IMPLEMENTATION
-            mContext = 	nvgCreateGLES2(NVG_STENCIL_STROKES );
+            mContext = nvgCreateGLES2(NVG_STENCIL_STROKES);
 #else
             mContext = 	nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES );
 #endif
 
-            if ( !mContext ) {
+            if (!mContext) {
                 std::cout << "NVG context is faulty as salty" << std::endl;
             }
 
-            unsigned char* data = (unsigned char*)malloc(mFontData.size());
+            unsigned char *data = (unsigned char *) malloc(mFontData.size());
             std::copy(mFontData.begin(), mFontData.end(), data);
-            nvgCreateFontMem( mContext, "font", data, mFontData.size(),  1 );
+            nvgCreateFontMem(mContext, "font", data, mFontData.size(), 1);
             mFontData.clear();
         }
 
-        if ( mFrames.empty() ) {
+        if (mFrames.empty()) {
 
-            for ( const auto& bitmapPair : mBitmaps ) {
+            for (const auto &bitmapPair : mBitmaps) {
                 auto bitmap = bitmapPair.second;
                 int imgW = bitmap->getWidth();
                 int imgH = bitmap->getHeight();
 
-                mFrames[ bitmapPair.first ] = nvgCreateImageRGBA(mContext, imgW, imgH, 0, (const unsigned char *) bitmap->getPixelData());
+                mFrames[bitmapPair.first] = nvgCreateImageRGBA(mContext, imgW, imgH, 0,
+                                                               (const unsigned char *) bitmap->getPixelData());
             }
 
             mLastTimestamp = snapshot.mTimestamp - currentAnimation.mStepList[frame].mDelay;
@@ -215,7 +217,7 @@ namespace odb {
         ss << snapshot.mHP;
         nvgText(mContext, 10, mHeight - 18, ss.str().c_str(), nullptr);
 
-        timeUntilNextFrame -= ( snapshot.mTimestamp - mLastTimestamp );
+        timeUntilNextFrame -= (snapshot.mTimestamp - mLastTimestamp);
         mLastTimestamp = snapshot.mTimestamp;
 
         auto animationSize = currentAnimation.mStepList.size();
@@ -230,7 +232,7 @@ namespace odb {
             timeUntilNextFrame = currentAnimation.mStepList[frame].mDelay;
         }
 
-        for ( const auto& node : currentAnimation.mStepList[frame].mNodes ) {
+        for (const auto &node : currentAnimation.mStepList[frame].mNodes) {
 
             auto nodeId = node->mFrameId;
             auto registeredTexture = mFrames[node->mFrameId];
