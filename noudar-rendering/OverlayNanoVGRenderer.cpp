@@ -271,7 +271,7 @@ namespace odb {
         currentAnimation = animations[ animationName ];
 
         if ( currentAnimation != nullptr ) {
-            mLastTimestamp = currentTimestamp - currentAnimation->mStepList[frame].mDelay;
+            mLastTimestamp = currentTimestamp;
             timeUntilNextFrame = currentAnimation->mStepList[frame].mDelay;
             frame = 0;
         }
