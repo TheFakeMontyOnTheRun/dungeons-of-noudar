@@ -49,7 +49,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 
 	public enum KB {
-		UP, RIGHT, DOWN, LEFT, ROTATE_LEFT, ROTATE_RIGHT
+		UP, RIGHT, DOWN, LEFT, ROTATE_LEFT, ROTATE_RIGHT, CYCLE_PREV, CYCLE_NEXT, PICK, DROP, USE
 	}
 
 	View.OnKeyListener keyListener = new OnKeyListener() {
@@ -65,6 +65,28 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 				if (keyCode == KeyEvent.KEYCODE_PERIOD || keyCode == KeyEvent.KEYCODE_BUTTON_R1) {
 					key = transformMovementToCameraRotation(GameViewGLES2.KB.RIGHT);
 				}
+
+				if (keyCode == KeyEvent.KEYCODE_MINUS || keyCode == KeyEvent.KEYCODE_BUTTON_L2) {
+					key = GameViewGLES2.KB.CYCLE_PREV;
+				}
+
+				if (keyCode == KeyEvent.KEYCODE_EQUALS || keyCode == KeyEvent.KEYCODE_BUTTON_R2) {
+					key = GameViewGLES2.KB.CYCLE_NEXT;
+				}
+
+				if (keyCode == KeyEvent.KEYCODE_Y || keyCode == KeyEvent.KEYCODE_BUTTON_Y) {
+					key = GameViewGLES2.KB.PICK;
+				}
+
+				if (keyCode == KeyEvent.KEYCODE_B || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
+					key = GameViewGLES2.KB.DROP;
+				}
+
+				if (keyCode == KeyEvent.KEYCODE_A || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
+					key = GameViewGLES2.KB.USE;
+				}
+
+
 
 				if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
 
@@ -314,6 +336,28 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 					case ROTATE_RIGHT:
 						GL2JNILib.rotateRight();
 						break;
+
+
+					case CYCLE_PREV:
+						GL2JNILib.cyclePreviousItem();
+						break;
+					case CYCLE_NEXT:
+						GL2JNILib.cycleNextItem();
+						break;
+
+					case DROP:
+						GL2JNILib.dropItem();
+						break;
+
+					case PICK:
+						GL2JNILib.pickItem();
+						break;
+
+					case USE:
+						GL2JNILib.useItem();
+						break;
+
+
 
 				}
 			}

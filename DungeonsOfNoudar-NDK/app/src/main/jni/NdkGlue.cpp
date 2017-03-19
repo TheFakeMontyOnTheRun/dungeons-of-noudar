@@ -122,6 +122,21 @@ void loadSoundsFromFilenames(JNIEnv *env, jclass type, jobject asset_manager,
 extern "C" {
 
 JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_cyclePreviousItem(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_cycleNextItem(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_dropItem(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_pickItem(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_useItem(JNIEnv *env, jclass type);
+
+JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type,
 		                                 jobject asset_manager, jobjectArray soundFiles);
 
@@ -377,4 +392,29 @@ Java_br_odb_GL2JNILib_setMeshes(JNIEnv *env, jclass type, jobject assets, jobjec
 
 	loadMeshList( meshes, loader );
 	meshes.clear();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_cyclePreviousItem(JNIEnv *env, jclass type) {
+    cyclePrevItem();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_cycleNextItem(JNIEnv *env, jclass type) {
+    cycleNextItem();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_dropItem(JNIEnv *env, jclass type) {
+    dropItem();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_pickItem(JNIEnv *env, jclass type) {
+    pickupItem();
+}
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_useItem(JNIEnv *env, jclass type) {
+    interact();
 }

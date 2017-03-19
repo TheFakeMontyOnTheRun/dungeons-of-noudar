@@ -49,4 +49,14 @@ public class GL2JNILib {
 	public static native void forcePlayerDirection(int direction);
 
 	public static native void setMeshes(AssetManager assets, String[] objFiles);
+
+	public static native void cyclePreviousItem();
+
+	public static native void cycleNextItem();
+
+	public static native void dropItem();
+
+	public static native void pickItem();
+
+	public static native void useItem();
 }
