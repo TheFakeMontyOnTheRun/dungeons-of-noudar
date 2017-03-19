@@ -12,7 +12,9 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import java.io.IOException;
 
@@ -38,7 +40,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 	@Override
 	public void onDrawFrame(GL10 gl10) {
-		long delta = tick();
+		tick();
 		GL2JNILib.tick(TICK_INTERVAL);
 
 		synchronized (renderingLock) {
@@ -122,9 +124,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	private long timeUntilTick;
 	private long t0;
 	GameViewGLES2.KB key = null;
-	private float[] forwardVector = new float[3];
 	boolean mHaveController;
-	int rotation = 0;
 
 	private long tick() {
 
@@ -162,50 +162,58 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 
 	public GameViewGLES2(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		super(context																																																																																																																			, attrs);
 		init();
 	}
 
-	boolean touching = false;
-
-	public void init(Context context, int level, boolean haveController) {
+	public void init(final Context context, int level, boolean haveController) {
 		mHaveController = haveController;
 
 		if (haveController) {
-			setOnKeyListener(keyListener);
+																																																																																																																																																																																																																																																																																																																																																																																																															setOnKeyListener(keyListener);
 		}
 
 	setOnTouchListener(new OnSwipeTouchListener(getContext()) {
 
 		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			synchronized ( GameViewGLES2.this ) {
+
+				long downTime = event.getEventTime() - event.getDownTime();
+				long pressTimeout = ViewConfiguration.get(context).getLongPressTimeout();
+				if ( event.getAction() == MotionEvent.ACTION_UP && key == null && ( downTime < pressTimeout ) ) {
+					float pointerX = event.getX();
+					int width = v.getWidth();
+					if ( pointerX < width / 3 ) {
+						key = KB.CYCLE_PREV;
+					} else if ( pointerX > ( ( 2 * width ) / 3 ) ) {
+						key = KB.CYCLE_NEXT;
+					}
+				}
+			}
+
+			return super.onTouch(v, event);
+		}
+
+		@Override
 		public void onSwipeLeft() {
 			super.onSwipeLeft();
 
-			if (touching ) {
-				key = KB.CYCLE_NEXT;
-			} else {
-				key = KB.ROTATE_RIGHT;
-			}
+			key = KB.ROTATE_RIGHT;
 		}
 
 		@Override
 		public void onSwipeRight() {
 			super.onSwipeRight();
 
-			if (touching ) {
-				key = KB.CYCLE_PREV;
-			} else {
-				key = KB.ROTATE_LEFT;
-			}
+			key = KB.ROTATE_LEFT;
 		}
 
 		@Override
 		public void onSwipeUp() {
 			super.onSwipeUp();
 
-			if (!touching) {
-				key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
-			}
+			key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
 		}
 
 		@Override
@@ -223,18 +231,14 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		public void onLongPress() {
 			super.onLongPress();
 
-			if (!touching) {
-				key = KB.USE;
-			}
+			key = KB.USE;
 		}
 
 		@Override
 		public void onSwipeDown() {
 			super.onSwipeDown();
 
-			if (!touching) {
-				key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
-			}
+			key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
 		}
 	});
 
