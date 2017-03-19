@@ -570,3 +570,10 @@ void cyclePrevItem() {
         render->setNextCommand('.');
     }
 }
+
+bool isThereAnyObjectInFrontOfYou() {
+    auto map = game->getMap();
+    auto actor = map->getAvatar();
+
+    return map->getItemAt( map->getActorTargetPosition(actor) ) != nullptr;
+}

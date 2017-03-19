@@ -59,4 +59,6 @@ public class GL2JNILib {
 	public static native void pickItem();
 
 	public static native void useItem();
+
+	public static native boolean isThereAnyObjectInFrontOfYou();
 }

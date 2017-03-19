@@ -166,6 +166,8 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		init();
 	}
 
+	boolean touching = false;
+
 	public void init(Context context, int level, boolean haveController) {
 		mHaveController = haveController;
 
@@ -173,34 +175,68 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 			setOnKeyListener(keyListener);
 		}
 
-		setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+	setOnTouchListener(new OnSwipeTouchListener(getContext()) {
 
-			@Override
-			public void onSwipeLeft() {
-				super.onSwipeLeft();
+		@Override
+		public void onSwipeLeft() {
+			super.onSwipeLeft();
+
+			if (touching ) {
+				key = KB.CYCLE_NEXT;
+			} else {
 				key = KB.ROTATE_RIGHT;
-
 			}
+		}
 
-			@Override
-			public void onSwipeRight() {
-				super.onSwipeRight();
+		@Override
+		public void onSwipeRight() {
+			super.onSwipeRight();
+
+			if (touching ) {
+				key = KB.CYCLE_PREV;
+			} else {
 				key = KB.ROTATE_LEFT;
 			}
+		}
 
-			@Override
-			public void onSwipeUp() {
-				super.onSwipeUp();
+		@Override
+		public void onSwipeUp() {
+			super.onSwipeUp();
+
+			if (!touching) {
 				key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
 			}
+		}
 
-			@Override
-			public void onSwipeDown() {
-				super.onSwipeDown();
+		@Override
+		public void onDoubleTap() {
+			super.onDoubleTap();
+
+			if ( GL2JNILib.isThereAnyObjectInFrontOfYou() ) {
+				key = KB.PICK;
+			} else {
+				key = KB.DROP;
+			}
+		}
+
+		@Override
+		public void onLongPress() {
+			super.onLongPress();
+
+			if (!touching) {
+				key = KB.USE;
+			}
+		}
+
+		@Override
+		public void onSwipeDown() {
+			super.onSwipeDown();
+
+			if (!touching) {
 				key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
 			}
-		});
-
+		}
+	});
 
 		requestFocus();
 		requestFocusFromTouch();

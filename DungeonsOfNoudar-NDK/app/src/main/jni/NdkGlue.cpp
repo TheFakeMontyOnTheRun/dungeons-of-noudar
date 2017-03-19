@@ -121,6 +121,9 @@ void loadSoundsFromFilenames(JNIEnv *env, jclass type, jobject asset_manager,
 
 extern "C" {
 
+JNIEXPORT jboolean JNICALL
+Java_br_odb_GL2JNILib_isThereAnyObjectInFrontOfYou(JNIEnv *env, jclass type);
+
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_cyclePreviousItem(JNIEnv *env, jclass type);
 
@@ -417,4 +420,10 @@ Java_br_odb_GL2JNILib_pickItem(JNIEnv *env, jclass type) {
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_useItem(JNIEnv *env, jclass type) {
     interact();
+}
+
+JNIEXPORT jboolean JNICALL
+Java_br_odb_GL2JNILib_isThereAnyObjectInFrontOfYou(JNIEnv *env, jclass type) {
+
+    return isThereAnyObjectInFrontOfYou();
 }

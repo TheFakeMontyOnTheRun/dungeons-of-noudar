@@ -66,4 +66,6 @@ void forceDirection( int direction );
 void setTileProperties( std::string tileProperties );
 
 void interact();
+
+bool isThereAnyObjectInFrontOfYou();
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H
