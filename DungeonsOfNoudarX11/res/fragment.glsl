@@ -16,6 +16,6 @@ void main() {
         discard;
     }
 
-  gl_FragColor = gl_FragColor * uFade.a;
+  gl_FragColor = gl_FragColor * uFade.a * uMod;
   
 }
