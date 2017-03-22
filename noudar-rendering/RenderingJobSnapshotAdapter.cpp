@@ -115,10 +115,10 @@ namespace odb {
 
 				auto tile = snapshot.map[z][x];
 
-				Shade shade = (0.25f * std::min(255, snapshot.mLightMap[z][x]) / 255.0f) + 0.75f;
+				Shade shade = 1.0f;
 
-				if (x == static_cast<int>( snapshot.mCursorPosition.x) &&
-				    z == static_cast<int>( snapshot.mCursorPosition.y)) {
+				if (x == snapshot.mCursorPosition.x &&
+				    z == snapshot.mCursorPosition.y) {
 					shade = 1.5f;
 				}
 
