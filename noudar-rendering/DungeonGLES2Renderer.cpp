@@ -504,7 +504,11 @@ namespace odb {
 				auto mapItem = snapshot.map[ z ][ x ];
 				auto actor = snapshot.snapshot[z][x];
 				int splatFrame = snapshot.splat[z][x];
-				Shade shade = (0.25f * std::min(255, snapshot.mLightMap[z][x]) / 255.0f) + 0.75f;
+                Shade shade = 1.0f;
+
+                if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
+                    shade = 1.5 * shade;
+                }
 
 				if ( mapItem == 't') {
 					pos = glm::vec3(x * 2, -4.0f, z * 2);
@@ -533,6 +537,17 @@ namespace odb {
 							getBillboardTransform(pos), shade, true);
 
 				}
+
+                if ( mapItem == 'u') {
+                    pos = glm::vec3(x * 2, -4.0f, z * 2);
+                    batches[ETextures::Quiver].emplace_back(
+                            std::get<0>(billboardVBO),
+                            std::get<1>(billboardVBO),
+                            std::get<2>(billboardVBO),
+                            getBillboardTransform(pos), shade, true);
+
+                }
+
 
 
 				if (x == static_cast<int>(snapshot.mCursorPosition.x) &&

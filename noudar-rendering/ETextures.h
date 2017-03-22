@@ -44,7 +44,8 @@ namespace odb {
         GrassStoneNear,
         Cross,
         Crossbow,
-        Falcata
+        Falcata,
+        Quiver
     };
 }
 #endif //DUNGEONSOFNOUDAR_NDK_ETEXTURES_H

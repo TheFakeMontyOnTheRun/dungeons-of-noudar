@@ -18,6 +18,7 @@ OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/IMapElement.o \
     ../noudar-core/noudar-core/src/CGame.o \
     ../noudar-core/noudar-core/src/CItem.o \
+    ../noudar-core/noudar-core/src/CStorageItem.o \
     ../noudar-core/noudar-core/src/CPlainFileLoader.o \
     ../noudar-core/noudar-core/src/CGameDelegate.o \
     ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
