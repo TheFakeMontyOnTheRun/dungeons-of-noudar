@@ -214,12 +214,12 @@ namespace odb {
 
 	extern void printGLString(const char *name, GLenum s) {
 		const char *v = (const char *) glGetString(s);
-		odb::Logger::log("GL %s = %s\n", name, v);
+		odb::Logger::log("GL %s = %s", name, v);
 	}
 
 	extern void checkGlError(const char *op) {
 		for (GLint error = glGetError(); error; error = glGetError()) {
-			odb::Logger::log("after %s() glError (0x%x)\n", op, error);
+			odb::Logger::log("after %s() glError (0x%x)", op, error);
 		}
 	}
 
@@ -241,7 +241,7 @@ namespace odb {
 					char *buf = (char *) malloc(infoLen);
 					if (buf) {
 						glGetShaderInfoLog(shader, infoLen, NULL, buf);
-						odb::Logger::log("Could not compile shader %d:\n%s\n", shaderType, buf);
+						odb::Logger::log("Could not compile shader %d:\n%s", shaderType, buf);
 						free(buf);
 					}
 					glDeleteShader(shader);
@@ -280,7 +280,7 @@ namespace odb {
 					char *buf = (char *) malloc(bufLength);
 					if (buf) {
 						glGetProgramInfoLog(program, bufLength, NULL, buf);
-						odb::Logger::log("Could not link program:\n%s\n", buf);
+						odb::Logger::log("Could not link program:\n%s", buf);
 						free(buf);
 					}
 				}
@@ -465,7 +465,7 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::shutdown() {
-		odb::Logger::log("Shutdown!\n");
+		odb::Logger::log("Shutdown!");
 	}
 
 	void DungeonGLES2Renderer::startFadingIn() {
