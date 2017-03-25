@@ -536,7 +536,9 @@ void interact() {
 		render->setNextCommand('\t');
 		game->tick();
 		render->setNextCommand('.');
-        overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+	    overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
+#endif
 	}
 }
 
