@@ -74,6 +74,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/IMapElement.cpp
         ../noudar-core/noudar-core/src/CGame.cpp
         ../noudar-core/noudar-core/src/CItem.cpp
+        ../noudar-core/noudar-core/src/CStorageItem.cpp
         ../noudar-core/noudar-core/src/CPlainFileLoader.cpp
         ../noudar-core/noudar-core/src/CGameDelegate.cpp
         ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.cpp
