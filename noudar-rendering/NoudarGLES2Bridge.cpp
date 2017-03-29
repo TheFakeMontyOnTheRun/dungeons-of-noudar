@@ -49,6 +49,13 @@
 
 namespace odb {
 
+    const bool kWillAttemptToMergeVisibilityToFillPotetialHoles =
+#ifdef OSMESA
+            false;
+#else
+            true;
+#endif
+
 	Knights::EDirection previousDirection = Knights::EDirection::kNorth;
 	Knights::Vec2i previousPosition = {0,0};
 	VisMap previous;
@@ -98,9 +105,15 @@ namespace odb {
 
         auto cameraPosition = current->getPosition();
 	    VisMap currentVisMap;
-        VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
-	    VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
-	    VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+
+        if ( kWillAttemptToMergeVisibilityToFillPotetialHoles  ) {
+            VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+            VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
+            VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+        } else {
+            VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+        }
+
         auto item = current->getSelectedItem();
 
         if ( item != nullptr ) {
