@@ -1,6 +1,7 @@
 CXXFLAGS = -O2 -g -c -std=c++0x -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1  -DGLM_FORCE_RADIANS
 LDFLAGS = -lpng -lopenal -lGL -lGLU `sdl-config --libs`
 CXX = clang++
+CC = clang
 OBJS = SDL-version/main.o \
    ../noudar-core/noudar-core/src/Vec2i.o \
    ../noudar-core/noudar-core/src/CActor.o \
