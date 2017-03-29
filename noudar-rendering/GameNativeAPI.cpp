@@ -97,6 +97,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	textures = {
 			loadPNG("grass.png", fileLoader),
+            loadPNG("grass2.png", fileLoader),
 			loadPNG("stonefloor.png", fileLoader),
 			loadPNG("bricks.png", fileLoader),
 			loadPNG("arch.png", fileLoader),

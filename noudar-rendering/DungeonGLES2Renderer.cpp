@@ -318,6 +318,7 @@ namespace odb {
 
 		mTextureRegistry["sky"] = ETextures::Skybox;
 		mTextureRegistry["grass"] = ETextures::Grass;
+        mTextureRegistry["grass2"] = ETextures::Grass2;
 		mTextureRegistry["floor"] = ETextures::Floor;
 		mTextureRegistry["bricks"] = ETextures::Bricks;
 		mTextureRegistry["arch"] = ETextures::Arch;
