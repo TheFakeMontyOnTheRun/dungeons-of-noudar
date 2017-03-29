@@ -1,4 +1,4 @@
-CXXFLAGS = -g -c -std=c++11 -DOSMESA -DGLM_FORCE_RADIANS -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -Imesa -march=i486
+CXXFLAGS = -g -c -std=c++11 -DOSMESA -DGLM_FORCE_RADIANS -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -march=i486 
 LDFLAGS = -lGLU -Lmesa -lOSMesa
 
 CXXFLAGS += -O3 -fomit-frame-pointer -ffast-math
@@ -7,6 +7,7 @@ OPT += -Wall -W  -std=gnu++0x
 L=-lOSMesa -I/usr/local/include/GL -L/usr/local/lib -I/usr/include/GL
 
 CXX = i586-pc-msdosdjgpp-g++
+CC = i586-pc-msdosdjgpp-gcc
 OBJS = DOS-version/main.o \
    ../noudar-core/noudar-core/src/Vec2i.o \
    ../noudar-core/noudar-core/src/CActor.o \
@@ -23,6 +24,7 @@ OBJS = DOS-version/main.o \
     ../noudar-core/noudar-core/src/IMapElement.o \
     ../noudar-core/noudar-core/src/CGame.o \
     ../noudar-core/noudar-core/src/CItem.o \
+    ../noudar-core/noudar-core/src/CStorageItem.o \
     ../noudar-core/noudar-core/src/CPlainFileLoader.o \
     ../noudar-core/noudar-core/src/CGameDelegate.o \
     ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.o \
@@ -48,8 +50,8 @@ OBJS = DOS-version/main.o \
         ../noudar-rendering/SplatAnimation.o \
         ../noudar-rendering/CTile3DProperties.o \
         ../noudar-rendering/NoudarGLES2Bridge.o \
-        DOS-version/LoadPNG.o \
         DOS-version/WindowOperationsDOS.o \
+	 ../gles2-renderer/LoadPNG.o \
         ../gles2-renderer/Logger.o \
         ../gles2-renderer/Trig.o \
         ../gles2-renderer/Camera.o \
@@ -61,6 +63,7 @@ OBJS = DOS-version/main.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \
         ../gles2-renderer/Texture.o \
+	../nanovg/src/nanovg.o \
         ../NullSoundSystem/SoundClip.o \
         ../NullSoundSystem/SoundEmitter.o \
         ../NullSoundSystem/SoundListener.o \

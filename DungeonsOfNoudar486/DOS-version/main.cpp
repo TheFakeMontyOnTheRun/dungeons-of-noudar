@@ -41,9 +41,15 @@
 
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
+#include "DOSHacks.h"
 
 int main(int argc, char *argv[]) {
-  readMap( std::make_shared<Knights::CPlainFileLoader>("res/"), "tiles.prp" );
+  auto fileLoader =  std::make_shared<Knights::CPlainFileLoader>("res\\");
+
+  fileLoader->setFilenameTransformation( kDosLongFileNameTransformer );
+  
+  readMap( fileLoader, "tiles.properties" );
+
   initWindow();
   setMainLoop();
   destroyWindow();

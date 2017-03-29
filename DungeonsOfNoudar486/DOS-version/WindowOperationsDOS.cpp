@@ -54,13 +54,42 @@
 #include "CGameDelegate.h"
 #include "CMap.h"
 #include "IRenderer.h"
-
+#include "CPlainFileLoader.h"
 #include "NoudarDungeonSnapshot.h"
 
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
 #include "Common.h"
 #include "LoadPNG.h"
+#include "DOSHacks.h"
+
+std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const std::string& filename ) {
+      std::cout << "bla: " << filename << std::endl;
+
+      auto dotPosition = std::find( std::begin(filename), std::end( filename), '.');
+      auto indexDot =  std::distance( std::begin( filename ), dotPosition );
+      auto extension = filename.substr( indexDot + 1, 3 );
+
+      if ( indexDot >  8 ) {
+	std::cout << indexDot  << std::endl;
+	auto toReturn = filename.substr( 0, 6 ) + "~1." + extension;
+
+	std::cout << toReturn << std::endl;
+	return toReturn;
+      }
+
+
+      
+      if ( filename.length() - indexDot > 4 ) {
+	std::cout <<  filename.length() << " - " <<  indexDot  << std::endl;
+	auto toReturn = filename.substr( 0, indexDot ) + "~1." + extension;
+
+	std::cout << toReturn << std::endl;
+	return toReturn;
+      }
+
+      return filename;
+  };
 
 namespace PC {
 	const unsigned W = 320, H = 200;
@@ -180,50 +209,7 @@ const int winWidth = 320, winHeight = 200;
 bool done = false;
 bool isActive = false;
 
-std::vector<std::shared_ptr<odb::NativeBitmap>> loadTextures() {
-	std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
-
-	toReturn.push_back(loadPNG("res/grass.ppm"));
-	toReturn.push_back(loadPNG("res/stonef1.ppm"));
-	toReturn.push_back(loadPNG("res/bricks.ppm"));
-	toReturn.push_back(loadPNG("res/arch.ppm"));
-	toReturn.push_back(loadPNG("res/bars.ppm"));
-	toReturn.push_back(loadPNG("res/begin.ppm"));
-	toReturn.push_back(loadPNG("res/exit.ppm"));
-	toReturn.push_back(loadPNG("res/bricks2.ppm"));
-	toReturn.push_back(loadPNG("res/bricks3.ppm"));
-	toReturn.push_back(loadPNG("res/foe0.ppm"));
-	toReturn.push_back(loadPNG("res/foe1.ppm"));
-	toReturn.push_back(loadPNG("res/foe2.ppm"));
-	toReturn.push_back(loadPNG("res/foe3.ppm"));
-	toReturn.push_back(loadPNG("res/foe4.ppm"));
-	toReturn.push_back(loadPNG("res/foe5.ppm"));
-	toReturn.push_back(loadPNG("res/crusad0.ppm"));
-	toReturn.push_back(loadPNG("res/crusad1.ppm"));
-	toReturn.push_back(loadPNG("res/crusad2.ppm"));
-	toReturn.push_back(loadPNG("res/shadow.ppm"));
-	toReturn.push_back(loadPNG("res/ceilin.ppm"));
-	toReturn.push_back(loadPNG("res/ceigdr.ppm"));
-	toReturn.push_back(loadPNG("res/ceigbgn.ppm"));
-	toReturn.push_back(loadPNG("res/ceilend.ppm"));
-	toReturn.push_back(loadPNG("res/splat0.ppm"));
-	toReturn.push_back(loadPNG("res/splat1.ppm"));
-	toReturn.push_back(loadPNG("res/splat2.ppm"));
-	toReturn.push_back(loadPNG("res/ceilbar.ppm"));
-	toReturn.push_back(loadPNG("res/clouds.ppm"));
-	toReturn.push_back(loadPNG("res/stngrsf.ppm"));
-	toReturn.push_back(loadPNG("res/grsstnf.ppm"));
-	toReturn.push_back(loadPNG("res/stngrsn.ppm"));
-	toReturn.push_back(loadPNG("res/grsstnn.ppm"));
-	toReturn.push_back(loadPNG("res/cross.ppm"));
-
-
-	return toReturn;
-}
-
 void initWindow() {
-
-	auto textures = loadTextures();
 
 	OSMesaContext om = OSMesaCreateContext(OSMESA_RGBA, NULL);
 	OSMesaMakeCurrent(om, PC::ImageBuffer, GL_UNSIGNED_BYTE, PC::W, PC::H);
@@ -234,7 +220,11 @@ void initWindow() {
 	auto gVertexShader = "";
 	auto gFragmentShader = "";
 
-	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, textures);
+	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>("res/");
+
+	fileLoader->setFilenameTransformation(  kDosLongFileNameTransformer );
+
+	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, fileLoader );
 
 	auto soundListener = std::make_shared<odb::SoundListener>();
 
