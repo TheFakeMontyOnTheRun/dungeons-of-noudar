@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 #include "NativeBitmap.h"
 
