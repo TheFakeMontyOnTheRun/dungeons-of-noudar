@@ -12,8 +12,10 @@ OBJS = DOS-version/main.o \
    ../noudar-core/noudar-core/src/Vec2i.o \
    ../noudar-core/noudar-core/src/CActor.o \
     ../noudar-core/noudar-core/src/CMonster.o \
+    ../noudar-core/noudar-core/src/CMonsterGenerator.o \
     ../noudar-core/noudar-core/src/CTeam.o \
     ../noudar-core/noudar-core/src/CMap.o \
+    ../noudar-core/noudar-core/src/CRandomWorldGenerator.o \
     ../noudar-core/noudar-core/src/Common.o \
     ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \

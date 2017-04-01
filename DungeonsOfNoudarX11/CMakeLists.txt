@@ -49,6 +49,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/CElixirFountain.h
         ../noudar-core/noudar-core/include/CMonsterGenerator.h
         ../noudar-core/noudar-core/include/CMonster.h
+        ../noudar-core/noudar-core/include/CMonsterGenerator.h
         ../noudar-core/noudar-core/include/CDoorway.h
         ../noudar-core/noudar-core/include/CGame.h
         ../noudar-core/noudar-core/include/CItem.h
@@ -59,9 +60,12 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/CCharacterArchetype.h
         ../noudar-core/noudar-core/include/CHuntApproach.h
         ../noudar-core/noudar-core/include/CCharacter.h
+        ../noudar-core/noudar-core/include/CRandomWorldGenerator.h
+        ../noudar-core/noudar-core/src/CRandomWorldGenerator.cpp
         ../noudar-core/noudar-core/src/Vec2i.cpp
         ../noudar-core/noudar-core/src/CActor.cpp
         ../noudar-core/noudar-core/src/CMonster.cpp
+        ../noudar-core/noudar-core/src/CMonsterGenerator.cpp
         ../noudar-core/noudar-core/src/CTeam.cpp
         ../noudar-core/noudar-core/src/CMap.cpp
         ../noudar-core/noudar-core/src/Common.cpp
