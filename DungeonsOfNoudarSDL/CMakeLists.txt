@@ -52,6 +52,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/Vec2i.cpp
         ../noudar-core/noudar-core/src/CActor.cpp
         ../noudar-core/noudar-core/src/CMonster.cpp
+	../noudar-core/noudar-core/src/CMonsterGenerator.cpp
         ../noudar-core/noudar-core/src/CTeam.cpp
         ../noudar-core/noudar-core/src/CMap.cpp
         ../noudar-core/noudar-core/src/Common.cpp
