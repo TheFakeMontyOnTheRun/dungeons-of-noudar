@@ -7,9 +7,6 @@
 [submodule "noudar-core"]
 	path = noudar-core
 	url = https://github.com/TheFakeMontyOnTheRun/noudar-core.git
-[submodule "gles2-renderer"]
-	path = gles2-renderer
-	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git
 [submodule "glm"]
 	path = glm
 	url = https://github.com/g-truc/glm.git
@@ -34,3 +31,6 @@
 [submodule "asio"]
 	path = asio
 	url = https://github.com/TheFakeMontyOnTheRun/asio.git
+[submodule "gles2-renderer"]
+	path = gles2-renderer
+	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git
