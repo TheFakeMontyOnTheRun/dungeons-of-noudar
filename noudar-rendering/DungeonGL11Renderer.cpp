@@ -455,14 +455,57 @@ namespace odb {
 					continue;
 				}
 
+				auto mapItem = snapshot.map[ z ][ x ];
 				auto actor = snapshot.snapshot[z][x];
 				int splatFrame = snapshot.splat[z][x];
-				Shade shade = (0.25f * std::min(255, snapshot.mLightMap[z][x]) / 255.0f) + 0.75f;
+				Shade shade = 1.0f;
 
-				auto tile = snapshot.map[z][x];
+				if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
+					shade = 1.5 * shade;
+				}
+
+				if ( mapItem == 't') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Falcata].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(pos), shade, true);
+
+				}
+				if ( mapItem == '+') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Cross].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(pos), shade, true);
+
+				}
+				if ( mapItem == 'y') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Crossbow].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(pos), shade, true);
+
+				}
+
+				if ( mapItem == 'u') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Quiver].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(pos), shade, true);
+
+				}
+
+
 
 				if (x == static_cast<int>(snapshot.mCursorPosition.x) &&
-				    z == static_cast<int>(snapshot.mCursorPosition.y)) {
+					z == static_cast<int>(snapshot.mCursorPosition.y)) {
 					shade = 1.5f;
 				}
 
@@ -470,27 +513,26 @@ namespace odb {
 				if (actor != EActorsSnapshotElement::kNothing) {
 
 					int id = snapshot.ids[z][x];
-					float fx, fz;
+					float fx, fz, height;
 
 					fx = x;
 					fz = z;
-
-					float step = 0.0f;
-					float curve = 0.0f;
+					height = mTileProperties[ mapItem ].mFloorHeight;
 
 					if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
 
 						auto animation = snapshot.movingCharacters.at(id);
 						auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation),
-						                                                     std::get<1>(animation),
-						                                                     std::get<2>(animation),
-						                                                     snapshot.mTimestamp);
+																			 std::get<1>(animation),
+																			 std::get<2>(animation),
+																			 snapshot.mTimestamp);
 
 						fx = pos.x;
 						fz = pos.y;
+
 					}
 
-					pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
+					pos = glm::vec3(fx * 2.0f, -4.0f + 2 * height, fz * 2.0f);
 
 
 					if (id != snapshot.mCameraId) {
@@ -510,9 +552,10 @@ namespace odb {
 				}
 
 				if (splatFrame > -1) {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					float height = mTileProperties[ mapItem ].mFloorHeight;
+					pos = glm::vec3(x * 2, -4.0f + 2.0f * height, z * 2);
 					batches[static_cast<ETextures >(splatFrame +
-					                                ETextures::Splat0)].emplace_back(
+													ETextures::Splat0)].emplace_back(
 							std::get<0>(billboardVBO),
 							std::get<1>(billboardVBO),
 							std::get<2>(billboardVBO),
@@ -526,25 +569,23 @@ namespace odb {
 			for (int x = 0; x < Knights::kMapSize; ++x) {
 
 				int id = snapshot.ids[z][x];
-
-				float fx, fz;
+				auto mapItem = snapshot.map[ z ][ x ];
+				float fx, fz, height;
 
 				fx = x;
 				fz = z;
-
-				float step = 0.0f;
-				float curve = 0.0f;
-
+				height = mTileProperties[ mapItem ].mFloorHeight;
 				if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
 
 					auto animation = snapshot.movingCharacters.at(id);
 					auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation), std::get<1>(animation),
-					                                                     std::get<2>(animation), snapshot.mTimestamp);
+																		 std::get<2>(animation), snapshot.mTimestamp);
+
 					fx = pos.x;
 					fz = pos.y;
 				}
 
-				pos = glm::vec3(fx * 2.0f, -4.0f, fz * 2.0f);
+				pos = glm::vec3(fx * 2.0f, -4.0f + 2.0f * height, fz * 2.0f);
 
 				if (id == snapshot.mCameraId) {
 					mCurrentCharacterPosition = pos;
