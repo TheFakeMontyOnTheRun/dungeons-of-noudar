@@ -115,7 +115,7 @@ namespace odb {
 
 				auto tile = snapshot.map[z][x];
 
-				Shade shade = 1.0f;
+                Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
 
 				if (x == snapshot.mCursorPosition.x &&
 				    z == snapshot.mCursorPosition.y) {

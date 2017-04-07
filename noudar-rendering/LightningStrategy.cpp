@@ -86,8 +86,7 @@ namespace odb {
 			return;
 		}
 
-
-		if ( lightMap[y][x] + emission <= 255 ) {
+		if ( (lightMap[y][x] + emission) <= 255 && (lightMap[y][x] + emission) >= 0 ) {
 			lightMap[y][x] += emission;
 		} else {
 			lightMap[y][x] = 255;
