@@ -46,6 +46,7 @@
 
 #include "Logger.h"
 #include "VisibilityStrategy.h"
+#include "LightningStrategy.h"
 
 namespace odb {
 
@@ -67,6 +68,7 @@ namespace odb {
         for ( int y = 0; y < Knights::kMapSize; ++y ) {
             for ( int x = 0; x < Knights::kMapSize; ++x ) {
 
+                snapshot.mLightMap[ y ][ x ] = 192;
                 snapshot.map[ y ][ x ] = '.';
                 snapshot.snapshot[ y ][ x ] = EActorsSnapshotElement::kNothing;
                 snapshot.ids[ y ][ x ] = 0;
@@ -102,6 +104,18 @@ namespace odb {
                 }
             }
         }
+
+        for ( int y = 0; y < Knights::kMapSize; ++y ) {
+            for (int x = 0; x < Knights::kMapSize; ++x) {
+                auto actor = map.getActorAt({ x, y } );
+
+
+                if ( actor != nullptr && actor->isAlive()  ) {
+                    LightningStrategy::castPointLight(snapshot.mLightMap, 64, snapshot.map, x, y);
+                }
+            }
+        }
+
 
         auto cameraPosition = current->getPosition();
 	    VisMap currentVisMap;
