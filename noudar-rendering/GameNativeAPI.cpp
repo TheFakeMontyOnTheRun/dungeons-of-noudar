@@ -401,6 +401,13 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 		soundEmitters[ 3 ]->play( mainListener );
 	};
 
+	auto onProjectileHit = [&](Knights::Vec2i pos) {
+		auto splat = std::make_shared<odb::SplatAnimation>( pos );
+		splatAnimation.push_back( splat );
+		splat->startSplatAnimation();
+	};
+
+
 	auto onPlayerDamaged = [&](Knights::Vec2i pos) {
 		soundEmitters[ 5 ]->play( mainListener );
 	};
@@ -422,6 +429,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 	gameDelegate->setPlayerDiedCallback( onPlayerDead );
 	gameDelegate->setPlayerDamagedCallback( onPlayerDamaged );
 	gameDelegate->setOnLevelLoadedCallback( onLevelLoaded );
+	gameDelegate->setProjectileCallback( onProjectileHit );
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
 
