@@ -145,6 +145,12 @@ namespace odb {
 	    previous = snapshot.mVisibilityMap;
     }
 
+    void NoudarGLES2Bridge::reset() {
+        previousPosition = {0, 0};
+        previousDirection = Knights::EDirection::kNorth;
+        previous = odb::VisMap();
+    }
+
     char NoudarGLES2Bridge::getInput() {
 
 	    char tmp = mNextCmd;

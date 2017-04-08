@@ -12,6 +12,7 @@ namespace odb {
         void drawMap( Knights::CMap &map, std::shared_ptr<Knights::CActor> current ) override;
         char getInput() override;
         void setNextCommand( char cmd );
+        void reset();
     };
 }
 
