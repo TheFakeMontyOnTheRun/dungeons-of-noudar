@@ -36,14 +36,12 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/CCycleNextItemCommand.h
         ../noudar-core/noudar-core/include/commands/CCyclePreviousItemCommand.h
         ../noudar-core/noudar-core/include/commands/CMoveActorCommand.h
-        ../noudar-core/noudar-core/include/commands/CActorMeleeAttackCommand.h
         ../noudar-core/noudar-core/include/commands/CEndTurnCommand.h
         ../noudar-core/noudar-core/include/commands/CLoadNewLevelCommand.h
         ../noudar-core/noudar-core/include/commands/CNullCommand.h
         ../noudar-core/noudar-core/include/commands/CQuitCommand.h
         ../noudar-core/noudar-core/include/commands/CTurnActorCommand.h
         ../noudar-core/noudar-core/include/commands/IGameCommand.h
-        ../noudar-core/noudar-core/include/commands/CHitscanAttackCommand.h
         ../noudar-core/noudar-core/include/CPlainFileLoader.h
         ../noudar-core/noudar-core/include/CActor.h
         ../noudar-core/noudar-core/include/CElixirFountain.h
@@ -81,7 +79,6 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/CStorageItem.cpp
         ../noudar-core/noudar-core/src/CPlainFileLoader.cpp
         ../noudar-core/noudar-core/src/CGameDelegate.cpp
-        ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.cpp
         ../noudar-core/noudar-core/src/commands/IGameCommand.cpp
         ../noudar-core/noudar-core/src/commands/CMoveActorCommand.cpp
         ../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.cpp
@@ -89,7 +86,6 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CQuitCommand.cpp
         ../noudar-core/noudar-core/src/commands/CNullCommand.cpp
         ../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.cpp
         ../noudar-core/noudar-core/src/commands/CPickItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CDropItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.cpp
