@@ -445,7 +445,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 void moveUp() {
 
 	if ( game != nullptr && !isAnimating() ) {
-		render->setNextCommand('o');
+		render->setNextCommand( Knights::kMovePlayerForwardCommand );
 		game->tick();
 		render->setNextCommand('.');
 	}
@@ -454,15 +454,7 @@ void moveUp() {
 void moveDown() {
 
 	if ( game != nullptr && !isAnimating() ) {
-		render->setNextCommand('p');
-		game->tick();
-		render->setNextCommand('p');
-		game->tick();
-		render->setNextCommand('o');
-		game->tick();
-		render->setNextCommand('i');
-		game->tick();
-		render->setNextCommand('i');
+		render->setNextCommand(Knights::kMovePlayerBackwardCommand );
 		game->tick();
 		render->setNextCommand('.');
 	}
@@ -471,7 +463,7 @@ void moveDown() {
 void moveLeft() {
 
 	if ( game != nullptr && !isAnimating() ) {
-		render->setNextCommand('k');
+		render->setNextCommand(Knights::kStrafeLeftCommand );
 		game->tick();
 		render->setNextCommand('.');
 	}
@@ -480,7 +472,7 @@ void moveLeft() {
 void moveRight() {
 
 	if ( game != nullptr && !isAnimating() ) {
-		render->setNextCommand('l');
+        render->setNextCommand(Knights::kStrafeRightCommand );
 		game->tick();
 		render->setNextCommand('.');
 	}
