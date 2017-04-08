@@ -80,12 +80,13 @@ std::map<int, glm::vec2> mPositions;
 
 bool hasActiveSplats;
 odb::AnimationList animationList;
+std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 long animationTime = 0;
+
 std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
 std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
-std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 std::shared_ptr<odb::SoundListener> mainListener;
 odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
@@ -414,10 +415,19 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 
 	auto onLevelLoaded = [&]() {
 	    forceDirection( 0 );
+        render->reset();
+        animationList.clear();
+        splatAnimation.clear();
+        animationTime = 0;
+        hasActiveSplats = false;
 
         if ( gles2Renderer != nullptr ) {
 			gles2Renderer->resetCamera();
 		}
+
+        if ( game != nullptr ) {
+            game->tick();
+        }
 	};
 
 	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();
