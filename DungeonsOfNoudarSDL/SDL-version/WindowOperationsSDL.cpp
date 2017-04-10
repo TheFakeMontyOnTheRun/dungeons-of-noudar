@@ -108,27 +108,9 @@ void handleKeyPress( SDL_keysym *keysym ) {
 
 void initWindow() {
 
-	SDL_Init( SDL_INIT_VIDEO );
+	SDL_Init( SDL_INIT_EVERYTHING );
 	
 	videoFlags  = SDL_OPENGL;
-	videoFlags |= SDL_GL_DOUBLEBUFFER;
-	videoFlags |= SDL_HWPALETTE;
-	videoFlags |= SDL_RESIZABLE;
-
-	    videoInfo = SDL_GetVideoInfo( );
-
-
-	if ( videoInfo->hw_available ) {
-		videoFlags |= SDL_HWSURFACE;
-	} else {
-		videoFlags |= SDL_SWSURFACE;
-	}
-
-	if ( videoInfo->blit_hw ) {
-		videoFlags |= SDL_HWACCEL;
-	}
-
-	SDL_GL_SetAttribute( SDL_GL_DOUBLEBUFFER, 1 );
 
 	video = SDL_SetVideoMode( winWidth, winHeight, 0,
 				videoFlags );
@@ -178,7 +160,7 @@ void setMainLoop() {
 				case SDL_VIDEORESIZE:
 				    video = SDL_SetVideoMode( event.resize.w,
 								event.resize.h,
-								16, videoFlags );
+								0, videoFlags );
 				    break;
 				case SDL_KEYDOWN:
 				    handleKeyPress( &event.key.keysym );
