@@ -39,7 +39,7 @@
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
 
-int main(int argc, char *argv[]) {
+extern "C" int main(int argc, char **argv) {
 	readMap( std::make_shared<Knights::CPlainFileLoader>("res/"), "tiles.properties" );
 	initWindow();
 	setMainLoop();
