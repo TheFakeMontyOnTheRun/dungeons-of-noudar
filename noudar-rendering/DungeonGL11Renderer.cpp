@@ -257,7 +257,7 @@ namespace odb {
 		glEnable(GL_TEXTURE_2D);
 		glShadeModel(GL_FLAT);
 		glDisable(GL_DITHER);
-		glDisable(GL_MULTISAMPLE);
+//		glDisable(GL_MULTISAMPLE);
 		glViewport(0, 0, w, h);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
