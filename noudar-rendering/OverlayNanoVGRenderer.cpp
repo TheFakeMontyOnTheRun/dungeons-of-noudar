@@ -369,8 +369,8 @@ namespace odb {
                 auto nodeId = node->mFrameId;
                 auto registeredTexture = mFrames[node->mFrameId];
                 auto bitmap = mBitmaps[node->mFrameId];
-                int imgW = bitmap->getWidth();
-                int imgH = bitmap->getHeight();
+                int imgW = ( bitmap->getWidth() * mWidth ) / 640;
+                int imgH = ( bitmap->getHeight() * mHeight ) / 480;
                 auto position = node->getPositionForTime( 1.0f - ((float) timeUntilNextFrame ) / ( (float) currentAnimation->mStepList[frame].mDelay ) );
                 float offsetX = position.x * mWidth;
                 float offsetY = position.y * mHeight;
