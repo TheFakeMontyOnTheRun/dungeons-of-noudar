@@ -427,8 +427,12 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 
         if ( game != nullptr ) {
             game->tick();
+
+            if ( game->getLevelNumber() >= 1 ) {
+                game->setIsPlaying( false );
+            }
         }
-	};
+    };
 
 	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();
 
