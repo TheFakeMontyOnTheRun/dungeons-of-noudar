@@ -10,6 +10,7 @@ It is known to build for the following targets:
 ![ ](/screenshot_osx.jpg?raw=true)
 
 - iOS (GLES 2.0)
+![ ](/screenshot_ios.png?raw=true)
 
 - Android, with optional suppor for Cardboard VR (GLES 2.0)
 ![ ](/screenshot_android.png?raw=true)
