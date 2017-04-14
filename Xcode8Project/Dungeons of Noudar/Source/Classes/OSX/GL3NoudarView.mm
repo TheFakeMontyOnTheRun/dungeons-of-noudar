@@ -79,6 +79,7 @@
 #include "NativeBitmap.h"
 #include "IMapElement.h"
 #include "CTeam.h"
+#include "CItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
@@ -94,7 +95,6 @@
 #include <memory>
 
 
-#include "AppleImageLoader.h"
 
 #include <cstdio>
 
@@ -114,53 +114,6 @@ long timeSinceStart = 0;
 
 @implementation GL3NoudarView
 
-
-
-std::vector <std::shared_ptr<odb::NativeBitmap>> loadTextures() {
-	std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
-	
-	toReturn.push_back( loadPNG( [[[NSBundle mainBundle] pathForResource:@"grass" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonefloor" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"arch" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bars" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"begin" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"exit" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks_blood" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"bricks_candles" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"boss2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cuco2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"demon2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"lady2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"crusader2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"shadow" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceiling" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingdoor" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingbegin" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingend" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat0" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat1" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"splat2" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"ceilingbars" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"clouds" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassfar" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"grassstonefar" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"stonegrassnear" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"grassstonenear" ofType:@"png"] UTF8String ]));
-	toReturn.push_back( loadPNG([[[NSBundle mainBundle] pathForResource:@"cross" ofType:@"png"] UTF8String ]));
-	
-	return toReturn;
-}
 
 - (CVReturn) getFrameForTime:(const CVTimeStamp*)outputTime
 {
@@ -190,8 +143,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	NSOpenGLPixelFormatAttribute attrs[] =
 	{
 		NSOpenGLPFADoubleBuffer,
-		NSOpenGLPFAColorSize, 24,
-		NSOpenGLPFADepthSize, 24,
+		NSOpenGLPFAColorSize, 32,
+		NSOpenGLPFADepthSize, 32,
 		NSOpenGLPFAOpenGLProfile,
 		NSOpenGLProfileVersionLegacy,
 		0
@@ -296,18 +249,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	
 	NSRect viewRectPixels = viewRectPoints;
 	
+	auto path = std::string( [ [ [ NSBundle mainBundle] resourcePath ] UTF8String ] ) + "/";
 	
-	
-	FILE *fd;
-	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"vertex_OSX" ofType:@"glsl"] UTF8String ], "r");
-	std::string gVertexShader = Knights::readToString(fd);
-	fclose(fd);
-	
-	fd = fopen( [[[NSBundle mainBundle] pathForResource:@"fragment_OSX" ofType:@"glsl"] UTF8String ], "r");
-	std::string gFragmentShader = Knights::readToString(fd);
-	fclose(fd);
-	
-	setupGraphics(viewRectPixels.size.width, viewRectPixels.size.height, gVertexShader, gFragmentShader, loadTextures());
+	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>( path );
+
+	readMap( std::make_shared<Knights::CPlainFileLoader>( path ), "tiles.properties" );
+	setupGraphics(viewRectPixels.size.width, viewRectPixels.size.height, "", "", fileLoader);
 	
 	auto soundListener = std::make_shared<odb::SoundListener>();
 	
@@ -335,10 +282,7 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	
 	
 	
-	auto path = std::string( [ [ [ NSBundle mainBundle] resourcePath ] UTF8String ] ) + "/";
 	
-	
-	readMap( std::make_shared<Knights::CPlainFileLoader>( path ), "tiles.properties" );
 
 
 	
@@ -373,7 +317,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	@synchronized (self) {
 		[[self openGLContext] makeCurrentContext];
 		{
-			NSLog( @"before rendering: %s", GetGLErrorString( glGetError() ) );
 			gameLoopTick( 20 );
 			renderFrame( 20 );
 			

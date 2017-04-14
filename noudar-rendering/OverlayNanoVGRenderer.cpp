@@ -1,7 +1,7 @@
 //
 // Created by monty on 23/11/15.
 //
-
+#define NANOVG_GLES2_IMPLEMENTATION
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -10,8 +10,6 @@
 
 #ifdef __APPLE__
 #if TARGET_IOS
-
-#define NANOVG_GLES2_IMPLEMENTATION
 
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
@@ -26,15 +24,11 @@
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2)
 
-#define NANOVG_GLES2_IMPLEMENTATION
-
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
 
 #else
-
-#define NANOVG_GL2_IMPLEMENTATION
 
 #include <GL/gl.h>
 

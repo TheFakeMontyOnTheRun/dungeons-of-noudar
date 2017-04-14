@@ -70,7 +70,6 @@
 #include <memory>
 
 #import "AppDelegate.h"
-#include "AppleImageLoader.h"
 
 #include <cstdio>
  

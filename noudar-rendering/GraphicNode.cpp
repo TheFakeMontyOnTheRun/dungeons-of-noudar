@@ -2,7 +2,7 @@
 // Created by monty on 15-03-2017.
 //
 #include <string>
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 #include "GraphicNode.h"
 
 namespace odb {

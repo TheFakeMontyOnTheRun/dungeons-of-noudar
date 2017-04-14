@@ -11,6 +11,10 @@
 #import <OpenAl/alc.h>
 #include <AudioToolbox/AudioToolbox.h>
 #else
+#import <OpenAl/al.h>
+#import <OpenAl/alc.h>
+#include <AudioToolbox/AudioToolbox.h>
+
 #endif
 #else
 
