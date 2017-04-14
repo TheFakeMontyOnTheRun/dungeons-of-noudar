@@ -502,7 +502,7 @@ namespace odb {
 					continue;
 				}
 
-				auto mapItem = snapshot.map[ z ][ x ];
+				auto mapItem = snapshot.mItemMap[ z ][ x ];
 				auto actor = snapshot.snapshot[z][x];
 				int splatFrame = snapshot.splat[z][x];
                 Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;

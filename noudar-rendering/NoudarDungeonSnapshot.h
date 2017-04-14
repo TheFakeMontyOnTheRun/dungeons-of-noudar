@@ -44,6 +44,7 @@ namespace odb {
 		odb::IntMap splat;
 		odb::IntMap ids;
 		odb::IntMap mLightMap;
+		odb::IntMap mItemMap;
 		Knights::Vec2i mCursorPosition;
 		int mCameraId;
 		int mTurn;
