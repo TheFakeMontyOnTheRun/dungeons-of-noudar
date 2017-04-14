@@ -20,7 +20,6 @@ OBJS = DOS-version/main.o \
     ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
-    ../noudar-core/noudar-core/src/CElixirFountain.o \
     ../noudar-core/noudar-core/src/CDoorway.o \
     ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
     ../noudar-core/noudar-core/src/IMapElement.o \
