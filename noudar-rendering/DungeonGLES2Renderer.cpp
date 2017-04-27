@@ -57,7 +57,7 @@
 
 
 namespace odb {
-	const static bool kShouldDestroyThingsManually = false;
+	const static bool kShouldDestroyThingsManually = true;
 
 	//OpenGL specific stuff
 
@@ -354,6 +354,7 @@ namespace odb {
 				glDeleteTextures(1, &(texture->mTextureId));
 			}
 			deleteVBOs();
+            glDeleteShader(gProgram);
 		}
 	}
 

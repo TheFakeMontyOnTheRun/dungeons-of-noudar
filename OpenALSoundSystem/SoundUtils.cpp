@@ -43,6 +43,10 @@ namespace odb {
         bits |= buffer[offset];
         offset += 2;
         offset += 8; // ignore the data chunk
-        return std::make_shared<SoundClip>( buffer, size, offset, bits, channels, frequency );
+	auto toReturn = std::make_shared<SoundClip>( buffer, size, offset, bits, channels, frequency );
+
+	delete[] buffer;
+	
+	return toReturn;
     }
 }
