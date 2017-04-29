@@ -1,23 +1,23 @@
 //
 // Created by monty on 23/11/15.
 //
-#define NANOVG_GLES2_IMPLEMENTATION
+
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "nanovg.h"
+
 
 #ifdef __APPLE__
 #if TARGET_IOS
-
+#define NANOVG_GLES2_IMPLEMENTATION
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 #else
 
 #define NANOVG_GL2_IMPLEMENTATION
 #import <OpenGL/OpenGL.h>
-#import <OpenGL/gl3.h>
+#import <OpenGL/gl.h>
 #endif
 
 #else
@@ -27,13 +27,15 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
-
+#define NANOVG_GLES2_IMPLEMENTATION
 #else
-
+#define NANOVG_GL2_IMPLEMENTATION
 #include <GL/gl.h>
 
 #endif
 #endif
+
+#include "nanovg.h"
 
 #include "nanovg_gl.h"
 #include "nanovg_gl_utils.h"
@@ -383,7 +385,11 @@ namespace odb {
     }
 
     OverlayNanoVGRenderer::~OverlayNanoVGRenderer() {
+#ifdef NANOVG_GLES2_IMPLEMENTATION
         nvgDeleteGLES2(mContext);
+#else
+        nvgDeleteGL2(mContext);
+#endif
     }
 
     void OverlayNanoVGRenderer::playAnimation( long currentTimestamp, std::string animationName ) {
