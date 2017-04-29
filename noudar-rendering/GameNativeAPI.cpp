@@ -174,7 +174,7 @@ void renderFrame(long delta) {
 	if (gles2Renderer != nullptr && game != nullptr && textures.size() > 0) {
 
 		gles2Renderer->updateFadeState(delta);
-		auto cursor = game->getCursorPosition();
+		auto cursor = game->getMap()->getTargetProjection( game->getMap()->getAvatar());
 
 		snapshot.movingCharacters = animationList;
 		snapshot.mTimestamp = animationTime;
