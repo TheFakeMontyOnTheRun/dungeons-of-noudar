@@ -95,16 +95,20 @@ void handleKeyPress(SDL_Event &event) {
             moveRight();
             break;
         case SDLK_MINUS:
+        case SDLK_e:
             cyclePrevItem();
             break;
         case SDLK_EQUALS:
+        case SDLK_d:
             cycleNextItem();
             break;
-
+            
+        case SDLK_w:
         case SDLK_LEFTBRACKET:
             pickupItem();
             break;
-
+            
+        case SDLK_s:
         case SDLK_RIGHTBRACKET:
             dropItem();
             break;
