@@ -1,5 +1,9 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl-config --cflags` -ffast-math -fomit-frame-pointer -DGLM_FORCE_RADIANS
-LDFLAGS = `sdl-config --libs` -lopengl32
+CXXFLAGS = -O2 -g -c -std=c++14 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl2-config --cflags` -DGLM_FORCE_RADIANS
+LDFLAGS = -lopenal -lopengl32 `sdl2-config --libs`
+CXX = g++
+CC = gcc
+
+
 
 OBJS = SDL-version/main.o \
    ../noudar-core/noudar-core/src/Vec2i.o \
@@ -12,7 +16,6 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
-    ../noudar-core/noudar-core/src/CElixirFountain.o \
     ../noudar-core/noudar-core/src/CDoorway.o \
     ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
     ../noudar-core/noudar-core/src/IMapElement.o \
@@ -36,6 +39,9 @@ OBJS = SDL-version/main.o \
         ../noudar-rendering/DungeonGL11Renderer.o \
         ../noudar-rendering/LightningStrategy.o \
         ../noudar-rendering/VisibilityStrategy.o \
+	../noudar-rendering/GraphicNode.o \
+	../noudar-rendering/Animation.o \
+	../noudar-rendering/AnimationStep.o \
         ../noudar-rendering/RenderingJobSnapshotAdapter.o \
 	../noudar-rendering/GameNativeAPI.o \
         ../noudar-rendering/NoudarDungeonSnapshot.o \
@@ -56,10 +62,10 @@ OBJS = SDL-version/main.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \
         ../gles2-renderer/Texture.o \
-        ../NullSoundSystem/SoundClip.o \
-        ../NullSoundSystem/SoundEmitter.o \
-        ../NullSoundSystem/SoundListener.o \
-        ../NullSoundSystem/SoundUtils.o
+        ../OpenALSoundSystem/SoundClip.o \
+        ../OpenALSoundSystem/SoundEmitter.o \
+        ../OpenALSoundSystem/SoundListener.o \
+        ../OpenALSoundSystem/SoundUtils.o
 
 TARGET = noudar
 

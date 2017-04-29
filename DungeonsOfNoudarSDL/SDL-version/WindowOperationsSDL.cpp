@@ -28,7 +28,7 @@
 #import <OpenGL/gl3.h>
 #endif
 #else
-#include <GLES2/gl2.h>
+#include <GL/gl.h>
 #endif
 
 #include "NativeBitmap.h"
