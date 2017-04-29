@@ -17,8 +17,19 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <GL/gl.h>
 #include <SDL2/SDL.h>
+
+#ifdef __APPLE__
+#if TARGET_IOS
+#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES2/glext.h>
+#else
+#import <OpenGL/OpenGL.h>
+#import <OpenGL/gl3.h>
+#endif
+#else
+#include <GLES2/gl2.h>
+#endif
 
 #include "NativeBitmap.h"
 

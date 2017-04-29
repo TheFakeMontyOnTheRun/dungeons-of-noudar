@@ -69,7 +69,7 @@
 #include "LoadPNG.h"
 
 
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS) || defined(TARGET_OSX)
 #include "OverlayNanoVGRenderer.h"
 std::shared_ptr<odb::OverlayNanoVGRenderer> overlayRenderer = nullptr;
 #endif
@@ -136,7 +136,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
             loadPNG("bull2.png", fileLoader),
 	};
 
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 
 	if ( overlayRenderer == nullptr ) {
 		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
@@ -185,7 +185,7 @@ void renderFrame(long delta) {
 		gles2Renderer->updateCamera(delta);
 }
 
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 
 	if ( overlayRenderer != nullptr ) {
 		overlayRenderer->render(snapshot);
@@ -202,7 +202,7 @@ void shutdown() {
 
 	gles2Renderer = nullptr;
 
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 	overlayRenderer = nullptr;
 #endif
 }
@@ -358,7 +358,7 @@ void loadMapData( std::string geoFile, std::string petFile ) {
 
 void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, std::string tilePropertiesFile ) {
 
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 	if ( overlayRenderer == nullptr ) {
 
 		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
@@ -551,7 +551,7 @@ void interact() {
 		render->setNextCommand('\t');
 		game->tick();
 		render->setNextCommand('.');
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 	    overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
 #endif
 	}
