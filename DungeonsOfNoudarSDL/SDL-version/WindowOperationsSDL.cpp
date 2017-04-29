@@ -52,73 +52,73 @@ bool done = false;
 SDL_Event event;
 bool windowed = false;
 
-void handleKeyPress( SDL_Event& event ) {
+void handleKeyPress(SDL_Event &event) {
     auto keysym = &event.key.keysym;
-    switch ( keysym->sym ) 	{
-	case SDLK_ESCAPE:
-	    	SDL_Quit( );
-	    break;
-	case SDLK_F1:
-        SDL_SetWindowFullscreen(window, windowed ? SDL_WINDOW_FULLSCREEN : 0 );
-        windowed = !windowed;
-	    break;
-	case SDLK_LEFT:
-		rotateCameraLeft();
-		break;
-	case SDLK_RIGHT:
-		rotateCameraRight();
-		break;
-	case SDLK_UP:
-		moveUp();
-		break;
-	case SDLK_DOWN:
-		moveDown();
-		break;
-	case SDLK_SPACE:
-		interact();
-		break;
-	case SDLK_z:
-		moveLeft();
-		break;
-	case SDLK_x:
-		moveRight();
-		break;
-    case SDLK_MINUS:
-      cyclePrevItem();
-      break;
-    case SDLK_EQUALS:
-      cycleNextItem();
-      break;
+    switch (keysym->sym) {
+        case SDLK_ESCAPE:
+            SDL_Quit();
+            break;
+        case SDLK_F1:
+            SDL_SetWindowFullscreen(window, windowed ? SDL_WINDOW_FULLSCREEN : 0);
+            windowed = !windowed;
+            break;
+        case SDLK_LEFT:
+            rotateCameraLeft();
+            break;
+        case SDLK_RIGHT:
+            rotateCameraRight();
+            break;
+        case SDLK_UP:
+            moveUp();
+            break;
+        case SDLK_DOWN:
+            moveDown();
+            break;
+        case SDLK_SPACE:
+            interact();
+            break;
+        case SDLK_z:
+            moveLeft();
+            break;
+        case SDLK_x:
+            moveRight();
+            break;
+        case SDLK_MINUS:
+            cyclePrevItem();
+            break;
+        case SDLK_EQUALS:
+            cycleNextItem();
+            break;
 
-    case SDLK_LEFTBRACKET:
-      pickupItem();
-      break;
+        case SDLK_LEFTBRACKET:
+            pickupItem();
+            break;
 
-    case SDLK_RIGHTBRACKET:
-      dropItem();
-      break;
+        case SDLK_RIGHTBRACKET:
+            dropItem();
+            break;
 
-    default:
-	    break;
-	}
+        default:
+            break;
+    }
 }
 
 
 void initWindow() {
 
-	SDL_Init( SDL_INIT_EVERYTHING );
-    window = SDL_CreateWindow("The Dungeons of Noudar", 0, 0, winWidth, winHeight, SDL_WINDOW_OPENGL );
+    SDL_Init(SDL_INIT_EVERYTHING);
+    window = SDL_CreateWindow("The Dungeons of Noudar", 0, 0, winWidth, winHeight, SDL_WINDOW_OPENGL);
     glContext = SDL_GL_CreateContext(window);
-	auto gVertexShader = "";
-	auto gFragmentShader = "";
+    auto gVertexShader = "";
+    auto gFragmentShader = "";
 
-	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, std::make_shared<Knights::CPlainFileLoader>());
+    setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, std::make_shared<Knights::CPlainFileLoader>());
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 
     std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
 
-    std::string filenames[] {
+    std::string filenames[]{
             "res/grasssteps.wav",
             "res/stepsstones.wav",
             "res/bgnoise.wav",
@@ -129,42 +129,42 @@ void initWindow() {
             "res/swing.wav"
     };
 
-    for ( auto filename : filenames ) {
-        FILE *file = fopen( filename.c_str(), "r");
-        auto soundClip = odb::makeSoundClipFrom( file );
+    for (auto filename : filenames) {
+        FILE *file = fopen(filename.c_str(), "r");
+        auto soundClip = odb::makeSoundClipFrom(file);
 
-        sounds.push_back( std::make_shared<odb::SoundEmitter>(soundClip) );
+        sounds.push_back(std::make_shared<odb::SoundEmitter>(soundClip));
     }
 
-    setSoundEmitters( sounds, soundListener );
+    setSoundEmitters(sounds, soundListener);
 }
 
 void tick() {
-    gameLoopTick( 20 );
-    renderFrame( 20 );
+    gameLoopTick(20);
+    renderFrame(20);
     SDL_GL_SwapWindow(window);
 }
 
 void setMainLoop() {
-	while ( !done ) {
-		while ( SDL_PollEvent( &event ) ) {
-			switch( event.type ) {
-				case SDL_KEYDOWN:
-				    handleKeyPress( event );
-				    break;
-				case SDL_QUIT:
-				    done = true;
-				    break;
-				default:
-				    break;
-				}
-			}
-	      tick();
-	}
+    while (!done) {
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_KEYDOWN:
+                    handleKeyPress(event);
+                    break;
+                case SDL_QUIT:
+                    done = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        tick();
+    }
 }
 
 
 void destroyWindow() {
-   shutdown();
+    shutdown();
     SDL_GL_DeleteContext(glContext);
 }
