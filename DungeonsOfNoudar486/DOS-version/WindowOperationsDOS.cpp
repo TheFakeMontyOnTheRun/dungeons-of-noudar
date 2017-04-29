@@ -173,9 +173,9 @@ namespace PC {
 
   int getPaletteEntry( int origin ) {
     int shade = 0;
-    shade += (((((origin & 0x0000FF)      )  ) / 85 ) );
+    shade += (((((origin & 0x0000FF)      )  ) / 85 ) ) << 4;
     shade += (((((origin & 0x00FF00) >> 8 )  ) / 85 ) ) << 2;
-    shade += (((((origin & 0xFF0000) >> 16)  ) / 85 ) ) << 4;
+    shade += (((((origin & 0xFF0000) >> 16)  ) / 85 ) );
     return shade;
   }
 
