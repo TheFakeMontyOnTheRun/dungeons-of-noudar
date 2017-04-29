@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/gl.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "NativeBitmap.h"
 
@@ -44,23 +44,23 @@
 #include "GameNativeAPI.h"
 #include "WindowOperations.h"
 #include "Common.h"
-#include "LoadPNG.h"
 
 const int winWidth = 640, winHeight = 480;
-SDL_Surface* video;
+SDL_Window *window;
+SDL_GLContext glContext;
 bool done = false;
-bool isActive = false;
 SDL_Event event;
-const SDL_VideoInfo *videoInfo;
-int videoFlags;
+bool windowed = false;
 
-void handleKeyPress( SDL_keysym *keysym ) {
+void handleKeyPress( SDL_Event& event ) {
+    auto keysym = &event.key.keysym;
     switch ( keysym->sym ) 	{
 	case SDLK_ESCAPE:
 	    	SDL_Quit( );
 	    break;
 	case SDLK_F1:
-	    SDL_WM_ToggleFullScreen( video );
+        SDL_SetWindowFullscreen(window, windowed ? SDL_WINDOW_FULLSCREEN : 0 );
+        windowed = !windowed;
 	    break;
 	case SDLK_LEFT:
 		rotateCameraLeft();
@@ -93,7 +93,7 @@ void handleKeyPress( SDL_keysym *keysym ) {
     case SDLK_LEFTBRACKET:
       pickupItem();
       break;
-      
+
     case SDLK_RIGHTBRACKET:
       dropItem();
       break;
@@ -101,20 +101,14 @@ void handleKeyPress( SDL_keysym *keysym ) {
     default:
 	    break;
 	}
-
-    return;
 }
 
 
 void initWindow() {
 
 	SDL_Init( SDL_INIT_EVERYTHING );
-	
-	videoFlags  = SDL_OPENGL;
-
-	video = SDL_SetVideoMode( winWidth, winHeight, 0,
-				videoFlags );
-    
+    window = SDL_CreateWindow("The Dungeons of Noudar", 0, 0, winWidth, winHeight, SDL_WINDOW_OPENGL );
+    glContext = SDL_GL_CreateContext(window);
 	auto gVertexShader = "";
 	auto gFragmentShader = "";
 
@@ -148,22 +142,15 @@ void initWindow() {
 void tick() {
     gameLoopTick( 20 );
     renderFrame( 20 );
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(window);
 }
 
 void setMainLoop() {
 	while ( !done ) {
 		while ( SDL_PollEvent( &event ) ) {
 			switch( event.type ) {
-				case SDL_ACTIVEEVENT:
-					isActive = event.active.gain != 0;
-				case SDL_VIDEORESIZE:
-				    video = SDL_SetVideoMode( event.resize.w,
-								event.resize.h,
-								0, videoFlags );
-				    break;
 				case SDL_KEYDOWN:
-				    handleKeyPress( &event.key.keysym );
+				    handleKeyPress( event );
 				    break;
 				case SDL_QUIT:
 				    done = true;
@@ -172,7 +159,6 @@ void setMainLoop() {
 				    break;
 				}
 			}
-
 	      tick();
 	}
 }
@@ -180,4 +166,5 @@ void setMainLoop() {
 
 void destroyWindow() {
    shutdown();
+    SDL_GL_DeleteContext(glContext);
 }
