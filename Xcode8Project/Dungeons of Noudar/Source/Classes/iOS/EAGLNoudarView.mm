@@ -103,12 +103,30 @@
 }
 
 
--(void) onSwipeLeft {
-	rotateCameraRight();
+-(void) onSwipeLeft:(UISwipeGestureRecognizer *)recognizer {
+	NSUInteger touches = recognizer.numberOfTouches;
+	switch (touches) {
+		case 1:
+			rotateCameraRight();
+			break;
+		case 2:
+				cycleNextItem();
+			break;
+	}
+	
 }
 
--(void) onSwipeRight {
-	rotateCameraLeft();
+-(void) onSwipeRight:(UISwipeGestureRecognizer *)recognizer {
+	NSUInteger touches = recognizer.numberOfTouches;
+	switch (touches) {
+		case 1:
+			rotateCameraLeft();
+			break;
+		case 2:
+			cyclePrevItem();
+			break;
+	}
+	
 }
 
 -(void) onSwipeUp {
@@ -119,6 +137,13 @@
 	moveDown();
 }
 
+-(void) onDoubleTap {
+	pickupItem();
+}
+
+-(void) onLongTap {
+	interact();
+}
 
 // The GL view is stored in the storyboard file. When it's unarchived it's sent -initWithCoder:
 - (instancetype) initWithCoder:(NSCoder*)coder
@@ -230,11 +255,11 @@
 	[self setupDisplayLink];
 	
 	
-	mSwipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeLeft)];
+	mSwipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeLeft:)];
 	mSwipeLeftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 	[ self addGestureRecognizer: mSwipeLeftRecognizer ];
 
-	mSwipeRightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeRight)];
+	mSwipeRightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeRight:)];
 	mSwipeRightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 	[ self addGestureRecognizer: mSwipeRightRecognizer ];
 
@@ -243,8 +268,31 @@
 	[ self addGestureRecognizer: mSwipeUpRecognizer ];
 
 	mSwipeDownRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeDown)];
+	
 	mSwipeDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
 	[ self addGestureRecognizer: mSwipeDownRecognizer ];
+	
+	mDoubleSwipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeLeft:)];
+	mDoubleSwipeLeftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+	mDoubleSwipeLeftRecognizer.numberOfTouchesRequired = 2;
+	[ self addGestureRecognizer: mDoubleSwipeLeftRecognizer ];
+
+	mDoubleSwipeRightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(onSwipeRight:)];
+	mDoubleSwipeRightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+	mDoubleSwipeRightRecognizer.numberOfTouchesRequired = 2;
+	[ self addGestureRecognizer: mDoubleSwipeRightRecognizer ];
+	
+	
+	mDoubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onDoubleTap)];
+	
+	mDoubleTapRecognizer.numberOfTapsRequired = 2;
+	
+	[self addGestureRecognizer: mDoubleTapRecognizer];
+	
+	mLongTapRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongTap)];
+
+	[self addGestureRecognizer:mLongTapRecognizer];
+	
 	
 	return self;
 }

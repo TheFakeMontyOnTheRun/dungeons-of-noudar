@@ -129,6 +129,8 @@
 	_fullscreenWindow = nil;
 }
 
+- (void) keyUp:(NSEvent *)event {
+}
 
 - (void) keyDown:(NSEvent *)event {
 	
@@ -162,6 +164,24 @@
 			exit(0);
 			break;
 			
+		case 'w':
+			pickupItem();
+			break;
+		case 's':
+			dropItem();
+			break;
+
+		case 'e':
+			cycleNextItem();
+			break;
+		case 'd':
+			cyclePrevItem();
+			break;
+			
+		case 'h':
+			interact();
+			break;
+			
 			
 			
 		case NSRightArrowFunctionKey:
@@ -182,7 +202,5 @@
 			
 			
 	}
-	
-	[super keyDown:event];
 }
 @end

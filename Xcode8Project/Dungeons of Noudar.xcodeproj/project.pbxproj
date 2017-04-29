@@ -285,6 +285,7 @@
 		F1513FBF1EA17B5900D7288E /* vertex.glsl in Resources */ = {isa = PBXBuildFile; fileRef = F1513EEE1EA17B5900D7288E /* vertex.glsl */; };
 		F1513FC01EA17B5900D7288E /* x_victory.mtl in Resources */ = {isa = PBXBuildFile; fileRef = F1513EEF1EA17B5900D7288E /* x_victory.mtl */; };
 		F1513FC11EA17B5900D7288E /* x_victory.mtl in Resources */ = {isa = PBXBuildFile; fileRef = F1513EEF1EA17B5900D7288E /* x_victory.mtl */; };
+		F15822481EB51297003877EB /* OverlayNanoVGRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA954C1E21A7E300759076 /* OverlayNanoVGRenderer.cpp */; };
 		F18755581DC90ECC001188C5 /* CActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552C1DC90ECC001188C5 /* CActor.cpp */; };
 		F18755591DC90ECC001188C5 /* CActor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F187552C1DC90ECC001188C5 /* CActor.cpp */; };
 		F18755601DC90ECC001188C5 /* CDoorway.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F18755301DC90ECC001188C5 /* CDoorway.cpp */; };
@@ -346,8 +347,6 @@
 		F1AA953B1E21A0F900759076 /* CCharacter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95341E21A0F900759076 /* CCharacter.cpp */; };
 		F1AA953C1E21A0F900759076 /* CCharacterArchetype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95351E21A0F900759076 /* CCharacterArchetype.cpp */; };
 		F1AA953D1E21A0F900759076 /* CCharacterArchetype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95351E21A0F900759076 /* CCharacterArchetype.cpp */; };
-		F1AA953E1E21A0F900759076 /* CElixirFountain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95361E21A0F900759076 /* CElixirFountain.cpp */; };
-		F1AA953F1E21A0F900759076 /* CElixirFountain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95361E21A0F900759076 /* CElixirFountain.cpp */; };
 		F1AA95401E21A0F900759076 /* CHuntApproach.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95371E21A0F900759076 /* CHuntApproach.cpp */; };
 		F1AA95411E21A0F900759076 /* CHuntApproach.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95371E21A0F900759076 /* CHuntApproach.cpp */; };
 		F1AA95421E21A0F900759076 /* CMonster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F1AA95381E21A0F900759076 /* CMonster.cpp */; };
@@ -615,12 +614,10 @@
 		F18A6ECA1DFC70E40036AB6E /* CLoadNewLevelCommand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CLoadNewLevelCommand.cpp; sourceTree = "<group>"; };
 		F1AA95341E21A0F900759076 /* CCharacter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCharacter.cpp; sourceTree = "<group>"; };
 		F1AA95351E21A0F900759076 /* CCharacterArchetype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCharacterArchetype.cpp; sourceTree = "<group>"; };
-		F1AA95361E21A0F900759076 /* CElixirFountain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CElixirFountain.cpp; sourceTree = "<group>"; };
 		F1AA95371E21A0F900759076 /* CHuntApproach.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CHuntApproach.cpp; sourceTree = "<group>"; };
 		F1AA95381E21A0F900759076 /* CMonster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CMonster.cpp; sourceTree = "<group>"; };
 		F1AA95461E21A14B00759076 /* CCharacter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCharacter.h; sourceTree = "<group>"; };
 		F1AA95471E21A14B00759076 /* CCharacterArchetype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCharacterArchetype.h; sourceTree = "<group>"; };
-		F1AA95481E21A14B00759076 /* CElixirFountain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CElixirFountain.h; sourceTree = "<group>"; };
 		F1AA95491E21A14B00759076 /* CHuntApproach.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHuntApproach.h; sourceTree = "<group>"; };
 		F1AA954A1E21A14B00759076 /* CMonster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMonster.h; sourceTree = "<group>"; };
 		F1AA954C1E21A7E300759076 /* OverlayNanoVGRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OverlayNanoVGRenderer.cpp; path = "../../../noudar-rendering/OverlayNanoVGRenderer.cpp"; sourceTree = "<group>"; };
@@ -981,7 +978,6 @@
 				F1AA95461E21A14B00759076 /* CCharacter.h */,
 				F1AA95471E21A14B00759076 /* CCharacterArchetype.h */,
 				F138295D1E46A4410089E1EC /* CTeam.h */,
-				F1AA95481E21A14B00759076 /* CElixirFountain.h */,
 				F1AA95491E21A14B00759076 /* CHuntApproach.h */,
 				F1AA954A1E21A14B00759076 /* CMonster.h */,
 				F18755181DC90ECC001188C5 /* CActor.h */,
@@ -1027,7 +1023,6 @@
 				F1513D0A1EA1691000D7288E /* CRandomWorldGenerator.cpp */,
 				F1513D0B1EA1691000D7288E /* CStorageItem.cpp */,
 				F1AA95351E21A0F900759076 /* CCharacterArchetype.cpp */,
-				F1AA95361E21A0F900759076 /* CElixirFountain.cpp */,
 				F13829571E46A30E0089E1EC /* Vec2i.cpp */,
 				F1AA954C1E21A7E300759076 /* OverlayNanoVGRenderer.cpp */,
 				F1AA95371E21A0F900759076 /* CHuntApproach.cpp */,
@@ -1162,9 +1157,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3A4CF8641A8958DD00324DBF /* GLEssentials-iOS */ = {
+		3A4CF8641A8958DD00324DBF /* Noudar-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A4CF8881A8958DD00324DBF /* Build configuration list for PBXNativeTarget "GLEssentials-iOS" */;
+			buildConfigurationList = 3A4CF8881A8958DD00324DBF /* Build configuration list for PBXNativeTarget "Noudar-iOS" */;
 			buildPhases = (
 				3A4CF8611A8958DD00324DBF /* Sources */,
 				3A4CF8621A8958DD00324DBF /* Frameworks */,
@@ -1174,14 +1169,14 @@
 			);
 			dependencies = (
 			);
-			name = "GLEssentials-iOS";
+			name = "Noudar-iOS";
 			productName = GLEssentials;
 			productReference = 3A4CF8651A8958DD00324DBF /* Dungeons of Noudar iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3A4CF9151A897D0E00324DBF /* GLEssentials-OSX */ = {
+		3A4CF9151A897D0E00324DBF /* Noudar-OSX */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A4CF9331A897D0F00324DBF /* Build configuration list for PBXNativeTarget "GLEssentials-OSX" */;
+			buildConfigurationList = 3A4CF9331A897D0F00324DBF /* Build configuration list for PBXNativeTarget "Noudar-OSX" */;
 			buildPhases = (
 				3A4CF9121A897D0E00324DBF /* Sources */,
 				3A4CF9131A897D0E00324DBF /* Frameworks */,
@@ -1191,7 +1186,7 @@
 			);
 			dependencies = (
 			);
-			name = "GLEssentials-OSX";
+			name = "Noudar-OSX";
 			productName = "GLEssentials-OSX";
 			productReference = 3A4CF9161A897D0E00324DBF /* Dungeons of Noudar OSX.app */;
 			productType = "com.apple.product-type.application";
@@ -1226,8 +1221,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3A4CF8641A8958DD00324DBF /* GLEssentials-iOS */,
-				3A4CF9151A897D0E00324DBF /* GLEssentials-OSX */,
+				3A4CF8641A8958DD00324DBF /* Noudar-iOS */,
+				3A4CF9151A897D0E00324DBF /* Noudar-OSX */,
 			);
 		};
 /* End PBXProject section */
@@ -1480,7 +1475,6 @@
 			files = (
 				F187557C1DC90ECC001188C5 /* CMoveActorCommand.cpp in Sources */,
 				F13B87B71DD8B84600BF256E /* SoundUtils.cpp in Sources */,
-				F1AA953E1E21A0F900759076 /* CElixirFountain.cpp in Sources */,
 				F1AA953A1E21A0F900759076 /* CCharacter.cpp in Sources */,
 				F1AA953C1E21A0F900759076 /* CCharacterArchetype.cpp in Sources */,
 				F1B23E9F1DCF5E33009E807B /* EAGLNoudarView.mm in Sources */,
@@ -1597,7 +1591,6 @@
 				F1875EA11DC9124C001188C5 /* LightningStrategy.cpp in Sources */,
 				F1E866741E5A615900A60721 /* CUseCurrentItemCommand.cpp in Sources */,
 				F18755611DC90ECC001188C5 /* CDoorway.cpp in Sources */,
-				F1AA953F1E21A0F900759076 /* CElixirFountain.cpp in Sources */,
 				F1E8667D1E5A621200A60721 /* RenderingJobSnapshotAdapter.cpp in Sources */,
 				F1513D1E1EA16DE200D7288E /* SoundEmitter.cpp in Sources */,
 				F1513D0F1EA1691000D7288E /* CMonsterGenerator.cpp in Sources */,
@@ -1609,6 +1602,7 @@
 				F1E866781E5A61DC00A60721 /* Camera.cpp in Sources */,
 				F1E8666C1E5A615900A60721 /* CCyclePreviousItemCommand.cpp in Sources */,
 				F1875E9F1DC9124C001188C5 /* GameNativeAPI.cpp in Sources */,
+				F15822481EB51297003877EB /* OverlayNanoVGRenderer.cpp in Sources */,
 				F1875EA51DC9124C001188C5 /* SplatAnimation.cpp in Sources */,
 				F1E8665F1E5A5E5600A60721 /* VisibilityStrategy.cpp in Sources */,
 				F1513D211EA16DE900D7288E /* SoundUtils.cpp in Sources */,
@@ -1784,11 +1778,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = TARGET_OSX;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Dungeons of Noudar/Data/OSX/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.GLEssentials";
+				PRODUCT_BUNDLE_IDENTIFIER = br.odb.noudar;
 				PRODUCT_NAME = "Dungeons of Noudar OSX";
 				SDKROOT = macosx;
 			};
@@ -1802,11 +1797,12 @@
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_PREPROCESSOR_DEFINITIONS = TARGET_OSX;
 				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Dungeons of Noudar/Data/OSX/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.example.apple-samplecode.GLEssentials";
+				PRODUCT_BUNDLE_IDENTIFIER = br.odb.noudar;
 				PRODUCT_NAME = "Dungeons of Noudar OSX";
 				SDKROOT = macosx;
 			};
@@ -1824,7 +1820,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A4CF8881A8958DD00324DBF /* Build configuration list for PBXNativeTarget "GLEssentials-iOS" */ = {
+		3A4CF8881A8958DD00324DBF /* Build configuration list for PBXNativeTarget "Noudar-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A4CF8891A8958DD00324DBF /* Debug */,
@@ -1833,7 +1829,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A4CF9331A897D0F00324DBF /* Build configuration list for PBXNativeTarget "GLEssentials-OSX" */ = {
+		3A4CF9331A897D0F00324DBF /* Build configuration list for PBXNativeTarget "Noudar-OSX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A4CF9341A897D0F00324DBF /* Debug */,

@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3A4CF8641A8958DD00324DBF"
                BuildableName = "Dungeons of Noudar iOS.app"
-               BlueprintName = "GLEssentials-iOS"
+               BlueprintName = "Noudar-iOS"
                ReferencedContainer = "container:Dungeons of Noudar.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,7 +34,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A4CF8641A8958DD00324DBF"
             BuildableName = "Dungeons of Noudar iOS.app"
-            BlueprintName = "GLEssentials-iOS"
+            BlueprintName = "Noudar-iOS"
             ReferencedContainer = "container:Dungeons of Noudar.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -57,7 +57,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A4CF8641A8958DD00324DBF"
             BuildableName = "Dungeons of Noudar iOS.app"
-            BlueprintName = "GLEssentials-iOS"
+            BlueprintName = "Noudar-iOS"
             ReferencedContainer = "container:Dungeons of Noudar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -76,7 +76,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A4CF8641A8958DD00324DBF"
             BuildableName = "Dungeons of Noudar iOS.app"
-            BlueprintName = "GLEssentials-iOS"
+            BlueprintName = "Noudar-iOS"
             ReferencedContainer = "container:Dungeons of Noudar.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

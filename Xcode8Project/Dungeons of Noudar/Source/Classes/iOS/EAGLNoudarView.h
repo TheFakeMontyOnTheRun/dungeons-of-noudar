@@ -13,26 +13,20 @@
 	UISwipeGestureRecognizer* mSwipeRightRecognizer;
 	UISwipeGestureRecognizer* mSwipeUpRecognizer;
 	UISwipeGestureRecognizer* mSwipeDownRecognizer;
+	
+	UISwipeGestureRecognizer* mDoubleSwipeLeftRecognizer;
+	UISwipeGestureRecognizer* mDoubleSwipeRightRecognizer;
+	
+	UITapGestureRecognizer* mDoubleTapRecognizer;
+	UILongPressGestureRecognizer* mLongTapRecognizer;
 }
 
-
-
-
-
-
-
-//	@property (readonly, nonatomic, getter=isAnimating) BOOL animating;
-//	@property (nonatomic) NSInteger animationFrameInterval;
-
-//	- (void) startAnimation;
-//	- (void) stopAnimation;
-
-
-
-	- (void) drawView:(id)sender;
-
--(void) onSwipeLeft;
--(void) onSwipeRight;
+- (void) drawView:(id)sender;
+-(void) onSwipeLeft:(UISwipeGestureRecognizer *)recognizer;
+-(void) onSwipeRight:(UISwipeGestureRecognizer *)recognizer;
 -(void) onSwipeUp;
 -(void) onSwipeDown;
+-(void) onDoubleTap;
+-(void) onLongTap;
+
 @end
