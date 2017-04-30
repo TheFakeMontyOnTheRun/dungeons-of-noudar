@@ -98,66 +98,60 @@ namespace PC {
 	int selector;
 
 	void Init() {
-		__dpmi_regs r;
+		__dpmi_regs reg;
 
-		r.x.ax = 0x13;
-		__dpmi_int(0x10, &r);
+		reg.x.ax = 0x13;
+		__dpmi_int(0x10, &reg);
 
 
 		outp(0x03c8, 0);
 
-
 		for ( int r = 0; r < 4; ++r ) {
-			for ( int g = 0; g < 4; ++g ) {
-				for ( int b = 0; b < 4; ++b ) {
-					outp(0x03c9, (r * 85));
-					outp(0x03c9, (g * 85));
-					outp(0x03c9, (b * 85));
-				}
-			}
+		  for ( int g = 0; g < 4; ++g ) {
+		    for ( int b = 0; b < 4; ++b ) {
+		      outp(0x03c9, (r * (85) ) );
+		      outp(0x03c9, (g * (85) ) );
+		      outp(0x03c9, (b * (85) ) );
+		    }
+		  }
 		}
 	}
 
+  int getPaletteEntry( int origin ) {
+    int shade = 0;
+    shade += (((((origin & 0x0000FF)      ) * 4  ) / 255 ) ) << 4;
+    shade += (((((origin & 0x00FF00) >> 8 ) * 4  ) / 255 ) ) << 2;
+    shade += (((((origin & 0xFF0000) >> 16) * 4  ) / 255 ) ) << 0;
+    return shade;
+  }
+  
 	void renderPalette() {
 		_farsetsel(_dos_ds);
 		int offset = 0;
 		int fullSize = 320 * 200;
 
 		for (int r = 0; r < 255; ++r) {
-			for (int x = 0; x < 50; ++x) {
-				int shade = 0;
-
-				int origin = r << 16;
-				shade += (((((origin & 0x0000FF))) / 85));
-				shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
-				shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
-
-				_farnspokeb(0xA0000 + (320 * x) + r, shade);
-			}
+		  for (int x = 0; x < 50; ++x) {
+		    
+		    int origin = r << 16;
+		    int shade = getPaletteEntry( origin );
+		    
+		    _farnspokeb(0xA0000 + (320 * x) + r, shade);
+		  }
 		}
 
 		for (int g = 0; g < 255; ++g) {
 			for (int x = 50; x < 100; ++x) {
-				int shade = 0;
-
 				int origin = g << 8;
-				shade += (((((origin & 0x0000FF))) / 85));
-				shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
-				shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
-
+				int shade = getPaletteEntry( origin );
 				_farnspokeb(0xA0000 + (320 * x) + g, shade);
 			}
 		}
 
 		for (int b = 0; b < 255; ++b) {
 			for (int x = 100; x < 150; ++x) {
-				int shade = 0;
-
 				int origin = b;
-				shade += (((((origin & 0x0000FF))) / 85));
-				shade += (((((origin & 0x00FF00) >> 8)) / 85)) << 2;
-				shade += (((((origin & 0xFF0000) >> 16)) / 85)) << 4;
-
+				int shade = getPaletteEntry( origin );
 				_farnspokeb(0xA0000 + (320 * x) + b, shade);
 			}
 		}
@@ -171,13 +165,7 @@ namespace PC {
 		std::fill(std::end(ImageBuffer) - (320 * 200), std::end(ImageBuffer), 0x0);
 	}
 
-  int getPaletteEntry( int origin ) {
-    int shade = 0;
-    shade += (((((origin & 0x0000FF)      )  ) / 85 ) ) << 4;
-    shade += (((((origin & 0x00FF00) >> 8 )  ) / 85 ) ) << 2;
-    shade += (((((origin & 0xFF0000) >> 16)  ) / 85 ) );
-    return shade;
-  }
+
 
 	void Render() {
 	  _farsetsel(_dos_ds);
