@@ -93,6 +93,8 @@ namespace odb {
 		const auto &skyVBO = VBORegisters.at("sky");
 
 		batches.clear();
+
+#ifndef OSMESA
 		batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
 		                                        std::get<1>(skyVBO),
 		                                        std::get<2>(skyVBO),
@@ -105,6 +107,7 @@ namespace odb {
 		                                        getSkyTransform(
 				                                        snapshot.mTimestamp + kSkyTextureLength * 1000),
 		                                        1.0f, true);
+#endif
 
 		for (int z = 0; z < Knights::kMapSize; ++z) {
 			for (int x = 0; x < Knights::kMapSize; ++x) {

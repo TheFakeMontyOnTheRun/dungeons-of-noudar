@@ -172,10 +172,12 @@ namespace PC {
 	  int offset = 0;
 	  int fullSize = 320 * 200;
 	  
-	  for (int y = 0; y < 200; ++y) {
+	 
+	  
+	  for (int y = 72; y < 200; ++y) {
 	    for (int x = 0; x < 320; ++x) {
 	      
-	      offset = (320 * y) + x;
+	      offset = (320 * ((y-72) / 2)) + ((x*4) / 10 );
 	      auto origin = ImageBuffer[offset];
 	      
 	      int shade = getPaletteEntry( origin );
@@ -183,8 +185,19 @@ namespace PC {
 	      _farnspokeb( 0xA0000 + (320 * (200 - y ) ) + x, shade);
 	    }
 	  }
+
+
+	  for (int y = 0; y < 72; ++y) {
+	    for (int x = 0; x < 320; ++x) {
+	      _farnspokeb( 0xA0000 + (320 * (200 - y ) ) + x, 0);
+	    }
+	  }
 	  
-	  std::fill(std::end(ImageBuffer) - (320 * 100), std::end(ImageBuffer), getPaletteEntry(0xDDDDDD));
+
+	  gotoxy(0, 21 );
+	  std::cout << std::endl;
+	  std::cout << getCurrentObjectName() << std::endl;
+	  std::cout << getHP() << std::endl;
 	}
 
 	void Close() // End graphics
@@ -193,7 +206,7 @@ namespace PC {
 	}
 }
 
-const int winWidth = 320, winHeight = 200;
+const int winWidth = 128, winHeight = 64;
 bool done = false;
 bool isActive = false;
 
@@ -266,7 +279,7 @@ void setMainLoop() {
 				case 'a':
 					moveLeft();
 					break;
-				case 'h':
+				case 'c':
 					interact();
 					break;
 				case 'e':
@@ -275,6 +288,20 @@ void setMainLoop() {
 				case 'q':
 					rotateCameraLeft();
 					break;
+
+				case 'z':
+				  cycleNextItem();
+					break;
+				case 'x':
+				  cyclePrevItem();
+					break;
+
+				case 'r':
+				  pickupItem();
+					break;
+				case 'f':
+				  dropItem();
+					break;										
 			}
 		tick();
 	}

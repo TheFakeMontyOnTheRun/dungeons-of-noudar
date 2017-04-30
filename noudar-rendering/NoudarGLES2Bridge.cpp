@@ -52,7 +52,7 @@ namespace odb {
 
     const bool kWillAttemptToMergeVisibilityToFillPotetialHoles =
 #ifdef OSMESA
-            false;
+            true;
 #else
             true;
 #endif

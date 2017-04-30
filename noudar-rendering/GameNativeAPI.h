@@ -68,4 +68,9 @@ void setTileProperties( std::string tileProperties );
 void interact();
 
 bool isThereAnyObjectInFrontOfYou();
+
+std::string getCurrentObjectName();
+
+int getHP();
+
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

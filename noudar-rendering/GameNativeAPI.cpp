@@ -595,3 +595,22 @@ bool isThereAnyObjectInFrontOfYou() {
 
     return map->getItemAt( map->getActorTargetPosition(actor) ) != nullptr;
 }
+
+std::string getCurrentObjectName() {
+    auto map = game->getMap();
+    auto actor = map->getAvatar();
+    auto item = actor->getSelectedItem();
+    if ( item != nullptr ) {
+        return item->to_string();
+    } else {
+        return "";
+    }
+}
+
+int getHP() {
+    auto map = game->getMap();
+    auto actor = map->getAvatar();
+
+    return actor->getHP();
+}
+
