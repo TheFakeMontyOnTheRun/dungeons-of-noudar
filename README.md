@@ -21,7 +21,7 @@ It is known to build for the following targets:
 ![ ](/screenshot_win32.png?raw=true)
 
 - MS-DOS - that's right! (GL 1.1), using Mesa Offscreen renderer
-![ ](/screenshot_dos.png?raw=true)
+![ ](/screenshot_DOS.png?raw=true)
 
 - Emscripten (GLES 2.0 transpiled to WebGL)
 live at: http://www.montyprojects.com/noudar/noudar.html
