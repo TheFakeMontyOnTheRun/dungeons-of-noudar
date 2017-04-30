@@ -348,6 +348,7 @@ namespace odb {
 
 			float *line = geometryBatch.vertices + (index * kGeometryLineStride);
 			glTexCoord2f(line[3], line[4]);
+            glColor3f( shade, shade, shade );
 			glVertex3f(line[0], line[1], line[2]);
 		}
 
@@ -441,159 +442,159 @@ namespace odb {
 
 	void
 	DungeonGLES2Renderer::produceRenderingBatches(const NoudarDungeonSnapshot &snapshot) {
+        glm::vec3 pos;
+        const auto &billboardVBO = mVBORegisters["billboard"];
 
-		glm::vec3 pos;
-		const auto &billboardVBO = mVBORegisters["billboard"];
+        batches.clear();
 
-		batches.clear();
+        mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry);
 
-		mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry);
+        for (int z = 0; z < Knights::kMapSize; ++z) {
+            for (int x = 0; x < Knights::kMapSize; ++x) {
 
-		for (int z = 0; z < Knights::kMapSize; ++z) {
-			for (int x = 0; x < Knights::kMapSize; ++x) {
+                if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
+                    continue;
+                }
 
-				if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
-					continue;
-				}
+                auto mapItem = snapshot.mItemMap[ z ][ x ];
+                auto actor = snapshot.snapshot[z][x];
+                int splatFrame = snapshot.splat[z][x];
+                Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
 
-				auto mapItem = snapshot.mItemMap[ z ][ x ];
-				auto actor = snapshot.snapshot[z][x];
-				int splatFrame = snapshot.splat[z][x];
-				Shade shade = 1.0f;
+                if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
+                    shade = 1.5 * shade;
+                }
 
-				if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
-					shade = 1.5 * shade;
-				}
+                if ( mapItem == 't') {
+                    pos = glm::vec3(x * 2, -4.0f, z * 2);
+                    batches[ETextures::Falcata].emplace_back(
+                            std::get<0>(billboardVBO),
+                            std::get<1>(billboardVBO),
+                            std::get<2>(billboardVBO),
+                            getBillboardTransform(pos), shade, true);
 
-				if ( mapItem == 't') {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
-					batches[ETextures::Falcata].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
+                }
+                if ( mapItem == '+') {
+                    pos = glm::vec3(x * 2, -4.0f, z * 2);
+                    batches[ETextures::Cross].emplace_back(
+                            std::get<0>(billboardVBO),
+                            std::get<1>(billboardVBO),
+                            std::get<2>(billboardVBO),
+                            getBillboardTransform(pos), shade, true);
 
-				}
-				if ( mapItem == '+') {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
-					batches[ETextures::Cross].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
+                }
+                if ( mapItem == 'y') {
+                    pos = glm::vec3(x * 2, -4.0f, z * 2);
+                    batches[ETextures::Crossbow].emplace_back(
+                            std::get<0>(billboardVBO),
+                            std::get<1>(billboardVBO),
+                            std::get<2>(billboardVBO),
+                            getBillboardTransform(pos), shade, true);
 
-				}
-				if ( mapItem == 'y') {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
-					batches[ETextures::Crossbow].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
+                }
 
-				}
+                if ( mapItem == 'u') {
+                    pos = glm::vec3(x * 2, -4.0f, z * 2);
+                    batches[ETextures::Quiver].emplace_back(
+                            std::get<0>(billboardVBO),
+                            std::get<1>(billboardVBO),
+                            std::get<2>(billboardVBO),
+                            getBillboardTransform(pos), shade, true);
 
-				if ( mapItem == 'u') {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
-					batches[ETextures::Quiver].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
-
-				}
-
+                }
 
 
-				if (x == static_cast<int>(snapshot.mCursorPosition.x) &&
-					z == static_cast<int>(snapshot.mCursorPosition.y)) {
-					shade = 1.5f;
-				}
 
-				//characters
-				if (actor != EActorsSnapshotElement::kNothing) {
+                if (x == static_cast<int>(snapshot.mCursorPosition.x) &&
+                    z == static_cast<int>(snapshot.mCursorPosition.y)) {
+                    shade = 1.5f;
+                }
 
-					int id = snapshot.ids[z][x];
-					float fx, fz, height;
+                //characters
+                if (actor != EActorsSnapshotElement::kNothing) {
 
-					fx = x;
-					fz = z;
-					height = mTileProperties[ mapItem ].mFloorHeight;
+                    int id = snapshot.ids[z][x];
+                    float fx, fz, height;
 
-					if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
+                    fx = x;
+                    fz = z;
+                    height = mTileProperties[ mapItem ].mFloorHeight;
 
-						auto animation = snapshot.movingCharacters.at(id);
-						auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation),
-																			 std::get<1>(animation),
-																			 std::get<2>(animation),
-																			 snapshot.mTimestamp);
+                    if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
 
-						fx = pos.x;
-						fz = pos.y;
+                        auto animation = snapshot.movingCharacters.at(id);
+                        auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation),
+                                                                             std::get<1>(animation),
+                                                                             std::get<2>(animation),
+                                                                             snapshot.mTimestamp);
 
-					}
+                        fx = pos.x;
+                        fz = pos.y;
 
-					pos = glm::vec3(fx * 2.0f, -4.0f + 2 * height, fz * 2.0f);
+                    }
 
-
-					if (id != snapshot.mCameraId) {
-
-						TextureId frame = mElementMap[actor];
-
-						if (splatFrame > -1) {
-							frame = ETextures::Foe2a;
-						}
-
-						batches[static_cast<ETextures >(frame)].emplace_back(
-								std::get<0>(billboardVBO),
-								std::get<1>(billboardVBO),
-								std::get<2>(billboardVBO),
-								getBillboardTransform(pos), shade, true);
-					}
-				}
-
-				if (splatFrame > -1) {
-					float height = mTileProperties[ mapItem ].mFloorHeight;
-					pos = glm::vec3(x * 2, -4.0f + 2.0f * height, z * 2);
-					batches[static_cast<ETextures >(splatFrame +
-													ETextures::Splat0)].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
-				}
-			}
-		}
+                    pos = glm::vec3(fx * 2.0f, -4.0f + 2 * height, fz * 2.0f);
 
 
-		for (int z = 0; z < Knights::kMapSize; ++z) {
-			for (int x = 0; x < Knights::kMapSize; ++x) {
+                    if (id != snapshot.mCameraId) {
 
-				int id = snapshot.ids[z][x];
-				auto mapItem = snapshot.map[ z ][ x ];
-				float fx, fz, height;
+                        TextureId frame = mElementMap[actor];
 
-				fx = x;
-				fz = z;
-				height = mTileProperties[ mapItem ].mFloorHeight;
-				if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
+                        if (splatFrame > -1) {
+                            frame = ETextures::Foe2a;
+                        }
 
-					auto animation = snapshot.movingCharacters.at(id);
-					auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation), std::get<1>(animation),
-																		 std::get<2>(animation), snapshot.mTimestamp);
+                        batches[static_cast<ETextures >(frame)].emplace_back(
+                                std::get<0>(billboardVBO),
+                                std::get<1>(billboardVBO),
+                                std::get<2>(billboardVBO),
+                                getBillboardTransform(pos), shade, true);
+                    }
+                }
 
-					fx = pos.x;
-					fz = pos.y;
-				}
+                if (splatFrame > -1) {
+                    float height = mTileProperties[ mapItem ].mFloorHeight;
+                    pos = glm::vec3(x * 2, -4.0f + 2.0f * height, z * 2);
+                    batches[static_cast<ETextures >(splatFrame +
+                                                    ETextures::Splat0)].emplace_back(
+                            std::get<0>(billboardVBO),
+                            std::get<1>(billboardVBO),
+                            std::get<2>(billboardVBO),
+                            getBillboardTransform(pos), shade, true);
+                }
+            }
+        }
 
-				pos = glm::vec3(fx * 2.0f, -4.0f + 2.0f * height, fz * 2.0f);
 
-				if (id == snapshot.mCameraId) {
-					mCurrentCharacterPosition = pos;
-					return;
-				}
-			}
-		}
+        for (int z = 0; z < Knights::kMapSize; ++z) {
+            for (int x = 0; x < Knights::kMapSize; ++x) {
+
+                int id = snapshot.ids[z][x];
+                auto mapItem = snapshot.map[ z ][ x ];
+                float fx, fz, height;
+
+                fx = x;
+                fz = z;
+                height = mTileProperties[ mapItem ].mFloorHeight;
+                if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
+
+                    auto animation = snapshot.movingCharacters.at(id);
+                    auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation), std::get<1>(animation),
+                                                                         std::get<2>(animation), snapshot.mTimestamp);
+
+                    fx = pos.x;
+                    fz = pos.y;
+                }
+
+                pos = glm::vec3(fx * 2.0f, -4.0f + 2.0f * height, fz * 2.0f);
+
+                if (id == snapshot.mCameraId) {
+                    mCurrentCharacterPosition = pos;
+                    return;
+                }
+            }
+        }
+
 	}
 
 	void DungeonGLES2Renderer::initTileProperties() {
