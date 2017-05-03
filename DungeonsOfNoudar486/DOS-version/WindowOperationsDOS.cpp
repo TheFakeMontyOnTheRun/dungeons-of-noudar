@@ -91,10 +91,16 @@ std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const 
       return filename;
   };
 
+const int winWidth = 128, winHeight = 64;
+bool done = false;
+bool isActive = false;
+long ms = 0;
+bool automatic = false;
+
 namespace PC {
 	const unsigned W = 320, H = 200;
 
-	unsigned ImageBuffer[W * H];
+	unsigned ImageBuffer[winWidth * winHeight];
 	int selector;
 
 	void Init() {
@@ -174,47 +180,52 @@ namespace PC {
 	  
 	 
 	  
-	  for (int y = 72; y < 200; ++y) {
-	    for (int x = 0; x < 320; ++x) {
+	  for (int y = 0; y < 128; ++y) {
+	    for (int x = 0; x < 256; ++x) {
 	      
-	      offset = (320 * ((y-72) / 2)) + ((x*4) / 10 );
+	      offset = ((y/2) * (winWidth)) + (x/2);
 	      auto origin = ImageBuffer[offset];
 	      
 	      int shade = getPaletteEntry( origin );
 	      
-	      _farnspokeb( 0xA0000 + (320 * (200 - y ) ) + x, shade);
+	      _farnspokeb( 0xA0000 + (320 * y ) + (x+32), shade);
 	    }
 	  }
 
 
-	  for (int y = 0; y < 72; ++y) {
+	  for (int y = 0; y < 129; ++y) {
+	    for (int x = 0; x < 32; ++x) {
+	      _farnspokeb( 0xA0000 + (320 * y ) + x, 0);
+	    }
+	  }
+
+	  for (int y = 0; y < 129; ++y) {
+	    for (int x = 288; x < 320; ++x) {
+	      _farnspokeb( 0xA0000 + (320 * y ) + x, 0 );
+	    }
+	  }
+
+	  for (int y = 128; y < 200; ++y) {
 	    for (int x = 0; x < 320; ++x) {
-	      _farnspokeb( 0xA0000 + (320 * (200 - y ) ) + x, 0);
+	      _farnspokeb( 0xA0000 + (320 * y ) + x, 0);
 	    }
 	  }
-	  
-
 	  gotoxy(0, 21 );
 	  std::cout << std::endl;
 	  std::cout << getCurrentObjectName() << std::endl;
 	  std::cout << getHP() << std::endl;
 	}
 
-	void Close() // End graphics
-	{
-		textmode(C80); // Set textmode again.
+	void Close() {
+	  textmode(C80); // Set textmode again.
 	}
 }
 
-const int winWidth = 128, winHeight = 64;
-bool done = false;
-bool isActive = false;
-
 void initWindow() {
-
 	OSMesaContext om = OSMesaCreateContext(OSMESA_RGBA, NULL);
-	OSMesaMakeCurrent(om, PC::ImageBuffer, GL_UNSIGNED_BYTE, PC::W, PC::H);
-
+	OSMesaMakeCurrent(om, PC::ImageBuffer, GL_UNSIGNED_BYTE, winWidth, winHeight );
+	OSMesaPixelStore( OSMESA_ROW_LENGTH, winWidth );
+	OSMesaPixelStore( OSMESA_Y_UP, 0 );
 	PC::Init();
 
 
