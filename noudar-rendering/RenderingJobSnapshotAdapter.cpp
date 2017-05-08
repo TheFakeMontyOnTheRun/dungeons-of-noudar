@@ -11,6 +11,7 @@
 #include "VBORenderingJob.h"
 #include <vector>
 #include <utility>
+#include <unordered_map>
 #include <map>
 #include <vector>
 #include "NativeBitmap.h"
@@ -82,10 +83,10 @@ namespace odb {
 	}
 
 	void RenderingJobSnapshotAdapter::readSnapshot(const NoudarDungeonSnapshot &snapshot,
-	                                               std::map<ETextures, std::vector<VBORenderingJob>> &batches,
+	                                               std::unordered_map<ETextures, std::vector<VBORenderingJob>> &batches,
 	                                               const CTilePropertyMap &tilePropertiesRegistry,
-	                                               const std::map<VBORegisterId, VBORegister> &VBORegisters,
-	                                               const std::map<std::string, ETextures> &textureRegistry
+	                                               const std::unordered_map<VBORegisterId, VBORegister> &VBORegisters,
+	                                               const std::unordered_map<std::string, ETextures> &textureRegistry
 	) {
 
 		glm::vec3 pos;

@@ -63,13 +63,13 @@ namespace odb {
 		int fadeUniform;
 		glm::mat4 projectionMatrix;
 		glm::mat4 mViewMatrix = glm::mat4(1.0f);
-		std::map<ETextures, std::vector<odb::VBORenderingJob>> batches;
-		std::map<EActorsSnapshotElement, ETextures> mElementMap;
-		std::map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
+		std::unordered_map<ETextures, std::vector<odb::VBORenderingJob>> batches;
+		std::unordered_map<EActorsSnapshotElement, ETextures> mElementMap;
+		std::unordered_map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
 		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
 		std::vector<std::shared_ptr<Texture>> mTextures;
-		std::map<VBORegisterId, VBORegister> mVBORegisters;
-		std::map<std::string, ETextures> mTextureRegistry;
+		std::unordered_map<VBORegisterId, VBORegister> mVBORegisters;
+		std::unordered_map<std::string, ETextures> mTextureRegistry;
 		CTilePropertyMap mTileProperties;
 
 		//interaction

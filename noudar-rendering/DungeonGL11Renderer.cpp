@@ -29,7 +29,7 @@
 #include <unordered_set>
 #include <map>
 #include <array>
-
+#include <unordered_map>
 #include "Vec2i.h"
 #include "IMapElement.h"
 #include "CTeam.h"
