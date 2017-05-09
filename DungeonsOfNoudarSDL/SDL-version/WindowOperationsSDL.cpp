@@ -67,7 +67,7 @@ void handleKeyPress(SDL_Event &event) {
     auto keysym = &event.key.keysym;
     switch (keysym->sym) {
         case SDLK_ESCAPE:
-            SDL_Quit();
+	  done = true;
             break;
         case SDLK_F1:
             SDL_SetWindowFullscreen(window, windowed ? SDL_WINDOW_FULLSCREEN : 0);
@@ -182,4 +182,5 @@ void setMainLoop() {
 void destroyWindow() {
     shutdown();
     SDL_GL_DeleteContext(glContext);
+    SDL_Quit();
 }
