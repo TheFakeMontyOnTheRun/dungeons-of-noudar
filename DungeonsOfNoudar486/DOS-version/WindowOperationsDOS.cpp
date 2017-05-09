@@ -193,21 +193,23 @@ namespace PC {
 	  }
 
 
+	  int shade =  getPaletteEntry( 0xFF0000 );
+	  
 	  for (int y = 0; y < 129; ++y) {
 	    for (int x = 0; x < 32; ++x) {
-	      _farnspokeb( 0xA0000 + (320 * y ) + x, 0);
+	      _farnspokeb( 0xA0000 + (320 * y ) + x, shade);
 	    }
 	  }
 
 	  for (int y = 0; y < 129; ++y) {
 	    for (int x = 288; x < 320; ++x) {
-	      _farnspokeb( 0xA0000 + (320 * y ) + x, 0 );
+	      _farnspokeb( 0xA0000 + (320 * y ) + x, shade );
 	    }
 	  }
 
 	  for (int y = 128; y < 200; ++y) {
 	    for (int x = 0; x < 320; ++x) {
-	      _farnspokeb( 0xA0000 + (320 * y ) + x, 0);
+	      _farnspokeb( 0xA0000 + (320 * y ) + x, shade );
 	    }
 	  }
 	  gotoxy(0, 21 );

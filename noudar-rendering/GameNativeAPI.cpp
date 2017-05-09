@@ -181,7 +181,7 @@ void renderFrame(long delta) {
 		snapshot.mTimestamp = animationTime;
 		snapshot.mCursorPosition = cursor;
 		snapshot.mCameraId = game->getCurrentActorId();
-
+        snapshot.mCameraPosition = game->getMap()->getAvatar()->getPosition();
 		gles2Renderer->render(snapshot);
 		gles2Renderer->updateCamera(delta);
 }

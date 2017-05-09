@@ -95,23 +95,33 @@ namespace odb {
 
 		batches.clear();
 
-#ifndef OSMESA
-		batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
-		                                        std::get<1>(skyVBO),
-		                                        std::get<2>(skyVBO),
-		                                        getSkyTransform(snapshot.mTimestamp),
-		                                        1.0f, true);
+#ifdef OSMESA
+        auto x0 = std::max( 0, snapshot.mCameraPosition.x - 4 );
+        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + 4 );
+        auto z0 = std::max( 0, snapshot.mCameraPosition.y - 4 );
+        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + 4 );
+#else
+        batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
+                                                std::get<1>(skyVBO),
+                                                std::get<2>(skyVBO),
+                                                getSkyTransform(snapshot.mTimestamp),
+                                                1.0f, true);
 
-		batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
-		                                        std::get<1>(skyVBO),
-		                                        std::get<2>(skyVBO),
-		                                        getSkyTransform(
-				                                        snapshot.mTimestamp + kSkyTextureLength * 1000),
-		                                        1.0f, true);
+        batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
+                                                std::get<1>(skyVBO),
+                                                std::get<2>(skyVBO),
+                                                getSkyTransform(
+                                                        snapshot.mTimestamp + kSkyTextureLength * 1000),
+                                                1.0f, true);
+
+        auto x0 = 0;
+        auto x1 = Knights::kMapSize - 1;
+        auto z0 = 0;
+        auto z1 = Knights::kMapSize - 1;
 #endif
 
-		for (int z = 0; z < Knights::kMapSize; ++z) {
-			for (int x = 0; x < Knights::kMapSize; ++x) {
+		for (int z = z0; z <= z1; ++z) {
+			for (int x = x0; x <= x1; ++x) {
 
 				if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
 					continue;

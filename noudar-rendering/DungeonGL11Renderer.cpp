@@ -384,7 +384,7 @@ namespace odb {
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 #else
-		glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 #endif
 		checkGlError("glClear");
@@ -449,8 +449,20 @@ namespace odb {
 
         mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry);
 
-        for (int z = 0; z < Knights::kMapSize; ++z) {
-            for (int x = 0; x < Knights::kMapSize; ++x) {
+#ifdef OSMESA
+        auto x0 = std::max( 0, snapshot.mCameraPosition.x - 4 );
+        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + 4 );
+        auto z0 = std::max( 0, snapshot.mCameraPosition.y - 4 );
+        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + 4 );
+#else
+        auto x0 = 0;
+        auto x1 = Knights::kMapSize - 1;
+        auto z0 = 0;
+        auto z1 = Knights::kMapSize - 1;
+#endif
+
+        for (int z = z0; z <= z1; ++z) {
+            for (int x = x0; x <= x1; ++x) {
 
                 if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
                     continue;
@@ -565,9 +577,8 @@ namespace odb {
             }
         }
 
-
-        for (int z = 0; z < Knights::kMapSize; ++z) {
-            for (int x = 0; x < Knights::kMapSize; ++x) {
+        for (int z = z0; z <= z1; ++z) {
+            for (int x = x0; x <= x1; ++x) {
 
                 int id = snapshot.ids[z][x];
                 auto mapItem = snapshot.map[ z ][ x ];

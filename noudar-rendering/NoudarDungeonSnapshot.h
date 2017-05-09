@@ -52,6 +52,7 @@ namespace odb {
 		AnimationList movingCharacters;
 		std::string mCurrentItem = "";
 		int mHP;
+        Knights::Vec2i mCameraPosition;
 	};
 
 	std::ostream& operator<<(std::ostream& os, const NoudarDungeonSnapshot& aSnapshot );
