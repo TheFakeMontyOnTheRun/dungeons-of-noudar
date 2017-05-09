@@ -91,7 +91,6 @@ namespace odb {
 
 		glm::vec3 pos;
 		const auto &floorVBO = VBORegisters.at("floor");
-		const auto &skyVBO = VBORegisters.at("sky");
 
 		batches.clear();
 
@@ -101,6 +100,7 @@ namespace odb {
         auto z0 = std::max( 0, snapshot.mCameraPosition.y - 4 );
         auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + 4 );
 #else
+        const auto &skyVBO = VBORegisters.at("sky");
         batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
                                                 std::get<1>(skyVBO),
                                                 std::get<2>(skyVBO),
