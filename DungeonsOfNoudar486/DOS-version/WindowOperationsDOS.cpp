@@ -212,10 +212,9 @@ namespace PC {
 	      _farnspokeb( 0xA0000 + (320 * y ) + x, shade );
 	    }
 	  }
-	  gotoxy(0, 21 );
-	  std::cout << std::endl;
-	  std::cout << getCurrentObjectName() << std::endl;
-	  std::cout << getHP() << std::endl;
+	  gotoxy(1, 20 );
+	  printf( "%s\n%d\n%ld", getCurrentObjectName().c_str(), getHP(), ms );
+
 	}
 
 	void Close() {
@@ -266,6 +265,7 @@ void initWindow() {
 }
 
 void tick() {
+  ++ms;
   gameLoopTick(250);
   renderFrame(250);
   PC::Render();
