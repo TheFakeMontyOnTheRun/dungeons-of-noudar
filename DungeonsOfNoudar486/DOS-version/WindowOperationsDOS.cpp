@@ -65,6 +65,10 @@ int imageBuffer[bufferWidth * bufferHeight];
 
 std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const std::string& filename ) {
   char c = 219;
+  c = 176;
+  c = 177;
+  c = 178;
+  c = '.';
   std::cout << c;
   std::cout.flush();
 
@@ -82,6 +86,19 @@ std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const 
   
   return filename;
 };
+
+char readKbd() {
+  unsigned char controlKbd;
+  
+  char lastKey = inportb(0x60);
+
+  controlKbd = inportb(0x61);
+  outportb( 0x61, controlKbd | 0x80 );
+  outportb( 0x61, controlKbd );
+  outportb( 0x20, inportb(0x20) );
+
+  return lastKey;
+}
 
 void initMode13h() {
   __dpmi_regs reg;
@@ -234,9 +251,11 @@ void setMainLoop() {
       case 27:
 	done = true;
 	break;
+      case 'H':
       case 'w':
 	moveUp();
 	break;
+      case 'P':
       case 's':
 	moveDown();
 	break;
@@ -249,9 +268,11 @@ void setMainLoop() {
       case 'c':
 	interact();
 	break;
+      case 'M':
       case 'e':
 	rotateCameraRight();
 	break;
+      case 'K':
       case 'q':
 	rotateCameraLeft();
 	break;	
