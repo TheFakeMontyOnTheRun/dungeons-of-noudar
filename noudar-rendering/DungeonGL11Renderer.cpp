@@ -218,15 +218,18 @@ namespace odb {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+#ifndef OSMESA
 		odb::Logger::log("textureId:%d\n", textureId);
-
+#endif
 		return textureId;
 	}
 
 
 	extern void printGLString(const char *name, GLenum s) {
+#ifndef OSMESA
 		const char *v = (const char *) glGetString(s);
 		odb::Logger::log("GL %s = %s\n", name, v);
+#endif
 	}
 
 	extern void checkGlError(const char *op) {
@@ -283,9 +286,14 @@ namespace odb {
 
 
 		int index = 0;
+#ifndef OSMESA
 		odb::Logger::log("bitmaps size as to upload: %d", mBitmaps.size());
+#endif
+
 		for (auto &bitmap : mBitmaps) {
+#ifndef OSMESA
 			odb::Logger::log("index: %d", index);
+#endif
 			mTextures.push_back(std::make_shared<Texture>(uploadTextureData(bitmap), bitmap));
 		}
 
@@ -392,7 +400,6 @@ namespace odb {
 
 	void DungeonGLES2Renderer::setPerspective() {
 		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
 		glLoadMatrixf(&projectionMatrix[0][0]);
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -444,8 +451,6 @@ namespace odb {
 	DungeonGLES2Renderer::produceRenderingBatches(const NoudarDungeonSnapshot &snapshot) {
         glm::vec3 pos;
         const auto &billboardVBO = mVBORegisters["billboard"];
-
-        batches.clear();
 
         mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry);
 
