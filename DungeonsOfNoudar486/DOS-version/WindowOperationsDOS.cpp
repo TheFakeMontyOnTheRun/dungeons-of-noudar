@@ -73,19 +73,11 @@ std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const 
   auto extension = filename.substr( indexDot + 1, 3 );
   
   if ( indexDot >  8 ) {
-    std::cout << indexDot  << std::endl;
-    auto toReturn = filename.substr( 0, 6 ) + "~1." + extension;
-    
-    std::cout << toReturn << std::endl;
-    return toReturn;
+    return filename.substr( 0, 6 ) + "~1." + extension;
   }
   
   if ( filename.length() - indexDot > 4 ) {
-    std::cout <<  filename.length() << " - " <<  indexDot  << std::endl;
-    auto toReturn = filename.substr( 0, indexDot ) + "~1." + extension;
-    
-    std::cout << toReturn << std::endl;
-    return toReturn;
+    return filename.substr( 0, indexDot ) + "~1." + extension;
   }
   
   return filename;
