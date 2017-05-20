@@ -1,13 +1,10 @@
-CXXFLAGS = -g -c -std=c++11 -DOSMESA -DGLM_FORCE_RADIANS -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -march=i486 
-LDFLAGS = -lGLU -Lmesa -lOSMesa
+CXXFLAGS = -g -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast-math -O6 -std=gnu++14 -DOSMESA -DGLM_FORCE_RADIANS -mtune=i486 -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -march=i486 -I/usr/local/include/GL -fpermissive
 
-CXXFLAGS += -O3 -fomit-frame-pointer -ffast-math
-CPPFLAGS += $(OPT)
-OPT += -Wall -W  -std=gnu++0x
-L=-lOSMesa -I/usr/local/include/GL -L/usr/local/lib -I/usr/include/GL
+LDFLAGS = -lGLU -Lmesa -lOSMesa -L/usr/local/lib -I/usr/include/GL 
 
 CXX = i586-pc-msdosdjgpp-g++
 CC = i586-pc-msdosdjgpp-gcc
+
 OBJS = DOS-version/main.o \
    ../noudar-core/noudar-core/src/Vec2i.o \
    ../noudar-core/noudar-core/src/CActor.o \
