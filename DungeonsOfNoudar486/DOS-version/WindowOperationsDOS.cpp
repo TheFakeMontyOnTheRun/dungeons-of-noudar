@@ -150,8 +150,6 @@ void renderPalette() {
 
 void copyImageBufferToVideoMemory() {
   
-  _farsetsel(_dos_ds);
-
   int offset = 0;
 
   unsigned char buffer[ 320 * 200 ];
