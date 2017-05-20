@@ -1,3 +1,4 @@
+
 #include <osmesa.h>
 #include <conio.h>
 #include <dpmi.h>
@@ -10,6 +11,7 @@
 
 #include <cstdlib>
 #include <cstdio>
+#include <functional>
 #include <cmath>
 #include <algorithm>
 #include <cmath>

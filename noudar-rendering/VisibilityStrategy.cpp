@@ -5,6 +5,7 @@
 #include "glm/glm.hpp"
 
 #include <memory>
+#include <functional>
 #include <iostream>
 #include <array>
 #include "glm/glm.hpp"
