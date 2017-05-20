@@ -5,6 +5,8 @@
 #include <sys/movedata.h>
 #include <pc.h>
 #include <sys/farptr.h>
+#include <bios.h>
+#include <sys/nearptr.h>
 
 #include <cstdlib>
 #include <cstdio>
@@ -49,7 +51,8 @@
 #include "LoadPNG.h"
 #include "DOSHacks.h"
 
-const int bufferWidth = 128;
+
+const int bufferWidth = 64;
 const int bufferHeight = 64;
 const int screenWidth = 320;
 const int screenHeight = 200;
@@ -59,9 +62,12 @@ long ms = 0;
 bool automatic = false;
 int imageBuffer[bufferWidth * bufferHeight];
 
+
 std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const std::string& filename ) {
-  std::cout << "loading: " << filename << std::endl;
-  
+  char c = 219;
+  std::cout << c;
+  std::cout.flush();
+
   auto dotPosition = std::find( std::begin(filename), std::end( filename), '.');
   auto indexDot =  std::distance( std::begin( filename ), dotPosition );
   auto extension = filename.substr( indexDot + 1, 3 );
@@ -104,8 +110,8 @@ void initMode13h() {
   }
 }
 
-int getPaletteEntry( int origin ) {
-  int shade = 0;
+unsigned char getPaletteEntry( int origin ) {
+  unsigned char shade = 0;
   shade += (((((origin & 0x0000FF)      ) * 4  ) / 255 ) ) << 4;
   shade += (((((origin & 0x00FF00) >> 8 ) * 4  ) / 255 ) ) << 2;
   shade += (((((origin & 0xFF0000) >> 16) * 4  ) / 255 ) ) << 0;
@@ -151,42 +157,30 @@ void renderPalette() {
 }
 
 void copyImageBufferToVideoMemory() {
+  
   _farsetsel(_dos_ds);
 
   int offset = 0;
-    
+
+  unsigned char buffer[ 320 * 200 ];
+  unsigned char bg =  getPaletteEntry( 0xFF0000 );
+  memset( buffer, bg, 320*200*sizeof(unsigned char));
+  
   for (int y = 0; y < 128; ++y) {
-    for (int x = 0; x < 256; ++x) {
+    for (int x = 0; x < 128; ++x) {
       
       offset = ((y/2) * (bufferWidth)) + (x/2);
       auto origin = imageBuffer[offset];
       
-      int shade = getPaletteEntry( origin );
-      
-      _farnspokeb( 0xA0000 + (320 * y ) + (x + 32), shade);
+      unsigned char shade = getPaletteEntry( origin );
+
+      buffer[ ( y * 320 ) + (x + 96) ] = shade;
     }
   }
-  
-  int shade =  getPaletteEntry( 0xFF0000 );
-  
-  for (int y = 0; y < 129; ++y) {
-    for (int x = 0; x < 32; ++x) {
-      _farnspokeb( 0xA0000 + (320 * y ) + x, shade);
-    }
-  }
-  
-  for (int y = 0; y < 129; ++y) {
-    for (int x = 288; x < 320; ++x) {
-      _farnspokeb( 0xA0000 + (320 * y ) + x, shade );
-    }
-  }
-  
-  for (int y = 128; y < 200; ++y) {
-    for (int x = 0; x < 320; ++x) {
-      _farnspokeb( 0xA0000 + (320 * y ) + x, shade );
-    }
-  }
-  gotoxy(1, 20 );
+
+  dosmemput(buffer, 64000, 0xa0000);
+ 
+  gotoxy(1, 18 );
   printf( "%s\n%d\n%ld", getCurrentObjectName().c_str(), getHP(), ms );
   
 }
@@ -196,11 +190,12 @@ void exitToTextMode() {
 }
 
 void initWindow() {
-  OSMesaContext om = OSMesaCreateContext(OSMESA_RGBA, NULL);
+  
+  OSMesaContext om = OSMesaCreateContext(OSMESA_RGBA, nullptr );
   OSMesaMakeCurrent(om, imageBuffer, GL_UNSIGNED_BYTE, bufferWidth, bufferHeight );
   OSMesaPixelStore( OSMESA_ROW_LENGTH, bufferWidth );
   OSMesaPixelStore( OSMESA_Y_UP, 0 );
-  initMode13h(); 
+
   
   auto gVertexShader = "";
   auto gFragmentShader = "";
@@ -231,6 +226,7 @@ void initWindow() {
   }
   
   setSoundEmitters(sounds, soundListener);
+  initMode13h();
 }
 
 void tick() {
