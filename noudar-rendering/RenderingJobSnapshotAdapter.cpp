@@ -38,9 +38,9 @@
 
 
 namespace odb {
+    const static glm::mat4 identity = glm::mat4(1.0f);
 
 	glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
-		glm::mat4 identity = glm::mat4(1.0f);
 
 		long offset = animationTime;
 		int integerPart = offset % ((kSkyTextureLength * 2) * 1000);
@@ -49,37 +49,37 @@ namespace odb {
 		return glm::translate(identity, glm::vec3(finalOffset, 0.0f, 0.0f));
 	}
 
-	glm::mat4 RenderingJobSnapshotAdapter::getCubeTransform(glm::vec3 translation) {
-		glm::mat4 identity = glm::mat4(1.0f);
-		glm::mat4 translated = glm::translate(identity, translation);
-
-		return translated;
+	glm::mat4 RenderingJobSnapshotAdapter::getCubeTransform(glm::vec3 translation, int scale = 1) {
+		return glm::scale( glm::translate(identity, translation), glm::vec3( 1.0f, scale, 1.0f ) );
 	}
 
 	glm::mat4 RenderingJobSnapshotAdapter::getFloorTransform(glm::vec3 translation) {
-		glm::mat4 identity = glm::mat4(1.0f);
-		glm::mat4 translated = glm::translate(identity, translation);
-
-		return translated;
+		return glm::translate(identity, translation);
 	}
 
 	glm::vec2 RenderingJobSnapshotAdapter::easingAnimationCurveStep(glm::vec2 prevPosition,
 	                                                                glm::vec2 destPosition,
 	                                                                long animationTime,
 	                                                                long timestamp) {
-		float step = (((float) ((timestamp - animationTime))) /
-		              ((float) kAnimationLength));
+        float step = (((float) ((timestamp - animationTime))) /
+                      ((float) kAnimationLength));
+
 
 		float curve = 0.0f;
 
+#ifdef OSMESA
+        curve = step;
+#else
 		if (step < 0.5f) {
 			curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
 		} else {
 			curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
 		}
+#endif
 
 		return {(curve * (destPosition.x - prevPosition.x)) + prevPosition.x,
 		        (curve * (destPosition.y - prevPosition.y)) + prevPosition.y};
+
 	}
 
 	void RenderingJobSnapshotAdapter::readSnapshot(const NoudarDungeonSnapshot &snapshot,
@@ -144,7 +144,7 @@ namespace odb {
 
 
 				if (tileProperties.mCeilingTexture != mNullTexture) {
-					pos = glm::vec3(x * 2, -5.0f + (2.0 * tileProperties.mCeilingHeight), z * 2);
+					pos = glm::vec3(x * 2, -5 + (2 * tileProperties.mCeilingHeight), z * 2);
 					batches[textureRegistry.at(tileProperties.mCeilingTexture)].emplace_back(std::get<0>(floorVBO),
 					                                                                         std::get<1>(floorVBO),
 					                                                                         std::get<2>(floorVBO),
@@ -155,26 +155,42 @@ namespace odb {
 				if (tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
 
 					const auto &tileVBO = VBORegisters.at(tileProperties.mVBOToRender);
+                    auto vboId = std::get<0>(tileVBO);
+                    auto vboIndicesId = std::get<1>(tileVBO);
+                    auto amount = std::get<2>(tileVBO);
+                    auto& repeatedBatches = batches[textureRegistry.at(tileProperties.mCeilingRepeatedWallTexture)];
 
-					for (float y = 0; y < tileProperties.mCeilingRepetitions; ++y) {
+#ifdef OSMESA
+                    pos = glm::vec3(x * 2,
+                                    -4 + (2 * tileProperties.mCeilingHeight) + (tileProperties.mCeilingRepetitions) - 1,
+                                    z * 2);
 
-						pos = glm::vec3(x * 2,
-						                -4.0f + (2.0f * tileProperties.mCeilingHeight) + (2.0 * y),
-						                z * 2);
+                    repeatedBatches.emplace_back(
+                            vboId,
+                            vboIndicesId,
+                            amount,
+                            getCubeTransform(pos, tileProperties.mCeilingRepetitions),
+                            shade, true);
+#else
+                    for (float y = 0; y < tileProperties.mCeilingRepetitions; ++y) {
+                        pos = glm::vec3(x * 2,
+                                        -4.0f + (2.0f * tileProperties.mCeilingHeight) + (2.0 * y),
+                                        z * 2);
 
-						batches[textureRegistry.at(tileProperties.mCeilingRepeatedWallTexture)].emplace_back(
-								std::get<0>(tileVBO),
-								std::get<1>(tileVBO),
-								std::get<2>(tileVBO),
-								getCubeTransform(pos),
-								shade, true);
-					}
+                        repeatedBatches.emplace_back(
+                                vboId,
+                                vboIndicesId,
+                                amount,
+                                getCubeTransform(pos),
+                                shade, true);
+                    }
+#endif
 				}
 
 				if (tileProperties.mMainWallTexture != mNullTexture) {
 					const auto &tileVBO = VBORegisters.at(tileProperties.mVBOToRender);
 
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					pos = glm::vec3(x * 2, -4, z * 2);
 
 					batches[textureRegistry.at(tileProperties.mMainWallTexture)].emplace_back(
 							std::get<0>(tileVBO),
@@ -186,25 +202,39 @@ namespace odb {
 				if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
 
 					const auto &tileVBO = VBORegisters.at(tileProperties.mVBOToRender);
+                    auto vboId = std::get<0>(tileVBO);
+                    auto vboIndicesId = std::get<1>(tileVBO);
+                    auto amount = std::get<2>(tileVBO);
+                    auto& repeatedBatches = batches[textureRegistry.at(tileProperties.mFloorRepeatedWallTexture)];
+#ifdef OSMESA
+                    pos = glm::vec3(x * 2,
+                                    -5 + (2 * tileProperties.mFloorHeight) - (tileProperties.mFloorRepetitions) -
+                                    1, z * 2);
 
-					for (float y = 0; y < tileProperties.mFloorRepetitions; ++y) {
+                    repeatedBatches.emplace_back(
+                            vboId,
+                            vboIndicesId,
+                            amount,
+                            getCubeTransform(pos, tileProperties.mFloorRepetitions),
+                            shade, true);
+#else
+                    for (float y = 0; y < tileProperties.mFloorRepetitions; ++y) {
+                        //the final -1.0f in y is for accounting fore the block's length
+                        pos = glm::vec3(x * 2,
+                                        -5.0f + (2.0f * tileProperties.mFloorHeight) - (2.0 * y) -
+                                        1.0f, z * 2);
 
-						//the final -1.0f in y is for accounting fore the block's length
-						pos = glm::vec3(x * 2,
-						                -5.0f + (2.0f * tileProperties.mFloorHeight) - (2.0 * y) -
-						                1.0f, z * 2);
-
-						batches[textureRegistry.at(tileProperties.mFloorRepeatedWallTexture)].emplace_back(
-								std::get<0>(tileVBO),
-								std::get<1>(tileVBO),
-								std::get<2>(tileVBO),
-								getCubeTransform(pos),
-								shade, true);
-					}
+                        repeatedBatches.emplace_back(
+                                vboId,
+                                vboIndicesId,
+                                amount, getCubeTransform(pos),
+                                shade, true);
+                    }
+#endif
 				}
 
 				if (tileProperties.mFloorTexture != mNullTexture) {
-					pos = glm::vec3(x * 2, -5.0f + (2.0f * tileProperties.mFloorHeight), z * 2);
+					pos = glm::vec3(x * 2, -5 + (2 * tileProperties.mFloorHeight), z * 2);
 					batches[textureRegistry.at(tileProperties.mFloorTexture)].emplace_back(std::get<0>(floorVBO),
 					                                                                       std::get<1>(floorVBO),
 					                                                                       std::get<2>(floorVBO),
