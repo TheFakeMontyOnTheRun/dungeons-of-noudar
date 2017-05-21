@@ -149,6 +149,7 @@ void initWindow() {
         auto soundClip = odb::makeSoundClipFrom(file);
 
         sounds.push_back(std::make_shared<odb::SoundEmitter>(soundClip));
+      fclose(file);
     }
 
     setSoundEmitters(sounds, soundListener);
@@ -182,5 +183,6 @@ void setMainLoop() {
 void destroyWindow() {
     shutdown();
     SDL_GL_DeleteContext(glContext);
+    SDL_DestroyWindow(window);
     SDL_Quit();
 }
