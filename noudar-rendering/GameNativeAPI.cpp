@@ -155,7 +155,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	}
 
 	overlayRenderer->setFrame( w, h );
-    overlayRenderer->playAnimation( animationTime, "crossbow-still" );
+    overlayRenderer->playAnimation( animationTime, "hand-still" );
     #endif
 
 	gles2Renderer->setTexture(textures);
@@ -370,6 +370,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
                 loadPNG( "bow0.png", fileLoaderDelegate ),
                 loadPNG( "bow1.png", fileLoaderDelegate ),
 				loadPNG( "bow2.png", fileLoaderDelegate ),
+                loadPNG( "mace.png", fileLoaderDelegate ),
 		};
 
 		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>( bitmaps );
@@ -557,40 +558,153 @@ void interact() {
 		game->tick();
 		render->setNextCommand('.');
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-	    overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
+
+
+        auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+        if ( item != nullptr && item->getView() == 't') {
+            overlayRenderer->playAnimation( animationTime, "mace-fire" );
+        } else if ( item != nullptr && item->getView() == 'y') {
+            overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
+        }
+
+
 #endif
 	}
 }
 
 void pickupItem() {
     if (game != nullptr) {
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->playAnimation(animationTime, "mace-disarm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else {
+                overlayRenderer->playAnimation(animationTime, "hand-disarm");
+            }
+        }
+
         render->setNextCommand('[');
         game->tick();
         render->setNextCommand('.');
+
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->enqueueAnimation(animationTime, "mace-arm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else {
+                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
+            }
+
+        }
     }
 }
 
 void dropItem() {
     if (game != nullptr) {
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->playAnimation(animationTime, "mace-disarm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else {
+                overlayRenderer->playAnimation(animationTime, "hand-disarm");
+            }
+        }
+
         render->setNextCommand(']');
         game->tick();
         render->setNextCommand('.');
+
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->enqueueAnimation( animationTime, "mace-arm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else {
+                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
+            }
+
+        }
     }
 }
 
 void cycleNextItem() {
     if (game != nullptr) {
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->playAnimation(animationTime, "mace-disarm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else {
+                overlayRenderer->playAnimation(animationTime, "hand-disarm");
+            }
+        }
+
         render->setNextCommand('-');
         game->tick();
         render->setNextCommand('.');
+
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->enqueueAnimation( animationTime, "mace-arm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else {
+                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
+            }
+        }
     }
 }
 
 void cyclePrevItem() {
     if (game != nullptr) {
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->playAnimation(animationTime, "mace-disarm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else {
+                overlayRenderer->playAnimation(animationTime, "hand-disarm");
+            }
+        }
+
         render->setNextCommand('=');
         game->tick();
         render->setNextCommand('.');
+
+        auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+        {
+            auto item = game->getMap()->getAvatar()->getSelectedItem();
+
+            if (item != nullptr && item->getView() == 't') {
+                overlayRenderer->enqueueAnimation( animationTime,  "mace-arm");
+            } else if (item != nullptr && item->getView() == 'y') {
+                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else {
+                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
+            }
+
+        }
+
+
     }
 }
 

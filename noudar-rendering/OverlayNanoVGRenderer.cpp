@@ -116,6 +116,162 @@ namespace odb {
             mBitmaps[id] = bitmap;
         }
 
+        animations[ "hand-arm" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.1f, 1.5f}, glm::vec2{0.076f, 0.8f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                "hand-still"
+        );
+
+        animations[ "hand-disarm" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.09f, 0.8f}, glm::vec2{0.15f, 1.5f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                ""
+        );
+
+        animations[ "hand-still" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.125f, 0.85f}, glm::vec2{0.12f, 0.8f}
+                                 ),
+                         },
+                                20000
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "hand1.png", glm::vec2{0.12f, 0.8f}, glm::vec2{0.125f, 0.85f}
+                                 )
+                         },
+                                20000
+                        },
+
+                },
+                true,
+                ""
+        );
+
+        animations[ "mace-arm" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "mace.png", glm::vec2{0.5f, 1.5f}, glm::vec2{0.6f, 0.8f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                "mace-still"
+        );
+
+        animations[ "mace-disarm" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "mace.png", glm::vec2{0.6f, 0.8f}, glm::vec2{0.5f, 1.5f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                ""
+        );
+
+
+
+        animations[ "mace-still" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "mace.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.512f, 0.8f}
+                                 ),
+                         },
+                                20000
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "mace.png", glm::vec2{0.712f, 0.8f}, glm::vec2{0.5125f, 0.85f}
+                                 )
+                         },
+                                20000
+                        },
+
+                },
+                true,
+                ""
+        );
+
+
+        animations[ "mace-fire" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "mace.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{-0.012f, 0.75f}
+                                 ),
+                         },
+                                150
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "mace.png", glm::vec2{-0.012f, 0.75f}, glm::vec2{0.7325f, 0.85f}
+                                 )
+                         },
+                                750
+                        },
+
+                },
+                false,
+                "mace-still"
+        );
+
+
+        animations[ "crossbow-arm" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow0.png", glm::vec2{0.5f, 1.5f}, glm::vec2{0.6f, 0.8f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                "crossbow-still"
+        );
+
+        animations[ "crossbow-disarm" ] = std::make_shared<odb::Animation>(
+                std::vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "bow0.png", glm::vec2{0.6f, 0.8f}, glm::vec2{0.5f, 1.5f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                ""
+        );
 
         animations[ "crossbow-still" ] = std::make_shared<odb::Animation>(
                 std::vector<odb::AnimationStep>{
@@ -392,10 +548,24 @@ namespace odb {
 #endif
     }
 
+    void OverlayNanoVGRenderer::enqueueAnimation( long currentTimestamp, std::string animationName ) {
+        if ( currentAnimation != nullptr ) {
+            mQueuedAnimations.push_back(animationName);
+        } else {
+            playAnimation( currentTimestamp, animationName );
+        }
+    }
+
     void OverlayNanoVGRenderer::playAnimation( long currentTimestamp, std::string animationName ) {
         currentAnimation = animations[ animationName ];
 
         if ( currentAnimation != nullptr ) {
+            mLastTimestamp = currentTimestamp;
+            timeUntilNextFrame = currentAnimation->mStepList[frame].mDelay;
+            frame = 0;
+        } else if ( !mQueuedAnimations.empty() ) {
+            currentAnimation = animations[ mQueuedAnimations.back() ];
+            mQueuedAnimations.pop_back();
             mLastTimestamp = currentTimestamp;
             timeUntilNextFrame = currentAnimation->mStepList[frame].mDelay;
             frame = 0;
