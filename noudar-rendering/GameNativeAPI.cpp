@@ -90,7 +90,10 @@ std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::shared_ptr<odb::SoundListener> mainListener;
 odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
+
+#ifndef OS_MESA
 std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
+#endif
 
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 
@@ -162,11 +165,15 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	gles2Renderer->setTileProperties( tileProperties );
 
+#ifndef OS_MESA
 	for  ( const auto& mesh : loadedMeshes ) {
 		gles2Renderer->setMesh( mesh );
-	}
 
-	loadedMeshes.clear();
+
+    }
+    loadedMeshes.clear();
+#endif
+
 	return toReturn;
 }
 
@@ -533,12 +540,15 @@ void setTileProperties( std::string tilePropertiesData ) {
 	tileProperties = odb::CTile3DProperties::parsePropertyList( tilePropertiesData );
 }
 
+
 void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
+#ifndef OS_MESA
 	for ( const auto& mesh : meshes ) {
 
 		std::istringstream meshStream( fileLoaderDelegate->loadFileFromPath( mesh));
 		loadedMeshes.emplace_back( readScene( meshStream, fileLoaderDelegate ) );
 	}
+#endif
 }
 
 void interact() {
