@@ -84,7 +84,6 @@ odb::AnimationList animationList;
 std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 long animationTime = 0;
 
-std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
 std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
@@ -97,7 +96,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
 
-	textures = {
+	auto textures = {
 			loadPNG("grass.png", fileLoader),
             loadPNG("grass2.png", fileLoader),
 			loadPNG("stonefloor.png", fileLoader),
@@ -172,7 +171,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 }
 
 void renderFrame(long delta) {
-	if (gles2Renderer != nullptr && game != nullptr && textures.size() > 0) {
+	if (gles2Renderer != nullptr && game != nullptr ) {
 
 		gles2Renderer->updateFadeState(delta);
 		auto cursor = game->getMap()->getTargetProjection( game->getMap()->getAvatar());
@@ -199,7 +198,6 @@ void shutdown() {
 	animationList.clear();
 	mPositions.clear();
 	animationTime = 0;
-	textures.clear();
 
 	gles2Renderer = nullptr;
 
@@ -341,7 +339,6 @@ void setPerspectiveMatrix( float* perspectiveMatrix ) {
 	}
 }
 
-
 void setAngleXZ( float XZAngle ) {
 	if (gles2Renderer != nullptr) {
 		gles2Renderer->setAngleXZ(XZAngle);
@@ -352,9 +349,6 @@ void setAngleYZ( float YZAngle ) {
 	if (gles2Renderer != nullptr) {
 		gles2Renderer->setAngleYZ(YZAngle);
 	}
-}
-
-void loadMapData( std::string geoFile, std::string petFile ) {
 }
 
 void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, std::string tilePropertiesFile ) {
