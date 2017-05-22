@@ -174,14 +174,22 @@ void copyImageBufferToVideoMemory() {
   unsigned char buffer[ 320 * 200 ];
   unsigned char bg =  getPaletteEntry( 0xFF0000 );
   memset( buffer, bg, 320*200*sizeof(unsigned char));
+
+  int origin = 0;
+  int lastOrigin = -1;
+  unsigned char shade = 0;
   
   for (int y = 0; y < 128; ++y) {
     for (int x = 0; x < 128; ++x) {
       
       offset = ((y/2) * (bufferWidth)) + (x/2);
-      auto origin = imageBuffer[offset];
+      origin = imageBuffer[offset];
       
-      unsigned char shade = getPaletteEntry( origin );
+      if ( origin != lastOrigin ) {
+	shade = getPaletteEntry( origin );
+      }
+
+      lastOrigin = origin;
 
       buffer[ ( y * 320 ) + (x + 96) ] = shade;
     }
