@@ -559,7 +559,6 @@ void interact() {
 		render->setNextCommand('.');
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 
-
         auto item = game->getMap()->getAvatar()->getSelectedItem();
 
         if ( item != nullptr && item->getView() == 't') {
@@ -567,14 +566,14 @@ void interact() {
         } else if ( item != nullptr && item->getView() == 'y') {
             overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
         }
-
-
 #endif
 	}
 }
 
 void pickupItem() {
     if (game != nullptr) {
+
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -586,11 +585,11 @@ void pickupItem() {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
         }
-
+#endif
         render->setNextCommand('[');
         game->tick();
         render->setNextCommand('.');
-
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -603,11 +602,13 @@ void pickupItem() {
             }
 
         }
+#endif
     }
 }
 
 void dropItem() {
     if (game != nullptr) {
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -619,11 +620,11 @@ void dropItem() {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
         }
-
+#endif
         render->setNextCommand(']');
         game->tick();
         render->setNextCommand('.');
-
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -636,11 +637,13 @@ void dropItem() {
             }
 
         }
+#endif
     }
 }
 
 void cycleNextItem() {
     if (game != nullptr) {
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -652,11 +655,11 @@ void cycleNextItem() {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
         }
-
+#endif
         render->setNextCommand('-');
         game->tick();
         render->setNextCommand('.');
-
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -668,11 +671,13 @@ void cycleNextItem() {
                 overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
             }
         }
+#endif
     }
 }
 
 void cyclePrevItem() {
     if (game != nullptr) {
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -684,13 +689,13 @@ void cyclePrevItem() {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
         }
-
+#endif
         render->setNextCommand('=');
         game->tick();
         render->setNextCommand('.');
 
         auto item = game->getMap()->getAvatar()->getSelectedItem();
-
+#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
         {
             auto item = game->getMap()->getAvatar()->getSelectedItem();
 
@@ -703,8 +708,7 @@ void cyclePrevItem() {
             }
 
         }
-
-
+#endif
     }
 }
 
