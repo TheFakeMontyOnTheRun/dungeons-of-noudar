@@ -225,23 +225,6 @@ void initWindow() {
   
   std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
   
-  std::string filenames[]{
-    "res/grasssteps.wav",
-      "res/stepsstones.wav",
-      "res/bgnoise.wav",
-      "res/monsterdamage.wav",
-      "res/monsterdead.wav",
-      "res/playerdamage.wav",
-      "res/playerdead.wav",
-      "res/swing.wav"
-      };
-  
-  for (auto filename : filenames) {
-    FILE *file = fopen(filename.c_str(), "r");
-    auto soundClip = odb::makeSoundClipFrom(file);
-    sounds.push_back(std::make_shared<odb::SoundEmitter>(soundClip));
-  }
-  
   setSoundEmitters(sounds, soundListener);
   initMode13h();
 }
