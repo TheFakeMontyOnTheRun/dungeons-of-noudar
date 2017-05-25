@@ -37,7 +37,6 @@
 #include "CGameDelegate.h"
 #include "CMap.h"
 #include "NativeBitmap.h"
-#include "Texture.h"
 #include "Logger.h"
 #include "VBORenderingJob.h"
 #include "IRenderer.h"
@@ -313,8 +312,10 @@ namespace odb {
 		checkGlError("glViewport");
 
 		for (auto &bitmap : mBitmaps) {
-			mTextures.push_back(std::make_shared<Texture>(uploadTextureData(bitmap), bitmap));
+			mTextures.push_back(uploadTextureData(bitmap));
 		}
+
+		mBitmaps.clear();
 
 		mTextureRegistry["sky"] = ETextures::Skybox;
 		mTextureRegistry["grass"] = ETextures::Grass;
@@ -351,7 +352,7 @@ namespace odb {
 
 		if (kShouldDestroyThingsManually) {
 			for (auto &texture : mTextures) {
-				glDeleteTextures(1, &(texture->mTextureId));
+				glDeleteTextures(1, &texture);
 			}
 			deleteVBOs();
             glDeleteShader(gProgram);
@@ -660,7 +661,7 @@ namespace odb {
 
 	void DungeonGLES2Renderer::render(const NoudarDungeonSnapshot &snapshot) {
 
-		if (mBitmaps.empty()) {
+		if (mTextures.empty()) {
 			return;
 		}
 
@@ -682,7 +683,7 @@ namespace odb {
 
 		for (const auto &batch : batches) {
 
-			auto textureId = mTextures[batch.first]->mTextureId;
+			auto textureId = mTextures[batch.first];
 
 			for (const auto &element : batch.second) {
 				const auto transform = element.getTransform();

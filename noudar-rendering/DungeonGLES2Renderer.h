@@ -67,7 +67,7 @@ namespace odb {
 		std::unordered_map<EActorsSnapshotElement, ETextures> mElementMap;
 		std::unordered_map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
 		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
-		std::vector<std::shared_ptr<Texture>> mTextures;
+		std::vector<unsigned int> mTextures;
 		std::unordered_map<VBORegisterId, VBORegister> mVBORegisters;
 		std::unordered_map<std::string, ETextures> mTextureRegistry;
 		CTilePropertyMap mTileProperties;

@@ -295,8 +295,10 @@ namespace odb {
 #ifndef OSMESA
 			odb::Logger::log("index: %d", index);
 #endif
-			mTextures.push_back(std::make_shared<Texture>(uploadTextureData(bitmap), bitmap));
+			mTextures.push_back(uploadTextureData(bitmap));
 		}
+
+        mBitmaps.clear();
 
 		mTextureRegistry["sky"] = ETextures::Skybox;
 		mTextureRegistry["grass"] = ETextures::Grass;
@@ -332,7 +334,7 @@ namespace odb {
 		if (kShouldDestroyThingsManually) {
 			deleteVBOs();
 			for (auto &texture : mTextures) {
-				glDeleteTextures(1, &(texture->mTextureId));
+				glDeleteTextures(1, &texture);
 			}
 		}
 	}
@@ -631,7 +633,7 @@ namespace odb {
 
 	void DungeonGLES2Renderer::render(const NoudarDungeonSnapshot &snapshot) {
 
-		if (mBitmaps.empty()) {
+		if (mTextures.empty()) {
 			return;
 		}
 
@@ -662,14 +664,13 @@ namespace odb {
 	void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
 		glMatrixMode(GL_MODELVIEW);
 
-
 #ifdef OSMESA
 	auto cubeVBO = mVBORegisters["cube"];
 #endif
 
 		for (const auto &batch : batches) {
 
-			auto textureId = mTextures[batch.first]->mTextureId;
+			auto textureId = mTextures[batch.first];
 			glBindTexture(GL_TEXTURE_2D, textureId);
 
 			for (const auto &element : batch.second) {
