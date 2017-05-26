@@ -110,7 +110,8 @@ namespace odb {
                 }
             }
         }
-
+        
+#ifndef OSMESA
         for ( int y = 0; y < Knights::kMapSize; ++y ) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
                 auto actor = map.getActorAt({ x, y } );
@@ -121,7 +122,7 @@ namespace odb {
                 }
             }
         }
-
+#endif
 
         auto cameraPosition = current->getPosition();
 	    VisMap currentVisMap;
