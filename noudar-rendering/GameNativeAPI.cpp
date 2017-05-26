@@ -86,12 +86,12 @@ long animationTime = 0;
 
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
-std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
-std::shared_ptr<odb::SoundListener> mainListener;
 odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
 
-#ifndef OS_MESA
+#ifndef OSMESA
+std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
+std::shared_ptr<odb::SoundListener> mainListener;
 std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 #endif
 
@@ -165,7 +165,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	gles2Renderer->setTileProperties( tileProperties );
 
-#ifndef OS_MESA
+#ifndef OSMESA
 	for  ( const auto& mesh : loadedMeshes ) {
 		gles2Renderer->setMesh( mesh );
 
@@ -257,6 +257,7 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 
 	animationList[id] = movement;
 
+#ifndef OSMESA
 	auto floorType = snapshot.map[ newPosition.y ][ newPosition.x ];
 
 	if ( floorType  == '.' || floorType == '-' ) {
@@ -268,6 +269,7 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 			soundEmitters[1]->play(mainListener);
 		}
 	}
+#endif
 }
 
 void updateCharacterMovements(const odb::IntMap& idsLocal) {
@@ -382,15 +384,21 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 	render = std::make_shared<odb::NoudarGLES2Bridge>();
 
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
+#ifndef OSMESA
 		soundEmitters[ 4 ]->play( mainListener );
+#endif
 	};
 
 	auto onPlayerDead = [&](Knights::Vec2i pos) {
+#ifndef OSMESA
 		soundEmitters[ 6 ]->play( mainListener );
+#endif
 	};
 
 	auto onPlayerAttack = [&](Knights::Vec2i pos) {
+#ifndef OSMESA
 		soundEmitters[ 7 ]->play( mainListener );
+#endif
 	};
 
 	auto onMonsterAttack = [&](Knights::Vec2i pos) {
@@ -401,8 +409,9 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 		auto splat = std::make_shared<odb::SplatAnimation>( pos );
 		splatAnimation.push_back( splat );
 		splat->startSplatAnimation();
-
+#ifndef OSMESA
 		soundEmitters[ 3 ]->play( mainListener );
+#endif
 	};
 
 	auto onProjectileHit = [&](Knights::Vec2i pos) {
@@ -413,7 +422,9 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 
 
 	auto onPlayerDamaged = [&](Knights::Vec2i pos) {
+#ifndef OSMESA
 		soundEmitters[ 5 ]->play( mainListener );
+#endif
 	};
 
 	auto onLevelLoaded = [&]() {
@@ -500,8 +511,10 @@ void gameLoopTick( long ms ) {
 }
 
 void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener ) {
+#ifndef OSMESA
 	soundEmitters = emitters;
 	mainListener = listener;
+#endif
 }
 
 void forceDirection( int direction ) {
@@ -543,7 +556,7 @@ void setTileProperties( std::string tilePropertiesData ) {
 
 
 void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
-#ifndef OS_MESA
+#ifndef OSMESA
 	for ( const auto& mesh : meshes ) {
 
 		std::istringstream meshStream( fileLoaderDelegate->loadFileFromPath( mesh));
