@@ -171,16 +171,16 @@ void copyImageBufferToVideoMemory() {
   
   int offset = 0;
 
-  unsigned char buffer[ 320 * 200 ];
+  unsigned char buffer[ screenWidth * screenHeight ];
   unsigned char bg =  getPaletteEntry( 0xFF0000 );
-  memset( buffer, bg, 320*200*sizeof(unsigned char));
+  memset( buffer, bg, screenWidth * screenHeight *sizeof(unsigned char));
 
   int origin = 0;
   int lastOrigin = -1;
   unsigned char shade = 0;
   
-  for (int y = 0; y < 128; ++y) {
-    for (int x = 0; x < 128; ++x) {
+  for (int y = 0; y < (bufferHeight * 2 ); ++y) {
+    for (int x = 0; x < (bufferWidth * 2); ++x) {
       
       offset = ((y/2) * (bufferWidth)) + (x/2);
       origin = imageBuffer[offset];
@@ -191,11 +191,11 @@ void copyImageBufferToVideoMemory() {
 
       lastOrigin = origin;
 
-      buffer[ ( y * 320 ) + (x + 96) ] = shade;
+      buffer[ ( y * screenWidth ) + (x + ( ( screenWidth - (2 * bufferWidth) ) / 2) ) ] = shade;
     }
   }
 
-  dosmemput(buffer, 64000, 0xa0000);
+  dosmemput(buffer, screenWidth * screenHeight, 0xa0000);
  
   gotoxy(1, 18 );
   printf( "%s\n%d\n%ld", getCurrentObjectName().c_str(), getHP(), ms );
@@ -207,7 +207,6 @@ void exitToTextMode() {
 }
 
 void initWindow() {
-  
   OSMesaContext om = OSMesaCreateContext(OSMESA_RGBA, nullptr );
   OSMesaMakeCurrent(om, imageBuffer, GL_UNSIGNED_BYTE, bufferWidth, bufferHeight );
   OSMesaPixelStore( OSMESA_ROW_LENGTH, bufferWidth );
@@ -235,6 +234,16 @@ void tick() {
   renderFrame(250);
   copyImageBufferToVideoMemory();
 }
+
+char read_char(void)
+{
+  union REGS regs;
+  regs.x.ax = 0x0100; //DOS function 01h
+  int86(0x21,&regs,&regs);
+  
+  return regs.x.ax;
+}
+
 
 void setMainLoop() {
   
