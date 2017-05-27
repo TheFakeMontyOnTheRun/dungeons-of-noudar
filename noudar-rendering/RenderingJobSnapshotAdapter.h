@@ -16,7 +16,7 @@ namespace odb {
 
 	using Shade = float;
 
-	using TextureId = int;
+	using TextureId = uint8_t;
 
 	class RenderingJobSnapshotAdapter {
 

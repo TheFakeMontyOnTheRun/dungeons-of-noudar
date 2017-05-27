@@ -8,7 +8,7 @@ namespace odb {
 
     class CTile3DProperties;
 
-    using CTileId = int;
+    using CTileId = uint8_t;
 
     using CTilePropertyMap = std::map< CTileId, CTile3DProperties >;
 
@@ -23,8 +23,8 @@ namespace odb {
         VBORegisterId mVBOToRender;
         TextureName mCeilingRepeatedWallTexture;
         TextureName mFloorRepeatedWallTexture;
-        int mCeilingRepetitions;
-        int mFloorRepetitions;
+        uint8_t mCeilingRepetitions;
+        uint8_t mFloorRepetitions;
         float mCeilingHeight;
         float mFloorHeight;
 

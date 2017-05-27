@@ -409,8 +409,11 @@ namespace odb {
 		mTextures.clear();
 
 		for (auto &vbo : mVBORegisters) {
-			glDeleteBuffers(1, &std::get<0>(vbo.second));
-			glDeleteBuffers(1, &std::get<1>(vbo.second));
+            unsigned int get0 = (GLuint)std::get<0>(vbo.second);
+            unsigned int get1 = (GLuint)std::get<1>(vbo.second);
+
+			glDeleteBuffers(1, &get0);
+			glDeleteBuffers(1, &get1);
 		}
 	}
 

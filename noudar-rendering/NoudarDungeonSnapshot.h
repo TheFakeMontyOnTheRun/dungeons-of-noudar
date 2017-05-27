@@ -7,7 +7,7 @@
 
 namespace odb {
 
-	enum class EActorsSnapshotElement {
+	enum class EActorsSnapshotElement : uint8_t {
 		kNothing,
 		kHeroStanding0,
 		kHeroStanding1,
@@ -23,17 +23,18 @@ namespace odb {
 		kDemonAttacking1,
 	};
 
-	enum class EVisibility {
+	enum class EVisibility : uint8_t {
 		kInvisible,
 		kVisible,
 	};
 
-	using CCharacterId = int;
+	using CCharacterId = int8_t;
 
-	using IntMap = std::array<std::array<int, Knights::kMapSize>, Knights::kMapSize>;
+	using IntMap = std::array<std::array<int8_t , Knights::kMapSize>, Knights::kMapSize>;
 	using CharMap = std::array<std::array<EActorsSnapshotElement, Knights::kMapSize>, Knights::kMapSize>;
 	using VisMap = std::array<std::array<EVisibility, Knights::kMapSize>, Knights::kMapSize>;
-	using AnimationList = std::map<int, std::tuple<glm::vec2, glm::vec2, long> >;
+    using LightMap = std::array<std::array<int , Knights::kMapSize>, Knights::kMapSize>;
+	using AnimationList = std::map<int8_t, std::tuple<glm::vec2, glm::vec2, long> >;
 
 	class NoudarDungeonSnapshot {
 
@@ -43,7 +44,7 @@ namespace odb {
 		odb::CharMap snapshot;
 		odb::IntMap splat;
 		odb::IntMap ids;
-		odb::IntMap mLightMap;
+        odb::LightMap mLightMap;
 		odb::IntMap mItemMap;
 		Knights::Vec2i mCursorPosition;
 		int mCameraId;

@@ -5,7 +5,7 @@
 #ifndef DUNGEONSOFNOUDAR_NDK_ETEXTURES_H
 #define DUNGEONSOFNOUDAR_NDK_ETEXTURES_H
 namespace odb {
-    enum ETextures {
+    enum ETextures : uint8_t {
         Grass,
         Grass2,
         Floor,

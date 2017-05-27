@@ -41,12 +41,12 @@ namespace odb {
 		return 0 <= pos.first && pos.first < Knights::kMapSize && 0 <= pos.second && pos.second < Knights::kMapSize;
 	}
 
-	void LightningStrategy::castPointLight(IntMap &lightMap, int emission, IntMap occluders,
+	void LightningStrategy::castPointLight(LightMap &lightMap, int emission, IntMap occluders,
 	                                       int x, int y) {
 		castLight(Direction::TOP, lightMap, emission, occluders, Vec2i{x, y});
 	}
 
-	void LightningStrategy::castLightInAllDirections(IntMap &lightMap, int emission, IntMap occluders,
+	void LightningStrategy::castLightInAllDirections(LightMap &lightMap, int emission, IntMap occluders,
 	                                                 int x, int y) {
 
 		castLight(Direction::N, lightMap, emission, occluders, Vec2i{x, y - 1});
@@ -69,7 +69,7 @@ namespace odb {
 	}
 
 
-	void LightningStrategy::castLight(Direction from, IntMap &lightMap, int emission,
+	void LightningStrategy::castLight(Direction from, LightMap &lightMap, int emission,
 	                                  IntMap occluders, Vec2i pos) {
 
 		if (emission <= 1) {

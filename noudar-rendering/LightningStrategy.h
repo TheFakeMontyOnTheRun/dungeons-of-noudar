@@ -12,7 +12,7 @@ namespace odb {
 
 
 
-		enum Direction {
+		enum Direction : uint8_t{
 			N,
 			E,
 			S,
@@ -21,18 +21,18 @@ namespace odb {
 			BOTTOM
 		};
 
-		using Vec2i = std::pair<int, int>;
+		using Vec2i = std::pair<int8_t, int8_t>;
 
 		static bool isValid(Vec2i pos);
 
-		static void castLight(Direction from, IntMap &lightMap, int emission,
+		static void castLight(Direction from, LightMap &lightMap, int emission,
 		               IntMap occluders, Vec2i pos);
 
 	public:
-		static void castPointLight(IntMap &lightMap, int emission, IntMap occluders,
+		static void castPointLight(LightMap &lightMap, int emission, IntMap occluders,
 		                                       int x, int y);
 
-		static void castLightInAllDirections(IntMap &lightMap, int emission, IntMap occluders,
+		static void castLightInAllDirections(LightMap &lightMap, int emission, IntMap occluders,
 		                                                 int x, int y);
 	};
 }
