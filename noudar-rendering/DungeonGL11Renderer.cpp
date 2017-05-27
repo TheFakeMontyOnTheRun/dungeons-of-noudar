@@ -185,6 +185,10 @@ namespace odb {
 			8, 11, 15
 	};
 
+#ifdef OSMESA
+    static int DungeonGLES2Renderer::visibility = 4;
+#endif
+
 	VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
 	                                            unsigned short *indexData,
 	                                            unsigned int indices) {
@@ -455,13 +459,16 @@ namespace odb {
         glm::vec3 pos;
         const auto &billboardVBO = mVBORegisters["billboard"];
 
+#ifdef OSMESA
+        mSnapshotAdapter.visibility = visibility;
+#endif
         mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry);
 
 #ifdef OSMESA
-        auto x0 = std::max( 0, snapshot.mCameraPosition.x - 4 );
-        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + 4 );
-        auto z0 = std::max( 0, snapshot.mCameraPosition.y - 4 );
-        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + 4 );
+        auto x0 = std::max( 0, snapshot.mCameraPosition.x - visibility );
+        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + visibility );
+        auto z0 = std::max( 0, snapshot.mCameraPosition.y - visibility );
+        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + visibility );
 #else
         auto x0 = 0;
         auto x1 = Knights::kMapSize - 1;

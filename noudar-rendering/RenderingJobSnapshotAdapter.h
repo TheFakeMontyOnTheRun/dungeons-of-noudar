@@ -43,6 +43,11 @@ namespace odb {
 		static glm::vec2
 		easingAnimationCurveStep(glm::vec2 prevPosition, glm::vec2 destPosition, long animationTime, long timestamp
 		                         );
+
+#ifdef OSMESA
+		static int visibility;
+#endif
+
 	};
 }
 

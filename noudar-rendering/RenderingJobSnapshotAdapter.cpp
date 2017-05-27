@@ -40,6 +40,9 @@
 
 namespace odb {
     const static glm::mat4 identity = glm::mat4(1.0f);
+#ifdef OSMESA
+    static int RenderingJobSnapshotAdapter::visibility;
+#endif
 
 	glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
 #ifndef OSMESA
@@ -100,10 +103,10 @@ namespace odb {
 		batches.clear();
 
 #ifdef OSMESA
-        auto x0 = std::max( 0, snapshot.mCameraPosition.x - 4 );
-        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + 4 );
-        auto z0 = std::max( 0, snapshot.mCameraPosition.y - 4 );
-        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + 4 );
+        auto x0 = std::max( 0, snapshot.mCameraPosition.x - visibility );
+        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + visibility );
+        auto z0 = std::max( 0, snapshot.mCameraPosition.y - visibility );
+        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + visibility );
 #else
         const auto &skyVBO = VBORegisters.at("sky");
         batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),

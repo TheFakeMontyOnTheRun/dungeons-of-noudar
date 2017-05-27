@@ -149,6 +149,10 @@ namespace odb {
 
 		//interactions
 		void resetCamera();
+
+#ifdef OSMESA
+		static int visibility;
+#endif
 	};
 }
 #endif //NOUDARRENDERING_DUNGEONRENDERER_H
