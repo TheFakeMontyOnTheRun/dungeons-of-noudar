@@ -225,7 +225,15 @@ namespace odb {
                 std::vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
-                                         "mace.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{-0.012f, 0.75f}
+                                         "mace.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.912f, 0.7f}
+                                 ),
+                         },
+                                100
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "mace.png", glm::vec2{0.9125f, 0.7f}, glm::vec2{-0.012f, 0.75f}
                                  ),
                          },
                                 150
