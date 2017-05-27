@@ -42,13 +42,17 @@ namespace odb {
     const static glm::mat4 identity = glm::mat4(1.0f);
 
 	glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
-
+#ifndef OSMESA
 		long offset = animationTime;
 		int integerPart = offset % ((kSkyTextureLength * 2) * 1000);
 		float finalOffset = integerPart / 1000.0f;
 
 		return glm::translate(identity, glm::vec3(finalOffset, 0.0f, 0.0f));
+#else
+        return glm::mat4(1.0f);
+#endif
 	}
+
 
 	glm::mat4 RenderingJobSnapshotAdapter::getCubeTransform(glm::vec3 translation, int scale = 1) {
 		return glm::scale( glm::translate(identity, translation), glm::vec3( 1.0f, scale, 1.0f ) );
@@ -129,9 +133,11 @@ namespace odb {
 				}
 
 				auto tile = snapshot.map[z][x];
-
+#ifndef OSMESA
                 Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
-
+#else
+                Shade shade = 1.0f;
+#endif
 				if (x == snapshot.mCursorPosition.x &&
 				    z == snapshot.mCursorPosition.y) {
 					shade = 1.5f;

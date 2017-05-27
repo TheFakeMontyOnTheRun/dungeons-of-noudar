@@ -8,12 +8,14 @@
 namespace odb {
 	const static bool kFogEnabled = false;
 	const static VBORegisterId mNullVBO = "null";
-	const static TextureName mSkyBoxTextureName = "sky";
 	const static TextureName mNullTexture = "null";
 
 	static const long kAnimationLength = 500;
-	const static int kSkyTextureLength = 400;
 
+#ifndef OSMESA
+	const static TextureName mSkyBoxTextureName = "sky";
+	const static int kSkyTextureLength = 400;
+#endif
 	using Shade = float;
 
 	using TextureId = uint8_t;

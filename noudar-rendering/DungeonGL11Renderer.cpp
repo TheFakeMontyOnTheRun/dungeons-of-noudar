@@ -106,14 +106,14 @@ namespace odb {
 			1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 			-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
 	};
-
+#ifndef OSMESA
 	const float DungeonGLES2Renderer::skyVertices[]{
 			-kSkyTextureLength - 20.0f, 10.0f, -200.0f, 0.0f, .0f,
 			-20.0f, 10.0f, -200.0f, 10.0f, 0.0f,
 			-20.0f, 10.0f, 200.0f, 10.0f, 10.0f,
 			-kSkyTextureLength - 20.0f, 10.0f, 200.0f, 0.0f, 10.0f,
 	};
-
+#endif
 	const float DungeonGLES2Renderer::cubeVertices[]{
 //    4________5
 //    /|       /|
@@ -380,9 +380,9 @@ namespace odb {
 		mVBORegisters["leftnear"] = submitVBO((float *) cornerLeftNearVertices, 4,
 		                                      (unsigned short *) cornerLeftNearIndices, 6);
 		mVBORegisters["floor"] = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6);
-
+#ifndef OSMESA
 		mVBORegisters["sky"] = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6);
-
+#endif
 		initTileProperties();
 	}
 
@@ -479,13 +479,17 @@ namespace odb {
                 auto mapItem = snapshot.mItemMap[ z ][ x ];
                 auto actor = snapshot.snapshot[z][x];
                 int splatFrame = snapshot.splat[z][x];
-                Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
+#ifndef OSMESA
+				Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
+#else
+                Shade shade = 1.0f;
+#endif
+				if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
+					shade = 1.5 * shade;
+				}
 
-                if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
-                    shade = 1.5 * shade;
-                }
 
-                if ( mapItem == 't') {
+				if ( mapItem == 't') {
                     pos = glm::vec3(x * 2, -4.0f, z * 2);
                     batches[ETextures::Falcata].emplace_back(
                             std::get<0>(billboardVBO),
