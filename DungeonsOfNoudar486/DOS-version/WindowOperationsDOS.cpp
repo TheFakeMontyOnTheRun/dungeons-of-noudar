@@ -53,7 +53,6 @@
 #include "LoadPNG.h"
 #include "DOSHacks.h"
 
-
 const int bufferWidth = 64;
 const int bufferHeight = 64;
 const int screenWidth = 320;
@@ -63,7 +62,6 @@ bool isActive = false;
 long ms = 0;
 bool automatic = false;
 int imageBuffer[bufferWidth * bufferHeight];
-
 
 std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const std::string& filename ) {
   char c = 219;
@@ -122,11 +120,9 @@ void initMode13h() {
 }
 
 unsigned char getPaletteEntry( int origin ) {
-  unsigned char shade = 0;
-  shade += (((((origin & 0x0000FF)      ) * 4  ) / 255 ) ) << 4;
-  shade += (((((origin & 0x00FF00) >> 8 ) * 4  ) / 255 ) ) << 2;
-  shade += (((((origin & 0xFF0000) >> 16) * 4  ) / 255 ) ) << 0;
-  return shade;
+  return ((((((origin & 0x0000FF)      ) << 2 ) >> 8 ) ) << 4 )
+    + ((((((origin & 0x00FF00) >> 8 ) << 2 ) >> 8 ) ) << 2 )
+    + ((((((origin & 0xFF0000) >> 16) << 2 ) >> 8 ) ) << 0);
 }
 
 void renderPalette() {
@@ -172,7 +168,7 @@ void copyImageBufferToVideoMemory() {
   int offset = 0;
 
   unsigned char buffer[ screenWidth * screenHeight ];
-  unsigned char bg =  getPaletteEntry( 0xFF0000 );
+  unsigned char bg =  getPaletteEntry( 0xAA );
   memset( buffer, bg, screenWidth * screenHeight *sizeof(unsigned char));
 
   int origin = 0;
@@ -248,7 +244,7 @@ char read_char(void)
 void setMainLoop() {
   
   while (!done) {
-    while (kbhit())
+    while (kbhit()) {
       switch (getch()) {
       case 27:
 	done = true;
@@ -292,6 +288,7 @@ void setMainLoop() {
 	dropItem();
 	break;										
       }
+    }
     tick();
   }
 }
