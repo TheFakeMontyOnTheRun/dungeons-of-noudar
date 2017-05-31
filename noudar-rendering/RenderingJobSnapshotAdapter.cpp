@@ -16,7 +16,6 @@
 #include <map>
 #include <vector>
 #include "NativeBitmap.h"
-#include "Texture.h"
 #include "Material.h"
 #include "Trig.h"
 #include "TrigBatch.h"
