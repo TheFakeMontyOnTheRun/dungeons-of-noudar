@@ -656,6 +656,28 @@ namespace odb {
 		mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::Crusader0;
 		mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::Crusader1;
 		mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::Crusader1;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonSpiritAttacking0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kCocoonStanding0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kCocoonStanding1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kWarthogAttacking0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kWarthogAttacking1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kMonkAttacking0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kMonkAttacking1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kMonkStanding0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kMonkStanding1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kFallenAttacking0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kFallenAttacking1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kFallenStanding0] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kFallenStanding1] = ETextures::Foe0b;
 	}
 
 	void DungeonGLES2Renderer::invalidateCachedBatches() {
