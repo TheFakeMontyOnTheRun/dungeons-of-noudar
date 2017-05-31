@@ -218,8 +218,7 @@ namespace odb {
                     auto& repeatedBatches = batches[textureRegistry.at(tileProperties.mFloorRepeatedWallTexture)];
 #ifdef OSMESA
                     pos = glm::vec3(x * 2,
-                                    -5 + (2 * tileProperties.mFloorHeight) - (tileProperties.mFloorRepetitions) -
-                                    1, z * 2);
+                                    -5 + (2 * tileProperties.mFloorHeight) - (tileProperties.mFloorRepetitions) , z * 2);
 
                     repeatedBatches.emplace_back(
                             vboId,
