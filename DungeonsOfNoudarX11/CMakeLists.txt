@@ -118,7 +118,6 @@ set(SOURCE_FILES
         ../gles2-renderer/WavefrontOBJReader.cpp
         ../gles2-renderer/WavefrontMaterialReader.cpp
         ../gles2-renderer/Scene.cpp
-        ../gles2-renderer/Texture.cpp
         ../nanovg/src/nanovg.c
         ../NullSoundSystem/SoundClip.cpp
         ../NullSoundSystem/SoundEmitter.cpp

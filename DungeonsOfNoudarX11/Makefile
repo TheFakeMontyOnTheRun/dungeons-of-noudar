@@ -59,7 +59,6 @@ OBJS = X11-version/main.o \
         ../gles2-renderer/WavefrontOBJReader.o \
         ../gles2-renderer/WavefrontMaterialReader.o \
         ../gles2-renderer/Scene.o \
-        ../gles2-renderer/Texture.o \
         ../nanovg/src/nanovg.o \
         ../OpenALSoundSystem/SoundClip.o \
         ../OpenALSoundSystem/SoundEmitter.o \
