@@ -193,8 +193,8 @@ void copyImageBufferToVideoMemory() {
 
   dosmemput(buffer, screenWidth * screenHeight, 0xa0000);
  
-  gotoxy(1, 18 );
-  printf( "%s\n%d\n%ld", getCurrentObjectName().c_str(), getHP(), ms );
+  gotoxy(1, 22 );
+  printf( "%s\n%d\n%s\n%ld", getCurrentObjectName().c_str(), getHP(), to_string(getCurrentDirection()).c_str(), ms );
   
 }
 
