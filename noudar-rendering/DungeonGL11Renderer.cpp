@@ -39,7 +39,6 @@
 #include "CGameDelegate.h"
 #include "CMap.h"
 #include "NativeBitmap.h"
-#include "Texture.h"
 #include "Logger.h"
 #include "VBORenderingJob.h"
 #include "IRenderer.h"
