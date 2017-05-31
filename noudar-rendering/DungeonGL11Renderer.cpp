@@ -364,7 +364,9 @@ namespace odb {
 
 			float *line = geometryBatch.vertices + (index * kGeometryLineStride);
 			glTexCoord2f(line[3], line[4]);
+#ifndef OSMESA
             glColor3f( shade, shade, shade );
+#endif
 			glVertex3f(line[0], line[1], line[2]);
 		}
 
