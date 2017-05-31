@@ -305,24 +305,26 @@ namespace odb {
         mBitmaps.clear();
 
 		mTextureRegistry["sky"] = ETextures::Skybox;
-		mTextureRegistry["grass"] = ETextures::Grass;
-		mTextureRegistry["floor"] = ETextures::Floor;
-		mTextureRegistry["bricks"] = ETextures::Bricks;
-		mTextureRegistry["arch"] = ETextures::Arch;
-		mTextureRegistry["bars"] = ETextures::Bars;
-		mTextureRegistry["begin"] = ETextures::Begin;
-		mTextureRegistry["exit"] = ETextures::Exit;
-		mTextureRegistry["bricksblood"] = ETextures::BricksBlood;
-		mTextureRegistry["brickscandles"] = ETextures::BricksCandles;
-		mTextureRegistry["stonegrassfar"] = ETextures::StoneGrassFar;
-		mTextureRegistry["grassstonefar"] = ETextures::GrassStoneFar;
-		mTextureRegistry["stonegrassnear"] = ETextures::StoneGrassNear;
-		mTextureRegistry["grassstonenear"] = ETextures::GrassStoneNear;
-		mTextureRegistry["ceiling"] = ETextures::Ceiling;
-		mTextureRegistry["ceilingdoor"] = ETextures::CeilingDoor;
-		mTextureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
-		mTextureRegistry["ceilingend"] = ETextures::CeilingEnd;
-		mTextureRegistry["ceilingbars"] = ETextures::CeilingBars;
+        mTextureRegistry["grass"] = ETextures::Grass;
+        mTextureRegistry["grass2"] = ETextures::Grass2;
+        mTextureRegistry["floor"] = ETextures::Floor;
+        mTextureRegistry["bricks"] = ETextures::Bricks;
+        mTextureRegistry["arch"] = ETextures::Arch;
+        mTextureRegistry["bars"] = ETextures::Bars;
+        mTextureRegistry["begin"] = ETextures::Begin;
+        mTextureRegistry["exit"] = ETextures::Exit;
+        mTextureRegistry["bricksblood"] = ETextures::BricksBlood;
+        mTextureRegistry["brickscandles"] = ETextures::BricksCandles;
+        mTextureRegistry["stonegrassfar"] = ETextures::StoneGrassFar;
+        mTextureRegistry["grassstonefar"] = ETextures::GrassStoneFar;
+        mTextureRegistry["stonegrassnear"] = ETextures::StoneGrassNear;
+        mTextureRegistry["grassstonenear"] = ETextures::GrassStoneNear;
+        mTextureRegistry["ceiling"] = ETextures::Ceiling;
+        mTextureRegistry["ceilingdoor"] = ETextures::CeilingDoor;
+        mTextureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
+        mTextureRegistry["ceilingend"] = ETextures::CeilingEnd;
+        mTextureRegistry["ceilingbars"] = ETextures::CeilingBars;
+
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
