@@ -73,4 +73,5 @@ std::string getCurrentObjectName();
 
 int getHP();
 
+Knights::EDirection getCurrentDirection();
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

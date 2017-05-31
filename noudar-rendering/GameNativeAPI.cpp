@@ -750,3 +750,9 @@ int getHP() {
     return actor->getHP();
 }
 
+Knights::EDirection getCurrentDirection() {
+    auto map = game->getMap();
+    auto actor = map->getAvatar();
+
+    return actor->getDirection();
+}
