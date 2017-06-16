@@ -185,7 +185,7 @@ namespace odb {
 	};
 
 #ifdef OSMESA
-    static int DungeonGLES2Renderer::visibility = 4;
+    static int DungeonGLES2Renderer::visibility = 8;
 #endif
 
 	VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
