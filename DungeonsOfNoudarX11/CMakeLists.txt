@@ -15,7 +15,6 @@ include_directories(../gsl)
 set(TEST_SOURCE_FILES
         ../tests/src/TestVisibilityStrategy.cpp
         ../tests/src/TestVec2i.cpp
-        ../tests/src/TestRenderingJobSnapshotAdapter.cpp
         ../googletest/googlemock/src/gmock-all.cc
         ../googletest/googlemock/src/gmock_main.cc
         ../googletest/googletest/src/gtest-all.cc
