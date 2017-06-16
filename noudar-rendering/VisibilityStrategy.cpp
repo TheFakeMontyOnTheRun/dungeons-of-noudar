@@ -36,6 +36,13 @@
 
 namespace odb {
 
+    const bool kNarrowByDistance =
+#ifdef OSMESA
+    true;
+#else
+    false;
+#endif
+
 	bool VisibilityStrategy::isValid(Knights::Vec2i pos) {
 		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
 	}
@@ -137,17 +144,29 @@ namespace odb {
 
             //The -1 is due to the fact I will add a new element.
 
-			if ( ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
+            int distance = ( currentPos.y - originalPos.y );
+            int divisor = 1;
+            int narrowing;
+#ifdef OSMESA
+            if ( std::abs( distance ) > 8 ) {
+                continue;
+            }
+            divisor = 2;
+//            narrowing = distance;
+            narrowing= divisor * 8;
+#endif
+
+			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) >= -std::abs(narrowing/divisor) )&& ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + leftOffset.x, currentPos.y + leftOffset.y};
 				++stackPos;
 			}
 
-			if ( ( currentPos.x - originalPos.x ) >= 0 && stackPos < positions.size() - 1) {
+			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) <= std::abs(narrowing/divisor) ) && ( currentPos.x - originalPos.x ) >= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + rightOffset.x, currentPos.y + rightOffset.y};
 				++stackPos;
 			}
 
-            if (( currentPos.y - originalPos.y ) <= 0 && stackPos < positions.size() - 1) {
+            if (  distance <= 0 && stackPos < positions.size() - 1) {
                 auto mapOffset = Knights::mapOffsetForDirection(Knights::EDirection::kNorth);
                 positions[stackPos] =  Knights::Vec2i{currentPos.x + mapOffset.x, currentPos.y + mapOffset.y};
                 ++stackPos;
