@@ -76,14 +76,15 @@ namespace odb {
                 snapshot.splat[ y ][ x ] = -1;
                 snapshot.mVisibilityMap[ y ][ x ] = EVisibility::kVisible;
 
-	            auto element = map.getMapAt( {x, y} );
 
-	            if ( element != '0' ) {
+                auto element = map.getElementAt( {x, y} );
+
+                if ( element != '0' ) {
                     snapshot.map[ y ][ x ] = element;
-	            }
+                }
 
                 if ( map.getItemAt( {x,y})) {
-                    snapshot.mItemMap[ y ][ x ] = map.getElementAt( {x,y} );
+                    snapshot.mItemMap[ y ][ x ] = map.getItemViewAt( {x,y} );
                 } else {
                     snapshot.mItemMap[ y ][ x ] = 0;
                 }
