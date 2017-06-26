@@ -293,6 +293,16 @@ namespace odb {
 	void DungeonGLES2Renderer::printVerboseDriverInformation() {
 	}
 
+	void DungeonGLES2Renderer::reloadTextures() {
+		mTextures.clear();
+
+		for (auto &bitmap : mBitmaps) {
+			mTextures.push_back(uploadTextureData(bitmap));
+		}
+
+		mBitmaps.clear();
+	}
+
 	bool DungeonGLES2Renderer::init(float w, float h, const std::string &vertexShader,
 	                                const std::string &fragmentShader) {
 
@@ -310,12 +320,6 @@ namespace odb {
 
 		glViewport(0, 0, w, h);
 		checkGlError("glViewport");
-
-		for (auto &bitmap : mBitmaps) {
-			mTextures.push_back(uploadTextureData(bitmap));
-		}
-
-		mBitmaps.clear();
 
 		mTextureRegistry["sky"] = ETextures::Skybox;
 		mTextureRegistry["grass"] = ETextures::Grass;
@@ -347,13 +351,17 @@ namespace odb {
 		return true;
 	}
 
+	void DungeonGLES2Renderer::unloadTextures() {
+		for (auto &texture : mTextures) {
+			glDeleteTextures(1, &texture);
+		}
+	}
+
 	DungeonGLES2Renderer::~DungeonGLES2Renderer() {
 		odb::Logger::log("Destroying the renderer");
 
 		if (kShouldDestroyThingsManually) {
-			for (auto &texture : mTextures) {
-				glDeleteTextures(1, &texture);
-			}
+			unloadTextures();
 			deleteVBOs();
             glDeleteShader(gProgram);
 		}

@@ -98,46 +98,6 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
 
-	auto textures = {
-			loadPNG("grass.png", fileLoader),
-            loadPNG("grass2.png", fileLoader),
-			loadPNG("stonefloor.png", fileLoader),
-			loadPNG("bricks.png", fileLoader),
-			loadPNG("arch.png", fileLoader),
-			loadPNG("bars.png", fileLoader),
-			loadPNG("begin.png", fileLoader),
-			loadPNG("exit.png", fileLoader),
-			loadPNG("bricks_blood.png", fileLoader),
-			loadPNG("bricks_candles.png", fileLoader),
-			loadPNG("foe0.png", fileLoader),
-			loadPNG("foe1.png", fileLoader),
-			loadPNG("foe2.png", fileLoader),
-			loadPNG("foe3.png", fileLoader),
-			loadPNG("foe4.png", fileLoader),
-			loadPNG("foe5.png", fileLoader),
-			loadPNG("crusader0.png", fileLoader),
-			loadPNG("crusader1.png", fileLoader),
-			loadPNG("crusader2.png", fileLoader),
-			loadPNG("shadow.png", fileLoader),
-			loadPNG("ceiling.png", fileLoader),
-			loadPNG("ceilingdoor.png", fileLoader),
-			loadPNG("ceilingbegin.png", fileLoader),
-			loadPNG("ceilingend.png", fileLoader),
-			loadPNG("splat0.png", fileLoader),
-			loadPNG("splat1.png", fileLoader),
-			loadPNG("splat2.png", fileLoader),
-			loadPNG("ceilingbars.png", fileLoader),
-			loadPNG("clouds.png", fileLoader),
-			loadPNG("stonegrassfar.png", fileLoader),
-			loadPNG("grassstonefar.png", fileLoader),
-			loadPNG("stonegrassnear.png", fileLoader),
-			loadPNG("grassstonenear.png", fileLoader),
-			loadPNG("cross.png", fileLoader),
-            loadPNG("crossbow.png", fileLoader),
-            loadPNG("falcata.png", fileLoader),
-            loadPNG("bull2.png", fileLoader),
-	};
-
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 
 	if ( overlayRenderer == nullptr ) {
@@ -157,12 +117,56 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
     overlayRenderer->playAnimation( animationTime, "hand-still" );
     #endif
 
-	gles2Renderer->setTexture(textures);
+
 	animationTime = 0;
 
 	auto toReturn = gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
 
-	gles2Renderer->setTileProperties( tileProperties );
+    auto textures = {
+            loadPNG("grass.png", fileLoader),
+            loadPNG("grass2.png", fileLoader),
+            loadPNG("stonefloor.png", fileLoader),
+            loadPNG("bricks.png", fileLoader),
+            loadPNG("arch.png", fileLoader),
+            loadPNG("bars.png", fileLoader),
+            loadPNG("begin.png", fileLoader),
+            loadPNG("exit.png", fileLoader),
+            loadPNG("bricks_blood.png", fileLoader),
+            loadPNG("bricks_candles.png", fileLoader),
+            loadPNG("foe0.png", fileLoader),
+            loadPNG("foe1.png", fileLoader),
+            loadPNG("foe2.png", fileLoader),
+            loadPNG("foe3.png", fileLoader),
+            loadPNG("foe4.png", fileLoader),
+            loadPNG("foe5.png", fileLoader),
+            loadPNG("crusader0.png", fileLoader),
+            loadPNG("crusader1.png", fileLoader),
+            loadPNG("crusader2.png", fileLoader),
+            loadPNG("shadow.png", fileLoader),
+            loadPNG("ceiling.png", fileLoader),
+            loadPNG("ceilingdoor.png", fileLoader),
+            loadPNG("ceilingbegin.png", fileLoader),
+            loadPNG("ceilingend.png", fileLoader),
+            loadPNG("splat0.png", fileLoader),
+            loadPNG("splat1.png", fileLoader),
+            loadPNG("splat2.png", fileLoader),
+            loadPNG("ceilingbars.png", fileLoader),
+            loadPNG("clouds.png", fileLoader),
+            loadPNG("stonegrassfar.png", fileLoader),
+            loadPNG("grassstonefar.png", fileLoader),
+            loadPNG("stonegrassnear.png", fileLoader),
+            loadPNG("grassstonenear.png", fileLoader),
+            loadPNG("cross.png", fileLoader),
+            loadPNG("crossbow.png", fileLoader),
+            loadPNG("falcata.png", fileLoader),
+            loadPNG("bull2.png", fileLoader),
+    };
+
+    gles2Renderer->setTexture(textures);
+    gles2Renderer->reloadTextures();
+
+
+    gles2Renderer->setTileProperties( tileProperties );
 
 #ifndef OSMESA
 	for  ( const auto& mesh : loadedMeshes ) {
@@ -427,7 +431,48 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 	};
 
 	auto onLevelLoaded = [&]() {
-	    forceDirection( 0 );
+
+        auto textures = {
+                loadPNG("lava.png", fileLoaderDelegate),
+                loadPNG("bricks.png", fileLoaderDelegate),
+                loadPNG("stonefloor.png", fileLoaderDelegate),
+                loadPNG("bricks.png", fileLoaderDelegate),
+                loadPNG("arch.png", fileLoaderDelegate),
+                loadPNG("bars.png", fileLoaderDelegate),
+                loadPNG("begin.png", fileLoaderDelegate),
+                loadPNG("exit.png", fileLoaderDelegate),
+                loadPNG("bricks_blood.png", fileLoaderDelegate),
+                loadPNG("bricks_candles.png", fileLoaderDelegate),
+                loadPNG("foe0.png", fileLoaderDelegate),
+                loadPNG("foe1.png", fileLoaderDelegate),
+                loadPNG("foe2.png", fileLoaderDelegate),
+                loadPNG("foe3.png", fileLoaderDelegate),
+                loadPNG("foe4.png", fileLoaderDelegate),
+                loadPNG("foe5.png", fileLoaderDelegate),
+                loadPNG("crusader0.png", fileLoaderDelegate),
+                loadPNG("crusader1.png", fileLoaderDelegate),
+                loadPNG("crusader2.png", fileLoaderDelegate),
+                loadPNG("shadow.png", fileLoaderDelegate),
+                loadPNG("ceiling.png", fileLoaderDelegate),
+                loadPNG("ceilingdoor.png", fileLoaderDelegate),
+                loadPNG("ceilingbegin.png", fileLoaderDelegate),
+                loadPNG("ceilingend.png", fileLoaderDelegate),
+                loadPNG("splat0.png", fileLoaderDelegate),
+                loadPNG("splat1.png", fileLoaderDelegate),
+                loadPNG("splat2.png", fileLoaderDelegate),
+                loadPNG("ceilingbars.png", fileLoaderDelegate),
+                loadPNG("clouds.png", fileLoaderDelegate),
+                loadPNG("stonegrassfar.png", fileLoaderDelegate),
+                loadPNG("grassstonefar.png", fileLoaderDelegate),
+                loadPNG("stonegrassnear.png", fileLoaderDelegate),
+                loadPNG("grassstonenear.png", fileLoaderDelegate),
+                loadPNG("cross.png", fileLoaderDelegate),
+                loadPNG("crossbow.png", fileLoaderDelegate),
+                loadPNG("falcata.png", fileLoaderDelegate),
+                loadPNG("bull2.png", fileLoaderDelegate),
+        };
+
+        forceDirection( 0 );
         render->reset();
         animationList.clear();
         splatAnimation.clear();
@@ -435,6 +480,8 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
         hasActiveSplats = false;
 
         if ( gles2Renderer != nullptr ) {
+            gles2Renderer->setTexture(textures);
+            gles2Renderer->reloadTextures();
 			gles2Renderer->resetCamera();
 		}
 

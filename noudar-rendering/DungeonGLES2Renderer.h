@@ -101,6 +101,10 @@ namespace odb {
 		//basic bookeeping
 		DungeonGLES2Renderer();
 
+		void reloadTextures();
+
+		void unloadTextures();
+
 		~DungeonGLES2Renderer();
 
 		bool init(float w, float h, const std::string &vertexShader,
