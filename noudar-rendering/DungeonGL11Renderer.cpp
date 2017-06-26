@@ -257,7 +257,8 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::reloadTextures() {
-		mTextures.clear();
+        unloadTextures();
+        mTextures.clear();
 
 		for (auto &bitmap : mBitmaps) {
 #ifndef OSMESA

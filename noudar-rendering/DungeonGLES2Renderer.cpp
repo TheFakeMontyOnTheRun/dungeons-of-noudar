@@ -294,6 +294,7 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::reloadTextures() {
+        unloadTextures();
 		mTextures.clear();
 
 		for (auto &bitmap : mBitmaps) {
