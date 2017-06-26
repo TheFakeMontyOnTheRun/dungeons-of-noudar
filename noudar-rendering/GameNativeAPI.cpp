@@ -94,6 +94,31 @@ std::shared_ptr<odb::SoundListener> mainListener;
 std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 #endif
 
+std::vector<std::shared_ptr<odb::NativeBitmap>>
+loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
+
+    std::stringstream roomName("");
+    roomName << "tiles";
+    roomName << levelNumber;
+    roomName << ".lst";
+    std::string tilesFilename = roomName.str();
+    auto data = fileLoader->loadFileFromPath( tilesFilename );
+    std::stringstream dataStream;
+
+    dataStream << data;
+
+    std::string buffer;
+
+    std::vector<std::shared_ptr<odb::NativeBitmap>> tilesToLoad;
+
+    while (dataStream.good()) {
+        std::getline(dataStream, buffer);
+        tilesToLoad.push_back(loadPNG(buffer, fileLoader));
+    }
+
+    return tilesToLoad;
+}
+
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
@@ -122,45 +147,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	auto toReturn = gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
 
-    auto textures = {
-            loadPNG("grass.png", fileLoader),
-            loadPNG("grass2.png", fileLoader),
-            loadPNG("stonefloor.png", fileLoader),
-            loadPNG("bricks.png", fileLoader),
-            loadPNG("arch.png", fileLoader),
-            loadPNG("bars.png", fileLoader),
-            loadPNG("begin.png", fileLoader),
-            loadPNG("exit.png", fileLoader),
-            loadPNG("bricks_blood.png", fileLoader),
-            loadPNG("bricks_candles.png", fileLoader),
-            loadPNG("foe0.png", fileLoader),
-            loadPNG("foe1.png", fileLoader),
-            loadPNG("foe2.png", fileLoader),
-            loadPNG("foe3.png", fileLoader),
-            loadPNG("foe4.png", fileLoader),
-            loadPNG("foe5.png", fileLoader),
-            loadPNG("crusader0.png", fileLoader),
-            loadPNG("crusader1.png", fileLoader),
-            loadPNG("crusader2.png", fileLoader),
-            loadPNG("shadow.png", fileLoader),
-            loadPNG("ceiling.png", fileLoader),
-            loadPNG("ceilingdoor.png", fileLoader),
-            loadPNG("ceilingbegin.png", fileLoader),
-            loadPNG("ceilingend.png", fileLoader),
-            loadPNG("splat0.png", fileLoader),
-            loadPNG("splat1.png", fileLoader),
-            loadPNG("splat2.png", fileLoader),
-            loadPNG("ceilingbars.png", fileLoader),
-            loadPNG("clouds.png", fileLoader),
-            loadPNG("stonegrassfar.png", fileLoader),
-            loadPNG("grassstonefar.png", fileLoader),
-            loadPNG("stonegrassnear.png", fileLoader),
-            loadPNG("grassstonenear.png", fileLoader),
-            loadPNG("cross.png", fileLoader),
-            loadPNG("crossbow.png", fileLoader),
-            loadPNG("falcata.png", fileLoader),
-            loadPNG("bull2.png", fileLoader),
-    };
+    auto textures = loadTexturesForLevel( 0, fileLoader );
 
     gles2Renderer->setTexture(textures);
     gles2Renderer->reloadTextures();
@@ -432,45 +419,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 
 	auto onLevelLoaded = [&]() {
 
-        auto textures = {
-                loadPNG("lava.png", fileLoaderDelegate),
-                loadPNG("bricks.png", fileLoaderDelegate),
-                loadPNG("stonefloor.png", fileLoaderDelegate),
-                loadPNG("bricks.png", fileLoaderDelegate),
-                loadPNG("arch.png", fileLoaderDelegate),
-                loadPNG("bars.png", fileLoaderDelegate),
-                loadPNG("begin.png", fileLoaderDelegate),
-                loadPNG("exit.png", fileLoaderDelegate),
-                loadPNG("bricks_blood.png", fileLoaderDelegate),
-                loadPNG("bricks_candles.png", fileLoaderDelegate),
-                loadPNG("foe0.png", fileLoaderDelegate),
-                loadPNG("foe1.png", fileLoaderDelegate),
-                loadPNG("foe2.png", fileLoaderDelegate),
-                loadPNG("foe3.png", fileLoaderDelegate),
-                loadPNG("foe4.png", fileLoaderDelegate),
-                loadPNG("foe5.png", fileLoaderDelegate),
-                loadPNG("crusader0.png", fileLoaderDelegate),
-                loadPNG("crusader1.png", fileLoaderDelegate),
-                loadPNG("crusader2.png", fileLoaderDelegate),
-                loadPNG("shadow.png", fileLoaderDelegate),
-                loadPNG("ceiling.png", fileLoaderDelegate),
-                loadPNG("ceilingdoor.png", fileLoaderDelegate),
-                loadPNG("ceilingbegin.png", fileLoaderDelegate),
-                loadPNG("ceilingend.png", fileLoaderDelegate),
-                loadPNG("splat0.png", fileLoaderDelegate),
-                loadPNG("splat1.png", fileLoaderDelegate),
-                loadPNG("splat2.png", fileLoaderDelegate),
-                loadPNG("ceilingbars.png", fileLoaderDelegate),
-                loadPNG("clouds.png", fileLoaderDelegate),
-                loadPNG("stonegrassfar.png", fileLoaderDelegate),
-                loadPNG("grassstonefar.png", fileLoaderDelegate),
-                loadPNG("stonegrassnear.png", fileLoaderDelegate),
-                loadPNG("grassstonenear.png", fileLoaderDelegate),
-                loadPNG("cross.png", fileLoaderDelegate),
-                loadPNG("crossbow.png", fileLoaderDelegate),
-                loadPNG("falcata.png", fileLoaderDelegate),
-                loadPNG("bull2.png", fileLoaderDelegate),
-        };
+        auto textures = loadTexturesForLevel( game != nullptr ? game->getLevelNumber() : 0, fileLoaderDelegate );
 
         forceDirection( 0 );
         render->reset();
