@@ -80,9 +80,9 @@ namespace odb {
         pos = std::next(pos);
         properties.mFloorRepetitions = std::atoi( pos->c_str() );
         pos = std::next(pos);
-        properties.mCeilingHeight = atod( pos->c_str() );
+        properties.mCeilingHeight = atof( pos->c_str() );
         pos = std::next(pos);
-        properties.mFloorHeight = atod( pos->c_str() );
+        properties.mFloorHeight = atof( pos->c_str() );
 
         return properties;
     }

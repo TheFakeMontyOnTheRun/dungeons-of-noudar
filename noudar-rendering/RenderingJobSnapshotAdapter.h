@@ -30,7 +30,7 @@ namespace odb {
 
 		static glm::mat4 getCornerLeftNearTransform(glm::vec3 translation);
 
-		static glm::mat4 getCubeTransform(glm::vec3 translation, int scale);
+		static glm::mat4 getCubeTransform(glm::vec3 translation, float scale);
 
 	public:
 		static void
