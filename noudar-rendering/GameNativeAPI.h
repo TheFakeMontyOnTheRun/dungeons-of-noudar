@@ -63,8 +63,6 @@ void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IF
 
 void forceDirection( int direction );
 
-void setTileProperties( std::string tileProperties );
-
 void interact();
 
 bool isThereAnyObjectInFrontOfYou();

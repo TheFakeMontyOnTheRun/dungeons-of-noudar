@@ -119,6 +119,19 @@ loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelega
     return tilesToLoad;
 }
 
+odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+    std::stringstream roomName("");
+    roomName << "tiles";
+    roomName << levelNumber;
+    roomName << ".prp";
+    std::string filename = roomName.str();
+
+    auto data = fileLoader->loadFileFromPath( filename );
+
+    return odb::CTile3DProperties::parsePropertyList( data );
+}
+
+
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
@@ -153,7 +166,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
     gles2Renderer->reloadTextures();
 
 
-    gles2Renderer->setTileProperties( tileProperties );
+    gles2Renderer->setTileProperties( loadTileProperties( game != nullptr ? game->getLevelNumber() : 0, fileLoader ) );
 
 #ifndef OSMESA
 	for  ( const auto& mesh : loadedMeshes ) {
@@ -433,6 +446,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
         if ( gles2Renderer != nullptr ) {
             gles2Renderer->setTexture(textures);
             gles2Renderer->reloadTextures();
+            gles2Renderer->setTileProperties( loadTileProperties( game != nullptr ? game->getLevelNumber() : 0, fileLoaderDelegate ) );
 			gles2Renderer->resetCamera();
 		}
 
@@ -457,10 +471,6 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 	gameDelegate->setProjectileCallback( onProjectileHit );
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
-
-	auto tilesData = fileLoaderDelegate->loadFileFromPath(tilePropertiesFile);
-
-	setTileProperties( tilesData );
 
 	if ( game != nullptr ) {
 		game->tick();
@@ -546,11 +556,6 @@ void setSnapshot(const odb::NoudarDungeonSnapshot& newSnapshot ) {
 
 	updateCharacterMovements( snapshot.ids );
 }
-
-void setTileProperties( std::string tilePropertiesData ) {
-	tileProperties = odb::CTile3DProperties::parsePropertyList( tilePropertiesData );
-}
-
 
 void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 #ifndef OSMESA

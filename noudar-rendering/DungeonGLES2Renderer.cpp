@@ -781,6 +781,8 @@ namespace odb {
 
 	void DungeonGLES2Renderer::setTileProperties(CTilePropertyMap map) {
 
+		mTileProperties.clear();
+
 		auto it = std::begin(map);
 		auto mapEnd = std::end(map);
 
