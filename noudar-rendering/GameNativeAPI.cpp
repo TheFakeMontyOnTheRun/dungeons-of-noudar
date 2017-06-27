@@ -94,49 +94,47 @@ std::shared_ptr<odb::SoundListener> mainListener;
 std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 #endif
 
+std::vector<std::shared_ptr<odb::NativeBitmap>>
+loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
+
+    std::stringstream roomName("");
+    roomName << "tiles";
+    roomName << levelNumber;
+    roomName << ".lst";
+    std::string tilesFilename = roomName.str();
+    auto data = fileLoader->loadFileFromPath( tilesFilename );
+    std::stringstream dataStream;
+
+    dataStream << data;
+
+    std::string buffer;
+
+    std::vector<std::shared_ptr<odb::NativeBitmap>> tilesToLoad;
+
+    while (dataStream.good()) {
+        std::getline(dataStream, buffer);
+        tilesToLoad.push_back(loadPNG(buffer, fileLoader));
+    }
+
+    return tilesToLoad;
+}
+
+odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+    std::stringstream roomName("");
+    roomName << "tiles";
+    roomName << levelNumber;
+    roomName << ".prp";
+    std::string filename = roomName.str();
+
+    auto data = fileLoader->loadFileFromPath( filename );
+
+    return odb::CTile3DProperties::parsePropertyList( data );
+}
+
+
 bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentShader, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
-
-	auto textures = {
-			loadPNG("grass.png", fileLoader),
-            loadPNG("grass2.png", fileLoader),
-			loadPNG("stonefloor.png", fileLoader),
-			loadPNG("bricks.png", fileLoader),
-			loadPNG("arch.png", fileLoader),
-			loadPNG("bars.png", fileLoader),
-			loadPNG("begin.png", fileLoader),
-			loadPNG("exit.png", fileLoader),
-			loadPNG("bricks_blood.png", fileLoader),
-			loadPNG("bricks_candles.png", fileLoader),
-			loadPNG("foe0.png", fileLoader),
-			loadPNG("foe1.png", fileLoader),
-			loadPNG("foe2.png", fileLoader),
-			loadPNG("foe3.png", fileLoader),
-			loadPNG("foe4.png", fileLoader),
-			loadPNG("foe5.png", fileLoader),
-			loadPNG("crusader0.png", fileLoader),
-			loadPNG("crusader1.png", fileLoader),
-			loadPNG("crusader2.png", fileLoader),
-			loadPNG("shadow.png", fileLoader),
-			loadPNG("ceiling.png", fileLoader),
-			loadPNG("ceilingdoor.png", fileLoader),
-			loadPNG("ceilingbegin.png", fileLoader),
-			loadPNG("ceilingend.png", fileLoader),
-			loadPNG("splat0.png", fileLoader),
-			loadPNG("splat1.png", fileLoader),
-			loadPNG("splat2.png", fileLoader),
-			loadPNG("ceilingbars.png", fileLoader),
-			loadPNG("clouds.png", fileLoader),
-			loadPNG("stonegrassfar.png", fileLoader),
-			loadPNG("grassstonefar.png", fileLoader),
-			loadPNG("stonegrassnear.png", fileLoader),
-			loadPNG("grassstonenear.png", fileLoader),
-			loadPNG("cross.png", fileLoader),
-            loadPNG("crossbow.png", fileLoader),
-            loadPNG("falcata.png", fileLoader),
-            loadPNG("bull2.png", fileLoader),
-	};
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 
@@ -157,12 +155,18 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
     overlayRenderer->playAnimation( animationTime, "hand-still" );
     #endif
 
-	gles2Renderer->setTexture(textures);
+
 	animationTime = 0;
 
 	auto toReturn = gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
 
-	gles2Renderer->setTileProperties( tileProperties );
+    auto textures = loadTexturesForLevel( 0, fileLoader );
+
+    gles2Renderer->setTexture(textures);
+    gles2Renderer->reloadTextures();
+
+
+    gles2Renderer->setTileProperties( loadTileProperties( game != nullptr ? game->getLevelNumber() : 0, fileLoader ) );
 
 #ifndef OSMESA
 	for  ( const auto& mesh : loadedMeshes ) {
@@ -426,8 +430,13 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 #endif
 	};
 
-	auto onLevelLoaded = [&]() {
-	    forceDirection( 0 );
+
+
+	auto onLevelLoaded = [fileLoaderDelegate]() {
+
+        auto textures = loadTexturesForLevel( game != nullptr ? game->getLevelNumber() : 0, fileLoaderDelegate );
+
+        forceDirection( 0 );
         render->reset();
         animationList.clear();
         splatAnimation.clear();
@@ -435,6 +444,9 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
         hasActiveSplats = false;
 
         if ( gles2Renderer != nullptr ) {
+            gles2Renderer->setTexture(textures);
+            gles2Renderer->reloadTextures();
+            gles2Renderer->setTileProperties( loadTileProperties( game != nullptr ? game->getLevelNumber() : 0, fileLoaderDelegate ) );
 			gles2Renderer->resetCamera();
 		}
 
@@ -459,10 +471,6 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 	gameDelegate->setProjectileCallback( onProjectileHit );
 
 	game = std::make_shared<Knights::CGame>( fileLoaderDelegate, render, gameDelegate );
-
-	auto tilesData = fileLoaderDelegate->loadFileFromPath(tilePropertiesFile);
-
-	setTileProperties( tilesData );
 
 	if ( game != nullptr ) {
 		game->tick();
@@ -548,11 +556,6 @@ void setSnapshot(const odb::NoudarDungeonSnapshot& newSnapshot ) {
 
 	updateCharacterMovements( snapshot.ids );
 }
-
-void setTileProperties( std::string tilePropertiesData ) {
-	tileProperties = odb::CTile3DProperties::parsePropertyList( tilePropertiesData );
-}
-
 
 void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 #ifndef OSMESA

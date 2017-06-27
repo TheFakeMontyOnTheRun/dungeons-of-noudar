@@ -56,7 +56,7 @@ namespace odb {
 	}
 
 
-	glm::mat4 RenderingJobSnapshotAdapter::getCubeTransform(glm::vec3 translation, int scale = 1) {
+	glm::mat4 RenderingJobSnapshotAdapter::getCubeTransform(glm::vec3 translation, float scale = 1.0f) {
 		return glm::scale( glm::translate(identity, translation), glm::vec3( 1.0f, scale, 1.0f ) );
 	}
 
@@ -153,7 +153,7 @@ namespace odb {
 
 
 				if (tileProperties.mCeilingTexture != mNullTexture) {
-					pos = glm::vec3(x * 2, -5 + (2 * tileProperties.mCeilingHeight), z * 2);
+					pos = glm::vec3(x * 2, -5 + (2.0f * tileProperties.mCeilingHeight), z * 2);
 					batches[textureRegistry.at(tileProperties.mCeilingTexture)].emplace_back(std::get<0>(floorVBO),
 					                                                                         std::get<1>(floorVBO),
 					                                                                         std::get<2>(floorVBO),
@@ -171,7 +171,7 @@ namespace odb {
 
 #ifdef OSMESA
                     pos = glm::vec3(x * 2,
-                                    -4 + (2 * tileProperties.mCeilingHeight) + (tileProperties.mCeilingRepetitions) - 1,
+                                    -4 + (2.0f * tileProperties.mCeilingHeight) + (tileProperties.mCeilingRepetitions) - 1.0f,
                                     z * 2);
 
                     repeatedBatches.emplace_back(
@@ -199,7 +199,7 @@ namespace odb {
 				if (tileProperties.mMainWallTexture != mNullTexture) {
 					const auto &tileVBO = VBORegisters.at(tileProperties.mVBOToRender);
 
-					pos = glm::vec3(x * 2, -4, z * 2);
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
 
 					batches[textureRegistry.at(tileProperties.mMainWallTexture)].emplace_back(
 							std::get<0>(tileVBO),
@@ -217,7 +217,7 @@ namespace odb {
                     auto& repeatedBatches = batches[textureRegistry.at(tileProperties.mFloorRepeatedWallTexture)];
 #ifdef OSMESA
                     pos = glm::vec3(x * 2,
-                                    -5 + (2 * tileProperties.mFloorHeight) - (tileProperties.mFloorRepetitions) , z * 2);
+                                    -5.0f + (2.0f * tileProperties.mFloorHeight) - (tileProperties.mFloorRepetitions) , z * 2);
 
                     repeatedBatches.emplace_back(
                             vboId,
@@ -242,7 +242,7 @@ namespace odb {
 				}
 
 				if (tileProperties.mFloorTexture != mNullTexture) {
-					pos = glm::vec3(x * 2, -5 + (2 * tileProperties.mFloorHeight), z * 2);
+					pos = glm::vec3(x * 2, -5.0f + (2.0f * tileProperties.mFloorHeight), z * 2);
 					batches[textureRegistry.at(tileProperties.mFloorTexture)].emplace_back(std::get<0>(floorVBO),
 					                                                                       std::get<1>(floorVBO),
 					                                                                       std::get<2>(floorVBO),

@@ -256,6 +256,20 @@ namespace odb {
 	void DungeonGLES2Renderer::printVerboseDriverInformation() {
 	}
 
+	void DungeonGLES2Renderer::reloadTextures() {
+        unloadTextures();
+        mTextures.clear();
+
+		for (auto &bitmap : mBitmaps) {
+#ifndef OSMESA
+			odb::Logger::log("index: %d", index);
+#endif
+			mTextures.push_back(uploadTextureData(bitmap));
+		}
+
+		mBitmaps.clear();
+	}
+
 	bool DungeonGLES2Renderer::init(float w, float h, const std::string &vertexShader,
 	                                const std::string &fragmentShader) {
 
@@ -294,15 +308,6 @@ namespace odb {
 		odb::Logger::log("bitmaps size as to upload: %d", mBitmaps.size());
 #endif
 
-		for (auto &bitmap : mBitmaps) {
-#ifndef OSMESA
-			odb::Logger::log("index: %d", index);
-#endif
-			mTextures.push_back(uploadTextureData(bitmap));
-		}
-
-        mBitmaps.clear();
-
 		mTextureRegistry["sky"] = ETextures::Skybox;
         mTextureRegistry["grass"] = ETextures::Grass;
         mTextureRegistry["grass2"] = ETextures::Grass2;
@@ -333,14 +338,18 @@ namespace odb {
 		return true;
 	}
 
+	void DungeonGLES2Renderer::unloadTextures() {
+		for (auto &texture : mTextures) {
+			glDeleteTextures(1, &texture);
+		}
+	}
+
 	DungeonGLES2Renderer::~DungeonGLES2Renderer() {
 		odb::Logger::log("Destroying the renderer");
 
 		if (kShouldDestroyThingsManually) {
 			deleteVBOs();
-			for (auto &texture : mTextures) {
-				glDeleteTextures(1, &texture);
-			}
+			unloadTextures();
 		}
 	}
 
@@ -786,6 +795,8 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::setTileProperties(CTilePropertyMap map) {
+
+		mTileProperties.clear();
 
 		auto it = std::begin(map);
 		auto mapEnd = std::end(map);
