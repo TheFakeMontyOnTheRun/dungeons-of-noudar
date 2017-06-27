@@ -417,7 +417,9 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 #endif
 	};
 
-	auto onLevelLoaded = [&]() {
+
+
+	auto onLevelLoaded = [fileLoaderDelegate]() {
 
         auto textures = loadTexturesForLevel( game != nullptr ? game->getLevelNumber() : 0, fileLoaderDelegate );
 
