@@ -94,6 +94,25 @@ std::shared_ptr<odb::SoundListener> mainListener;
 std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 #endif
 
+std::vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+	auto data = fileLoader->loadFileFromPath( filename );
+	std::stringstream dataStream;
+
+	dataStream << data;
+
+	std::string buffer;
+
+	std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
+
+	while (dataStream.good()) {
+		std::getline(dataStream, buffer);
+
+		toReturn.push_back(loadPNG(buffer, fileLoader));
+	}
+
+	return toReturn;
+}
+
 std::vector<std::vector<std::shared_ptr<odb::NativeBitmap>>>
 loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
 
@@ -114,7 +133,17 @@ loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelega
     while (dataStream.good()) {
         std::getline(dataStream, buffer);
         std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
-        textures.push_back(loadPNG(buffer, fileLoader));
+
+
+		if (buffer.substr(buffer.length() - 4) == ".lst") {
+			auto frames = loadBitmapList(buffer, fileLoader );
+			for ( const auto frame : frames ) {
+				textures.push_back(frame);
+			}
+		} else {
+			textures.push_back(loadPNG(buffer, fileLoader));
+		}
+
         tilesToLoad.push_back(textures);
     }
 
