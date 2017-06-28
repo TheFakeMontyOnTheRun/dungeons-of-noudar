@@ -51,7 +51,7 @@ namespace odb {
 		void initTileProperties();
 
 	private:
-
+        int frame = 0;
 		int vertexAttributePosition;
 		int modelMatrixAttributePosition;
 		int samplerUniformPosition;
@@ -66,7 +66,7 @@ namespace odb {
 		std::unordered_map<ETextures, std::vector<odb::VBORenderingJob>> batches;
 		std::unordered_map<EActorsSnapshotElement, ETextures> mElementMap;
 		std::unordered_map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
-		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
+		std::vector<std::vector<std::shared_ptr<NativeBitmap>>> mBitmaps;
 		std::vector<std::vector<unsigned int>> mTextures;
 		std::unordered_map<VBORegisterId, VBORegister> mVBORegisters;
 		std::unordered_map<std::string, ETextures> mTextureRegistry;
@@ -110,7 +110,7 @@ namespace odb {
 		bool init(float w, float h, const std::string &vertexShader,
 		          const std::string &fragmentShader);
 
-		void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
+		void setTexture(std::vector<std::vector<std::shared_ptr<NativeBitmap>>> textures);
 
 		void render(const NoudarDungeonSnapshot &snapshot);
 

@@ -297,9 +297,11 @@ namespace odb {
         unloadTextures();
 		mTextures.clear();
 
-		for (auto &bitmap : mBitmaps) {
-            std::vector<unsigned int> tex = {};
-            tex.push_back(uploadTextureData(bitmap));
+		for (auto &bitmapList : mBitmaps) {
+            std::vector<unsigned int> tex;
+            for ( auto& bitmap : bitmapList ) {
+                tex.push_back(uploadTextureData(bitmap));
+            }
             mTextures.push_back(tex);
 		}
 
@@ -478,7 +480,7 @@ namespace odb {
 		mFadeLerp.update( ms );
 	}
 
-	void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
+	void DungeonGLES2Renderer::setTexture(std::vector<std::vector<std::shared_ptr<NativeBitmap>>> textures) {
 		mBitmaps.clear();
 		mBitmaps.insert(mBitmaps.end(), begin(textures), end(textures));
 	}
@@ -703,6 +705,8 @@ namespace odb {
 			return;
 		}
 
+        ++frame;
+
 		clearBuffers();
 		prepareShaderProgram();
 		setPerspective();
@@ -730,7 +734,7 @@ namespace odb {
 				const auto vboId = element.getVBOId();
 				const auto vboIndicesId = element.getVBOIndicesId();
 
-				drawGeometry(textureId[0],
+				drawGeometry(textureId[ frame % textureId.size() ],
 				             vboId,
 				             vboIndicesId,
 				             amount,

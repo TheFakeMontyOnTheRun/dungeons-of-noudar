@@ -260,14 +260,14 @@ namespace odb {
         unloadTextures();
         mTextures.clear();
 
-		for (auto &bitmap : mBitmaps) {
-#ifndef OSMESA
-			odb::Logger::log("index: %d", index);
-#endif
-            std::vector<unsigned int> tex = {};
-            tex.push_back(uploadTextureData(bitmap));
+        for (auto &bitmapList : mBitmaps) {
+            std::vector<unsigned int> tex;
+            for ( auto& bitmap : bitmapList ) {
+                tex.push_back(uploadTextureData(bitmap));
+            }
             mTextures.push_back(tex);
         }
+
 
 		mBitmaps.clear();
 	}
@@ -444,7 +444,7 @@ namespace odb {
 		mFadeLerp.update( ms );
 	}
 
-	void DungeonGLES2Renderer::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
+	void DungeonGLES2Renderer::setTexture(std::vector<std::vector<std::shared_ptr<NativeBitmap>>> textures) {
 		mBitmaps.clear();
 		mBitmaps.insert(mBitmaps.end(), begin(textures), end(textures));
 	}
@@ -686,6 +686,8 @@ namespace odb {
 			return;
 		}
 
+		++frame;
+
 		clearBuffers();
 		prepareShaderProgram();
 		setPerspective();
@@ -720,7 +722,7 @@ namespace odb {
 		for (const auto &batch : batches) {
 
 			auto textureId = mTextures[batch.first];
-			glBindTexture(GL_TEXTURE_2D, textureId[0]);
+			glBindTexture(GL_TEXTURE_2D, textureId[ frame % textureId.size()]);
 
 			for (const auto &element : batch.second) {
 				const auto &transform = element.getTransform();
@@ -745,7 +747,7 @@ namespace odb {
 				glEnable(GL_ALPHA_TEST);
 				glAlphaFunc(GL_GREATER, 0.5f);
 #endif
-				drawGeometry(textureId[0],
+				drawGeometry(textureId[ frame % textureId.size() ],
 				             vboId,
 				             vboIndicesId,
 				             amount,
