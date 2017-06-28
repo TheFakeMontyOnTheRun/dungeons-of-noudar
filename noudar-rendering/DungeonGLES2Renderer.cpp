@@ -734,7 +734,7 @@ namespace odb {
 				const auto vboId = element.getVBOId();
 				const auto vboIndicesId = element.getVBOIndicesId();
 
-				drawGeometry(textureId[ frame % textureId.size() ],
+				drawGeometry(textureId[ (frame/4) % textureId.size() ],
 				             vboId,
 				             vboIndicesId,
 				             amount,

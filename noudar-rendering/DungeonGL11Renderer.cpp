@@ -722,7 +722,7 @@ namespace odb {
 		for (const auto &batch : batches) {
 
 			auto textureId = mTextures[batch.first];
-			glBindTexture(GL_TEXTURE_2D, textureId[ frame % textureId.size()]);
+			glBindTexture(GL_TEXTURE_2D, textureId[ (frame/4) % textureId.size()]);
 
 			for (const auto &element : batch.second) {
 				const auto &transform = element.getTransform();
