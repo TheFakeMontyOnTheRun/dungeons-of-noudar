@@ -264,8 +264,10 @@ namespace odb {
 #ifndef OSMESA
 			odb::Logger::log("index: %d", index);
 #endif
-			mTextures.push_back(uploadTextureData(bitmap));
-		}
+            std::vector<unsigned int> tex = {};
+            tex.push_back(uploadTextureData(bitmap));
+            mTextures.push_back(tex);
+        }
 
 		mBitmaps.clear();
 	}
@@ -339,9 +341,11 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::unloadTextures() {
-		for (auto &texture : mTextures) {
-			glDeleteTextures(1, &texture);
-		}
+        for (auto &texture : mTextures) {
+            for ( auto &textureId : texture ) {
+                glDeleteTextures(1, &textureId);
+            }
+        }
 	}
 
 	DungeonGLES2Renderer::~DungeonGLES2Renderer() {
@@ -716,7 +720,7 @@ namespace odb {
 		for (const auto &batch : batches) {
 
 			auto textureId = mTextures[batch.first];
-			glBindTexture(GL_TEXTURE_2D, textureId);
+			glBindTexture(GL_TEXTURE_2D, textureId[0]);
 
 			for (const auto &element : batch.second) {
 				const auto &transform = element.getTransform();
@@ -741,7 +745,7 @@ namespace odb {
 				glEnable(GL_ALPHA_TEST);
 				glAlphaFunc(GL_GREATER, 0.5f);
 #endif
-				drawGeometry(textureId,
+				drawGeometry(textureId[0],
 				             vboId,
 				             vboIndicesId,
 				             amount,

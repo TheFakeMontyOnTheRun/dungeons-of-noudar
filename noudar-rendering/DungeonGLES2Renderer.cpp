@@ -298,7 +298,9 @@ namespace odb {
 		mTextures.clear();
 
 		for (auto &bitmap : mBitmaps) {
-			mTextures.push_back(uploadTextureData(bitmap));
+            std::vector<unsigned int> tex = {};
+            tex.push_back(uploadTextureData(bitmap));
+            mTextures.push_back(tex);
 		}
 
 		mBitmaps.clear();
@@ -354,7 +356,9 @@ namespace odb {
 
 	void DungeonGLES2Renderer::unloadTextures() {
 		for (auto &texture : mTextures) {
-			glDeleteTextures(1, &texture);
+            for ( auto &textureId : texture ) {
+                glDeleteTextures(1, &textureId);
+            }
 		}
 	}
 
@@ -726,7 +730,7 @@ namespace odb {
 				const auto vboId = element.getVBOId();
 				const auto vboIndicesId = element.getVBOIndicesId();
 
-				drawGeometry(textureId,
+				drawGeometry(textureId[0],
 				             vboId,
 				             vboIndicesId,
 				             amount,
