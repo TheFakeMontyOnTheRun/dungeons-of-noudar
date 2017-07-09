@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.7)
 project(dungeons_of_noudar_SDL)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLM_FORCE_RADIANS")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DMESA_GLES2 -DGLM_FORCE_RADIANS")
 
 include_directories(../noudar-core/noudar-core/include)
 include_directories(../NullSoundSystem)
@@ -12,115 +12,114 @@ include_directories(../glm)
 include_directories(../nanovg/src)
 include_directories(../gsl)
 
-find_package(SDL REQUIRED)
+find_package(SDL2 REQUIRED)
 
+include_directories( ${SDL2_INCLUDE_DIRS} )
 
-include_directories( ${SDL_INCLUDE_DIRS} )
-
-set(SOURCE_FILES
-        ../noudar-core/noudar-core/include/commands/CPickItemCommand.h
-        ../noudar-core/noudar-core/include/commands/CDropItemCommand.h
-        ../noudar-core/noudar-core/include/commands/CUseCurrentItemCommand.h
-        ../noudar-core/noudar-core/include/commands/CCycleNextItemCommand.h
-        ../noudar-core/noudar-core/include/commands/CCyclePreviousItemCommand.h
-        ../noudar-core/noudar-core/include/commands/CMoveActorCommand.h
-        ../noudar-core/noudar-core/include/commands/CActorMeleeAttackCommand.h
-        ../noudar-core/noudar-core/include/commands/CEndTurnCommand.h
-        ../noudar-core/noudar-core/include/commands/CLoadNewLevelCommand.h
-        ../noudar-core/noudar-core/include/commands/CNullCommand.h
-        ../noudar-core/noudar-core/include/commands/CQuitCommand.h
-        ../noudar-core/noudar-core/include/commands/CTurnActorCommand.h
-        ../noudar-core/noudar-core/include/commands/IGameCommand.h
-        ../noudar-core/noudar-core/include/commands/CHitscanAttackCommand.h
-        ../noudar-core/noudar-core/include/CPlainFileLoader.h
-        ../noudar-core/noudar-core/include/CActor.h
-        ../noudar-core/noudar-core/include/CElixirFountain.h
-        ../noudar-core/noudar-core/include/CMonsterGenerator.h
-        ../noudar-core/noudar-core/include/CMonster.h
-        ../noudar-core/noudar-core/include/CDoorway.h
-        ../noudar-core/noudar-core/include/CGame.h
-        ../noudar-core/noudar-core/include/CItem.h
-        ../noudar-core/noudar-core/include/CMap.h
-        ../noudar-core/noudar-core/include/IRenderer.h
-        ../noudar-core/noudar-core/include/Vec2i.h
-        ../noudar-core/noudar-core/include/CTeam.h
-        ../noudar-core/noudar-core/include/CCharacterArchetype.h
-        ../noudar-core/noudar-core/include/CHuntApproach.h
-        ../noudar-core/noudar-core/include/CCharacter.h
-        ../noudar-core/noudar-core/include/CRandomWorldGenerator.h
-        ../noudar-core/noudar-core/src/CRandomWorldGenerator.cpp
-        ../noudar-core/noudar-core/src/Vec2i.cpp
-        ../noudar-core/noudar-core/src/CActor.cpp
-        ../noudar-core/noudar-core/src/CMonster.cpp
-	../noudar-core/noudar-core/src/CMonsterGenerator.cpp
-        ../noudar-core/noudar-core/src/CTeam.cpp
-        ../noudar-core/noudar-core/src/CMap.cpp
-        ../noudar-core/noudar-core/src/Common.cpp
-        ../noudar-core/noudar-core/src/CHuntApproach.cpp
-        ../noudar-core/noudar-core/src/CCharacter.cpp
-        ../noudar-core/noudar-core/src/CCharacterArchetype.cpp
-        ../noudar-core/noudar-core/src/CElixirFountain.cpp
-        ../noudar-core/noudar-core/src/CDoorway.cpp
-        ../noudar-core/noudar-core/src/IFileLoaderDelegate.cpp
-        ../noudar-core/noudar-core/src/IMapElement.cpp
-        ../noudar-core/noudar-core/src/CGame.cpp
-        ../noudar-core/noudar-core/src/CItem.cpp
-        ../noudar-core/noudar-core/src/CStorageItem.cpp
-        ../noudar-core/noudar-core/src/CPlainFileLoader.cpp
-        ../noudar-core/noudar-core/src/CGameDelegate.cpp
-        ../noudar-core/noudar-core/src/commands/CActorMeleeAttackCommand.cpp
-        ../noudar-core/noudar-core/src/commands/IGameCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CMoveActorCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CTurnActorCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CQuitCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CNullCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CHitscanAttackCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CPickItemCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CDropItemCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.cpp
-        ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.cpp
-        ../noudar-rendering/RenderingJobSnapshotAdapter.h
-        ../noudar-rendering/RenderingJobSnapshotAdapter.cpp
-        ../noudar-rendering/GameNativeAPI.cpp
-        ../noudar-rendering/DungeonGL11Renderer.cpp
-        ../noudar-rendering/LightningStrategy.cpp
-        ../noudar-rendering/VisibilityStrategy.h
-        ../noudar-rendering/VisibilityStrategy.cpp
-        ../noudar-rendering/NoudarDungeonSnapshot.cpp
-        ../noudar-rendering/SplatAnimation.cpp
-        ../noudar-rendering/CTile3DProperties.cpp
-        ../noudar-rendering/NoudarGLES2Bridge.cpp
-        SDL-version/WindowOperationsSDL.cpp
-        ../gles2-renderer/LoadPNG.cpp
-        ../gles2-renderer/CLerp.cpp
-        ../gles2-renderer/CLerp.h
-        ../gles2-renderer/Camera.cpp
-        ../gles2-renderer/Camera.h
-        ../gles2-renderer/Logger.cpp
-        ../gles2-renderer/Trig.cpp
-        ../gles2-renderer/Camera.cpp
-        ../gles2-renderer/Camera.h
-        ../gles2-renderer/TrigBatch.cpp
-        ../gles2-renderer/VBORenderingJob.cpp
-        ../gles2-renderer/NativeBitmap.cpp
-        ../gles2-renderer/WavefrontOBJReader.cpp
-        ../gles2-renderer/WavefrontMaterialReader.cpp
-        ../gles2-renderer/Scene.cpp
-        ../gles2-renderer/Texture.cpp
-        ../nanovg/src/nanovg.c
-        ../NullSoundSystem/SoundClip.cpp
-        ../NullSoundSystem/SoundEmitter.cpp
-        ../NullSoundSystem/SoundListener.cpp
-        ../NullSoundSystem/SoundUtils.cpp
+set(SOURCE_FILES        ../noudar-core/noudar-core/include/commands/CPickItemCommand.h
+		../noudar-core/noudar-core/include/commands/CDropItemCommand.h
+		../noudar-core/noudar-core/include/commands/CUseCurrentItemCommand.h
+		../noudar-core/noudar-core/include/commands/CCycleNextItemCommand.h
+		../noudar-core/noudar-core/include/commands/CCyclePreviousItemCommand.h
+		../noudar-core/noudar-core/include/commands/CMoveActorCommand.h
+		../noudar-core/noudar-core/include/commands/CEndTurnCommand.h
+		../noudar-core/noudar-core/include/commands/CLoadNewLevelCommand.h
+		../noudar-core/noudar-core/include/commands/CNullCommand.h
+		../noudar-core/noudar-core/include/commands/CQuitCommand.h
+		../noudar-core/noudar-core/include/commands/CTurnActorCommand.h
+		../noudar-core/noudar-core/include/commands/IGameCommand.h
+		../noudar-core/noudar-core/include/CPlainFileLoader.h
+		../noudar-core/noudar-core/include/CActor.h
+		../noudar-core/noudar-core/include/CMonsterGenerator.h
+		../noudar-core/noudar-core/include/CMonster.h
+		../noudar-core/noudar-core/include/CMonsterGenerator.h
+		../noudar-core/noudar-core/include/CDoorway.h
+		../noudar-core/noudar-core/include/CGame.h
+		../noudar-core/noudar-core/include/CItem.h
+		../noudar-core/noudar-core/include/CMap.h
+		../noudar-core/noudar-core/include/IRenderer.h
+		../noudar-core/noudar-core/include/Vec2i.h
+		../noudar-core/noudar-core/include/CTeam.h
+		../noudar-core/noudar-core/include/CCharacterArchetype.h
+		../noudar-core/noudar-core/include/CHuntApproach.h
+		../noudar-core/noudar-core/include/CCharacter.h
+		../noudar-core/noudar-core/include/CRandomWorldGenerator.h
+		../noudar-core/noudar-core/src/CRandomWorldGenerator.cpp
+		../noudar-core/noudar-core/src/Vec2i.cpp
+		../noudar-core/noudar-core/src/CActor.cpp
+		../noudar-core/noudar-core/src/CMonster.cpp
+		../noudar-core/noudar-core/src/CMonsterGenerator.cpp
+		../noudar-core/noudar-core/src/CTeam.cpp
+		../noudar-core/noudar-core/src/CMap.cpp
+		../noudar-core/noudar-core/src/Common.cpp
+		../noudar-core/noudar-core/src/CHuntApproach.cpp
+		../noudar-core/noudar-core/src/CCharacter.cpp
+		../noudar-core/noudar-core/src/CCharacterArchetype.cpp
+		../noudar-core/noudar-core/src/CDoorway.cpp
+		../noudar-core/noudar-core/src/IFileLoaderDelegate.cpp
+		../noudar-core/noudar-core/src/IMapElement.cpp
+		../noudar-core/noudar-core/src/CGame.cpp
+		../noudar-core/noudar-core/src/CItem.cpp
+		../noudar-core/noudar-core/src/CStorageItem.cpp
+		../noudar-core/noudar-core/src/CPlainFileLoader.cpp
+		../noudar-core/noudar-core/src/CGameDelegate.cpp
+		../noudar-core/noudar-core/src/commands/IGameCommand.cpp
+		../noudar-core/noudar-core/src/commands/CMoveActorCommand.cpp
+		../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.cpp
+		../noudar-core/noudar-core/src/commands/CTurnActorCommand.cpp
+		../noudar-core/noudar-core/src/commands/CQuitCommand.cpp
+		../noudar-core/noudar-core/src/commands/CNullCommand.cpp
+		../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
+		../noudar-core/noudar-core/src/commands/CPickItemCommand.cpp
+		../noudar-core/noudar-core/src/commands/CDropItemCommand.cpp
+		../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.cpp
+		../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.cpp
+		../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.cpp
+		../noudar-rendering/RenderingJobSnapshotAdapter.h
+		../noudar-rendering/RenderingJobSnapshotAdapter.cpp
+		../noudar-rendering/GameNativeAPI.cpp
+		../noudar-rendering/OverlayNanoVGRenderer.cpp
+		../noudar-rendering/DungeonGL11Renderer.cpp
+		../noudar-rendering/LightningStrategy.cpp
+		../noudar-rendering/VisibilityStrategy.h
+		../noudar-rendering/VisibilityStrategy.cpp
+		../noudar-rendering/NoudarDungeonSnapshot.cpp
+		../noudar-rendering/SplatAnimation.cpp
+		../noudar-rendering/CTile3DProperties.cpp
+		../noudar-rendering/NoudarGLES2Bridge.cpp
+		SDL-version/WindowOperationsSDL.cpp
+		../gles2-renderer/LoadPNG.cpp
+		../gles2-renderer/CLerp.cpp
+		../gles2-renderer/CLerp.h
+		../gles2-renderer/Camera.cpp
+		../gles2-renderer/Camera.h
+		../gles2-renderer/Logger.cpp
+		../gles2-renderer/Trig.cpp
+		../gles2-renderer/Camera.cpp
+		../gles2-renderer/Camera.h
+		../gles2-renderer/TrigBatch.cpp
+		../gles2-renderer/VBORenderingJob.cpp
+		../gles2-renderer/NativeBitmap.cpp
+		../gles2-renderer/WavefrontOBJReader.cpp
+		../gles2-renderer/WavefrontMaterialReader.cpp
+		../gles2-renderer/Scene.cpp
+		../nanovg/src/nanovg.c
+		../NullSoundSystem/SoundClip.cpp
+		../NullSoundSystem/SoundEmitter.cpp
+		../NullSoundSystem/SoundListener.cpp
+		../NullSoundSystem/SoundUtils.cpp
+		../noudar-rendering/GraphicNode.cpp
+		../noudar-rendering/GraphicNode.h
+		../noudar-rendering/Animation.cpp
+		../noudar-rendering/Animation.h
+		../noudar-rendering/AnimationStep.cpp
+		../noudar-rendering/AnimationStep.h
         )
 
 find_package(OpenGL REQUIRED)
 
 include (FindPkgConfig)
 
-add_executable(dungeons_of_noudar_SDL ${SOURCE_FILES} SDL-version/main.cpp ../noudar-rendering/GraphicNode.cpp ../noudar-rendering/GraphicNode.h ../noudar-rendering/Animation.cpp ../noudar-rendering/Animation.h ../noudar-rendering/AnimationStep.cpp ../noudar-rendering/AnimationStep.h)
+add_executable(dungeons_of_noudar_SDL ${SOURCE_FILES} SDL-version/main.cpp )
 
-target_link_libraries(dungeons_of_noudar_SDL ${OPENGL_LIBRARIES} ${SDL_LIBRARY}   )
+target_link_libraries(dungeons_of_noudar_SDL ${OPENGL_LIBRARIES} ${SDL2_LIBRARY}   )
