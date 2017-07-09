@@ -1,22 +1,14 @@
-/**
- *
- */
 package br.odb;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-
-import java.io.IOException;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -44,7 +36,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		GL2JNILib.tick(TICK_INTERVAL);
 
 		synchronized (renderingLock) {
-			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 			GL2JNILib.step();
 		}
 	}
@@ -169,11 +160,11 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	public void init(final Context context, int level, boolean haveController) {
 		mHaveController = haveController;
 
-		if (haveController) {
-																																																																																																																																																																																																																																																																																																																																																																																																															setOnKeyListener(keyListener);
+		if ( mHaveController ) {
+			setOnKeyListener( keyListener );
 		}
 
-	setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+		setOnTouchListener(new OnSwipeTouchListener(getContext()) {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
@@ -256,9 +247,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		synchronized (renderingLock) {
 			this.assets = assets;
 			GL2JNILib.onCreate(assets);
-
-			loadTextures(assets);
-			loadMeshes(assets);
 			final Activity activity = ((Activity) getContext());
 
 			GL2JNILib.loadSounds( activity.getAssets(), new String[] {
@@ -272,69 +260,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 					"swing.wav" //7
 			});
 		}
-	}
-
-	private void loadMeshes(AssetManager assets) {
-		GL2JNILib.setMeshes( assets, new String[]{"cube.obj"});
-	}
-
-	public void setTextures(Bitmap[] bitmaps) {
-
-	}
-
-	public void loadTextures(AssetManager assets) {
-		try {
-			Bitmap[] bitmaps;
-
-			bitmaps = loadBitmaps(assets, new String[]{
-					"grass.png",
-					"stonefloor.png",
-					"bricks.png",
-					"arch.png",
-					"bars.png",
-					"begin.png",
-					"exit.png",
-					"bricks_blood.png",
-					"bricks_candles.png",
-					"foe0.png",
-					"foe1.png",
-					"foe2.png",
-					"foe3.png",
-					"foe4.png",
-					"foe5.png",
-					"crusader0.png",
-					"crusader1.png",
-					"crusader2.png",
-					"shadow.png",
-					"ceiling.png",
-					"ceilingdoor.png",
-					"ceilingbegin.png",
-					"ceilingend.png",
-					"splat0.png",
-					"splat1.png",
-					"splat2.png",
-					"ceilingbars.png",
-					"clouds.png",
-					"stonegrassfar.png",
-					"grassstonefar.png",
-					"stonegrassnear.png",
-					"grassstonenear.png",
-					"cross.png",
-			});
-			setTextures(bitmaps);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private Bitmap[] loadBitmaps(AssetManager assets, String[] filenames) throws IOException {
-		Bitmap[] toReturn = new Bitmap[filenames.length];
-
-		for (int i = 0; i < filenames.length; i++) {
-			toReturn[i] = BitmapFactory.decodeStream(assets.open(filenames[i]));
-		}
-
-		return toReturn;
 	}
 
 	@Override
@@ -396,9 +321,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 					case USE:
 						GL2JNILib.useItem();
 						break;
-
-
-
 				}
 			}
 		}
