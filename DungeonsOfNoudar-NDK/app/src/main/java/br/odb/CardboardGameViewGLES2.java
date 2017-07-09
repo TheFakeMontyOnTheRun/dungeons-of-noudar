@@ -46,7 +46,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 
 			int previousRotation = rotation;
 
-			rotation = (int) (( 360- xz) / 90) % 4;
+			rotation = (int) (( 360 - xz + 45) / 90) % 4;
 
 			while ( rotation < 0 ) {
 				rotation += 4;
