@@ -794,3 +794,7 @@ Knights::EDirection getCurrentDirection() {
 void shouldDrawHUD(bool drawHUD) {
 	drawOverlayHUD = drawHUD;
 }
+
+void performVisibilityChecks(bool visibilityCheck) {
+    render->setVisibilityChecks(visibilityCheck);
+}

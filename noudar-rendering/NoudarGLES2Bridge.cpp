@@ -129,13 +129,20 @@ namespace odb {
         auto cameraPosition = current->getPosition();
 	    VisMap currentVisMap;
 
-        if ( kWillAttemptToMergeVisibilityToFillPotetialHoles  ) {
-            VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
-            VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
-            VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+        if ( mPerformVisibilityCheck ) {
+            if ( kWillAttemptToMergeVisibilityToFillPotetialHoles  ) {
+                VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+                VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
+                VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+            } else {
+                VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+            }
         } else {
-            VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+            VisibilityStrategy::makeAllVisible( snapshot.mVisibilityMap );
         }
+
+
+
 
         auto item = current->getSelectedItem();
 
@@ -170,4 +177,8 @@ namespace odb {
 	void NoudarGLES2Bridge::setNextCommand(char cmd) {
 		mNextCmd = cmd;
 	}
+
+    void NoudarGLES2Bridge::setVisibilityChecks(bool visibilityCheck) {
+        mPerformVisibilityCheck = visibilityCheck;
+    }
 }

@@ -74,7 +74,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 				GL2JNILib.setEyeMatrix(eye.getEyeView());
 				GL2JNILib.setPerspectiveMatrix(eye.getPerspective(0.1f, 100.0f));
 			}
-
+			GL2JNILib.enableVisibilityCheck( false );
 			GL2JNILib.step();
 		}
 	}

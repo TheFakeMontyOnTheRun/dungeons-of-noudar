@@ -175,4 +175,12 @@ namespace odb {
 
 		}
 	}
+
+    void VisibilityStrategy::makeAllVisible(VisMap& map) {
+		for ( int y = 0; y < Knights::kMapSize; ++y ) {
+			for ( int x = 0; x < Knights::kMapSize; ++x ) {
+				map[ y ][ x ] = EVisibility::kVisible;
+			}
+		}
+    }
 }

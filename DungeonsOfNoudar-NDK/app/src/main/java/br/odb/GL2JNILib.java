@@ -63,4 +63,6 @@ public class GL2JNILib {
 	public static native boolean isThereAnyObjectInFrontOfYou();
 
 	public static native void setHUDLessMode(boolean shouldHideHUD);
+
+	public static native void enableVisibilityCheck(boolean visibilityCheck);
 }

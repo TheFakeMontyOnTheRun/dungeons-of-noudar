@@ -120,6 +120,8 @@ void loadSoundsFromFilenames(JNIEnv *env, jclass type, jobject asset_manager,
 }
 
 extern "C" {
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_enableVisibilityCheck(JNIEnv *env, jclass type, jboolean visibilityCheck);
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setHUDLessMode(JNIEnv *env, jclass type, jboolean shouldHideHUD);
@@ -436,4 +438,9 @@ Java_br_odb_GL2JNILib_setHUDLessMode(JNIEnv *env, jclass type, jboolean shouldHi
 
     shouldDrawHUD(!shouldHideHUD);
 }
+
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_enableVisibilityCheck(JNIEnv *env, jclass type, jboolean visibilityCheck) {
+
+    performVisibilityChecks( visibilityCheck );
 }

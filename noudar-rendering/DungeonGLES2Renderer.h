@@ -50,6 +50,7 @@ namespace odb {
 
 		void initTileProperties();
 
+		bool mPerformVisibilityChecks = true;
 	private:
         int frame = 0;
 		int vertexAttributePosition;
@@ -153,6 +154,8 @@ namespace odb {
 
 		//interactions
 		void resetCamera();
+
+		void performVisibilityChecks(bool visibilityChecks);
 
 #ifdef OSMESA
 		static int visibility;

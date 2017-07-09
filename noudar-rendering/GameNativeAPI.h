@@ -73,5 +73,7 @@ int getHP();
 
 void shouldDrawHUD(bool drawHUD );
 
+void performVisibilityChecks( bool visibilityCheck );
+
 Knights::EDirection getCurrentDirection();
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

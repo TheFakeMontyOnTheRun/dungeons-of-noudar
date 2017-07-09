@@ -19,7 +19,9 @@ namespace odb {
         static Knights::Vec2i transform( Knights::EDirection from, Knights::Vec2i currentPos );
         static void castVisibility(VisMap &visMap, const IntMap& occluders, Knights::Vec2i pos, Knights::EDirection direction, bool cleanPrevious);
 		static void mergeInto(const VisMap &map1, const VisMap &map2, VisMap &result);
-	};
+
+        static void makeAllVisible(VisMap& array);
+    };
 }
 
 #endif //KNIGHTSOFALENTEJOANDROID_AS_VISIBILITYSTRATEGY_H
