@@ -18,6 +18,9 @@ namespace odb {
 	class DungeonGLES2Renderer {
 
 	private:
+#if defined(__ANDROID__ )
+        bool mUseStereoBillboardBehavior = false;
+#endif
 
 		void fetchShaderLocations();
 

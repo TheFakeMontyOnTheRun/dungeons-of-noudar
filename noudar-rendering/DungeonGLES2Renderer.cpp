@@ -758,6 +758,13 @@ namespace odb {
 		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
+#if defined(__ANDROID__ )
+        if (mUseStereoBillboardBehavior) {
+            return glm::rotate(translated,
+                               (mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
+                               glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+#endif
 
 		return glm::rotate(translated,
 		                   (360 - mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
@@ -777,7 +784,10 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::setAngleXZ(float xz) {
-		mCamera.setRotationXZ( xz );
+#if defined(__ANDROID__ )
+        mUseStereoBillboardBehavior = true;
+#endif
+        mCamera.setRotationXZ( xz );
 	}
 
 	void DungeonGLES2Renderer::setAngleYZ(float yz) {
