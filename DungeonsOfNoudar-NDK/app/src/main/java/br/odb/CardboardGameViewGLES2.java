@@ -1,13 +1,8 @@
-/**
- *
- */
 package br.odb;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -19,11 +14,7 @@ import com.google.vr.sdk.base.GvrView;
 import com.google.vr.sdk.base.HeadTransform;
 import com.google.vr.sdk.base.Viewport;
 
-import java.io.IOException;
-
 import javax.microedition.khronos.egl.EGLConfig;
-
-import static java.security.AccessController.getContext;
 
 /**
  * @author monty
@@ -31,7 +22,9 @@ import static java.security.AccessController.getContext;
 public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRenderer {
 
 	public static final int TICK_INTERVAL = 20;
+	private static final float RAD = (float) (180.0f / Math.PI);
 	private AssetManager assets;
+	private boolean mIsStereoEnabled = false;
 
 	@Override
 	public void onNewFrame(HeadTransform headTransform) {
@@ -39,28 +32,21 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		GL2JNILib.tick(delta);
 
 		headTransform.getEulerAngles(forwardVector, 0);
-		float xz = extractAngleXZFromHeadtransform(headTransform);
-		float yz = extractAngleYZFromHeadtransform(headTransform);
+		float xz = extractAngleXZFromHeadtransform();
+		float yz = extractAngleYZFromHeadtransform();
+		int previousRotation = rotation;
 
-		if (!mHaveController && getStereoModeEnabled()) {
+		rotation = (int) ((360 - xz + 45) / 90) % 4;
 
-			int previousRotation = rotation;
-
-			rotation = (int) (( 360 - xz + 45) / 90) % 4;
-
-			while ( rotation < 0 ) {
-				rotation += 4;
-			}
-
-			if ( rotation != previousRotation ) {
-				GL2JNILib.forcePlayerDirection( rotation );
-			}
+		while (rotation < 0) {
+			rotation += 4;
 		}
 
-		if (getStereoModeEnabled()) {
-			GL2JNILib.setXZAngle(xz);
-			GL2JNILib.setYZAngle(yz);
+		if (rotation != previousRotation) {
+			GL2JNILib.forcePlayerDirection(rotation);
 		}
+
+		GL2JNILib.setHeadAngles(xz, yz);
 	}
 
 
@@ -68,13 +54,11 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 	public void onDrawEye(Eye eye) {
 
 		synchronized (renderingLock) {
-			GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
-			if (getStereoModeEnabled()) {
+			if (mIsStereoEnabled) {
 				GL2JNILib.setEyeMatrix(eye.getEyeView());
 				GL2JNILib.setPerspectiveMatrix(eye.getPerspective(0.1f, 100.0f));
 			}
-			GL2JNILib.enableVisibilityCheck( false );
 			GL2JNILib.step();
 		}
 	}
@@ -178,6 +162,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		setFocusable(true);
 		GL2JNILib.setHUDLessMode( true );
 		t0 = System.currentTimeMillis();
+		mIsStereoEnabled = getStereoModeEnabled();
 	}
 
 	public CardboardGameViewGLES2(Context context) {
@@ -191,7 +176,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		init();
 	}
 
-	public void init(Context context, int level, boolean haveController) {
+	public void init(Context context, boolean haveController) {
 		mHaveController = haveController;
 
 		if (haveController) {
@@ -253,7 +238,6 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		synchronized (renderingLock) {
 			this.assets = assets;
 			GL2JNILib.onCreate(assets);
-			loadTextures(assets);
 
 			final Activity activity = ((Activity) getContext());
 
@@ -268,70 +252,6 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 					"swing.wav" //7
 			});
 		}
-	}
-
-
-	private void loadMeshes(AssetManager assets) {
-		GL2JNILib.setMeshes( assets, new String[]{"cube.obj"});
-	}
-
-	public void setTextures(Bitmap[] bitmaps) {
-
-	}
-
-	public void loadTextures(AssetManager assets) {
-		try {
-			Bitmap[] bitmaps;
-
-			bitmaps = loadBitmaps(assets, new String[]{
-					"grass.png",
-					"stonefloor.png",
-					"bricks.png",
-					"arch.png",
-					"bars.png",
-					"begin.png",
-					"exit.png",
-					"bricks_blood.png",
-					"bricks_candles.png",
-					"foe0.png",
-					"foe1.png",
-					"foe2.png",
-					"foe3.png",
-					"foe4.png",
-					"foe5.png",
-					"crusader0.png",
-					"crusader1.png",
-					"crusader2.png",
-					"shadow.png",
-					"ceiling.png",
-					"ceilingdoor.png",
-					"ceilingbegin.png",
-					"ceilingend.png",
-					"splat0.png",
-					"splat1.png",
-					"splat2.png",
-					"ceilingbars.png",
-					"clouds.png",
-					"stonegrassfar.png",
-					"grassstonefar.png",
-					"stonegrassnear.png",
-					"grassstonenear.png",
-					"cross.png",
-			});
-			setTextures(bitmaps);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private Bitmap[] loadBitmaps(AssetManager assets, String[] filenames) throws IOException {
-		Bitmap[] toReturn = new Bitmap[filenames.length];
-
-		for (int i = 0; i < filenames.length; i++) {
-			toReturn[i] = BitmapFactory.decodeStream(assets.open(filenames[i]));
-		}
-
-		return toReturn;
 	}
 
 	@Override
@@ -383,15 +303,11 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 		}
 	}
 
-	private float extractAngleXYFromHeadtransform(HeadTransform headTransform) {
-		return 360.0f - ((float) (forwardVector[2] * (180 / Math.PI)));
+	private float extractAngleYZFromHeadtransform() {
+		return forwardVector[0] * RAD;
 	}
 
-	private float extractAngleYZFromHeadtransform(HeadTransform headTransform) {
-		return ((float) (forwardVector[0] * (180 / Math.PI)));
-	}
-
-	private float extractAngleXZFromHeadtransform(HeadTransform headTransform) {
-		return ((float) (forwardVector[1] * (180 / Math.PI)));
+	private float extractAngleXZFromHeadtransform() {
+		return forwardVector[1] * RAD;
 	}
 }

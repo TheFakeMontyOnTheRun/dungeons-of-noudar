@@ -796,5 +796,7 @@ void shouldDrawHUD(bool drawHUD) {
 }
 
 void performVisibilityChecks(bool visibilityCheck) {
-    render->setVisibilityChecks(visibilityCheck);
+	if ( render != nullptr ) {
+		render->setVisibilityChecks(visibilityCheck);
+	}
 }

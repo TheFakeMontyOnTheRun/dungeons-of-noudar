@@ -13,10 +13,7 @@ public class CardboardRootActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	    playNextLevel( 0 );
-    }
 
-	private void playNextLevel(int levelToPlay) {
 		Intent intent = new Intent(getBaseContext(), CardboardGameActivity.class);
 		intent.putExtra(USE_VR, Boolean.TRUE);
 		startActivity(intent);

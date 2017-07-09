@@ -29,7 +29,7 @@ public class CardboardGameActivity extends GvrActivity {
 		view = new CardboardGameViewGLES2( this );
 		setContentView( view );
 		view.setStereoModeEnabled( playInVR );
-		view.init(this, 0, mHaveController);
+		view.init(this, mHaveController);
 		setGvrView( view );
 	}
 

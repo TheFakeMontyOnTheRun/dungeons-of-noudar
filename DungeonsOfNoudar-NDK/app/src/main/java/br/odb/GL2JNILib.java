@@ -65,4 +65,6 @@ public class GL2JNILib {
 	public static native void setHUDLessMode(boolean shouldHideHUD);
 
 	public static native void enableVisibilityCheck(boolean visibilityCheck);
+
+	public static native void setHeadAngles(float xz, float yz);
 }
