@@ -87,6 +87,7 @@ std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
 odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
+bool drawOverlayHUD = true;
 
 #ifndef OSMESA
 std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
@@ -228,7 +229,7 @@ void renderFrame(long delta) {
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 
-	if ( overlayRenderer != nullptr ) {
+	if ( overlayRenderer != nullptr && drawOverlayHUD ) {
 		overlayRenderer->render(snapshot);
 	}
 #endif
@@ -788,4 +789,8 @@ Knights::EDirection getCurrentDirection() {
     auto actor = map->getAvatar();
 
     return actor->getDirection();
+}
+
+void shouldDrawHUD(bool drawHUD) {
+	drawOverlayHUD = drawHUD;
 }

@@ -71,5 +71,7 @@ std::string getCurrentObjectName();
 
 int getHP();
 
+void shouldDrawHUD(bool drawHUD );
+
 Knights::EDirection getCurrentDirection();
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

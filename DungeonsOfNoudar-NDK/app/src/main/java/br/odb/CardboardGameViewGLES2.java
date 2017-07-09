@@ -176,6 +176,7 @@ public class CardboardGameViewGLES2 extends GvrView implements GvrView.StereoRen
 	private void init() {
 		setRenderer(this);
 		setFocusable(true);
+		GL2JNILib.setHUDLessMode( true );
 		t0 = System.currentTimeMillis();
 	}
 
