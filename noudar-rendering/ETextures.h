@@ -7,7 +7,7 @@
 namespace odb {
     enum ETextures : uint8_t {
         Grass,
-        Grass2,
+        Lava,
         Floor,
         Bricks,
         Arch,
