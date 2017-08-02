@@ -677,7 +677,16 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::invalidateCachedBatches() {
-		batches.clear();
+
+		for ( auto& batch : batches ) {
+			auto sizeBefore = batch.second.size();
+
+			batch.second.clear();
+
+			if ( sizeBefore > 0 ) {
+				batch.second.reserve( sizeBefore );
+			}
+		}
 	}
 
 	void DungeonGLES2Renderer::render(const NoudarDungeonSnapshot &snapshot) {
@@ -692,23 +701,8 @@ namespace odb {
 		prepareShaderProgram();
 		setPerspective();
 		resetTransformMatrices();
-
-//	    bool containsCamera = false;
-//
-//	    for ( const auto& movement : movingCharacters ) {
-//		    if ( std::get<0>(movement) == mCameraId ) {
-//			    containsCamera = true;
-//		    }
-//	    }
-
-//	    if ( isAnimating() || containsCamera ) {
-
 		invalidateCachedBatches();
-
-		if (batches.size() == 0) {
-			produceRenderingBatches(snapshot);
-		}
-//	    }
+		produceRenderingBatches(snapshot);
 		consumeRenderingBatches(snapshot.mTimestamp);
 	}
 
