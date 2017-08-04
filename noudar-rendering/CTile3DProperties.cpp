@@ -45,18 +45,6 @@
 
 namespace odb {
 
-    double atod( const char *s ) {
-        std::stringstream ss;
-
-        ss << s;
-
-        double toReturn;
-
-        ss >> toReturn;
-
-        return toReturn;
-    }
-
     CTile3DProperties readPropertiesLine(std::vector<std::string>::iterator& pos) {
 
         CTile3DProperties properties;
