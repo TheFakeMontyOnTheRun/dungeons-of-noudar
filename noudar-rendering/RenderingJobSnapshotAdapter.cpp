@@ -179,7 +179,8 @@ namespace odb {
                             vboIndicesId,
                             amount,
                             getCubeTransform(pos, tileProperties.mCeilingRepetitions),
-                            shade, true);
+                            shade,
+                            tileProperties.mNeedsAlphaTest);
 #else
                     for (float y = 0; y < tileProperties.mCeilingRepetitions; ++y) {
                         pos = glm::vec3(x * 2,
@@ -191,7 +192,8 @@ namespace odb {
                                 vboIndicesId,
                                 amount,
                                 getCubeTransform(pos),
-                                shade, true);
+                                shade,
+                                tileProperties.mNeedsAlphaTest);
                     }
 #endif
 				}
@@ -205,7 +207,8 @@ namespace odb {
 							std::get<0>(tileVBO),
 							std::get<1>(tileVBO),
 							std::get<2>(tileVBO),
-							getCubeTransform(pos), shade, true);
+							getCubeTransform(pos), shade,
+                            tileProperties.mNeedsAlphaTest);
 				}
 
 				if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
@@ -224,7 +227,8 @@ namespace odb {
                             vboIndicesId,
                             amount,
                             getCubeTransform(pos, tileProperties.mFloorRepetitions),
-                            shade, true);
+                            shade,
+                            tileProperties.mNeedsAlphaTest);
 #else
                     for (float y = 0; y < tileProperties.mFloorRepetitions; ++y) {
                         //the final -1.0f in y is for accounting fore the block's length
@@ -236,7 +240,8 @@ namespace odb {
                                 vboId,
                                 vboIndicesId,
                                 amount, getCubeTransform(pos),
-                                shade, true);
+                                shade,
+                                tileProperties.mNeedsAlphaTest);
                     }
 #endif
 				}
