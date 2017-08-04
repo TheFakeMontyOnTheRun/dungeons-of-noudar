@@ -50,7 +50,7 @@ namespace odb {
         CTile3DProperties properties;
 
         pos = std::next(pos);
-        properties.mNeedsAlphaTest = std::atoi(pos->c_str()) == 1;
+        properties.mNeedsAlphaTest = ((*pos)[0] == '1');
         pos = std::next(pos);
         properties.mCeilingTexture = *pos;
         pos = std::next(pos);
