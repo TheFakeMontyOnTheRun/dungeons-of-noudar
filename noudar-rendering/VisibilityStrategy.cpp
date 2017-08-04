@@ -145,23 +145,20 @@ namespace odb {
             //The -1 is due to the fact I will add a new element.
 
             int distance = ( currentPos.y - originalPos.y );
-            int divisor = 1;
-            int narrowing;
+            int narrowing = 1;
 #ifdef OSMESA
-            if ( std::abs( distance ) > 8 ) {
+            if ( std::abs( distance ) >= 9 ) {
                 continue;
             }
-            divisor = 2;
-//            narrowing = distance;
-            narrowing= divisor * 8;
+            narrowing = (distance / 2);
 #endif
 
-			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) >= -std::abs(narrowing/divisor) )&& ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
+			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) >= -std::abs(narrowing) )&& ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + leftOffset.x, currentPos.y + leftOffset.y};
 				++stackPos;
 			}
 
-			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) <= std::abs(narrowing/divisor) ) && ( currentPos.x - originalPos.x ) >= 0 && stackPos < positions.size() - 1) {
+			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) <= std::abs(narrowing) ) && ( currentPos.x - originalPos.x ) >= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + rightOffset.x, currentPos.y + rightOffset.y};
 				++stackPos;
 			}
