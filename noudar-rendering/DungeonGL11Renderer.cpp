@@ -280,7 +280,7 @@ namespace odb {
 		glEnable(GL_TEXTURE_2D);
 		glShadeModel(GL_FLAT);
 		glDisable(GL_DITHER);
-//		glDisable(GL_MULTISAMPLE);
+        glDisable( GL_CULL_FACE );
 		glViewport(0, 0, w, h);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -709,10 +709,6 @@ namespace odb {
 	void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
 		glMatrixMode(GL_MODELVIEW);
 
-#ifdef OSMESA
-	auto cubeVBO = mVBORegisters["cube"];
-#endif
-
 		for (const auto &batch : batches) {
 
 			auto textureId = mTextures[batch.first];
@@ -724,7 +720,7 @@ namespace odb {
 				const auto &amount = element.getAmount();
 				const auto &vboId = element.getVBOId();
 				const auto &vboIndicesId = element.getVBOIndicesId();
-#ifdef OSMESA
+
 				if ( element.mNeedsAlphaTest ) {
 					glEnable( GL_ALPHA_TEST );
 					glAlphaFunc(GL_GREATER,0.5f);
@@ -732,15 +728,6 @@ namespace odb {
 					glDisable( GL_ALPHA_TEST );
 				}
 
-				if ( vboId == std::get<0>(cubeVBO) && !element.mNeedsAlphaTest ) {
-					glEnable( GL_CULL_FACE );
-				} else {
-					glDisable( GL_CULL_FACE );
-				}
-#else
-				glEnable(GL_ALPHA_TEST);
-				glAlphaFunc(GL_GREATER, 0.5f);
-#endif
 				drawGeometry(textureId[ frame % textureId.size() ],
 				             vboId,
 				             vboIndicesId,
