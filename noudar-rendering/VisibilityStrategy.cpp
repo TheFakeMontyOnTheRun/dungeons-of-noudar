@@ -150,7 +150,7 @@ namespace odb {
             if ( std::abs( distance ) >= 9 ) {
                 continue;
             }
-            narrowing = (distance / 2);
+            narrowing = (distance / 2) + 1;
 #endif
 
 			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) >= -std::abs(narrowing) )&& ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
