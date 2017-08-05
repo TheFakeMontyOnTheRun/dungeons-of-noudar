@@ -244,52 +244,97 @@ char read_char(void)
 void setMainLoop() {
   
   while (!done) {
-    while (kbhit()) {
-      switch (getch()) {
-      case 27:
-	done = true;
-	break;
-      case 'H':
-      case 'w':
-	moveUp();
-	break;
-      case 'P':
-      case 's':
-	moveDown();
-	break;
-      case 'd':
-	moveRight();
-	break;
-      case 'a':
-	moveLeft();
-	break;
-      case 'c':
-	interact();
-	break;
-      case 'M':
-      case 'e':
-	rotateCameraRight();
-	break;
-      case 'K':
-      case 'q':
-	rotateCameraLeft();
-	break;	
-      case 'z':
-	cycleNextItem();
-	break;
-      case 'x':
-	cyclePrevItem();
-	break;
-	
-      case 'r':
-	pickupItem();
-	break;
-      case 'f':
-	dropItem();
-	break;										
-      }
+    auto lastKey = bioskey(0x11);
+    auto extendedKeys = bioskey(0x12);
+    
+    if (extendedKeys & (0b0000000000000100) ||
+        extendedKeys & (0b0000000100000000)
+        ) {
+      //ctrl
+      dropItem();
+      
     }
-    tick();
+    
+    if (extendedKeys & (0b0000000000000001) ||
+        extendedKeys & (0b0000000000000010)
+        ) {
+      //shift
+      pickupItem();
+      
+    }
+    
+    bdos(0xC, 0, 0);
+    
+    switch (lastKey) {
+    case 9836: //l
+    case 11640: //x
+      cyclePrevItem();
+      break;
+    case 27:
+    case 283:
+      //esc
+      done = true;
+      break;
+    case 'w':
+    case 4471:
+    case 18656:
+      //up
+      moveUp();
+      break;
+
+    case 7777: //a
+      moveLeft();
+      break;
+
+    case 8292: //d
+      moveRight();
+      break;
+
+    case 's':
+    case 8051:
+    case 20704:
+      //down
+      moveDown();
+      break;
+    case 'a':
+    case 19424: //right arrow
+    case 4209: //q
+
+      //left
+      rotateCameraLeft();
+      break;
+    case 'd':
+
+    case 4709: //e
+    case 19936: //right arrow 
+      //right
+      rotateCameraRight();
+      break;
+    case ' ':
+    case 3849:
+    case 14624:
+    case 11785: //c
+    case 5236: //t
+      //space
+      interact();
+      break;
+    case 7181:
+    case 11386: //z
+      //enter
+      cycleNextItem();
+      break;
+    case 0:
+      break;
+
+    case 4978: //r
+      pickupItem();
+      break;
+
+    case 8550: //f
+      dropItem();
+      break;
+    }
+    tick(); 
   }
 }
 
