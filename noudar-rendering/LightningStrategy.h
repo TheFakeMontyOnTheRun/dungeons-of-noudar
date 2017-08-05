@@ -21,19 +21,14 @@ namespace odb {
 			BOTTOM
 		};
 
-		using Vec2i = std::pair<int8_t, int8_t>;
-
-		static bool isValid(Vec2i pos);
+		static bool isValid(Knights::Vec2i pos);
 
 		static void castLight(Direction from, LightMap &lightMap, int emission,
-		               IntMap occluders, Vec2i pos);
+		               IntMap occluders, Knights::Vec2i pos);
 
 	public:
 		static void castPointLight(LightMap &lightMap, int emission, IntMap occluders,
 		                                       int x, int y);
-
-		static void castLightInAllDirections(LightMap &lightMap, int emission, IntMap occluders,
-		                                                 int x, int y);
 	};
 }
 

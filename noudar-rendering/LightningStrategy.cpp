@@ -36,22 +36,13 @@
 
 namespace odb {
 
-	bool LightningStrategy::isValid(Vec2i pos) {
-		return 0 <= pos.first && pos.first < Knights::kMapSize && 0 <= pos.second && pos.second < Knights::kMapSize;
+	bool LightningStrategy::isValid(Knights::Vec2i pos) {
+		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
 	}
 
 	void LightningStrategy::castPointLight(LightMap &lightMap, int emission, IntMap occluders,
 	                                       int x, int y) {
-		castLight(Direction::TOP, lightMap, emission, occluders, Vec2i{x, y});
-	}
-
-	void LightningStrategy::castLightInAllDirections(LightMap &lightMap, int emission, IntMap occluders,
-	                                                 int x, int y) {
-
-		castLight(Direction::N, lightMap, emission, occluders, Vec2i{x, y - 1});
-		castLight(Direction::E, lightMap, emission, occluders, Vec2i{x + 1, y});
-		castLight(Direction::S, lightMap, emission, occluders, Vec2i{x, y + 1});
-		castLight(Direction::W, lightMap, emission, occluders, Vec2i{x - 1, y});
+		castLight(Direction::TOP, lightMap, emission, occluders, Knights::Vec2i{x, y});
 	}
 
 	bool isBlock(IntMap occluders, int x, int y) {
@@ -69,39 +60,69 @@ namespace odb {
 
 
 	void LightningStrategy::castLight(Direction from, LightMap &lightMap, int emission,
-	                                  IntMap occluders, Vec2i pos) {
+	                                  IntMap occluders, Knights::Vec2i originalPos) {
 
-		if (emission <= 1) {
-			return;
+		std::array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
+		std::array<int, Knights::kMapSize + Knights::kMapSize> intensity;
+		int stackPos = 0;
+		Knights::Vec2i currentPos;
+
+		positions[stackPos] = originalPos;
+		intensity[stackPos] = emission;
+		++stackPos;
+
+		while (stackPos > 0) {
+			--stackPos;
+
+			currentPos = positions[ stackPos ];
+			emission = intensity[ stackPos ];
+
+			if (emission <= 2) {
+				continue;
+			}
+
+			int x = currentPos.x;
+			int y = currentPos.y;
+
+			if (!isValid(currentPos)) {
+				continue;
+			}
+
+			if ( isBlock( occluders, x, y ) ) {
+				continue;
+			}
+
+			if ( (lightMap[y][x] + emission) <= 255 && (lightMap[y][x] + emission) >= 0 ) {
+				lightMap[y][x] += emission;
+			} else {
+				lightMap[y][x] = 255;
+			}
+
+			//The -1 is due to the fact I will add a new element.
+
+			if ( stackPos < positions.size() - 1) {
+				positions[stackPos] =  Knights::Vec2i{currentPos.x + 1, currentPos.y};
+				intensity[stackPos] = emission / 2;
+				++stackPos;
+			}
+
+			if ( stackPos < positions.size() - 1) {
+				positions[stackPos] =  Knights::Vec2i{currentPos.x, currentPos.y + 1};
+				intensity[stackPos] = emission / 2;
+				++stackPos;
+			}
+
+			if ( stackPos < positions.size() - 1) {
+				positions[stackPos] =  Knights::Vec2i{currentPos.x - 1, currentPos.y};
+				intensity[stackPos] = emission / 2;
+				++stackPos;
+			}
+
+			if ( stackPos < positions.size() - 1) {
+				positions[stackPos] =  Knights::Vec2i{currentPos.x, currentPos.y - 1};
+				intensity[stackPos] = emission / 2;
+				++stackPos;
+			}
 		}
-
-		int x = pos.first;
-		int y = pos.second;
-
-		if (!isValid(pos)) {
-			return;
-		}
-
-		if ( isBlock( occluders, x, y ) ) {
-			return;
-		}
-
-		if ( (lightMap[y][x] + emission) <= 255 && (lightMap[y][x] + emission) >= 0 ) {
-			lightMap[y][x] += emission;
-		} else {
-			lightMap[y][x] = 255;
-		}
-
-		castLight(Direction::N, lightMap, (from == Direction::N ? 0 : emission / 2), occluders,
-		          Vec2i{x, y - 1});
-
-		castLight(Direction::W, lightMap, (from == Direction::W ? 0 : emission / 2), occluders,
-		          Vec2i{x - 1, y});
-
-		castLight(Direction::S, lightMap, (from == Direction::S ? 0 : emission / 2), occluders,
-		          Vec2i{x, y + 1});
-
-		castLight(Direction::E, lightMap, (from == Direction::E ? 0 : emission / 2), occluders,
-		          Vec2i{x + 1, y});
 	}
 }
