@@ -1,4 +1,4 @@
-CXXFLAGS = -g -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast-math -DOSMESA -DGLM_FORCE_RADIANS -mtune=i486 -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -march=i486 -I/usr/local/include/GL -fpermissive
+CXXFLAGS = -g -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast-math -DOSMESA -DGLM_FORCE_RADIANS -mtune=i486 -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -I/usr/local/include/GL -fpermissive
 
 LDFLAGS = -lGLU -Lmesa -lOSMesa -L/usr/local/lib -I/usr/include/GL 
 
@@ -55,7 +55,6 @@ OBJS = DOS-version/main.o \
         ../gles2-renderer/TrigBatch.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \
-	../nanovg/src/nanovg.o \
         ../NullSoundSystem/SoundClip.o \
         ../NullSoundSystem/SoundEmitter.o \
         ../NullSoundSystem/SoundListener.o \
