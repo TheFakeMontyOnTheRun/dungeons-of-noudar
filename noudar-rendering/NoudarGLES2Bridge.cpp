@@ -46,7 +46,10 @@
 
 #include "Logger.h"
 #include "VisibilityStrategy.h"
+
+#ifndef OSMESA
 #include "LightningStrategy.h"
+#endif
 
 namespace odb {
 

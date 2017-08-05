@@ -64,7 +64,11 @@
 #include "Camera.h"
 #include "CLerp.h"
 #include "DungeonGLES2Renderer.h"
+
+#ifndef OSMESA
 #include "LightningStrategy.h"
+#endif
+
 #include "VisibilityStrategy.h"
 #include "LoadPNG.h"
 
