@@ -16,9 +16,6 @@
 [submodule "nanovg"]
 	path = nanovg
 	url = https://github.com/memononen/nanovg.git
-[submodule "protobuf"]
-	path = protobuf
-	url = https://github.com/google/protobuf.git
 [submodule "gles2-renderer"]
 	path = gles2-renderer
 	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git
