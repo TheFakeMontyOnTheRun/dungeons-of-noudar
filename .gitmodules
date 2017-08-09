@@ -25,10 +25,6 @@
 [submodule "protobuf"]
 	path = protobuf
 	url = https://github.com/google/protobuf.git
-[submodule "asio"]
-	path = asio
-	url = https://github.com/chriskohlhoff/asio.git
-
 [submodule "gles2-renderer"]
 	path = gles2-renderer
 	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git
