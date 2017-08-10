@@ -7,12 +7,17 @@
 #include <memory>
 #include <functional>
 #include <iostream>
-#include <array>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <map>
-#include <vector>
+
 #include "NativeBitmap.h"
 #include "Material.h"
 #include "Trig.h"
@@ -111,7 +116,7 @@ namespace odb {
 	void VisibilityStrategy::castVisibility(Knights::EDirection from, VisMap &visMap, const IntMap &occluders,
 	                                        Knights::Vec2i originalPos, Knights::Vec2i offset) {
 
-		std::array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
+		array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
 		int stackPos = 0;
 		Knights::Vec2i currentPos;
 

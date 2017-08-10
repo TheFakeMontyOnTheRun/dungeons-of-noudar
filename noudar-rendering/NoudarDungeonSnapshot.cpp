@@ -6,7 +6,7 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
+
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -17,9 +17,13 @@
 #include <string>
 #include <tuple>
 #include <utility>
-#include <array>
 #include <stdio.h>
 #include <cmath>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
 
 #include "Vec2i.h"
 #include "IMapElement.h"

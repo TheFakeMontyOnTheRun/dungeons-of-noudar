@@ -5,19 +5,24 @@
 #include <assert.h>
 #include <math.h>
 #include <map>
-#include <vector>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <memory>
 #include <iostream>
-#include <array>
+
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <iostream>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
 
 #include "SoundClip.h"
 #include "SoundUtils.h"

@@ -29,7 +29,13 @@
 // for native audio
 #include <SLES/OpenSLES.h>
 #include <SLES/OpenSLES_Android.h>
-#include <vector>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
+
 // for native asset manager
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
@@ -51,7 +57,7 @@ static const char hello[] =
 #include "../DungeonsOfNoudar-NDK/app/src/main/jni/hello_clip.h"
 ;
 
-std::vector<AudioBuffer> buffers;
+vector<AudioBuffer> buffers;
 
 // engine interfaces
 static SLObjectItf engineObject = NULL;

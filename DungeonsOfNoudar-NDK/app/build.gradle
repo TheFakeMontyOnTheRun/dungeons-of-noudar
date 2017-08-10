@@ -41,6 +41,8 @@ model {
 		cppFlags.add("-I${file("../../AndroidSoundSystem")}".toString())
 		cppFlags.add("-I${file("../../glm")}".toString())
 		cppFlags.add("-I${file("../../noudar-core/noudar-core/include")}".toString())
+		cppFlags.add("-I${file("../../noudar-core/EASTL/include")}".toString())
+		cppFlags.add("-I${file("../../noudar-core/EASTL/test/packages/EABase/include/Common")}".toString())
 		cppFlags.add("-I${file("../../noudar-rendering")}".toString())
 		cppFlags.add("-I${file("../../gles2-renderer")}".toString())
 	}

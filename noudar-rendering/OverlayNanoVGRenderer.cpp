@@ -41,15 +41,21 @@
 #include "nanovg_gl_utils.h"
 
 #include <memory>
-#include <vector>
+
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
 #include <map>
 #include <algorithm>
 #include <tuple>
-#include <array>
+
 #include <fstream>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 
 #include "Vec2i.h"
 #include "IMapElement.h"
@@ -93,7 +99,7 @@ std::map<std::string, std::shared_ptr<odb::Animation>> animations;
 long timeUntilNextFrame = 0;
 int frame = 0;
 
-std::vector<NVGpaint> paints;
+vector<NVGpaint> paints;
 
 namespace odb {
 
@@ -109,14 +115,14 @@ namespace odb {
     }
 
 
-    OverlayNanoVGRenderer::OverlayNanoVGRenderer(std::vector<std::shared_ptr<odb::NativeBitmap>> bitmaps) {
+    OverlayNanoVGRenderer::OverlayNanoVGRenderer(vector<std::shared_ptr<odb::NativeBitmap>> bitmaps) {
         for (const auto &bitmap : bitmaps) {
             auto id = bitmap->getId();
             mBitmaps[id] = bitmap;
         }
 
         animations[ "hand-arm" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "hand1.png", glm::vec2{0.1f, 1.5f}, glm::vec2{0.076f, 0.8f}
@@ -130,7 +136,7 @@ namespace odb {
         );
 
         animations[ "hand-disarm" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "hand1.png", glm::vec2{0.09f, 0.8f}, glm::vec2{0.15f, 1.5f}
@@ -144,7 +150,7 @@ namespace odb {
         );
 
         animations[ "hand-still" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "hand1.png", glm::vec2{0.125f, 0.85f}, glm::vec2{0.12f, 0.8f}
@@ -167,7 +173,7 @@ namespace odb {
         );
 
         animations[ "mace-arm" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "mace.png", glm::vec2{0.5f, 1.5f}, glm::vec2{0.6f, 0.8f}
@@ -181,7 +187,7 @@ namespace odb {
         );
 
         animations[ "mace-disarm" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "mace.png", glm::vec2{0.6f, 0.8f}, glm::vec2{0.5f, 1.5f}
@@ -197,7 +203,7 @@ namespace odb {
 
 
         animations[ "mace-still" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "mace.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.512f, 0.8f}
@@ -221,7 +227,7 @@ namespace odb {
 
 
         animations[ "mace-fire" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "mace.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.912f, 0.7f}
@@ -253,7 +259,7 @@ namespace odb {
 
 
         animations[ "crossbow-arm" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "bow0.png", glm::vec2{0.5f, 1.5f}, glm::vec2{0.6f, 0.8f}
@@ -267,7 +273,7 @@ namespace odb {
         );
 
         animations[ "crossbow-disarm" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "bow0.png", glm::vec2{0.6f, 0.8f}, glm::vec2{0.5f, 1.5f}
@@ -281,7 +287,7 @@ namespace odb {
         );
 
         animations[ "crossbow-still" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "bow0.png", glm::vec2{0.5125f, 0.85f}, glm::vec2{0.512f, 0.8f}
@@ -304,7 +310,7 @@ namespace odb {
         );
 
         animations[ "crossbow-fire" ] = std::make_shared<odb::Animation>(
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>(
                                          "bow0.png", glm::vec2{0.512f, 0.8f}
@@ -348,7 +354,7 @@ namespace odb {
 
         animations[ "crossbow-reload" ] = std::make_shared<odb::Animation>(
                 //arco-mão-esquerda-diff: 0.1, 0.65
-                std::vector<odb::AnimationStep>{
+                vector<odb::AnimationStep>{
                         {{
                                  std::make_shared<odb::GraphicNode>( "bow2.png", glm::vec2(0.15f, 1.0f),  glm::vec2(0.15f, 0.2f) ),
                                  std::make_shared<odb::GraphicNode>("hand1.png", glm::vec2(0.25f, 1.65f),  glm::vec2(0.25f, 0.85f) )

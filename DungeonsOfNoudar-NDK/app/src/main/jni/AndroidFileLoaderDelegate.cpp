@@ -2,7 +2,12 @@
 // Created by monty on 09/12/16.
 //
 
-#include <vector>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 
 #include <jni.h>
 #include <android/asset_manager.h>
@@ -25,11 +30,11 @@ namespace odb {
     AndroidFileLoaderDelegate::AndroidFileLoaderDelegate(AAssetManager *assetManager) : mAssetManager( assetManager ) {
     }
 
-    std::vector<char> AndroidFileLoaderDelegate::loadBinaryFileFromPath( const std::string& path ) {
+    vector<char> AndroidFileLoaderDelegate::loadBinaryFileFromPath( const std::string& path ) {
         FILE *fd;
 
         fd = android_fopen(path.c_str(), "rb", mAssetManager);
-        std::vector<char> toReturn = readToBuffer(fd);
+        auto toReturn = readToBuffer(fd);
         fclose(fd);
 
         return toReturn;

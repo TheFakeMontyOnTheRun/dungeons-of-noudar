@@ -3,7 +3,6 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -15,9 +14,14 @@
 #include <string>
 #include <tuple>
 #include <utility>
-#include <array>
+
 #include <stdio.h>
 #include <cmath>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
 
 #include "IFileLoaderDelegate.h"
 
@@ -84,7 +88,7 @@ std::map<int, glm::vec2> mPositions;
 
 bool hasActiveSplats;
 odb::AnimationList animationList;
-std::vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
+vector<std::shared_ptr<odb::SplatAnimation>> splatAnimation;
 long animationTime = 0;
 
 std::shared_ptr<Knights::CGame> game;
@@ -94,12 +98,12 @@ odb::NoudarDungeonSnapshot snapshot;
 bool drawOverlayHUD = true;
 
 #ifndef OSMESA
-std::vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
+vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::shared_ptr<odb::SoundListener> mainListener;
-std::vector< std::shared_ptr<odb::Scene>> loadedMeshes;
+vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 #endif
 
-std::vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 	auto data = fileLoader->loadFileFromPath( filename );
 	std::stringstream dataStream;
 
@@ -107,7 +111,7 @@ std::vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filen
 
 	std::string buffer;
 
-	std::vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
+	vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
 
 	while (dataStream.good()) {
 		std::getline(dataStream, buffer);
@@ -118,7 +122,7 @@ std::vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filen
 	return toReturn;
 }
 
-std::vector<std::vector<std::shared_ptr<odb::NativeBitmap>>>
+vector<vector<std::shared_ptr<odb::NativeBitmap>>>
 loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
 
     std::stringstream roomName("");
@@ -133,11 +137,11 @@ loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelega
 
     std::string buffer;
 
-    std::vector<std::vector<std::shared_ptr<odb::NativeBitmap>>> tilesToLoad;
+    vector<vector<std::shared_ptr<odb::NativeBitmap>>> tilesToLoad;
 
     while (dataStream.good()) {
         std::getline(dataStream, buffer);
-        std::vector<std::shared_ptr<odb::NativeBitmap>> textures;
+        vector<std::shared_ptr<odb::NativeBitmap>> textures;
 
 
 		if (buffer.substr(buffer.length() - 4) == ".lst") {
@@ -175,7 +179,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 
 	if ( overlayRenderer == nullptr ) {
-		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
+		auto bitmaps = vector< std::shared_ptr<odb::NativeBitmap> > {
                 loadPNG( "dart0.png", fileLoader  ),
 				loadPNG( "hand0.png", fileLoader  ),
 				loadPNG( "hand1.png", fileLoader ),
@@ -404,7 +408,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 	if ( overlayRenderer == nullptr ) {
 
-		auto bitmaps = std::vector< std::shared_ptr<odb::NativeBitmap> > {
+		auto bitmaps = vector< std::shared_ptr<odb::NativeBitmap> > {
                 loadPNG( "dart0.png", fileLoaderDelegate ),
 				loadPNG( "hand0.png", fileLoaderDelegate ),
 				loadPNG( "hand1.png", fileLoaderDelegate ),
@@ -553,7 +557,7 @@ void gameLoopTick( long ms ) {
     updateAnimations( ms );
 }
 
-void setSoundEmitters( std::vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener ) {
+void setSoundEmitters( vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener ) {
 #ifndef OSMESA
 	soundEmitters = emitters;
 	mainListener = listener;
@@ -593,7 +597,7 @@ void setSnapshot(const odb::NoudarDungeonSnapshot& newSnapshot ) {
 	updateCharacterMovements( snapshot.ids );
 }
 
-void loadMeshList( std::vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
+void loadMeshList( vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 #ifndef OSMESA
 	for ( const auto& mesh : meshes ) {
 

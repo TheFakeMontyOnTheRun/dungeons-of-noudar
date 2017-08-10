@@ -21,12 +21,18 @@
 #endif
 #include <unordered_map>
 #include <memory>
-#include <vector>
+
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
 #include <map>
-#include <array>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
+
 #include "CLerp.h"
 
 #include "Vec2i.h"
@@ -298,7 +304,7 @@ namespace odb {
 		mTextures.clear();
 
 		for (auto &bitmapList : mBitmaps) {
-            std::vector<unsigned int> tex;
+            vector<unsigned int> tex;
             for ( auto& bitmap : bitmapList ) {
                 tex.push_back(uploadTextureData(bitmap));
             }
@@ -481,9 +487,9 @@ namespace odb {
 		mFadeLerp.update( ms );
 	}
 
-	void DungeonGLES2Renderer::setTexture(std::vector<std::vector<std::shared_ptr<NativeBitmap>>> textures) {
+	void DungeonGLES2Renderer::setTexture(vector<vector<std::shared_ptr<NativeBitmap>>> textures) {
 		mBitmaps.clear();
-		mBitmaps.insert(mBitmaps.end(), begin(textures), end(textures));
+		mBitmaps.insert(mBitmaps.end(), std::begin(textures), std::end(textures));
 	}
 
 	void DungeonGLES2Renderer::shutdown() {

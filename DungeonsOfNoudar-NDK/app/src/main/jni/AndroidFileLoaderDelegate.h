@@ -12,7 +12,7 @@ namespace odb {
     public:
         AndroidFileLoaderDelegate( AAssetManager *assetManager );
         std::string getFilePathPrefix() override;
-        std::vector<char> loadBinaryFileFromPath( const std::string& path ) override;
+        vector<char> loadBinaryFileFromPath( const std::string& path ) override;
         std::string loadFileFromPath( const std::string& path ) override;
     };
 }

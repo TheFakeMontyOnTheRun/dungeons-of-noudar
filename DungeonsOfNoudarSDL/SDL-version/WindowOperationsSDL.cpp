@@ -7,12 +7,10 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <vector>
 #include <string.h>
 #include <memory>
 #include <iostream>
 #include <map>
-#include <array>
 #include <iostream>
 
 #include <stdio.h>
@@ -30,6 +28,13 @@
 #else
 #include <GL/gl.h>
 #endif
+
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 
 #include "NativeBitmap.h"
 
@@ -131,7 +136,7 @@ void initWindow() {
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 
-    std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+    vector<std::shared_ptr<odb::SoundEmitter>> sounds;
 
     std::string filenames[]{
             "res/grasssteps.wav",

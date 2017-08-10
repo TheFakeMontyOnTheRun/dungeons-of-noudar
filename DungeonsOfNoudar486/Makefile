@@ -1,4 +1,4 @@
-CXXFLAGS = -g -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast-math -DOSMESA -DGLM_FORCE_RADIANS -mtune=i486 -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -I/usr/local/include/GL -fpermissive
+CXXFLAGS = -g -c -O6 -Ofast  -DEA_PLATFORM_LINUX   -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast-math -DOSMESA -DGLM_FORCE_RADIANS -mtune=i486 -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -I/usr/local/include/GL -fpermissive -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common
 
 LDFLAGS = -lGLU -Lmesa -lOSMesa -L/usr/local/lib -I/usr/include/GL 
 
@@ -12,9 +12,7 @@ OBJS = DOS-version/main.o \
     ../noudar-core/noudar-core/src/CMonsterGenerator.o \
     ../noudar-core/noudar-core/src/CTeam.o \
     ../noudar-core/noudar-core/src/CMap.o \
-    ../noudar-core/noudar-core/src/CRandomWorldGenerator.o \
     ../noudar-core/noudar-core/src/Common.o \
-    ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
     ../noudar-core/noudar-core/src/CDoorway.o \

@@ -34,7 +34,7 @@ namespace odb {
 
 	public:
 		static void
-		readSnapshot(const NoudarDungeonSnapshot &snapshot, std::unordered_map<ETextures, std::vector<VBORenderingJob>> &batches,
+		readSnapshot(const NoudarDungeonSnapshot &snapshot, std::unordered_map<ETextures, vector<VBORenderingJob>> &batches,
 		             const CTilePropertyMap &tileProperties,
 		             const std::unordered_map<VBORegisterId, VBORegister> &VBORegisters,
 		             const std::unordered_map<std::string, ETextures> &textureRegistry
