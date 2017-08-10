@@ -24,13 +24,19 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
 #include <map>
-#include <array>
 #include <unordered_map>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
+
+
 #include "Vec2i.h"
 #include "IMapElement.h"
 #include "CTeam.h"
@@ -69,8 +75,8 @@ namespace odb {
 		unsigned int sizeIndices;
 	};
 
-	std::vector<TGeometryBatch> GeometryBatches; //bitches!
-	std::vector<TIndicesBatch> IndicesBatches; //bitches!
+	vector<TGeometryBatch> GeometryBatches; //bitches!
+	vector<TIndicesBatch> IndicesBatches; //bitches!
 	const static int kGeometryLineStride = 5;
 	const static bool kShouldDestroyThingsManually = false;
 
@@ -261,7 +267,7 @@ namespace odb {
         mTextures.clear();
 
         for (auto &bitmapList : mBitmaps) {
-            std::vector<unsigned int> tex;
+            vector<unsigned int> tex;
             for ( auto& bitmap : bitmapList ) {
                 tex.push_back(uploadTextureData(bitmap));
             }
@@ -444,9 +450,9 @@ namespace odb {
 		mFadeLerp.update( ms );
 	}
 
-	void DungeonGLES2Renderer::setTexture(std::vector<std::vector<std::shared_ptr<NativeBitmap>>> textures) {
+	void DungeonGLES2Renderer::setTexture(vector<vector<std::shared_ptr<NativeBitmap>>> textures) {
 		mBitmaps.clear();
-		mBitmaps.insert(mBitmaps.end(), begin(textures), end(textures));
+		mBitmaps.insert(mBitmaps.end(), std::begin(textures), std::end(textures));
 	}
 
 	void DungeonGLES2Renderer::shutdown() {

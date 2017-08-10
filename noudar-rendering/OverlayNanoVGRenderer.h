@@ -10,14 +10,14 @@ namespace odb {
 
         float mWidth;
         float mHeight;
-        std::vector<char> mFontData;
-        std::vector<std::string> mQueuedAnimations;
+        vector<char> mFontData;
+        vector<std::string> mQueuedAnimations;
         std::map<std::string, std::shared_ptr<odb::NativeBitmap>> mBitmaps;
         std::map<std::string, int> mFrames;
         long mLastTimestamp;
 
     public:
-        explicit OverlayNanoVGRenderer( std::vector<std::shared_ptr<odb::NativeBitmap>> bitmaps);
+        explicit OverlayNanoVGRenderer( vector<std::shared_ptr<odb::NativeBitmap>> bitmaps);
         void setFrame(float width, float height);
         void loadFonts(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate );
         ~OverlayNanoVGRenderer();

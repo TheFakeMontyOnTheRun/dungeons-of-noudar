@@ -53,10 +53,10 @@ namespace odb {
 
 	using CCharacterId = int8_t;
 
-	using IntMap = std::array<std::array<int8_t , Knights::kMapSize>, Knights::kMapSize>;
-	using CharMap = std::array<std::array<EActorsSnapshotElement, Knights::kMapSize>, Knights::kMapSize>;
-	using VisMap = std::array<std::array<EVisibility, Knights::kMapSize>, Knights::kMapSize>;
-    using LightMap = std::array<std::array<int , Knights::kMapSize>, Knights::kMapSize>;
+	using IntMap = array<array<int8_t , Knights::kMapSize>, Knights::kMapSize>;
+	using CharMap = array<array<EActorsSnapshotElement, Knights::kMapSize>, Knights::kMapSize>;
+	using VisMap = array<array<EVisibility, Knights::kMapSize>, Knights::kMapSize>;
+    using LightMap = array<array<int , Knights::kMapSize>, Knights::kMapSize>;
 	using AnimationList = std::map<int8_t, std::tuple<glm::vec2, glm::vec2, long> >;
 
 	class NoudarDungeonSnapshot {

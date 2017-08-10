@@ -15,13 +15,17 @@
 #include <cmath>
 #include <algorithm>
 #include <cmath>
-#include <vector>
 #include <cstring>
 #include <memory>
 #include <iostream>
 #include <map>
-#include <array>
 #include <iostream>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -218,7 +222,7 @@ void initWindow() {
   
   auto soundListener = std::make_shared<odb::SoundListener>();
   
-  std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+  vector<std::shared_ptr<odb::SoundEmitter>> sounds;
   
   setSoundEmitters(sounds, soundListener);
   initMode13h();

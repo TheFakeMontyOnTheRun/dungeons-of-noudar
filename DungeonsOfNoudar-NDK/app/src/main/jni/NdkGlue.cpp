@@ -9,9 +9,12 @@
 #include <map>
 #include <string>
 #include <memory>
-#include <vector>
 #include <functional>
-#include <array>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
 
 #include "Common.h"
 #include "Logger.h"
@@ -44,14 +47,24 @@
 using Knights::readToString;
 
 long currentDelta = 0;
-std::vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
-std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
-std::vector< std::string> meshes;
+vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
+vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+vector< std::string> meshes;
 std::string gVertexShader;
 std::string gFragmentShader;
 
 std::shared_ptr<AndroidAudioSink> audioSinkWrapper;
 std::shared_ptr<odb::SoundListener> soundListener;
+
+void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags,
+                     const char* file, int line) {
+    return malloc( size );
+}
+
+void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char* pName,
+                     int flags, unsigned debugFlags, const char* file, int line) {
+    return malloc( size );
+}
 
 std::shared_ptr<odb::SoundEmitter> makeSoundEmitterFromFilename(JNIEnv *env, jclass type,
                                                                 AAssetManager *assetManager,

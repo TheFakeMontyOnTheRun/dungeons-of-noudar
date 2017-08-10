@@ -3,7 +3,13 @@
 //
 #include <memory>
 #include <string>
-#include <vector>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
+
 #include <glm/vec2.hpp>
 #include "GraphicNode.h"
 #include "AnimationStep.h"

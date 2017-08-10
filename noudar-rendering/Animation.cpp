@@ -3,13 +3,19 @@
 //
 #include "glm/glm.hpp"
 #include <memory>
-#include <vector>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
+
 #include <string>
 #include "GraphicNode.h"
 #include "AnimationStep.h"
 #include "Animation.h"
 
 namespace odb {
-    Animation::Animation(std::vector<AnimationStep> aStepList, bool aRepeatedPlayback, std::string aNextAnimation ) : mStepList(aStepList), mRepeatedPlayback(aRepeatedPlayback), mNextAnimation(aNextAnimation) {
+    Animation::Animation(vector<AnimationStep> aStepList, bool aRepeatedPlayback, std::string aNextAnimation ) : mStepList(aStepList), mRepeatedPlayback(aRepeatedPlayback), mNextAnimation(aNextAnimation) {
     }
 }

@@ -14,10 +14,16 @@
 #include <iostream>
 #include <memory>
 #include <map>
-#include <array>
+
 #include <fstream>
-#include <vector>
+
 #include <cstdlib>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 
 #include "Vec2i.h"
 #include "NativeBitmap.h"

@@ -7,12 +7,17 @@
 #include <memory>
 #include <functional>
 #include <iostream>
-#include <array>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <map>
-#include <vector>
+
 #include "NativeBitmap.h"
 #include "Material.h"
 #include "Trig.h"
@@ -62,8 +67,8 @@ namespace odb {
 	void LightningStrategy::castLight(Direction from, LightMap &lightMap, int emission,
 	                                  IntMap occluders, Knights::Vec2i originalPos) {
 
-		std::array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
-		std::array<int, Knights::kMapSize + Knights::kMapSize> intensity;
+		array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
+		array<int, Knights::kMapSize + Knights::kMapSize> intensity;
 		int stackPos = 0;
 		Knights::Vec2i currentPos;
 

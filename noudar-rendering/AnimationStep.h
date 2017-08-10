@@ -8,7 +8,7 @@
 namespace odb {
     class AnimationStep {
     public:
-        std::vector<std::shared_ptr<odb::GraphicNode> > mNodes;
+        vector<std::shared_ptr<odb::GraphicNode> > mNodes;
         long mDelay;
     };
 }

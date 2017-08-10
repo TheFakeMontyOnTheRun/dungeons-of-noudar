@@ -7,28 +7,12 @@
 [submodule "glm"]
 	path = glm
 	url = https://github.com/g-truc/glm.git
-[submodule "socketiocpp"]
-	path = socketiocpp
-	url = https://github.com/socketio/socket.io-client-cpp.git
 [submodule "stb"]
 	path = stb
 	url = https://github.com/TheFakeMontyOnTheRun/stb.git
 [submodule "nanovg"]
 	path = nanovg
 	url = https://github.com/memononen/nanovg.git
-[submodule "gsl"]
-	path = gsl
-	url = https://github.com/Microsoft/GSL
-[submodule "googletest"]
-	path = googletest
-	url = https://github.com/google/googletest.git
-[submodule "protobuf"]
-	path = protobuf
-	url = https://github.com/google/protobuf.git
-[submodule "asio"]
-	path = asio
-	url = https://github.com/chriskohlhoff/asio.git
-
 [submodule "gles2-renderer"]
 	path = gles2-renderer
 	url = https://github.com/TheFakeMontyOnTheRun/gles2-renderer.git

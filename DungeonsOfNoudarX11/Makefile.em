@@ -1,5 +1,5 @@
-CXXFLAGS = -O2 -Werror -Wall -g -c -std=c++14 -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -s ALLOW_MEMORY_GROWTH=1 -DGLM_FORCE_RADIANS
-LDFLAGS =  -O2 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins  -s ALLOW_MEMORY_GROWTH=1
+CXXFLAGS = -O3 -Werror -Wall -DEA_PLATFORM_SAMSUNG_TV -g -c -std=c++14 -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -s ALLOW_MEMORY_GROWTH=1 -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common
+LDFLAGS =  -O3 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins  -s ALLOW_MEMORY_GROWTH=1
 CXX = em++
 CC = emcc
 OBJS = X11-version/main.o \
@@ -9,7 +9,6 @@ OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/CMonsterGenerator.o \
     ../noudar-core/noudar-core/src/CTeam.o \
     ../noudar-core/noudar-core/src/CMap.o \
-    ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
     ../noudar-core/noudar-core/src/Common.o \

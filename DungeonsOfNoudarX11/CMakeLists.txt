@@ -10,23 +10,20 @@ include_directories(../gles2-renderer)
 include_directories(../X11-version)
 include_directories(../glm)
 include_directories(../nanovg/src)
-include_directories(../gsl)
+include_directories(../noudar-core/EASTL/include )
+include_directories(../noudar-core/EASTL/test/packages/EABase/include/Common)
 
 set(TEST_SOURCE_FILES
         ../tests/src/TestVisibilityStrategy.cpp
         ../tests/src/TestVec2i.cpp
-        ../googletest/googlemock/src/gmock-all.cc
-        ../googletest/googlemock/src/gmock_main.cc
-        ../googletest/googletest/src/gtest-all.cc
-        ../noudar-rendering/Animation.cpp ../noudar-rendering/Animation.h ../noudar-rendering/AnimationStep.cpp ../noudar-rendering/AnimationStep.h)
+        ../noudar-core/lib/googletest/googlemock/src/gmock-all.cc
+        ../noudar-core/lib/googletest/googlemock/src/gmock_main.cc
+        ../noudar-core/lib/googletest/googletest/src/gtest-all.cc)
 
-
-
-include_directories(../googletest/googletest/include)
-include_directories(../googletest/googlemock/include)
-include_directories(../googletest/googletest)
-include_directories(../googletest/googlemock)
-
+include_directories(../noudar-core/lib/googletest/googletest/include)
+include_directories(../noudar-core/lib/googletest/googlemock/include)
+include_directories(../noudar-core/lib/googletest/googletest)
+include_directories(../noudar-core/lib/googletest/googlemock)
 
 set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/CPickItemCommand.h
@@ -54,10 +51,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/Vec2i.h
         ../noudar-core/noudar-core/include/CTeam.h
         ../noudar-core/noudar-core/include/CCharacterArchetype.h
-        ../noudar-core/noudar-core/include/CHuntApproach.h
         ../noudar-core/noudar-core/include/CCharacter.h
-        ../noudar-core/noudar-core/include/CRandomWorldGenerator.h
-        ../noudar-core/noudar-core/src/CRandomWorldGenerator.cpp
         ../noudar-core/noudar-core/src/Vec2i.cpp
         ../noudar-core/noudar-core/src/CActor.cpp
         ../noudar-core/noudar-core/src/CMonster.cpp
@@ -65,7 +59,6 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/CTeam.cpp
         ../noudar-core/noudar-core/src/CMap.cpp
         ../noudar-core/noudar-core/src/Common.cpp
-        ../noudar-core/noudar-core/src/CHuntApproach.cpp
         ../noudar-core/noudar-core/src/CCharacter.cpp
         ../noudar-core/noudar-core/src/CCharacterArchetype.cpp
         ../noudar-core/noudar-core/src/CDoorway.cpp
@@ -130,7 +123,6 @@ set(SOURCE_FILES
         ../noudar-rendering/AnimationStep.h
         )
 
-
 find_package(OpenGL REQUIRED)
 find_package(X11 REQUIRED)
 find_package(PNG REQUIRED)
@@ -148,7 +140,6 @@ include_directories(
 
 add_executable(dungeons_of_noudar_x11 ${SOURCE_FILES} X11-version/main.cpp )
 add_executable(dungeons_of_noudar_tests ${SOURCE_FILES} ${TEST_SOURCE_FILES} )
-
 
 target_link_libraries(dungeons_of_noudar_x11 ${OPENGL_LIBRARIES} ${X11_LIBRARIES}  ${PNG_LIBRARY} ${EGL_LIBRARIES} ${GLESV2_LIBRARIES}  )
 

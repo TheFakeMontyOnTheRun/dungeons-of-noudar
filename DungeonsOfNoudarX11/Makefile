@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -Werror -DMESA_GLES2 -Wall -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -I../gsl -DGLM_FORCE_RADIANS
+CXXFLAGS = -O2 -g -Werror -DMESA_GLES2 -Wall -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common
 LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng -lopenal
 CXX = clang++
 CC = clang
@@ -10,7 +10,6 @@ OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/CTeam.o \
     ../noudar-core/noudar-core/src/CMap.o \
     ../noudar-core/noudar-core/src/Common.o \
-    ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
     ../noudar-core/noudar-core/src/CDoorway.o \

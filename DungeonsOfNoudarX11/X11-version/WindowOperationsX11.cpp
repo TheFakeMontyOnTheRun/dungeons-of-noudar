@@ -6,23 +6,27 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <vector>
+
 #include <sstream>
 #include <string.h>
 #include <memory>
 #include <iterator>
 #include <iostream>
 #include <map>
-#include <array>
+
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <iostream>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
 
 #include "NativeBitmap.h"
-
 #include "SoundClip.h"
 #include "SoundUtils.h"
 #include "SoundListener.h"
@@ -119,16 +123,11 @@ void initWindow() {
 
 	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>("res/");
 
-	std::istringstream meshListData( fileLoader->loadFileFromPath( "mesh.list" ) );
-
-	std::vector<std::string> meshList{std::istream_iterator<std::string>(meshListData),
-	                                   std::istream_iterator<std::string>{}};
-
 	setupGraphics(winWidth, winHeight, gVertexShader, gFragmentShader, fileLoader);
 
     auto soundListener = std::make_shared<odb::SoundListener>();
 
-    std::vector<std::shared_ptr<odb::SoundEmitter>> sounds;
+    vector<std::shared_ptr<odb::SoundEmitter>> sounds;
 
     std::string filenames[] {
             "res/grasssteps.wav",

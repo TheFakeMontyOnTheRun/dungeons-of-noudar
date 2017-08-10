@@ -5,14 +5,19 @@
 
 #include <memory>
 #include <iostream>
-#include <array>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include <VBORenderingJob.h>
-#include <vector>
+
 #include <utility>
 #include <map>
-#include <vector>
+
 #include "NativeBitmap.h"
 #include "Material.h"
 #include "Trig.h"
@@ -35,20 +40,30 @@
 
 #include "VisibilityStrategy.h"
 
+void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags,
+                     const char* file, int line) {
+    return malloc( size );
+}
+
+void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char* pName,
+                     int flags, unsigned debugFlags, const char* file, int line) {
+    return malloc( size );
+}
+
 auto getTestSnapshotWithCrossOfSize(int size, Knights::Vec2i characterPosition) -> odb::NoudarDungeonSnapshot {
     odb::NoudarDungeonSnapshot snapshot;
     int middleOfTheMap = Knights::kMapSize / 2;
 
     for ( auto& line : snapshot.map ) {
-        std::fill( begin( line ), end( line ), '_' );
+        std::fill( std::begin( line ), std::end( line ), '_' );
     }
 
     for ( auto& line : snapshot.mVisibilityMap ) {
-        std::fill( begin( line ), end( line ), odb::EVisibility::kInvisible );
+        std::fill( std::begin( line ), std::end( line ), odb::EVisibility::kInvisible );
     }
 
     for ( auto& line : snapshot.snapshot ) {
-        std::fill( begin( line ), end( line ), odb::EActorsSnapshotElement::kNothing );
+        std::fill(std::begin(  line ),std::end(  line ), odb::EActorsSnapshotElement::kNothing );
     }
 
 

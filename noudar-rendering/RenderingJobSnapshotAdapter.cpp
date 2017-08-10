@@ -2,19 +2,21 @@
 // Created by monty on 07/02/17.
 //
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #include <memory>
 #include <iostream>
 #include <functional>
-#include <array>
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "VBORenderingJob.h"
-#include <vector>
 #include <utility>
 #include <unordered_map>
 #include <map>
-#include <vector>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
+
+#include "VBORenderingJob.h"
 #include "NativeBitmap.h"
 #include "Material.h"
 #include "Trig.h"
@@ -90,7 +92,7 @@ namespace odb {
 	}
 
 	void RenderingJobSnapshotAdapter::readSnapshot(const NoudarDungeonSnapshot &snapshot,
-	                                               std::unordered_map<ETextures, std::vector<VBORenderingJob>> &batches,
+	                                               std::unordered_map<ETextures, vector<VBORenderingJob>> &batches,
 	                                               const CTilePropertyMap &tilePropertiesRegistry,
 	                                               const std::unordered_map<VBORegisterId, VBORegister> &VBORegisters,
 	                                               const std::unordered_map<std::string, ETextures> &textureRegistry

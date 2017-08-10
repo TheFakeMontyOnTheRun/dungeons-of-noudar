@@ -67,11 +67,11 @@ namespace odb {
 		int fadeUniform;
 		glm::mat4 projectionMatrix;
 		glm::mat4 mViewMatrix = glm::mat4(1.0f);
-		std::unordered_map<ETextures, std::vector<odb::VBORenderingJob>> batches;
+		std::unordered_map<ETextures, vector<odb::VBORenderingJob>> batches;
 		std::unordered_map<EActorsSnapshotElement, ETextures> mElementMap;
 		std::unordered_map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
-		std::vector<std::vector<std::shared_ptr<NativeBitmap>>> mBitmaps;
-		std::vector<std::vector<unsigned int>> mTextures;
+		vector<vector<std::shared_ptr<NativeBitmap>>> mBitmaps;
+		vector<vector<unsigned int>> mTextures;
 		std::unordered_map<VBORegisterId, VBORegister> mVBORegisters;
 		std::unordered_map<std::string, ETextures> mTextureRegistry;
 		CTilePropertyMap mTileProperties;
@@ -114,7 +114,7 @@ namespace odb {
 		bool init(float w, float h, const std::string &vertexShader,
 		          const std::string &fragmentShader);
 
-		void setTexture(std::vector<std::vector<std::shared_ptr<NativeBitmap>>> textures);
+		void setTexture(vector<vector<std::shared_ptr<NativeBitmap>>> textures);
 
 		void render(const NoudarDungeonSnapshot &snapshot);
 

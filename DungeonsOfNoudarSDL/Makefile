@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -DMESA_GLES2 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl2-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1  -DGLM_FORCE_RADIANS
+CXXFLAGS = -O2 -g -c -std=c++0x -DMESA_GLES2 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl2-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1  -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common
 LDFLAGS = -lopenal -lGL `sdl2-config --libs`
 CXX = clang++
 CC = clang
@@ -10,7 +10,6 @@ OBJS = SDL-version/main.o \
     ../noudar-core/noudar-core/src/CTeam.o \
     ../noudar-core/noudar-core/src/CMap.o \
     ../noudar-core/noudar-core/src/Common.o \
-    ../noudar-core/noudar-core/src/CHuntApproach.o \
     ../noudar-core/noudar-core/src/CCharacter.o \
     ../noudar-core/noudar-core/src/CCharacterArchetype.o \
     ../noudar-core/noudar-core/src/CDoorway.o \

@@ -18,14 +18,18 @@
 
 #include <functional>
 #include <memory>
-#include <vector>
+
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <iterator>
 #include <unordered_set>
 #include <map>
-#include <array>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
 
 #include "Vec2i.h"
 #include "IMapElement.h"
@@ -45,7 +49,7 @@
 
 namespace odb {
 
-    CTile3DProperties readPropertiesLine(std::vector<std::string>::iterator& pos) {
+    CTile3DProperties readPropertiesLine(vector<std::string>::iterator& pos) {
 
         CTile3DProperties properties;
 
@@ -76,6 +80,7 @@ namespace odb {
     }
 
 
+
     CTilePropertyMap CTile3DProperties::parsePropertyList(std::string propertyFile) {
 
         odb::CTilePropertyMap map;
@@ -83,14 +88,21 @@ namespace odb {
         std::stringstream ss;
         ss << propertyFile;
 
-        std::vector<std::string> tokens{std::istream_iterator<std::string>(ss),
-                                        std::istream_iterator<std::string>{}};
+        vector<std::string> tokens;
+        std::string tmp;
+        while ( ss.good() ) {
+            ss >> tmp;
+            tokens.push_back(tmp);
+        }
 
         auto fileBegin = std::begin(tokens);
         auto fileEnd = std::end(tokens);
         auto pos = fileBegin;
 
+        int line = 0;
+
         while (pos != fileEnd) {
+            line++;
             CTileId id = pos->c_str()[0];
             auto props = readPropertiesLine(pos);
 	        map[id] = props;
