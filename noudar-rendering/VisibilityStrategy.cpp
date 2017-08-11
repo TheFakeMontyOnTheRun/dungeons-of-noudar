@@ -70,7 +70,7 @@ namespace odb {
 
 		auto tile = occluders[ transformed.y][transformed.x];
 
-		for (auto candidate : {'1', 'Y', 'X', '\\', '/', 'S', 'Z', '|', '%', '<', '>'}) {
+		for (auto candidate : {'1', 'I','Y', 'X', 'R', '\\', '/', 'S', 'Z', '|', '%', '<', '>'}) {
 			if (candidate == tile) {
 				return true;
 			}
