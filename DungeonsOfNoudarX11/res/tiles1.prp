@@ -1,4 +1,6 @@
 1 0 null null bricks cube bricks null 2 0 1 0
+R 0 null null bricks cube bricks null 2 0 1 0
+I 0 null null bricks cube bricks null 2 0 1 0
 0 0 null grass null floor null null 0 0 0 0
 O 0 null grass null floor null null 0 0 0 0
 _ 0 null floor null cube null floor 0 1 0 0.35
@@ -47,4 +49,4 @@ J 0 null grass null floor null null 0 0 0 0
 c 0 null grass null floor null null 0 0 0 0
 d 0 null grass null floor null null 0 0 0 0
 e 0 null grass null floor null null 0 0 0 0
-G 0 null grass null floor null null 0 0 0 0
+G 0 null grass null floor null null 0 0 0 0gam
