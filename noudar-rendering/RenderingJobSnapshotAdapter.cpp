@@ -45,6 +45,13 @@ namespace odb {
     static int RenderingJobSnapshotAdapter::visibility;
 #endif
 
+	const static bool kUseRepeatedGeometryStances =
+#ifdef OSMESA
+	false;
+#else
+	false;
+#endif
+
 	glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
 #ifndef OSMESA
 		long offset = animationTime;
@@ -171,33 +178,34 @@ namespace odb {
                     auto amount = std::get<2>(tileVBO);
                     auto& repeatedBatches = batches[textureRegistry.at(tileProperties.mCeilingRepeatedWallTexture)];
 
-#ifdef OSMESA
-                    pos = glm::vec3(x * 2,
-                                    -4 + (2.0f * tileProperties.mCeilingHeight) + (tileProperties.mCeilingRepetitions) - 1.0f,
-                                    z * 2);
+					if (kUseRepeatedGeometryStances) {
+						for (float y = 0; y < tileProperties.mCeilingRepetitions; ++y) {
+							pos = glm::vec3(x * 2,
+											-4.0f + (2.0f * tileProperties.mCeilingHeight) + (2.0 * y),
+											z * 2);
 
-                    repeatedBatches.emplace_back(
-                            vboId,
-                            vboIndicesId,
-                            amount,
-                            getCubeTransform(pos, tileProperties.mCeilingRepetitions),
-                            shade,
-                            tileProperties.mNeedsAlphaTest);
-#else
-                    for (float y = 0; y < tileProperties.mCeilingRepetitions; ++y) {
-                        pos = glm::vec3(x * 2,
-                                        -4.0f + (2.0f * tileProperties.mCeilingHeight) + (2.0 * y),
-                                        z * 2);
+							repeatedBatches.emplace_back(
+									vboId,
+									vboIndicesId,
+									amount,
+									getCubeTransform(pos),
+									shade,
+									tileProperties.mNeedsAlphaTest);
+						}
+					} else {
+						pos = glm::vec3(x * 2,
+										-4 + (2.0f * tileProperties.mCeilingHeight) + (tileProperties.mCeilingRepetitions) - 1.0f,
+										z * 2);
 
-                        repeatedBatches.emplace_back(
-                                vboId,
-                                vboIndicesId,
-                                amount,
-                                getCubeTransform(pos),
-                                shade,
-                                tileProperties.mNeedsAlphaTest);
-                    }
-#endif
+						repeatedBatches.emplace_back(
+								vboId,
+								vboIndicesId,
+								amount,
+								getCubeTransform(pos, tileProperties.mCeilingRepetitions),
+								shade,
+								tileProperties.mNeedsAlphaTest);
+
+					}
 				}
 
 				if (tileProperties.mMainWallTexture != mNullTexture) {
@@ -220,32 +228,33 @@ namespace odb {
                     auto vboIndicesId = std::get<1>(tileVBO);
                     auto amount = std::get<2>(tileVBO);
                     auto& repeatedBatches = batches[textureRegistry.at(tileProperties.mFloorRepeatedWallTexture)];
-#ifdef OSMESA
-                    pos = glm::vec3(x * 2,
-                                    -5.0f + (2.0f * tileProperties.mFloorHeight) - (tileProperties.mFloorRepetitions) , z * 2);
 
-                    repeatedBatches.emplace_back(
-                            vboId,
-                            vboIndicesId,
-                            amount,
-                            getCubeTransform(pos, tileProperties.mFloorRepetitions),
-                            shade,
-                            tileProperties.mNeedsAlphaTest);
-#else
-                    for (float y = 0; y < tileProperties.mFloorRepetitions; ++y) {
-                        //the final -1.0f in y is for accounting fore the block's length
-                        pos = glm::vec3(x * 2,
-                                        -5.0f + (2.0f * tileProperties.mFloorHeight) - (2.0 * y) -
-                                        1.0f, z * 2);
+					if (kUseRepeatedGeometryStances) {
+						for (float y = 0; y < tileProperties.mFloorRepetitions; ++y) {
+							//the final -1.0f in y is for accounting fore the block's length
+							pos = glm::vec3(x * 2,
+											-5.0f + (2.0f * tileProperties.mFloorHeight) - (2.0 * y) -
+											1.0f, z * 2);
 
-                        repeatedBatches.emplace_back(
-                                vboId,
-                                vboIndicesId,
-                                amount, getCubeTransform(pos),
-                                shade,
-                                tileProperties.mNeedsAlphaTest);
-                    }
-#endif
+							repeatedBatches.emplace_back(
+									vboId,
+									vboIndicesId,
+									amount, getCubeTransform(pos),
+									shade,
+									tileProperties.mNeedsAlphaTest);
+						}
+					} else {
+						pos = glm::vec3(x * 2,
+										-5.0f + (2.0f * tileProperties.mFloorHeight) - (tileProperties.mFloorRepetitions) , z * 2);
+
+						repeatedBatches.emplace_back(
+								vboId,
+								vboIndicesId,
+								amount,
+								getCubeTransform(pos, tileProperties.mFloorRepetitions),
+								shade,
+								tileProperties.mNeedsAlphaTest);
+					}
 				}
 
 				if (tileProperties.mFloorTexture != mNullTexture) {
