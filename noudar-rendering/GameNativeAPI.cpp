@@ -403,7 +403,7 @@ void setAngleYZ( float YZAngle ) {
 	}
 }
 
-void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate, std::string tilePropertiesFile ) {
+void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
 
 #if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
 	if ( overlayRenderer == nullptr ) {

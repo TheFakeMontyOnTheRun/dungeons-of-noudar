@@ -55,7 +55,7 @@ void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, cons
 }
 
 extern "C" int main(int argc, char **argv) {
-	readMap( std::make_shared<Knights::CPlainFileLoader>("res/"), "tiles.properties" );
+	readMap( std::make_shared<Knights::CPlainFileLoader>("res/") );
 	initWindow();
 	setMainLoop();
 	destroyWindow();
