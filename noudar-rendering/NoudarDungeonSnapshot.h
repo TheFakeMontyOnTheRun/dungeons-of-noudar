@@ -11,20 +11,16 @@ namespace odb {
 		kNothing,
 		kHeroStanding0,
 		kHeroStanding1,
-		kHeroDead0,
-		kHeroDead1,
 		kHeroAttacking0,
 		kHeroAttacking1,
-		kDemonStanding0,
-		kDemonStanding1,
-		kDemonDead0,
-		kDemonDead1,
-		kDemonAttacking0,
-		kDemonAttacking1,
-        kWeakenedDemonSpiritAttacking0,
+        kWeakenedDemonAttacking0,
 		kWeakenedDemonAttacking1,
 		kWeakenedDemonStanding0,
 		kWeakenedDemonStanding1,
+		kStrongDemonAttacking0,
+		kStrongDemonAttacking1,
+		kStrongDemonStanding0,
+		kStrongDemonStanding1,
 		kCocoonStanding0,
 		kCocoonStanding1,
 		kEvilSpiritAttacking0,
@@ -43,7 +39,8 @@ namespace odb {
 		kFallenAttacking1,
 		kFallenStanding0,
 		kFallenStanding1,
-
+		kRope,
+		kMagicSeal
 	};
 
 	enum class EVisibility : uint8_t {

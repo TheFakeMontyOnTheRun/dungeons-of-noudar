@@ -212,7 +212,8 @@ namespace odb {
 		// Set the filtering mode - surprisingly, this is needed.
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		return textureId;
 	}
 
@@ -352,7 +353,10 @@ namespace odb {
 		mTextureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
 		mTextureRegistry["ceilingend"] = ETextures::CeilingEnd;
 		mTextureRegistry["ceilingbars"] = ETextures::CeilingBars;
-
+        mTextureRegistry["rope"] = ETextures::Rope;
+        mTextureRegistry["slot"] = ETextures::Slot;
+        mTextureRegistry["magicseal"] = ETextures::MagicSeal;
+        mTextureRegistry["shutdoor"] = ETextures::ShutDoor;
 		createVBOs();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
@@ -566,9 +570,9 @@ namespace odb {
 
 				}
 
-                if ( mapItem == 'u') {
+                if ( mapItem == 'v') {
                     pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[ETextures::Quiver].emplace_back(
+                    batches[ETextures::Shield].emplace_back(
                             std::get<0>(billboardVBO),
                             std::get<1>(billboardVBO),
                             std::get<2>(billboardVBO),
@@ -612,10 +616,6 @@ namespace odb {
 					if (id != snapshot.mCameraId) {
 
 						TextureId frame = mElementMap[actor];
-
-						if (splatFrame > -1) {
-							frame = ETextures::Foe2a;
-						}
 
 						batches[static_cast<ETextures >(frame)].emplace_back(
 								std::get<0>(billboardVBO),
@@ -670,36 +670,38 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::initTileProperties() {
-		mElementMap[EActorsSnapshotElement::kDemonAttacking0] = ETextures::Foe1a;
-		mElementMap[EActorsSnapshotElement::kDemonAttacking1] = ETextures::Foe1b;
-		mElementMap[EActorsSnapshotElement::kDemonStanding0] = ETextures::Foe0a;
-		mElementMap[EActorsSnapshotElement::kDemonStanding1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kHeroStanding0] = ETextures::Crusader0;
-		mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::Crusader0;
-		mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::Crusader1;
-		mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::Crusader1;
-		mElementMap[EActorsSnapshotElement::kWeakenedDemonSpiritAttacking0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kCocoonStanding0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kCocoonStanding1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kWarthogAttacking0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kWarthogAttacking1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kWarthogStanding0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kWarthogStanding1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kMonkAttacking0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kMonkAttacking1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kMonkStanding0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kMonkStanding1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kFallenAttacking0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kFallenAttacking1] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kFallenStanding0] = ETextures::Foe0b;
-		mElementMap[EActorsSnapshotElement::kFallenStanding1] = ETextures::Foe0b;
+        mElementMap[EActorsSnapshotElement::kRope] = ETextures::Rope;
+        mElementMap[EActorsSnapshotElement::kMagicSeal] = ETextures::MagicSeal;
+		mElementMap[EActorsSnapshotElement::kStrongDemonAttacking0] = ETextures::StrongDemonAttack0;
+		mElementMap[EActorsSnapshotElement::kStrongDemonAttacking1] = ETextures::StrongDemonAttack1;
+		mElementMap[EActorsSnapshotElement::kStrongDemonStanding0] = ETextures::StrongDemonStanding0;
+		mElementMap[EActorsSnapshotElement::kStrongDemonStanding1] = ETextures::StrongDemonStanding1;
+		mElementMap[EActorsSnapshotElement::kHeroStanding0] = ETextures::CrusaderStanding0;
+		mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::CrusaderStanding1;
+		mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::CrusaderAttack0;
+		mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::CrusaderAttack1;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking0] = ETextures::WeakDemonAttack0;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking1] = ETextures::WeakDemonAttack1;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding0] = ETextures::WeakDemonStanding0;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding1] = ETextures::WeakDemonStanding1;
+		mElementMap[EActorsSnapshotElement::kCocoonStanding0] = ETextures::CocoonStanding0;
+		mElementMap[EActorsSnapshotElement::kCocoonStanding1] = ETextures::CocoonStanding1;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking0] = ETextures::EvilSpiritAttack0;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking1] = ETextures::EvilSpiritAttack1;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding0] = ETextures::EvilSpiritStanding0;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding1] = ETextures::EvilSpiritStanding1;
+		mElementMap[EActorsSnapshotElement::kWarthogAttacking0] = ETextures::WarthogAttack0;
+		mElementMap[EActorsSnapshotElement::kWarthogAttacking1] = ETextures::WarthogAttack1;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding0] = ETextures::WarthogStanding0;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding1] = ETextures::WarthogStanding1;
+		mElementMap[EActorsSnapshotElement::kMonkAttacking0] = ETextures::MonkAttack0;
+		mElementMap[EActorsSnapshotElement::kMonkAttacking1] = ETextures::MonkAttack1;
+		mElementMap[EActorsSnapshotElement::kMonkStanding0] = ETextures::MonkStanding0;
+		mElementMap[EActorsSnapshotElement::kMonkStanding1] = ETextures::MonkStanding1;
+		mElementMap[EActorsSnapshotElement::kFallenAttacking0] = ETextures::FallenAttack0;
+		mElementMap[EActorsSnapshotElement::kFallenAttacking1] = ETextures::FallenAttack1;
+		mElementMap[EActorsSnapshotElement::kFallenStanding0] = ETextures::FallenStanding0;
+		mElementMap[EActorsSnapshotElement::kFallenStanding1] = ETextures::FallenStanding1;
 	}
 
 	void DungeonGLES2Renderer::invalidateCachedBatches() {

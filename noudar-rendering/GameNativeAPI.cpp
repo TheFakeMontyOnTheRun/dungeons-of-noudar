@@ -192,7 +192,7 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 	}
 
 	overlayRenderer->setFrame( w, h );
-    overlayRenderer->playAnimation( animationTime, "hand-still" );
+    overlayRenderer->playAnimation( animationTime, "mace-still" );
     #endif
 
 

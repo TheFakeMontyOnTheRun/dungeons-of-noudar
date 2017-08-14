@@ -103,20 +103,59 @@ namespace odb {
 	            if ( actor != nullptr && actor->isAlive()) {
 
                     snapshot.ids[ y ][ x ] = actor->getId();
+
                     bool alternate = (actor->getMoves() % 2) == 0;
 
-                    if ( actor->getTeam() != current->getTeam() ) {
-                        if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kDemonAttacking0 : EActorsSnapshotElement::kDemonAttacking1;
-                        } else {
-                            snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kDemonStanding0 : EActorsSnapshotElement::kDemonStanding1;
-                        }
-                    } else {
-                        if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kHeroAttacking0 : EActorsSnapshotElement::kHeroAttacking1;
-                        } else {
-                            snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kHeroStanding0: EActorsSnapshotElement::kHeroStanding1;
-                        }
+                    switch ( actor->getView()) {
+                        case 'T':
+                            snapshot.snapshot[ y ][ x ] = EActorsSnapshotElement::kRope;
+                            continue;
+                        case 'C':
+                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kCocoonStanding0 : EActorsSnapshotElement::kCocoonStanding1;
+                            continue;
+                        case '@':
+                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kMonkAttacking0 : EActorsSnapshotElement::kMonkAttacking1;
+                            } else {
+                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kMonkStanding0 : EActorsSnapshotElement::kMonkStanding1;
+                            }
+                            continue;
+                        case '$':
+                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kFallenAttacking0 : EActorsSnapshotElement::kFallenAttacking1;
+                            } else {
+                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kFallenStanding0 : EActorsSnapshotElement::kFallenStanding1;
+                            }
+                            continue;
+                        case 'w':
+                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kEvilSpiritAttacking0 : EActorsSnapshotElement::kEvilSpiritAttacking1;
+                            } else {
+                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kEvilSpiritStanding0 : EActorsSnapshotElement::kEvilSpiritStanding1;\
+                            }
+                            continue;
+                        case 'J':
+                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kWarthogAttacking0 : EActorsSnapshotElement::kWarthogAttacking1;
+                            } else {
+                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kWarthogStanding0: EActorsSnapshotElement::kWarthogStanding1;
+                            }
+                            continue;
+                        case 'd':
+                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kWeakenedDemonAttacking0 : EActorsSnapshotElement::kWeakenedDemonAttacking1;
+                            } else {
+                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kWeakenedDemonStanding0 : EActorsSnapshotElement::kWeakenedDemonStanding1;
+                            }
+                            continue;
+                        case 'D':
+                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
+                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kStrongDemonAttacking0 : EActorsSnapshotElement::kStrongDemonAttacking1;
+                            } else {
+                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kStrongDemonStanding0 : EActorsSnapshotElement::kStrongDemonStanding1;
+                            }
+                            continue;
+
                     }
                 }
             }
