@@ -54,3 +54,5 @@ c 0 null grass null floor null null 0 0 0 0
 d 0 null grass null floor null null 0 0 0 0
 e 0 null grass null floor null null 0 0 0 0
 G 0 null grass null floor null null 0 0 0 0
+3 1 ceilingbars floor magicseal cube bricks null 2 0 1 0
+@ 1 ceilingbars floor slot cube bricks null 2 0 1 0

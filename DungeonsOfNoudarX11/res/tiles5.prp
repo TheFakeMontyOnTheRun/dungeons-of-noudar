@@ -13,11 +13,11 @@ R 0 null null bricks cube bricks null 2 0 1 0
 _ 0 null floor null cube null bricks 0 1 0 0.05
 A 1 ceiling ceiling null cube bricks bricks 0 0 0 0
 L 0 ceiling lava null cube null null 2 0 2 -2
-* 0 null floor null cube null null 0 0 0 0
+* 0 ceiling grass null cube bricks null 1 0 2 0
 4 0 null floor null cube null null 0 0 0 0
 % 1 null floor bricks leftnear bricks null 3 0 1 0
 # 1 ceilingbars floor bars cube bricks null 2 0 1 0
-3 1 ceilingbars floor bars cube bricks null 2 0 1 0
+3 1 ceilingbars floor magicseal cube bricks null 2 0 1 0
 | 0 null floor bricks leftfar bricks null 3 0 1 0
 . 0 null grass null null null null 0 0 0 0
 H 0 ceiling grass null cube brickscandles null 1 0 3 0
