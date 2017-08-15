@@ -357,6 +357,7 @@ namespace odb {
         mTextureRegistry["slot"] = ETextures::Slot;
         mTextureRegistry["magicseal"] = ETextures::MagicSeal;
         mTextureRegistry["shutdoor"] = ETextures::ShutDoor;
+		mTextureRegistry["cobblestone"] = ETextures::Cobblestone;
 		createVBOs();
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
