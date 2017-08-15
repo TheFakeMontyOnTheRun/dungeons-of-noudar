@@ -186,6 +186,9 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
                 loadPNG( "bow0.png", fileLoader ),
                 loadPNG( "bow1.png", fileLoader ),
 				loadPNG( "bow2.png", fileLoader ),
+				loadPNG( "mace.png", fileLoader ),
+				loadPNG( "shieldinhand.png", fileLoader ),
+				loadPNG( "token.png", fileLoader ),
 		};
 
 		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>(bitmaps);
@@ -211,8 +214,6 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 #ifndef OSMESA
 	for  ( const auto& mesh : loadedMeshes ) {
 		gles2Renderer->setMesh( mesh );
-
-
     }
     loadedMeshes.clear();
 #endif
@@ -416,6 +417,8 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
                 loadPNG( "bow1.png", fileLoaderDelegate ),
 				loadPNG( "bow2.png", fileLoaderDelegate ),
                 loadPNG( "mace.png", fileLoaderDelegate ),
+				loadPNG( "shieldinhand.png", fileLoaderDelegate ),
+				loadPNG( "token.png", fileLoaderDelegate ),
 		};
 
 		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>( bitmaps );
@@ -620,6 +623,10 @@ void interact() {
             overlayRenderer->playAnimation( animationTime, "mace-fire" );
         } else if ( item != nullptr && item->getView() == 'y') {
             overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
+        } else if ( item != nullptr && item->getView() == 'v') {
+            overlayRenderer->playAnimation( animationTime, "shield-fire" );
+		} else if ( item != nullptr && item->getView() == '+') {
+			overlayRenderer->playAnimation( animationTime, "token-fire" );
         }
 #endif
 	}
@@ -636,6 +643,10 @@ void pickupItem() {
                 overlayRenderer->playAnimation(animationTime, "mace-disarm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-disarm" );
             } else {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
@@ -652,6 +663,10 @@ void pickupItem() {
                 overlayRenderer->enqueueAnimation(animationTime, "mace-arm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-arm" );
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-arm" );
             } else {
                 overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
             }
@@ -671,6 +686,10 @@ void dropItem() {
                 overlayRenderer->playAnimation(animationTime, "mace-disarm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-disarm" );
             } else {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
@@ -687,6 +706,10 @@ void dropItem() {
                 overlayRenderer->enqueueAnimation( animationTime, "mace-arm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-arm");
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-arm" );
             } else {
                 overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
             }
@@ -706,6 +729,10 @@ void cycleNextItem() {
                 overlayRenderer->playAnimation(animationTime, "mace-disarm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-disarm" );
             } else {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
@@ -722,6 +749,10 @@ void cycleNextItem() {
                 overlayRenderer->enqueueAnimation( animationTime, "mace-arm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-arm" );
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-arm" );
             } else {
                 overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
             }
@@ -740,6 +771,10 @@ void cyclePrevItem() {
                 overlayRenderer->playAnimation(animationTime, "mace-disarm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-disarm" );
             } else {
                 overlayRenderer->playAnimation(animationTime, "hand-disarm");
             }
@@ -758,6 +793,10 @@ void cyclePrevItem() {
                 overlayRenderer->enqueueAnimation( animationTime,  "mace-arm");
             } else if (item != nullptr && item->getView() == 'y') {
                 overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
+            } else if ( item != nullptr && item->getView() == 'v') {
+                overlayRenderer->playAnimation( animationTime, "shield-arm" );
+			} else if ( item != nullptr && item->getView() == '+') {
+				overlayRenderer->playAnimation( animationTime, "token-arm" );
             } else {
                 overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
             }

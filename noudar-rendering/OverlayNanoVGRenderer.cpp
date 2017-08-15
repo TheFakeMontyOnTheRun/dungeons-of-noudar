@@ -121,6 +121,181 @@ namespace odb {
             mBitmaps[id] = bitmap;
         }
 
+
+//token
+        animations[ "token-arm" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "token.png", glm::vec2{0.5f, 1.5f}, glm::vec2{0.6f, 0.8f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                "token-still"
+        );
+
+        animations[ "token-disarm" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "token.png", glm::vec2{0.6f, 0.8f}, glm::vec2{0.5f, 1.5f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                ""
+        );
+
+
+
+        animations[ "token-still" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "token.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.512f, 0.8f}
+                                 ),
+                         },
+                                20000
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "token.png", glm::vec2{0.712f, 0.8f}, glm::vec2{0.5125f, 0.85f}
+                                 )
+                         },
+                                20000
+                        },
+
+                },
+                true,
+                ""
+        );
+
+
+        animations[ "token-fire" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "token.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.912f, 0.7f}
+                                 ),
+                         },
+                                100
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "token.png", glm::vec2{0.9125f, 0.7f}, glm::vec2{-0.012f, 0.75f}
+                                 ),
+                         },
+                                150
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "token.png", glm::vec2{-0.012f, 0.75f}, glm::vec2{0.7325f, 0.85f}
+                                 )
+                         },
+                                750
+                        },
+
+                },
+                false,
+                "token-still"
+        );
+
+//shield
+        animations[ "shield-arm" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "shieldinhand.png", glm::vec2{0.5f, 1.5f}, glm::vec2{0.6f, 0.8f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                "shield-still"
+        );
+
+        animations[ "shield-disarm" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "shieldinhand.png", glm::vec2{0.6f, 0.8f}, glm::vec2{0.5f, 1.5f}
+                                 ),
+                         },
+                                1000
+                        },
+                },
+                false,
+                ""
+        );
+
+
+
+        animations[ "shield-still" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "shieldinhand.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.512f, 0.8f}
+                                 ),
+                         },
+                                20000
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "shieldinhand.png", glm::vec2{0.712f, 0.8f}, glm::vec2{0.5125f, 0.85f}
+                                 )
+                         },
+                                20000
+                        },
+
+                },
+                true,
+                ""
+        );
+
+
+        animations[ "shield-fire" ] = std::make_shared<odb::Animation>(
+                vector<odb::AnimationStep>{
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "shieldinhand.png", glm::vec2{0.7125f, 0.85f}, glm::vec2{0.912f, 0.7f}
+                                 ),
+                         },
+                                100
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "shieldinhand.png", glm::vec2{0.9125f, 0.7f}, glm::vec2{-0.012f, 0.75f}
+                                 ),
+                         },
+                                150
+                        },
+
+                        {{
+                                 std::make_shared<odb::GraphicNode>(
+                                         "shieldinhand.png", glm::vec2{-0.012f, 0.75f}, glm::vec2{0.7325f, 0.85f}
+                                 )
+                         },
+                                750
+                        },
+
+                },
+                false,
+                "shield-still"
+        );
+
+
+//hand
         animations[ "hand-arm" ] = std::make_shared<odb::Animation>(
                 vector<odb::AnimationStep>{
                         {{
