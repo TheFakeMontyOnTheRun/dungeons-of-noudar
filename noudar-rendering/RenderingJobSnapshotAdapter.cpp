@@ -210,15 +210,29 @@ namespace odb {
 
 				if (tileProperties.mMainWallTexture != mNullTexture) {
 					const auto &tileVBO = VBORegisters.at(tileProperties.mVBOToRender);
+                    if (kUseRepeatedGeometryStances) {
+                        for (float y = tileProperties.mFloorHeight; y < tileProperties.mCeilingHeight; ++y) {
+                            pos = glm::vec3(x * 2, -4.0 + (y * 2), z * 2);
 
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
+                            batches[textureRegistry.at(tileProperties.mMainWallTexture)].emplace_back(
+                                    std::get<0>(tileVBO),
+                                    std::get<1>(tileVBO),
+                                    std::get<2>(tileVBO),
+                                    getCubeTransform(pos), shade,
+                                    tileProperties.mNeedsAlphaTest);
+                        }
+                    } else {
+                        auto height = tileProperties.mCeilingHeight - tileProperties.mFloorHeight;
+                        pos = glm::vec3(x * 2, -5.0f + 2.0f * (tileProperties.mFloorHeight + tileProperties.mCeilingHeight) / 2.0f, z * 2);
 
-					batches[textureRegistry.at(tileProperties.mMainWallTexture)].emplace_back(
-							std::get<0>(tileVBO),
-							std::get<1>(tileVBO),
-							std::get<2>(tileVBO),
-							getCubeTransform(pos), shade,
-                            tileProperties.mNeedsAlphaTest);
+                        batches[textureRegistry.at(tileProperties.mMainWallTexture)].emplace_back(
+                                std::get<0>(tileVBO),
+                                std::get<1>(tileVBO),
+                                std::get<2>(tileVBO),
+                                getCubeTransform(pos, height), shade,
+                                tileProperties.mNeedsAlphaTest);
+
+                    }
 				}
 
 				if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
