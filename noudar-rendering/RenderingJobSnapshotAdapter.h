@@ -32,12 +32,16 @@ namespace odb {
 
 		static glm::mat4 getCubeTransform(glm::vec3 translation, float scale);
 
+		static glm::mat4 getBillboardTransform(const Camera& camera, glm::vec3 translation);
+
 	public:
 		static void
 		readSnapshot(const NoudarDungeonSnapshot &snapshot, std::unordered_map<ETextures, vector<VBORenderingJob>> &batches,
 		             const CTilePropertyMap &tileProperties,
 		             const std::unordered_map<VBORegisterId, VBORegister> &VBORegisters,
-		             const std::unordered_map<std::string, ETextures> &textureRegistry
+		             const std::unordered_map<std::string, ETextures> &textureRegistry,
+					 const Camera& camera,
+					 const std::unordered_map<EActorsSnapshotElement, ETextures>& elementMap
 		);
 
 		static glm::vec2

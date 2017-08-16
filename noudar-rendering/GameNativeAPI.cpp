@@ -64,8 +64,8 @@ using eastl::array;
 #include "VBORegister.h"
 #include "VBORenderingJob.h"
 #include "CTile3DProperties.h"
-#include "RenderingJobSnapshotAdapter.h"
 #include "Camera.h"
+#include "RenderingJobSnapshotAdapter.h"
 #include "CLerp.h"
 #include "DungeonGLES2Renderer.h"
 

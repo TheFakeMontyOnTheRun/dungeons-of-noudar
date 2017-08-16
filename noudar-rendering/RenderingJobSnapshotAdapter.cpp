@@ -12,6 +12,7 @@
 #include <map>
 #include <EASTL/vector.h>
 #include <EASTL/array.h>
+#include <Camera.h>
 
 using eastl::vector;
 using eastl::array;
@@ -98,11 +99,30 @@ namespace odb {
 
 	}
 
+	glm::mat4 RenderingJobSnapshotAdapter::getBillboardTransform(const Camera& camera, glm::vec3 translation) {
+		glm::mat4 identity = glm::mat4(1.0f);
+		glm::mat4 translated = glm::translate(identity, translation);
+
+#if defined(__ANDROID__ )
+		if (mUseStereoBillboardBehavior) {
+            return glm::rotate(translated,
+                               (mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
+                               glm::vec3(0.0f, 1.0f, 0.0f));
+        }
+#endif
+
+		return glm::rotate(translated,
+						   (360 - camera.getCameraRotationXZ()) * (3.141592f / 180.0f),
+						   glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
 	void RenderingJobSnapshotAdapter::readSnapshot(const NoudarDungeonSnapshot &snapshot,
 	                                               std::unordered_map<ETextures, vector<VBORenderingJob>> &batches,
 	                                               const CTilePropertyMap &tilePropertiesRegistry,
 	                                               const std::unordered_map<VBORegisterId, VBORegister> &VBORegisters,
-	                                               const std::unordered_map<std::string, ETextures> &textureRegistry
+	                                               const std::unordered_map<std::string, ETextures> &textureRegistry,
+												   const Camera& camera,
+												   const std::unordered_map<EActorsSnapshotElement, ETextures>& elementMap
 	) {
 
 		glm::vec3 pos;
@@ -278,6 +298,126 @@ namespace odb {
 					                                                                       std::get<2>(floorVBO),
 					                                                                       getFloorTransform(pos),
 					                                                                       shade, true);
+				}
+			}
+		}
+
+		const auto &billboardVBO = VBORegisters.at("billboard");
+
+		for (int z = 0; z < Knights::kMapSize; ++z) {
+			for (int x = 0; x < Knights::kMapSize; ++x) {
+
+				if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
+					continue;
+				}
+
+				auto mapItem = snapshot.mItemMap[ z ][ x ];
+				auto actor = snapshot.snapshot[z][x];
+				int splatFrame = snapshot.splat[z][x];
+#ifndef OSMESA
+				Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
+#else
+				Shade shade = 1.0f;
+#endif
+				auto tile = snapshot.map[z][x];
+				auto tileProperties = tilePropertiesRegistry.at(tile);
+
+				if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
+					shade = 1.5 * shade;
+				}
+
+				if ( mapItem == 't') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Falcata].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(camera, pos), shade, true);
+
+				}
+				if ( mapItem == '+') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Cross].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(camera, pos), shade, true);
+
+				}
+				if ( mapItem == 'y') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Crossbow].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(camera, pos), shade, true);
+
+				}
+
+				if ( mapItem == 'v') {
+					pos = glm::vec3(x * 2, -4.0f, z * 2);
+					batches[ETextures::Shield].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(camera, pos), shade, true);
+
+				}
+
+
+
+				if (x == static_cast<int>(snapshot.mCursorPosition.x) &&
+					z == static_cast<int>(snapshot.mCursorPosition.y)) {
+					shade = 1.5f;
+				}
+
+				//characters
+				if (actor != EActorsSnapshotElement::kNothing) {
+
+					int id = snapshot.ids[z][x];
+					float fx, fz, height;
+
+					fx = x;
+					fz = z;
+					height = tileProperties.mFloorHeight;
+
+					if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
+
+						auto animation = snapshot.movingCharacters.at(id);
+						auto pos = easingAnimationCurveStep(std::get<0>(animation),
+																			 std::get<1>(animation),
+																			 std::get<2>(animation),
+																			 snapshot.mTimestamp);
+
+						fx = pos.x;
+						fz = pos.y;
+
+					}
+
+					pos = glm::vec3(fx * 2.0f, -4.0f + 2 * height, fz * 2.0f);
+
+
+					if (id != snapshot.mCameraId) {
+
+						TextureId frame = elementMap.at(actor);
+
+						batches[static_cast<ETextures >(frame)].emplace_back(
+								std::get<0>(billboardVBO),
+								std::get<1>(billboardVBO),
+								std::get<2>(billboardVBO),
+								getBillboardTransform(camera, pos), shade, true);
+					}
+				}
+
+				if (splatFrame > -1) {
+					float height = tileProperties.mFloorHeight;
+					pos = glm::vec3(x * 2, -4.0f + 2.0f * height, z * 2);
+					batches[static_cast<ETextures >(splatFrame +
+													ETextures::Splat0)].emplace_back(
+							std::get<0>(billboardVBO),
+							std::get<1>(billboardVBO),
+							std::get<2>(billboardVBO),
+							getBillboardTransform(camera, pos), shade, true);
 				}
 			}
 		}

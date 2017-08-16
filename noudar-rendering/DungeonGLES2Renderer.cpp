@@ -56,8 +56,8 @@ using eastl::array;
 #include "MeshObject.h"
 #include "MaterialList.h"
 #include "Scene.h"
-#include "RenderingJobSnapshotAdapter.h"
 #include "Camera.h"
+#include "RenderingJobSnapshotAdapter.h"
 #include "DungeonGLES2Renderer.h"
 
 
@@ -525,119 +525,7 @@ namespace odb {
 
 		batches.clear();
 
-		mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry);
-
-		for (int z = 0; z < Knights::kMapSize; ++z) {
-			for (int x = 0; x < Knights::kMapSize; ++x) {
-
-				if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
-					continue;
-				}
-
-				auto mapItem = snapshot.mItemMap[ z ][ x ];
-				auto actor = snapshot.snapshot[z][x];
-				int splatFrame = snapshot.splat[z][x];
-                Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
-
-                if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
-                    shade = 1.5 * shade;
-                }
-
-				if ( mapItem == 't') {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
-					batches[ETextures::Falcata].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
-
-				}
-				if ( mapItem == '+') {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
-					batches[ETextures::Cross].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
-
-				}
-				if ( mapItem == 'y') {
-					pos = glm::vec3(x * 2, -4.0f, z * 2);
-					batches[ETextures::Crossbow].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
-
-				}
-
-                if ( mapItem == 'v') {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[ETextures::Shield].emplace_back(
-                            std::get<0>(billboardVBO),
-                            std::get<1>(billboardVBO),
-                            std::get<2>(billboardVBO),
-                            getBillboardTransform(pos), shade, true);
-
-                }
-
-
-
-				if (x == static_cast<int>(snapshot.mCursorPosition.x) &&
-				    z == static_cast<int>(snapshot.mCursorPosition.y)) {
-					shade = 1.5f;
-				}
-
-				//characters
-				if (actor != EActorsSnapshotElement::kNothing) {
-
-					int id = snapshot.ids[z][x];
-					float fx, fz, height;
-
-					fx = x;
-					fz = z;
-					height = mTileProperties[ mapItem ].mFloorHeight;
-
-					if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
-
-						auto animation = snapshot.movingCharacters.at(id);
-						auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation),
-						                                                     std::get<1>(animation),
-						                                                     std::get<2>(animation),
-						                                                     snapshot.mTimestamp);
-
-						fx = pos.x;
-						fz = pos.y;
-
-					}
-
-					pos = glm::vec3(fx * 2.0f, -4.0f + 2 * height, fz * 2.0f);
-
-
-					if (id != snapshot.mCameraId) {
-
-						TextureId frame = mElementMap[actor];
-
-						batches[static_cast<ETextures >(frame)].emplace_back(
-								std::get<0>(billboardVBO),
-								std::get<1>(billboardVBO),
-								std::get<2>(billboardVBO),
-								getBillboardTransform(pos), shade, true);
-					}
-				}
-
-				if (splatFrame > -1) {
-					float height = mTileProperties[ mapItem ].mFloorHeight;
-					pos = glm::vec3(x * 2, -4.0f + 2.0f * height, z * 2);
-					batches[static_cast<ETextures >(splatFrame +
-					                                ETextures::Splat0)].emplace_back(
-							std::get<0>(billboardVBO),
-							std::get<1>(billboardVBO),
-							std::get<2>(billboardVBO),
-							getBillboardTransform(pos), shade, true);
-				}
-			}
-		}
+		mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry, mCamera, mElementMap);
 
 
 		for (int z = 0; z < Knights::kMapSize; ++z) {

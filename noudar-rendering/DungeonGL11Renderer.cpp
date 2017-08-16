@@ -58,9 +58,9 @@ using eastl::array;
 #include "MeshObject.h"
 #include "MaterialList.h"
 #include "Scene.h"
-#include "RenderingJobSnapshotAdapter.h"
 #include "CLerp.h"
 #include "Camera.h"
+#include "RenderingJobSnapshotAdapter.h"
 #include "DungeonGLES2Renderer.h"
 
 namespace odb {
@@ -317,26 +317,30 @@ namespace odb {
 #endif
 
 		mTextureRegistry["sky"] = ETextures::Skybox;
-        mTextureRegistry["grass"] = ETextures::Grass;
-        mTextureRegistry["lava"] = ETextures::Lava;
-        mTextureRegistry["floor"] = ETextures::Floor;
-        mTextureRegistry["bricks"] = ETextures::Bricks;
-        mTextureRegistry["arch"] = ETextures::Arch;
-        mTextureRegistry["bars"] = ETextures::Bars;
-        mTextureRegistry["begin"] = ETextures::Begin;
-        mTextureRegistry["exit"] = ETextures::Exit;
-        mTextureRegistry["bricksblood"] = ETextures::BricksBlood;
-        mTextureRegistry["brickscandles"] = ETextures::BricksCandles;
-        mTextureRegistry["stonegrassfar"] = ETextures::StoneGrassFar;
-        mTextureRegistry["grassstonefar"] = ETextures::GrassStoneFar;
-        mTextureRegistry["stonegrassnear"] = ETextures::StoneGrassNear;
-        mTextureRegistry["grassstonenear"] = ETextures::GrassStoneNear;
-        mTextureRegistry["ceiling"] = ETextures::Ceiling;
-        mTextureRegistry["ceilingdoor"] = ETextures::CeilingDoor;
-        mTextureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
-        mTextureRegistry["ceilingend"] = ETextures::CeilingEnd;
-        mTextureRegistry["ceilingbars"] = ETextures::CeilingBars;
-
+		mTextureRegistry["grass"] = ETextures::Grass;
+		mTextureRegistry["lava"] = ETextures::Lava;
+		mTextureRegistry["floor"] = ETextures::Floor;
+		mTextureRegistry["bricks"] = ETextures::Bricks;
+		mTextureRegistry["arch"] = ETextures::Arch;
+		mTextureRegistry["bars"] = ETextures::Bars;
+		mTextureRegistry["begin"] = ETextures::Begin;
+		mTextureRegistry["exit"] = ETextures::Exit;
+		mTextureRegistry["bricksblood"] = ETextures::BricksBlood;
+		mTextureRegistry["brickscandles"] = ETextures::BricksCandles;
+		mTextureRegistry["stonegrassfar"] = ETextures::StoneGrassFar;
+		mTextureRegistry["grassstonefar"] = ETextures::GrassStoneFar;
+		mTextureRegistry["stonegrassnear"] = ETextures::StoneGrassNear;
+		mTextureRegistry["grassstonenear"] = ETextures::GrassStoneNear;
+		mTextureRegistry["ceiling"] = ETextures::Ceiling;
+		mTextureRegistry["ceilingdoor"] = ETextures::CeilingDoor;
+		mTextureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
+		mTextureRegistry["ceilingend"] = ETextures::CeilingEnd;
+		mTextureRegistry["ceilingbars"] = ETextures::CeilingBars;
+		mTextureRegistry["rope"] = ETextures::Rope;
+		mTextureRegistry["slot"] = ETextures::Slot;
+		mTextureRegistry["magicseal"] = ETextures::MagicSeal;
+		mTextureRegistry["shutdoor"] = ETextures::ShutDoor;
+		mTextureRegistry["cobblestone"] = ETextures::Cobblestone;
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
@@ -484,7 +488,7 @@ namespace odb {
 #ifdef OSMESA
         mSnapshotAdapter.visibility = visibility;
 #endif
-        mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry);
+        mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry, mCamera, mElementMap );
 
 #ifdef OSMESA
         auto x0 = std::max( 0, snapshot.mCameraPosition.x - visibility );
@@ -497,126 +501,6 @@ namespace odb {
         auto z0 = 0;
         auto z1 = Knights::kMapSize - 1;
 #endif
-
-        for (int z = z0; z <= z1; ++z) {
-            for (int x = x0; x <= x1; ++x) {
-
-                if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
-                    continue;
-                }
-
-                auto mapItem = snapshot.mItemMap[ z ][ x ];
-                auto actor = snapshot.snapshot[z][x];
-                int splatFrame = snapshot.splat[z][x];
-#ifndef OSMESA
-				Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
-#else
-                Shade shade = 1.0f;
-#endif
-				if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
-					shade = 1.5 * shade;
-				}
-
-
-				if ( mapItem == 't') {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[ETextures::Falcata].emplace_back(
-                            std::get<0>(billboardVBO),
-                            std::get<1>(billboardVBO),
-                            std::get<2>(billboardVBO),
-                            getBillboardTransform(pos), shade, true);
-
-                }
-                if ( mapItem == '+') {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[ETextures::Cross].emplace_back(
-                            std::get<0>(billboardVBO),
-                            std::get<1>(billboardVBO),
-                            std::get<2>(billboardVBO),
-                            getBillboardTransform(pos), shade, true);
-
-                }
-                if ( mapItem == 'y') {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[ETextures::Crossbow].emplace_back(
-                            std::get<0>(billboardVBO),
-                            std::get<1>(billboardVBO),
-                            std::get<2>(billboardVBO),
-                            getBillboardTransform(pos), shade, true);
-
-                }
-
-                if ( mapItem == 'u') {
-                    pos = glm::vec3(x * 2, -4.0f, z * 2);
-                    batches[ETextures::Quiver].emplace_back(
-                            std::get<0>(billboardVBO),
-                            std::get<1>(billboardVBO),
-                            std::get<2>(billboardVBO),
-                            getBillboardTransform(pos), shade, true);
-
-                }
-
-
-
-                if (x == static_cast<int>(snapshot.mCursorPosition.x) &&
-                    z == static_cast<int>(snapshot.mCursorPosition.y)) {
-                    shade = 1.5f;
-                }
-
-                //characters
-                if (actor != EActorsSnapshotElement::kNothing) {
-
-                    int id = snapshot.ids[z][x];
-                    float fx, fz, height;
-
-                    fx = x;
-                    fz = z;
-                    height = mTileProperties[ mapItem ].mFloorHeight;
-
-                    if (id != 0 && snapshot.movingCharacters.count(id) > 0) {
-
-                        auto animation = snapshot.movingCharacters.at(id);
-                        auto pos = mSnapshotAdapter.easingAnimationCurveStep(std::get<0>(animation),
-                                                                             std::get<1>(animation),
-                                                                             std::get<2>(animation),
-                                                                             snapshot.mTimestamp);
-
-                        fx = pos.x;
-                        fz = pos.y;
-
-                    }
-
-                    pos = glm::vec3(fx * 2.0f, -4.0f + 2 * height, fz * 2.0f);
-
-
-                    if (id != snapshot.mCameraId) {
-
-                        TextureId frame = mElementMap[actor];
-
-                        if (splatFrame > -1) {
-                            frame = ETextures::Foe2a;
-                        }
-
-                        batches[static_cast<ETextures >(frame)].emplace_back(
-                                std::get<0>(billboardVBO),
-                                std::get<1>(billboardVBO),
-                                std::get<2>(billboardVBO),
-                                getBillboardTransform(pos), shade, true);
-                    }
-                }
-
-                if (splatFrame > -1) {
-                    float height = mTileProperties[ mapItem ].mFloorHeight;
-                    pos = glm::vec3(x * 2, -4.0f + 2.0f * height, z * 2);
-                    batches[static_cast<ETextures >(splatFrame +
-                                                    ETextures::Splat0)].emplace_back(
-                            std::get<0>(billboardVBO),
-                            std::get<1>(billboardVBO),
-                            std::get<2>(billboardVBO),
-                            getBillboardTransform(pos), shade, true);
-                }
-            }
-        }
 
         for (int z = z0; z <= z1; ++z) {
             for (int x = x0; x <= x1; ++x) {
@@ -650,36 +534,38 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::initTileProperties() {
-        mElementMap[EActorsSnapshotElement::kDemonAttacking0] = ETextures::Foe1a;
-        mElementMap[EActorsSnapshotElement::kDemonAttacking1] = ETextures::Foe1b;
-        mElementMap[EActorsSnapshotElement::kDemonStanding0] = ETextures::Foe0a;
-        mElementMap[EActorsSnapshotElement::kDemonStanding1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kHeroStanding0] = ETextures::Crusader0;
-        mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::Crusader0;
-        mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::Crusader1;
-        mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::Crusader1;
-        mElementMap[EActorsSnapshotElement::kWeakenedDemonSpiritAttacking0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kCocoonStanding0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kCocoonStanding1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kEvilSpiritStanding0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kEvilSpiritStanding1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kWarthogAttacking0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kWarthogAttacking1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kWarthogStanding0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kWarthogStanding1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kMonkAttacking0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kMonkAttacking1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kMonkStanding0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kMonkStanding1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kFallenAttacking0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kFallenAttacking1] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kFallenStanding0] = ETextures::Foe0b;
-        mElementMap[EActorsSnapshotElement::kFallenStanding1] = ETextures::Foe0b;
+		mElementMap[EActorsSnapshotElement::kRope] = ETextures::Rope;
+		mElementMap[EActorsSnapshotElement::kMagicSeal] = ETextures::MagicSeal;
+		mElementMap[EActorsSnapshotElement::kStrongDemonAttacking0] = ETextures::StrongDemonAttack0;
+		mElementMap[EActorsSnapshotElement::kStrongDemonAttacking1] = ETextures::StrongDemonAttack1;
+		mElementMap[EActorsSnapshotElement::kStrongDemonStanding0] = ETextures::StrongDemonStanding0;
+		mElementMap[EActorsSnapshotElement::kStrongDemonStanding1] = ETextures::StrongDemonStanding1;
+		mElementMap[EActorsSnapshotElement::kHeroStanding0] = ETextures::CrusaderStanding0;
+		mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::CrusaderStanding1;
+		mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::CrusaderAttack0;
+		mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::CrusaderAttack1;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking0] = ETextures::WeakDemonAttack0;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking1] = ETextures::WeakDemonAttack1;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding0] = ETextures::WeakDemonStanding0;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding1] = ETextures::WeakDemonStanding1;
+		mElementMap[EActorsSnapshotElement::kCocoonStanding0] = ETextures::CocoonStanding0;
+		mElementMap[EActorsSnapshotElement::kCocoonStanding1] = ETextures::CocoonStanding1;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking0] = ETextures::EvilSpiritAttack0;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking1] = ETextures::EvilSpiritAttack1;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding0] = ETextures::EvilSpiritStanding0;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding1] = ETextures::EvilSpiritStanding1;
+		mElementMap[EActorsSnapshotElement::kWarthogAttacking0] = ETextures::WarthogAttack0;
+		mElementMap[EActorsSnapshotElement::kWarthogAttacking1] = ETextures::WarthogAttack1;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding0] = ETextures::WarthogStanding0;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding1] = ETextures::WarthogStanding1;
+		mElementMap[EActorsSnapshotElement::kMonkAttacking0] = ETextures::MonkAttack0;
+		mElementMap[EActorsSnapshotElement::kMonkAttacking1] = ETextures::MonkAttack1;
+		mElementMap[EActorsSnapshotElement::kMonkStanding0] = ETextures::MonkStanding0;
+		mElementMap[EActorsSnapshotElement::kMonkStanding1] = ETextures::MonkStanding1;
+		mElementMap[EActorsSnapshotElement::kFallenAttacking0] = ETextures::FallenAttack0;
+		mElementMap[EActorsSnapshotElement::kFallenAttacking1] = ETextures::FallenAttack1;
+		mElementMap[EActorsSnapshotElement::kFallenStanding0] = ETextures::FallenStanding0;
+		mElementMap[EActorsSnapshotElement::kFallenStanding1] = ETextures::FallenStanding1;
 	}
 
 	void DungeonGLES2Renderer::invalidateCachedBatches() {
