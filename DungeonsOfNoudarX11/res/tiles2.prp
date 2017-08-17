@@ -1,4 +1,5 @@
 1 0 null null null cube bricks null 3 0 0 0
+@ 0 bricks bricks slot cube bricks null 2 0 1 0
 I 0 null null null cube null bricks 0 4 0 2
 R 0 null null bricks cube bricks null 2 0 1 0
 0 0 null grass null floor null null 0 0 0 0
