@@ -341,7 +341,7 @@ namespace odb {
 		mTextureRegistry["magicseal"] = ETextures::MagicSeal;
 		mTextureRegistry["shutdoor"] = ETextures::ShutDoor;
 		mTextureRegistry["cobblestone"] = ETextures::Cobblestone;
-
+		mTextureRegistry["fence"] = ETextures::Fence;
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
 		glFrontFace(GL_CW);

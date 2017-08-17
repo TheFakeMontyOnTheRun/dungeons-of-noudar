@@ -68,7 +68,8 @@ namespace odb {
         Slot,
         MagicSeal,
         ShutDoor,
-        Cobblestone
+        Cobblestone,
+        Fence
     };
 }
 #endif //DUNGEONSOFNOUDAR_NDK_ETEXTURES_H
