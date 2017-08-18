@@ -54,8 +54,8 @@ c 0 null grass null floor null null 0 0 0 0
 d 0 null grass null floor null null 0 0 0 0
 e 0 null grass null floor null null 0 0 0 0
 G 0 null grass null floor null null 0 0 0 0
-D 0 null grass null null null null 0 0 0 0
 4 0 null grass null null null null 0 0 0 0
+D 0 null grass null floor null null 0 0 0 0
 5 0 null grass null floor null null 0 0 0 0
 6 0 ceiling floor null cube null bricks 0 0 3 0.05
 T 0 ceiling floor null cube null bricks 0 0 3 0.05
