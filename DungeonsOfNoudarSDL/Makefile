@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -DMESA_GLES2 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl2-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1  -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common
+CXXFLAGS = -O2 -g -c -std=c++1z -DMESA_GLES2 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -I../nanovg/src -ISDL-version -I../glm `sdl2-config --cflags` -ffast-math -fomit-frame-pointer -ferror-limit=1  -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common
 LDFLAGS = -lopenal -lGL `sdl2-config --libs`
 CXX = clang++
 CC = clang

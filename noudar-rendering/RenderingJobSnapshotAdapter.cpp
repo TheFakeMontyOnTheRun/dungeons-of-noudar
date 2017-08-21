@@ -104,11 +104,11 @@ namespace odb {
 		glm::mat4 translated = glm::translate(identity, translation);
 
 #if defined(__ANDROID__ )
-		if (mUseStereoBillboardBehavior) {
-            return glm::rotate(translated,
-                               (mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
-                               glm::vec3(0.0f, 1.0f, 0.0f));
-        }
+//		if (mUseStereoBillboardBehavior) {
+//            return glm::rotate(translated,
+//                               (mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
+//                               glm::vec3(0.0f, 1.0f, 0.0f));
+//        }
 #endif
 
 		return glm::rotate(translated,
