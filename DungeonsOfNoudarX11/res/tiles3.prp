@@ -8,14 +8,14 @@ I 0 null null bricks cube bricks bricks 3 1 1 0
 L 1 null floor bars cube bricks bricks 1 1 2 0.25
 * 0 null floor null cube null null 0 0 0 0
 4 0 null floor null cube null null 0 0 0 0
-= 0 ceiling floor null cube bricks bricks 1 6 2 0
 % 1 null floor bricks leftnear bricks null 3 0 1 0
 # 1 ceilingbars floor bars cube bricks null 3 0 1 0
 K 1 null floor fence cube null bricks 0 1 2 0.25
 | 0 null floor bricks leftfar bricks null 3 0 1 0
 . 0 null grass null null null null 0 0 0 0
 - 0 null floor null cube null bricks 0 1 2 0.3
-O 0 null floor null cube null bricks 0 1 2 0.6
+O 0 ceiling floor null cube null bricks 0 1 3 0.6
+= 0 ceiling floor null cube bricks bricks 1 6 2 0
 ( 1 null grassstonefar null null null null 0 0 0 0
 { 1 null grassstonenear null null null null 0 0 0 0
 ) 1 null stonegrassnear null null null null 0 0 0 0
