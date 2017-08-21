@@ -93,7 +93,7 @@ EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *
         moveLeft();
     } else if (code == "KeyX") {
         moveRight();
-    } else if (code == "KeyH") {
+    } else if (code == "Space") {
         interact();
     } else if (code == "Equal") {
         cycleNextItem();
