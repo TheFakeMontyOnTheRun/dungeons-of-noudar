@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7)
 project(dungeons_of_noudar_x11)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMESA_GLES2 -DGLM_FORCE_RADIANS")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMESA_GLES2 -DGLM_FORCE_RADIANS -DUSE_ITEMS_INSTANTLY ")
 set(CMAKE_CXX_STANDARD 14)
 include_directories(../noudar-core/noudar-core/include)
 include_directories(../NullSoundSystem)
