@@ -64,6 +64,7 @@ namespace odb {
 		int gProgram;
 		int uView;
 		int uMod;
+		int uScale;
 		int fadeUniform;
 		glm::mat4 projectionMatrix;
 		glm::mat4 mViewMatrix = glm::mat4(1.0f);

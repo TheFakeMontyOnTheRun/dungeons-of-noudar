@@ -64,6 +64,7 @@ using eastl::array;
 namespace odb {
 	const static bool kShouldDestroyThingsManually = true;
 
+    const static glm::mat4 identity = glm::mat4(1.0f);
 	//OpenGL specific stuff
 
 	const float DungeonGLES2Renderer::billboardVertices[]{
@@ -396,6 +397,7 @@ namespace odb {
 		uView = glGetUniformLocation(gProgram, "uView");
 		uMod = glGetUniformLocation(gProgram, "uMod");
 		fadeUniform = glGetUniformLocation(gProgram, "uFade");
+        uScale = glGetUniformLocation(gProgram, "uScale");
 	}
 
 	void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
@@ -408,6 +410,14 @@ namespace odb {
 		glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
 		glUniform4f(uMod, shade, shade, shade, 1.0f);
 		glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
+
+        auto registerVertex = std::get<0>(mVBORegisters["billboard"]);
+
+        if (vertexVbo != registerVertex ) {
+            glUniformMatrix4fv(uScale, 1, false, &transform[0][0]);
+        } else {
+            glUniformMatrix4fv(uScale, 1, false, &identity[0][0]);
+        }
 
 		glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
 		glEnableVertexAttribArray(vertexAttributePosition);
@@ -653,7 +663,6 @@ namespace odb {
 	}
 
 	glm::mat4 DungeonGLES2Renderer::getBillboardTransform(glm::vec3 translation) {
-		glm::mat4 identity = glm::mat4(1.0f);
 		glm::mat4 translated = glm::translate(identity, translation);
 
 #if defined(__ANDROID__ )
