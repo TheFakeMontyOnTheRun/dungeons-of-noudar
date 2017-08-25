@@ -411,9 +411,7 @@ namespace odb {
 		glUniform4f(uMod, shade, shade, shade, 1.0f);
 		glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
 
-        auto registerVertex = std::get<0>(mVBORegisters["billboard"]);
-
-        if (vertexVbo != registerVertex ) {
+        if (vertexVbo != mSkyboxVBOVertexId && vertexVbo != mBillboardVBOVertexId ) {
             glUniformMatrix4fv(uScale, 1, false, &transform[0][0]);
         } else {
             glUniformMatrix4fv(uScale, 1, false, &identity[0][0]);
@@ -467,6 +465,10 @@ namespace odb {
 		mVBORegisters["floor"] = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6);
 
 		mVBORegisters["sky"] = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6);
+
+
+		mBillboardVBOVertexId = std::get<0>(mVBORegisters["billboard"]);
+		mSkyboxVBOVertexId = std::get<0>(mVBORegisters["sky"]);
 
 		initTileProperties();
 	}

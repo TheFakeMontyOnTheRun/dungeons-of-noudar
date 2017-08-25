@@ -66,6 +66,8 @@ namespace odb {
 		int uMod;
 		int uScale;
 		int fadeUniform;
+		int mSkyboxVBOVertexId = -1;
+		int mBillboardVBOVertexId = -1;
 		glm::mat4 projectionMatrix;
 		glm::mat4 mViewMatrix = glm::mat4(1.0f);
 		std::unordered_map<ETextures, vector<odb::VBORenderingJob>> batches;
