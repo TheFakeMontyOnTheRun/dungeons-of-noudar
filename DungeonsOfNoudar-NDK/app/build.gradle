@@ -30,7 +30,7 @@ model {
 	android.ndk {
 		moduleName = "NdkGlue"
 		toolchain = "clang"
-		cppFlags.addAll(["-std=gnu++14", "-g", "-fno-inline"])
+		cppFlags.addAll(["-std=gnu++14", "-g", "-fno-inline", "-DUSE_ITEMS_INSTANTLY"])
 		ldLibs.addAll(["log", "GLESv2", "android", "jnigraphics", "OpenSLES"])
 		CFlags.add('-std=c99')
 		stl = "c++_static"
