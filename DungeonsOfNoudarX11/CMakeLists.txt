@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.8)
 project(dungeons_of_noudar_x11)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMESA_GLES2 -DGLM_FORCE_RADIANS -DUSE_ITEMS_INSTANTLY ")
