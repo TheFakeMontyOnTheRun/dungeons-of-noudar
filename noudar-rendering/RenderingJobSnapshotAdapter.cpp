@@ -190,7 +190,7 @@ namespace odb {
 					                                                                         shade, true);
 				}
 
-				if (tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
+				if (tileProperties.mCeilingRepetitions > 0 && tileProperties.mCeilingRepeatedWallTexture != mNullTexture) {
 
 					const auto &tileVBO = VBORegisters.at(tileProperties.mVBOToRender);
                     auto vboId = std::get<0>(tileVBO);
@@ -255,7 +255,7 @@ namespace odb {
                     }
 				}
 
-				if (tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
+				if (tileProperties.mFloorRepetitions > 0 && tileProperties.mFloorRepeatedWallTexture != mNullTexture) {
 
 					const auto &tileVBO = VBORegisters.at(tileProperties.mVBOToRender);
                     auto vboId = std::get<0>(tileVBO);
