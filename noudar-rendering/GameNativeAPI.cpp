@@ -498,6 +498,8 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
             if ( game->getLevelNumber() >= 7 ) {
                 game->setIsPlaying( false );
+				render->setNextCommand(Knights::kEndTurnCommand);
+				game->tick();
             }
         }
     };
