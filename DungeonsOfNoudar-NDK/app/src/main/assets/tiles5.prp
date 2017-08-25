@@ -19,7 +19,7 @@ L 0 ceiling lava null cube null null 2 0 2 -2
 * 0 ceiling floor null floor null null 0 0 6 0
 % 1 null floor bricks leftnear bricks null 3 0 1 0
 # 1 ceilingbars floor bars cube bricks null 2 0 1 0
-3 1 ceilingbars floor magicseal cube bricks null 2 0 1 0
+3 1 ceiling floor magicseal cube bricks null 2 0 1 0
 @ 1 ceilingbars floor slot cube bricks null 2 0 1 0
 | 0 null floor bricks leftfar bricks null 3 0 1 0
 . 0 null floor null null null null 0 0 0 0
