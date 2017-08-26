@@ -38,8 +38,12 @@ namespace odb {
 
 		void deleteVBOs();
 
-		void drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo, int vertexCount,
-		                  const glm::mat4 &transform, float shade);
+		void drawGeometry(const int vertexVbo, const int indexVbo,
+                          const glm::vec3 &translate, int rotate, float scale);
+
+        void drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
+                                      int vertexCount,
+                                      const glm::mat4 &transform, float shade);
 
 		int createProgram(const char *pVertexSource, const char *pFragmentSource);
 

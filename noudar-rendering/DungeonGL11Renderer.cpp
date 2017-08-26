@@ -370,6 +370,24 @@ namespace odb {
 	void DungeonGLES2Renderer::fetchShaderLocations() {
 	}
 
+	void DungeonGLES2Renderer::drawGeometry(const int vertexVbo, const int indexVbo,
+											const glm::vec3 &translate, int rotate, float scale) {
+
+
+		auto geometryBatch = GeometryBatches[vertexVbo];
+		auto indicesBatch = IndicesBatches[indexVbo];
+
+		glBegin(GL_TRIANGLES);
+		for (int i = 0; i < indicesBatch.sizeIndices; ++i) {
+			unsigned short index = indicesBatch.indices[i];
+
+			float *line = geometryBatch.vertices + (index * kGeometryLineStride);
+			glTexCoord2f(line[3], line[4] * scale);
+			glVertex3f(line[0] + translate.x, (line[1] * scale) + translate.y, line[2] + translate.z);
+		}
+		glEnd();
+    }
+
 	void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
 	                                        int vertexCount,
 	                                        const glm::mat4 &transform, float shade) {
@@ -386,7 +404,7 @@ namespace odb {
 			unsigned short index = indicesBatch.indices[i];
 
 			float *line = geometryBatch.vertices + (index * kGeometryLineStride);
-			glTexCoord2f(line[3], line[4]);
+			glTexCoord2f(line[3], line[4] * transform[1][1]);
 #ifndef OSMESA
             glColor3f( shade, shade, shade );
 #endif
@@ -414,6 +432,9 @@ namespace odb {
 		mVBORegisters["sky"] = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6);
 #endif
 		initTileProperties();
+
+        mBillboardVBOVertexId = std::get<0>(mVBORegisters["billboard"]);
+        mSkyboxVBOVertexId = std::get<0>(mVBORegisters["sky"]);
 	}
 
 	void DungeonGLES2Renderer::clearBuffers() {
@@ -606,7 +627,7 @@ namespace odb {
 			auto textureId = mTextures[batch.first];
 			glBindTexture(GL_TEXTURE_2D, textureId[ (frame/4) % textureId.size()]);
 
-			for (const auto &element : batch.second) {
+            for (const auto &element : batch.second) {
 				const auto &transform = element.getTransform();
 				const auto &shade = element.getShade();
 				const auto &amount = element.getAmount();
@@ -619,14 +640,39 @@ namespace odb {
 				} else {
 					glDisable( GL_ALPHA_TEST );
 				}
+#ifndef OSMESA
+                drawGeometry(textureId[ frame % textureId.size() ],
+                             vboId,
+                             vboIndicesId,
+                             amount,
+                             transform,
+                             shade
+                );
+#else
+                if ( vboId != mBillboardVBOVertexId ) {
 
-				drawGeometry(textureId[ frame % textureId.size() ],
-				             vboId,
-				             vboIndicesId,
-				             amount,
-				             transform,
-				             shade
-				);
+                    glLoadMatrixf(&(mViewMatrix)[0][0]);
+
+                    auto x = transform[3][0];
+				    auto y = transform[3][1];
+				    auto z = transform[3][2];
+
+                    drawGeometry(vboId,
+                                 vboIndicesId,
+                                 glm::vec3{x, y, z},
+                                 mCamera.getCameraRotationXZ(),
+                                 transform[1][1]
+                    );
+                } else {
+                    drawGeometry(textureId[ frame % textureId.size() ],
+                                 vboId,
+                                 vboIndicesId,
+                                 amount,
+                                 transform,
+                                 shade
+                    );
+                }
+#endif
 			}
 		}
 	}
