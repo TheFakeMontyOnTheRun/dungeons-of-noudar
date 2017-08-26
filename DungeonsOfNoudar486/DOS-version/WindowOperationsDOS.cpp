@@ -57,8 +57,8 @@ using eastl::array;
 #include "LoadPNG.h"
 #include "DOSHacks.h"
 
-const int bufferWidth = 64;
-const int bufferHeight = 64;
+const int bufferWidth = 160;
+const int bufferHeight = 100;
 const int screenWidth = 320;
 const int screenHeight = 200;
 bool done = false;

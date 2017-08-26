@@ -12,10 +12,8 @@ namespace odb {
 
 	static const long kAnimationLength = 500;
 
-#ifndef OSMESA
 	const static TextureName mSkyBoxTextureName = "sky";
 	const static int kSkyTextureLength = 400;
-#endif
 	using Shade = float;
 
 	using TextureId = uint8_t;
@@ -48,9 +46,7 @@ namespace odb {
 		easingAnimationCurveStep(glm::vec2 prevPosition, glm::vec2 destPosition, long animationTime, long timestamp
 		                         );
 
-#ifdef OSMESA
 		static int visibility;
-#endif
 
 	};
 }

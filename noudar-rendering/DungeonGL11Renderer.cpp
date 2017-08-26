@@ -111,14 +111,14 @@ namespace odb {
 			1.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 			-1.0f, 0.0f, 1.0f, 0.0f, 1.0f,
 	};
-#ifndef OSMESA
+
 	const float DungeonGLES2Renderer::skyVertices[]{
 			-kSkyTextureLength - 20.0f, 10.0f, -200.0f, 0.0f, .0f,
 			-20.0f, 10.0f, -200.0f, 10.0f, 0.0f,
 			-20.0f, 10.0f, 200.0f, 10.0f, 10.0f,
 			-kSkyTextureLength - 20.0f, 10.0f, 200.0f, 0.0f, 10.0f,
 	};
-#endif
+
 	const float DungeonGLES2Renderer::cubeVertices[]{
 //    4________5
 //    /|       /|
@@ -190,9 +190,8 @@ namespace odb {
 			8, 11, 15
 	};
 
-#ifdef OSMESA
+
     int DungeonGLES2Renderer::visibility = 8;
-#endif
 
 	VBORegister DungeonGLES2Renderer::submitVBO(float *data, int vertices,
 	                                            unsigned short *indexData,
@@ -428,9 +427,9 @@ namespace odb {
 		mVBORegisters["leftnear"] = submitVBO((float *) cornerLeftNearVertices, 4,
 		                                      (unsigned short *) cornerLeftNearIndices, 6);
 		mVBORegisters["floor"] = submitVBO((float *) floorVertices, 4, (unsigned short *) floorIndices, 6);
-#ifndef OSMESA
+
 		mVBORegisters["sky"] = submitVBO((float *) skyVertices, 4, (unsigned short *) skyIndices, 6);
-#endif
+
 		initTileProperties();
 
         mBillboardVBOVertexId = std::get<0>(mVBORegisters["billboard"]);
@@ -442,13 +441,8 @@ namespace odb {
 		checkGlError("glClearColor");
 		glClearDepth(1.0f);
 		checkGlError("glClearDepthf");
-#ifndef OSMESA
 		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-#else
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-#endif
 		checkGlError("glClear");
 	}
 
@@ -506,22 +500,13 @@ namespace odb {
         glm::vec3 pos;
         const auto &billboardVBO = mVBORegisters["billboard"];
 
-#ifdef OSMESA
         mSnapshotAdapter.visibility = visibility;
-#endif
         mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters, mTextureRegistry, mCamera, mElementMap );
 
-#ifdef OSMESA
-        auto x0 = std::max( 0, snapshot.mCameraPosition.x - visibility );
-        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + visibility );
-        auto z0 = std::max( 0, snapshot.mCameraPosition.y - visibility );
-        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + visibility );
-#else
         auto x0 = 0;
         auto x1 = Knights::kMapSize - 1;
         auto z0 = 0;
         auto z1 = Knights::kMapSize - 1;
-#endif
 
         for (int z = z0; z <= z1; ++z) {
             for (int x = x0; x <= x1; ++x) {

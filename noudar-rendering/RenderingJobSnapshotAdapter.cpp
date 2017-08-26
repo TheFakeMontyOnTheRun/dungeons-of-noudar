@@ -42,8 +42,13 @@ using eastl::array;
 
 namespace odb {
     const static glm::mat4 identity = glm::mat4(1.0f);
+    int RenderingJobSnapshotAdapter::visibility = 0;
+
+	const static bool kOnlyRenderAreaAroundPlayer =
 #ifdef OSMESA
-    static int RenderingJobSnapshotAdapter::visibility;
+			false;
+#else
+			false;
 #endif
 
 	const static bool kUseRepeatedGeometryStances =
@@ -54,15 +59,11 @@ namespace odb {
 #endif
 
 	glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
-#ifndef OSMESA
 		long offset = animationTime;
 		int integerPart = offset % ((kSkyTextureLength * 2) * 1000);
 		float finalOffset = integerPart / 1000.0f;
 
 		return glm::translate(identity, glm::vec3(finalOffset, 0.0f, 0.0f));
-#else
-        return glm::mat4(1.0f);
-#endif
 	}
 
 
@@ -127,15 +128,26 @@ namespace odb {
 
 		glm::vec3 pos;
 		const auto &floorVBO = VBORegisters.at("floor");
-
+		const auto &billboardVBO = VBORegisters.at("billboard");
 		batches.clear();
 
-#ifdef OSMESA
-        auto x0 = std::max( 0, snapshot.mCameraPosition.x - visibility );
-        auto x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + visibility );
-        auto z0 = std::max( 0, snapshot.mCameraPosition.y - visibility );
-        auto z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + visibility );
-#else
+		uint8_t x0;
+		uint8_t x1;
+		uint8_t z0;
+		uint8_t z1;
+
+		if (kOnlyRenderAreaAroundPlayer ) {
+			x0 = std::max( 0, snapshot.mCameraPosition.x - visibility );
+			x1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.x + visibility );
+			z0 = std::max( 0, snapshot.mCameraPosition.y - visibility );
+			z1 = std::min( Knights::kMapSize, snapshot.mCameraPosition.y + visibility );
+		} else {
+			x0 = 0;
+			x1 = Knights::kMapSize - 1;
+			z0 = 0;
+			z1 = Knights::kMapSize - 1;
+		}
+
         const auto &skyVBO = VBORegisters.at("sky");
         batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
                                                 std::get<1>(skyVBO),
@@ -149,12 +161,6 @@ namespace odb {
                                                 getSkyTransform(
                                                         snapshot.mTimestamp + kSkyTextureLength * 1000),
                                                 1.0f, true);
-
-        auto x0 = 0;
-        auto x1 = Knights::kMapSize - 1;
-        auto z0 = 0;
-        auto z1 = Knights::kMapSize - 1;
-#endif
 
 		for (int z = z0; z <= z1; ++z) {
 			for (int x = x0; x <= x1; ++x) {
@@ -174,11 +180,15 @@ namespace odb {
 					shade = 1.5f;
 				}
 
-				if (tilePropertiesRegistry.count(tile) <= 0) {
+
+				auto mapItem = snapshot.mItemMap[ z ][ x ];
+				auto actor = snapshot.snapshot[z][x];
+				int splatFrame = snapshot.splat[z][x];
+				auto tileProperties = tilePropertiesRegistry.at(tile);
+
+				if (tilePropertiesRegistry.find(tile) == std::end(tilePropertiesRegistry)) {
 					continue;
 				}
-
-				auto tileProperties = tilePropertiesRegistry.at(tile);
 
 
 				if (tileProperties.mCeilingTexture != mNullTexture) {
@@ -298,32 +308,6 @@ namespace odb {
 					                                                                       std::get<2>(floorVBO),
 					                                                                       getFloorTransform(pos),
 					                                                                       shade, true);
-				}
-			}
-		}
-
-		const auto &billboardVBO = VBORegisters.at("billboard");
-
-		for (int z = 0; z < Knights::kMapSize; ++z) {
-			for (int x = 0; x < Knights::kMapSize; ++x) {
-
-				if (snapshot.mVisibilityMap[z][x] == EVisibility::kInvisible) {
-					continue;
-				}
-
-				auto mapItem = snapshot.mItemMap[ z ][ x ];
-				auto actor = snapshot.snapshot[z][x];
-				int splatFrame = snapshot.splat[z][x];
-#ifndef OSMESA
-				Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
-#else
-				Shade shade = 1.0f;
-#endif
-				auto tile = snapshot.map[z][x];
-				auto tileProperties = tilePropertiesRegistry.at(tile);
-
-				if ( z == snapshot.mCursorPosition.y && x == snapshot.mCursorPosition.y ) {
-					shade = 1.5 * shade;
 				}
 
 				if ( mapItem == 't') {

@@ -1,4 +1,4 @@
-CXXFLAGS = -g -c -O6 -Ofast  -DEA_PLATFORM_LINUX   -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast-math -DOSMESA -DGLM_FORCE_RADIANS -mtune=i486 -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -I/usr/local/include/GL -fpermissive -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common
+CXXFLAGS = -g -c -O6 -Ofast  -DEA_PLATFORM_LINUX   -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -fno-rtti -ffast-math -DOSMESA -DGLM_FORCE_RADIANS -mtune=i486 -march=i486 -I../noudar-core/noudar-core/include -Iincludes -I../NullSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IDOS-version -I../glm -I../nanovg/src -Imesa -I/usr/local/include/GL -fpermissive -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -DUSE_ITEMS_INSTANTLY
 
 LDFLAGS = -lGLU -Lmesa -lOSMesa -lemu
 

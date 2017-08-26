@@ -167,9 +167,7 @@ namespace odb {
 
 		void performVisibilityChecks(bool visibilityChecks);
 
-#ifdef OSMESA
 		static int visibility;
-#endif
 	};
 }
 #endif //NOUDARRENDERING_DUNGEONRENDERER_H

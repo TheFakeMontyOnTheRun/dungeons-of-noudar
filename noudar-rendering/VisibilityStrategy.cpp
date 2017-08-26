@@ -43,7 +43,7 @@ namespace odb {
 
     const bool kNarrowByDistance =
 #ifdef OSMESA
-    true;
+    false;
 #else
     false;
 #endif
@@ -152,7 +152,7 @@ namespace odb {
             int distance = ( currentPos.y - originalPos.y );
             int narrowing = 1;
 #ifdef OSMESA
-            if ( std::abs( distance ) >= 9 ) {
+            if ( kNarrowByDistance && std::abs( distance ) >= 9 ) {
                 continue;
             }
             narrowing = (distance / 2) + 1;
