@@ -42,11 +42,18 @@ using eastl::array;
 
 namespace odb {
     const static glm::mat4 identity = glm::mat4(1.0f);
-    int RenderingJobSnapshotAdapter::visibility = 0;
+    int RenderingJobSnapshotAdapter::visibility = 8;
+
+	const static bool kRenderSky =
+#ifdef OSMESA
+            false;
+#else
+            true;
+#endif
 
 	const static bool kOnlyRenderAreaAroundPlayer =
 #ifdef OSMESA
-			false;
+			true;
 #else
 			false;
 #endif
@@ -56,6 +63,13 @@ namespace odb {
 	false;
 #else
 	false;
+#endif
+
+	const static bool kUseSmoothAnimationCurves =
+#ifdef OSMESA
+			false;
+#else
+			true;
 #endif
 
 	glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
@@ -85,15 +99,15 @@ namespace odb {
 
 		float curve = 0.0f;
 
-#ifdef OSMESA
-        curve = step;
-#else
-		if (step < 0.5f) {
-			curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
+		if (kUseSmoothAnimationCurves) {
+			if (step < 0.5f) {
+				curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
+			} else {
+				curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
+			}
 		} else {
-			curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
+			curve = step;
 		}
-#endif
 
 		return {(curve * (destPosition.x - prevPosition.x)) + prevPosition.x,
 		        (curve * (destPosition.y - prevPosition.y)) + prevPosition.y};
@@ -148,19 +162,23 @@ namespace odb {
 			z1 = Knights::kMapSize - 1;
 		}
 
-        const auto &skyVBO = VBORegisters.at("sky");
-        batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
-                                                std::get<1>(skyVBO),
-                                                std::get<2>(skyVBO),
-                                                getSkyTransform(snapshot.mTimestamp),
-                                                1.0f, true);
+		if ( kRenderSky ) {
+			const auto &skyVBO = VBORegisters.at("sky");
+			batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
+													std::get<1>(skyVBO),
+													std::get<2>(skyVBO),
+													getSkyTransform(snapshot.mTimestamp),
+													1.0f, true);
 
-        batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
-                                                std::get<1>(skyVBO),
-                                                std::get<2>(skyVBO),
-                                                getSkyTransform(
-                                                        snapshot.mTimestamp + kSkyTextureLength * 1000),
-                                                1.0f, true);
+			batches[ETextures::Skybox].emplace_back(std::get<0>(skyVBO),
+													std::get<1>(skyVBO),
+													std::get<2>(skyVBO),
+													getSkyTransform(
+															snapshot.mTimestamp + kSkyTextureLength * 1000),
+													1.0f, true);
+		}
+
+
 
 		for (int z = z0; z <= z1; ++z) {
 			for (int x = x0; x <= x1; ++x) {
