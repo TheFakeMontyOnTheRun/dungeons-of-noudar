@@ -107,8 +107,6 @@ set(SOURCE_FILES
         ../gles2-renderer/TrigBatch.cpp
         ../gles2-renderer/VBORenderingJob.cpp
         ../gles2-renderer/NativeBitmap.cpp
-        ../gles2-renderer/WavefrontOBJReader.cpp
-        ../gles2-renderer/WavefrontMaterialReader.cpp
         ../gles2-renderer/Scene.cpp
         ../nanovg/src/nanovg.c
         ../NullSoundSystem/SoundClip.cpp

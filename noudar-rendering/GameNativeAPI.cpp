@@ -602,16 +602,6 @@ void setSnapshot(const odb::NoudarDungeonSnapshot& newSnapshot ) {
 	updateCharacterMovements( snapshot.ids );
 }
 
-void loadMeshList( vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
-#ifndef OSMESA
-	for ( const auto& mesh : meshes ) {
-
-		std::istringstream meshStream( fileLoaderDelegate->loadFileFromPath( mesh));
-		loadedMeshes.emplace_back( readScene( meshStream, fileLoaderDelegate ) );
-	}
-#endif
-}
-
 void interact() {
 	if (game != nullptr) {
 		render->setNextCommand('\t');

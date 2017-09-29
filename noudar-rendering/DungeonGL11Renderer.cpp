@@ -606,7 +606,6 @@ namespace odb {
 
 	void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
 		glMatrixMode(GL_MODELVIEW);
-
 		for (const auto &batch : batches) {
 
 			auto textureId = mTextures[batch.first];
@@ -676,7 +675,7 @@ namespace odb {
 
 
 		return glm::rotate(translated,
-		                   (360 - mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
+		                   ((360 - mCamera.getCameraRotationXZ()) / 180)  * (3.141592f),
 		                   glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 

@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -Werror -DMESA_GLES2 -Wall -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -DUSE_ITEMS_INSTANTLY
+CXXFLAGS = -O2 -g -DMESA_GLES2 -Wall -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -DUSE_ITEMS_INSTANTLY
 LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng -lopenal
 CXX = clang++
 CC = clang
@@ -55,8 +55,6 @@ OBJS = X11-version/main.o \
         ../gles2-renderer/TrigBatch.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \
-        ../gles2-renderer/WavefrontOBJReader.o \
-        ../gles2-renderer/WavefrontMaterialReader.o \
         ../gles2-renderer/Scene.o \
         ../nanovg/src/nanovg.o \
         ../OpenALSoundSystem/SoundClip.o \

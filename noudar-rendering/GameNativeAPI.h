@@ -59,8 +59,6 @@ void gameLoopTick( long ms );
 
 void setSoundEmitters( vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener );
 
-void loadMeshList( vector< std::string> meshes, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate );
-
 void forceDirection( int direction );
 
 void interact();
