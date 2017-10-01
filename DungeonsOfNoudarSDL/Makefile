@@ -53,8 +53,6 @@ OBJS = SDL-version/main.o \
         ../nanovg/src/nanovg.o \
         ../gles2-renderer/CLerp.o \
         ../gles2-renderer/Scene.o \
-        ../gles2-renderer/WavefrontOBJReader.o \
-        ../gles2-renderer/WavefrontMaterialReader.o \
         ../gles2-renderer/TrigBatch.o \
         ../gles2-renderer/VBORenderingJob.o \
         ../gles2-renderer/NativeBitmap.o \
