@@ -402,23 +402,6 @@ Java_br_odb_GL2JNILib_forcePlayerDirection(JNIEnv *env, jclass type, jint direct
 }
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setMeshes(JNIEnv *env, jclass type, jobject assets, jobjectArray objFiles) {
-
-
-	int length = env->GetArrayLength(objFiles);
-	AAssetManager *assetManager = AAssetManager_fromJava(env, assets);
-	auto loader = std::make_shared<odb::AndroidFileLoaderDelegate>(assetManager);
-
-	for (int c = 0; c < length; ++c) {
-		auto objFile = std::string(  env->GetStringUTFChars((jstring) env->GetObjectArrayElement(objFiles, c), 0) );
-		meshes.emplace_back( objFile );
-	}
-
-	loadMeshList( meshes, loader );
-	meshes.clear();
-}
-
-JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_cyclePreviousItem(JNIEnv *env, jclass type) {
     cyclePrevItem();
 }

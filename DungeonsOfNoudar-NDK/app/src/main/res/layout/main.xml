@@ -35,28 +35,34 @@
             android:textSize="45sp"/>
 
     </RelativeLayout>
-<LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_weight="0.25"
-    android:layout_height="0dp">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_weight="0.25"
+        android:layout_height="0dp">
 
-    <Button
-        android:id="@+id/btStart"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:text="@string/start"
-        android:layout_weight="1"/>
+        <Button
+            android:id="@+id/btStart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:text="@string/start"
+            android:layout_weight="1"/>
 
-    <Button
-        android:id="@+id/btnplayInvr"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:text="Play In VR"
-        android:layout_weight="1" />
+        <Button
+            android:id="@+id/btnHowToPlay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/how_to_play"
+            android:layout_weight="1"/>
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnCredits"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/credits"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
 
 </LinearLayout>

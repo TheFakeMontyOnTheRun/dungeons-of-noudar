@@ -21,6 +21,9 @@ model {
 						srcDir "../../noudar-rendering"
 						srcDir "../../nanovg/src"
 						srcDir "../../AndroidSoundSystem"
+
+						exclude "**/*WavefrontOBJReader.cpp"
+						exclude "**/*WavefrontMaterialReader.cpp"
 					}
 				}
 			}
