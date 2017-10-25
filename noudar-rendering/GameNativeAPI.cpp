@@ -525,11 +525,13 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 	}
 }
 
+#ifndef OSMESA
 void playSound( int soundNum ) {
     if (!soundEmitters.empty() ) {
         soundEmitters[ soundNum ]->play(mainListener );
     }
 }
+#endif
 
 void moveUp() {
 
