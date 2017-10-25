@@ -9,7 +9,7 @@ model {
 			applicationId = "br.odb.noudar"
 			minSdkVersion.apiLevel = 22
 			targetSdkVersion.apiLevel = 22
-			testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//			testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 		}
 
 		sources {
@@ -76,17 +76,17 @@ model {
 	}
 }
 
-dependencies {
-
-	compile fileTree(include: ['*.jar'], dir: 'libs')
-
-	compile project(':base')
-	compile project(':common')
-	compile project(':audio')
-
-	compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
-
-	androidTestCompile 'com.android.support:support-annotations:23.1.1'
-	androidTestCompile 'com.android.support.test:runner:0.4.1'
-	androidTestCompile 'com.android.support.test:rules:0.4.1'
-}
+//dependencies {
+//
+//	compile fileTree(include: ['*.jar'], dir: 'libs')
+//
+//	compile project(':base')
+//	compile project(':common')
+//	compile project(':audio')
+//
+//	compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
+//
+//	androidTestCompile 'com.android.support:support-annotations:23.1.1'
+//	androidTestCompile 'com.android.support.test:runner:0.4.1'
+//	androidTestCompile 'com.android.support.test:rules:0.4.1'
+//}
