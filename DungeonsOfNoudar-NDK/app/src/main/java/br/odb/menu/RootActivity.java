@@ -37,12 +37,12 @@ public class RootActivity extends Activity {
 				playGame();
 			}
 		});
-		findViewById(R.id.btnCredits).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showCredits();
-			}
-		});
+//		findViewById(R.id.btnCredits).setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				showCredits();
+//			}
+//		});
 		findViewById(R.id.btnHowToPlay).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -51,7 +51,7 @@ public class RootActivity extends Activity {
 		});
 
 		((Button)findViewById(R.id.btStart)).setTypeface( font );
-		((Button)findViewById(R.id.btnCredits)).setTypeface( font );
+//		((Button)findViewById(R.id.btnCredits)).setTypeface( font );
 		((Button)findViewById(R.id.btnHowToPlay)).setTypeface( font );
 
 		mSoundManager.playMusic( R.raw.canto_rg );

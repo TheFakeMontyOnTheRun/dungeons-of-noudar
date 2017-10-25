@@ -18,6 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Renderer {
 
+	public static final boolean kShouldLoadSounds = false;
 	public static final int TICK_INTERVAL = 20;
 	private AssetManager assets;
 
@@ -249,16 +250,18 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 			GL2JNILib.onCreate(assets);
 			final Activity activity = ((Activity) getContext());
 
-			GL2JNILib.loadSounds( activity.getAssets(), new String[] {
-					"grasssteps.wav", //0
-					"stepsstones.wav", //1
-					"bgnoise.wav", //2
-					"monsterdamage.wav", //3
-					"monsterdead.wav", //4
-					"playerdamage.wav", //5
-					"playerdead.wav", //6
-					"swing.wav" //7
-			});
+			if (kShouldLoadSounds) {
+				GL2JNILib.loadSounds( activity.getAssets(), new String[] {
+						"grasssteps.wav", //0
+						"stepsstones.wav", //1
+						"bgnoise.wav", //2
+						"monsterdamage.wav", //3
+						"monsterdead.wav", //4
+						"playerdamage.wav", //5
+						"playerdead.wav", //6
+						"swing.wav" //7
+				});
+			}
 		}
 	}
 

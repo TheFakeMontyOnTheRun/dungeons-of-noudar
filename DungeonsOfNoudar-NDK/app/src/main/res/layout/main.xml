@@ -56,12 +56,12 @@
             android:text="@string/how_to_play"
             android:layout_weight="1"/>
 
-        <Button
-            android:id="@+id/btnCredits"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/credits"
-            android:layout_weight="1"/>
+        <!--<Button-->
+            <!--android:id="@+id/btnCredits"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:text="@string/credits"-->
+            <!--android:layout_weight="1"/>-->
     </LinearLayout>
 
 

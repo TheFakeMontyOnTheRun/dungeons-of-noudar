@@ -101,6 +101,9 @@ bool drawOverlayHUD = true;
 vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::shared_ptr<odb::SoundListener> mainListener;
 vector< std::shared_ptr<odb::Scene>> loadedMeshes;
+
+void playSound(int soundNum);
+
 #endif
 
 vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
@@ -305,12 +308,12 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 	auto floorType = snapshot.map[ newPosition.y ][ newPosition.x ];
 
 	if ( floorType  == '.' || floorType == '-' ) {
-		soundEmitters[0]->play(mainListener);
+        playSound(0);
 	} else if ( floorType == '_' || floorType == '=') {
-		soundEmitters[1]->play(mainListener);
+        playSound(1);
 	} else {
 		if ( floorType == '{' || floorType == '(' || floorType == ')' || floorType == '}' || floorType == '2' || floorType == '7' || '~' ) {
-			soundEmitters[1]->play(mainListener);
+            playSound(1);
 		}
 	}
 #endif
@@ -431,19 +434,19 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
 #ifndef OSMESA
-		soundEmitters[ 4 ]->play( mainListener );
+        playSound(4);
 #endif
 	};
 
 	auto onPlayerDead = [&](Knights::Vec2i pos) {
 #ifndef OSMESA
-		soundEmitters[ 6 ]->play( mainListener );
+        playSound(6);
 #endif
 	};
 
 	auto onPlayerAttack = [&](Knights::Vec2i pos) {
 #ifndef OSMESA
-		soundEmitters[ 7 ]->play( mainListener );
+        playSound(7);
 #endif
 	};
 
@@ -456,7 +459,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 		splatAnimation.push_back( splat );
 		splat->startSplatAnimation();
 #ifndef OSMESA
-		soundEmitters[ 3 ]->play( mainListener );
+        playSound(3);
 #endif
 	};
 
@@ -469,7 +472,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	auto onPlayerDamaged = [&](Knights::Vec2i pos) {
 #ifndef OSMESA
-		soundEmitters[ 5 ]->play( mainListener );
+        playSound(5);
 #endif
 	};
 
@@ -520,6 +523,12 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 	if ( game != nullptr ) {
 		game->tick();
 	}
+}
+
+void playSound( int soundNum ) {
+    if (!soundEmitters.empty() ) {
+        soundEmitters[ soundNum ]->play(mainListener );
+    }
 }
 
 void moveUp() {

@@ -8,7 +8,7 @@ import android.media.MediaPlayer;
  */
 public class SoundManager {
 	private final Context mContext;
-	private MediaPlayer mMusic;
+//	private MediaPlayer mMusic;
 
 	private boolean mayEnableSound() {
 		android.media.AudioManager am = (android.media.AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
@@ -30,16 +30,16 @@ public class SoundManager {
 
 	public void playMusic(int musicRes) {
 		if ( mayEnableSound() ) {
-			mMusic = MediaPlayer.create( mContext, musicRes );
-			mMusic.start();
+//			mMusic = MediaPlayer.create( mContext, musicRes );
+//			mMusic.start();
 		}
 	}
 
 	public void stop() {
-		if ( mMusic != null ) {
-			mMusic.stop();
-			mMusic.release();
-			mMusic = null;
-		}
+//		if ( mMusic != null ) {
+//			mMusic.stop();
+//			mMusic.release();
+//			mMusic = null;
+//		}
 	}
 }
