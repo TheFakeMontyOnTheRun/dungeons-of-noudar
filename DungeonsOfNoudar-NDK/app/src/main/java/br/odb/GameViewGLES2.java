@@ -21,6 +21,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	public static final boolean kShouldLoadSounds = false;
 	public static final int TICK_INTERVAL = 20;
 	private AssetManager assets;
+	private Context mContext;
 
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
@@ -37,7 +38,11 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		GL2JNILib.tick(TICK_INTERVAL);
 
 		synchronized (renderingLock) {
-			GL2JNILib.step();
+			if (!GL2JNILib.step() ) {
+				if (mContext instanceof  Activity ) {
+					((Activity)mContext).finish();
+				}
+			}
 		}
 	}
 
@@ -138,8 +143,8 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 		return delta;
 	}
 
-	private void init() {
-
+	private void init(Context context) {
+		this.mContext = context;
 		setEGLContextClientVersion(2);
 
 		setRenderer(this);
@@ -149,13 +154,13 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 	public GameViewGLES2(Context context) {
 		super(context);
-		init();
+		init(context);
 	}
 
 
 	public GameViewGLES2(Context context, AttributeSet attrs) {
 		super(context																																																																																																																			, attrs);
-		init();
+		init(context);
 	}
 
 	public void init(final Context context, int level, boolean haveController) {

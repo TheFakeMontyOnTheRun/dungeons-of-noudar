@@ -480,7 +480,8 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	auto onLevelLoaded = [fileLoaderDelegate]() {
 
-        auto textures = loadTexturesForLevel( game != nullptr ? game->getLevelNumber() : 0, fileLoaderDelegate );
+        auto levelNumber = game != nullptr ? game->getLevelNumber() : 0;
+        auto textures = loadTexturesForLevel( levelNumber, fileLoaderDelegate );
 
         forceDirection( 0 );
         render->reset();
@@ -497,13 +498,18 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 		}
 
         if ( game != nullptr ) {
-            game->tick();
+#if defined(__ANDROID__ )
+            auto avatar = game->getMap()->getAvatar();
+            avatar->addHP(-avatar->getHP());
+#else
+             game->tick();
 
             if ( game->getLevelNumber() >= 7 ) {
                 game->setIsPlaying( false );
 				render->setNextCommand(Knights::kEndTurnCommand);
 				game->tick();
             }
+#endif
         }
     };
 
@@ -849,4 +855,8 @@ void performVisibilityChecks(bool visibilityCheck) {
 	if ( render != nullptr ) {
 		render->setVisibilityChecks(visibilityCheck);
 	}
+}
+
+bool isPlaying() {
+    return getHP() > 0;
 }

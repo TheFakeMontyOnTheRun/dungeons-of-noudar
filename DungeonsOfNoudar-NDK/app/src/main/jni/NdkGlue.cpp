@@ -236,7 +236,7 @@ JNIEXPORT void JNICALL
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
                                                   jint width, jint height, jobject asset_manager);
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type);
+JNIEXPORT jboolean JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setMapWithSplatsAndActors(JNIEnv *env, jclass type, jintArray map_,
@@ -270,8 +270,10 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
     setupGraphics(width, height, gVertexShader, gFragmentShader, loader);
 }
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type) {
+JNIEXPORT jboolean JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type) {
 	renderFrame(currentDelta);
+
+	return isPlaying();
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jobject obj) {
