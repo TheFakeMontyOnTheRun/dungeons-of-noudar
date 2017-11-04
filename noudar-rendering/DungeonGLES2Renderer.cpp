@@ -302,8 +302,11 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::reloadTextures() {
+#if !defined(__ANDROID__ )
         unloadTextures();
-		mTextures.clear();
+        mTextures.clear();
+#endif
+
 
 		for (auto &bitmapList : mBitmaps) {
             vector<unsigned int> tex;
