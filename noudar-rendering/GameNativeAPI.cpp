@@ -96,11 +96,14 @@ std::shared_ptr<odb::NoudarGLES2Bridge> render;
 odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
 bool drawOverlayHUD = true;
+const int DEFAULT_HEALTH = 999;
+const int kMaxLevel = 7;
 
 #ifndef OSMESA
 vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::shared_ptr<odb::SoundListener> mainListener;
 vector< std::shared_ptr<odb::Scene>> loadedMeshes;
+
 
 void playSound(int soundNum);
 
@@ -442,6 +445,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 #ifndef OSMESA
         playSound(6);
 #endif
+        game->playLevel(8);
 	};
 
 	auto onPlayerAttack = [&](Knights::Vec2i pos) {
@@ -480,8 +484,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 	auto onLevelLoaded = [fileLoaderDelegate]() {
 
-        auto levelNumber = game != nullptr ? game->getLevelNumber() : 0;
-        auto textures = loadTexturesForLevel( levelNumber, fileLoaderDelegate );
+        auto textures = loadTexturesForLevel( game != nullptr ? game->getLevelNumber() : 0, fileLoaderDelegate );
 
         forceDirection( 0 );
         render->reset();
@@ -498,19 +501,8 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 		}
 
         if ( game != nullptr ) {
-#if defined(__ANDROID__ )
-            auto avatar = game->getMap()->getAvatar();
-            avatar->addHP(-avatar->getHP());
-#else
-             game->tick();
-
-            if ( game->getLevelNumber() >= 7 ) {
-                game->setIsPlaying( false );
-				render->setNextCommand(Knights::kEndTurnCommand);
-				game->tick();
-            }
-#endif
-        }
+            game->tick();
+		}
     };
 
 	auto gameDelegate = std::make_shared<Knights::CGameDelegate>();
@@ -834,8 +826,22 @@ std::string getCurrentObjectName() {
 }
 
 int getHP() {
+
+    if ( game == nullptr ) {
+        return DEFAULT_HEALTH;
+    }
+
     auto map = game->getMap();
+
+    if ( map == nullptr ) {
+        return DEFAULT_HEALTH;
+    }
+
     auto actor = map->getAvatar();
+
+    if ( actor == nullptr ) {
+        return DEFAULT_HEALTH;
+    }
 
     return actor->getHP();
 }
@@ -859,4 +865,12 @@ void performVisibilityChecks(bool visibilityCheck) {
 
 bool isPlaying() {
     return getHP() > 0;
+}
+
+int getLevel() {
+    if (game == nullptr) {
+        return 0;
+    }
+
+    return game->getLevelNumber();
 }

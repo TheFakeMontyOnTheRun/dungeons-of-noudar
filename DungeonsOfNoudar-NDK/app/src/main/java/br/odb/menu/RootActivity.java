@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import br.odb.GL2JNILib;
 import br.odb.SoundManager;
 import br.odb.noudar.R;
 
@@ -60,21 +61,23 @@ public class RootActivity extends Activity {
 	private void playGame() {
 		Intent intent = new Intent(getBaseContext(), GameActivity.class);
 		intent.putExtra(USE_VR, Boolean.FALSE);
-		startActivity(intent);
+		startActivityForResult(intent, 1);
 		overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
 	}
 
-	private void onLevelEnded(int levelPlayed, GameOutcome outcome) {
-		if (outcome == GameOutcome.VICTORY) {
-
-			++levelPlayed;
-
-			if (levelPlayed > NUMBER_OF_LEVELS) {
+	private void onLevelEnded(int levelPlayed) {
+			if (levelPlayed == 7 ) {
 				showGameEnding();
+			} else if (levelPlayed == 8 ) {
+				showGameOver();
 			}
-		} else if (outcome == GameOutcome.DEFEAT) {
-			showGameOver();
-		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		onLevelEnded(resultCode);
 	}
 
 	private void showHowToPlay() {

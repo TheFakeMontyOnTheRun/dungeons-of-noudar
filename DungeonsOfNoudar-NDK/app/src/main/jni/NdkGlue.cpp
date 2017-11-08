@@ -242,6 +242,12 @@ JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setMapWithSplatsAndActors(JNIEnv *env, jclass type, jintArray map_,
 		                                                jintArray actors_, jintArray splats_);
 
+JNIEXPORT jint JNICALL
+    Java_br_odb_GL2JNILib_getLevel(JNIEnv *env, jclass type);
+
+JNIEXPORT jboolean JNICALL
+    Java_br_odb_GL2JNILib_isPlaying(JNIEnv *env, jclass type);
+
 };
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserved,
@@ -450,4 +456,17 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setHeadAngles(JNIEnv *env, jclass type, jfloat xz, jfloat yz) {
  	setAngleXZ(xz);
 	setAngleYZ(yz);
+}
+
+JNIEXPORT jint JNICALL
+Java_br_odb_GL2JNILib_getLevel(JNIEnv *env, jclass type) {
+
+    return getLevel();
+
+}
+
+JNIEXPORT jboolean JNICALL
+Java_br_odb_GL2JNILib_isPlaying(JNIEnv *env, jclass type) {
+
+    return isPlaying();
 }

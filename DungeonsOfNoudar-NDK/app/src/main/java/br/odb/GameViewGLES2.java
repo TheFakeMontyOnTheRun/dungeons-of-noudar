@@ -22,6 +22,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 	public static final int TICK_INTERVAL = 20;
 	private AssetManager assets;
 	private Context mContext;
+	boolean playing = true;
 
 	@Override
 	public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
@@ -34,14 +35,29 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
 	@Override
 	public void onDrawFrame(GL10 gl10) {
+		if (!playing) {
+			return;
+		}
+
 		tick();
 		GL2JNILib.tick(TICK_INTERVAL);
 
 		synchronized (renderingLock) {
-			if (!GL2JNILib.step() ) {
+			GL2JNILib.step();
+
 				if (mContext instanceof  Activity ) {
-					((Activity)mContext).finish();
-				}
+					Activity activity = ((Activity)mContext);
+					int level = GL2JNILib.getLevel();
+					boolean win = (level == 7);
+					boolean loose = (level == 8);
+
+					if ( win || loose ) {
+						activity.setResult( level );
+						activity.finish();
+						playing = false;
+					}
+
+
 			}
 		}
 	}

@@ -76,4 +76,6 @@ void performVisibilityChecks( bool visibilityCheck );
 Knights::EDirection getCurrentDirection();
 
 bool isPlaying();
+
+int getLevel();
 #endif //DUNGEONSOFNOUDAR_NDK_GAMENATIVEAPI_H

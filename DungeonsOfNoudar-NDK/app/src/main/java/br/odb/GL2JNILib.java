@@ -3,6 +3,8 @@ package br.odb;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 
+import br.odb.menu.RootActivity;
+
 public class GL2JNILib {
 	static {
 		System.loadLibrary("NdkGlue");
@@ -67,4 +69,8 @@ public class GL2JNILib {
 	public static native void enableVisibilityCheck(boolean visibilityCheck);
 
 	public static native void setHeadAngles(float xz, float yz);
+
+	public static native int getLevel();
+
+	public static native boolean isPlaying();
 }
