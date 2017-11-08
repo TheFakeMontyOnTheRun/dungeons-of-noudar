@@ -53,7 +53,7 @@ namespace odb {
 
 	const static bool kOnlyRenderAreaAroundPlayer =
 #ifdef OSMESA
-			true;
+			false;
 #else
 			false;
 #endif
