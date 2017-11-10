@@ -19,3 +19,9 @@
 [submodule "noudar-core"]
 	path = noudar-core
 	url = https://github.com/TheFakeMontyOnTheRun/noudar-core
+[submodule "DungeonsOfNoudar486/uGLy"]
+	path = DungeonsOfNoudar486/uGLy
+	url = https://github.com/TheFakeMontyOnTheRun/uGLy.git
+[submodule "fixed_point"]
+	path = fixed_point
+	url = https://github.com/johnmcfarlane/fixed_point.git
