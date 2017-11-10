@@ -1,0 +1,77 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+/.idea/.name
+/.idea/castle-of-viana-3D.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/workspace.xml
+/CWSDPMI.SWP
+/cmake-build-debug/CMakeCache.txt
+/cmake-build-debug/CMakeFiles/3.8.2/CMakeCCompiler.cmake
+/cmake-build-debug/CMakeFiles/3.8.2/CMakeCXXCompiler.cmake
+/cmake-build-debug/CMakeFiles/3.8.2/CMakeDetermineCompilerABI_C.bin
+/cmake-build-debug/CMakeFiles/3.8.2/CMakeDetermineCompilerABI_CXX.bin
+/cmake-build-debug/CMakeFiles/3.8.2/CMakeSystem.cmake
+/cmake-build-debug/CMakeFiles/3.8.2/CompilerIdC/CMakeCCompilerId.c
+/cmake-build-debug/CMakeFiles/3.8.2/CompilerIdCXX/CMakeCXXCompilerId.cpp
+/cmake-build-debug/CMakeFiles/CMakeDirectoryInformation.cmake
+/cmake-build-debug/CMakeFiles/CMakeError.log
+/cmake-build-debug/CMakeFiles/CMakeOutput.log
+/cmake-build-debug/CMakeFiles/Makefile.cmake
+/cmake-build-debug/CMakeFiles/Makefile2
+/cmake-build-debug/CMakeFiles/TargetDirectories.txt
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/CXX.includecache
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/DependInfo.cmake
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/build.make
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/cmake_clean.cmake
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/depend.internal
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/depend.make
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/flags.make
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/link.txt
+/cmake-build-debug/CMakeFiles/castle_of_viana_3D.dir/progress.make
+/cmake-build-debug/CMakeFiles/clion-environment.txt
+/cmake-build-debug/CMakeFiles/clion-log.txt
+/cmake-build-debug/CMakeFiles/cmake.check_cache
+/cmake-build-debug/CMakeFiles/feature_tests.bin
+/cmake-build-debug/CMakeFiles/feature_tests.c
+/cmake-build-debug/CMakeFiles/feature_tests.cxx
+/cmake-build-debug/CMakeFiles/progress.marks
+/cmake-build-debug/Makefile
+/cmake-build-debug/castle_of_viana_3D
+/cmake-build-debug/castle_of_viana_3D.cbp
+/cmake-build-debug/cmake_install.cmake
+/game.data
+/game.html
+/game.js
+/game

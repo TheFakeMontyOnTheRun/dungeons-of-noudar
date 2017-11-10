@@ -1,0 +1,75 @@
+#ifndef IRENDERER_H
+#define IRENDERER_H
+
+#include <CTile3DProperties.h>
+
+namespace odb {
+
+    class CRenderer  : public Knights::IRenderer {
+        bool mCached = false;
+        int mAngle = 0;
+        Knights::CommandType mBufferedCommand = '.';
+        bool mNeedsToRedraw = true;
+    public:
+        void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
+        Knights::CommandType getInput() override;
+    private:
+        void flip();
+     public:
+        CRenderer();
+
+        void fillSidebar();
+
+        void fillUnderbar();
+
+        void drawCubeAt(const Vec3 &center, std::shared_ptr<odb::NativeBitmap> texture );
+
+        Vec2 project(const Vec3 &p);
+
+        void loadTextures( vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap& tileProperties );
+
+        void render(long ms);
+
+        void handleSystemEvents();
+
+        void sleep(long ms);
+
+        void putRaw(uint16_t x, uint16_t y, uint32_t pixel);
+
+        void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture );
+
+        void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture);
+
+        void clear();
+
+        Vec3 mCamera{ FixP{1}, FixP{1}, FixP{1}};
+        Vec3 mSpeed{0, 0, 0};
+        bool clearScr = true;
+
+        void drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+
+        void drawLine(const Vec2 &p0, const Vec2 &p1);
+
+        void projectAllVertices();
+
+        vector<vector<std::shared_ptr<odb::NativeBitmap>>> mTextures;
+
+        vector<std::pair<Vec3, Vec2>> mVertices {
+                {Vec3{0,0,0},Vec2{0,0}},
+                {Vec3{0,0,0},Vec2{0,0}},
+                {Vec3{0,0,0},Vec2{0,0}},
+                {Vec3{0,0,0},Vec2{0,0}},
+
+                {Vec3{0,0,0},Vec2{0,0}},
+                {Vec3{0,0,0},Vec2{0,0}},
+                {Vec3{0,0,0},Vec2{0,0}},
+                {Vec3{0,0,0},Vec2{0,0}},
+        };
+
+        CTilePropertyMap mTileProperties;
+    };
+
+    vector<vector<std::shared_ptr<odb::NativeBitmap>>>
+    loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
+}
+#endif

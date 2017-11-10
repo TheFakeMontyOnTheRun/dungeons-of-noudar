@@ -1,0 +1,54 @@
+CXX = i586-pc-msdosdjgpp-g++
+LD = i586-pc-msdosdjgpp-ld
+
+CXXFLAGS = -g -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -mtune=i486 -march=i486 -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer
+
+LDFLAGS = -lemu
+
+OBJS = src/CRenderer.o \
+     src/RasterizerCommon.o \
+     src/NativeBitmap.o \
+     src/CTile3DProperties.o \
+    ../gles2-renderer/Logger.o \
+    ../gles2-renderer/LoadPNG.o \
+    ../noudar-core/noudar-core/src/Vec2i.o \
+    ../noudar-core/noudar-core/src/CActor.o \
+    ../noudar-core/noudar-core/src/CMonster.o \
+    ../noudar-core/noudar-core/src/CMonsterGenerator.o \
+    ../noudar-core/noudar-core/src/CTeam.o \
+    ../noudar-core/noudar-core/src/CMap.o \
+    ../noudar-core/noudar-core/src/Common.o \
+    ../noudar-core/noudar-core/src/CCharacter.o \
+    ../noudar-core/noudar-core/src/CCharacterArchetype.o \
+    ../noudar-core/noudar-core/src/CDoorway.o \
+    ../noudar-core/noudar-core/src/IFileLoaderDelegate.o \
+    ../noudar-core/noudar-core/src/IMapElement.o \
+    ../noudar-core/noudar-core/src/CGame.o \
+    ../noudar-core/noudar-core/src/CItem.o \
+    ../noudar-core/noudar-core/src/CStorageItem.o \
+    ../noudar-core/noudar-core/src/CPlainFileLoader.o \
+    ../noudar-core/noudar-core/src/CGameDelegate.o \
+    ../noudar-core/noudar-core/src/commands/IGameCommand.o \
+    ../noudar-core/noudar-core/src/commands/CMoveActorCommand.o \
+    ../noudar-core/noudar-core/src/commands/CLoadNewLevelCommand.o \
+    ../noudar-core/noudar-core/src/commands/CTurnActorCommand.o \
+    ../noudar-core/noudar-core/src/commands/CQuitCommand.o \
+    ../noudar-core/noudar-core/src/commands/CNullCommand.o \
+    ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
+    ../noudar-core/noudar-core/src/commands/CPickItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CDropItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \
+    DOSVersion/main.o \
+    DOSVersion/CDOSRenderer.o \
+
+TARGET = game.exe
+
+$(TARGET):	$(OBJS)
+	$(CXX) -o $(TARGET) $(OBJS) $(LIBS) $(LDFLAGS)
+
+all:   $(TARGET)
+
+clean:
+	rm -f $(OBJS) $(TARGET)
