@@ -216,14 +216,167 @@ namespace odb {
                   ulz0.mY, llz0.mY,
                   urz0.mY, lrz0.mY,
                   texture );
+    }
 
+    void CRenderer::drawColumnAt(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
 
-
-            drawLine(ulz0, ulz1);
-            drawLine(llz0, llz1);
-            drawLine(urz0, urz1);
-            drawLine(lrz0, lrz1);
+        if (static_cast<int>(center.mZ) <= 1 ) {
+            return;
         }
+
+        FixP one{ 1 };
+        FixP two{ 2 };
+
+        auto halfScale = divide(scale.mY, two);
+
+        mVertices[ 0 ].first = ( center + Vec3{ -one, -halfScale, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one, -halfScale, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one,  halfScale, -one });
+        mVertices[ 3 ].first = ( center + Vec3{  one,  halfScale, -one });
+        mVertices[ 4 ].first = ( center + Vec3{ -one, -halfScale,  one });
+        mVertices[ 5 ].first = ( center + Vec3{  one, -halfScale,  one });
+        mVertices[ 6 ].first = ( center + Vec3{ -one,  halfScale,  one });
+        mVertices[ 7 ].first = ( center + Vec3{  one,  halfScale,  one });
+
+        projectAllVertices();
+
+        auto ulz0 = mVertices[0].second;
+        auto urz0 = mVertices[1].second;
+        auto llz0 = mVertices[2].second;
+        auto lrz0 = mVertices[3].second;
+        auto ulz1 = mVertices[4].second;
+        auto urz1 = mVertices[5].second;
+        auto llz1 = mVertices[6].second;
+        auto lrz1 = mVertices[7].second;
+
+        if (static_cast<int>(center.mX) <= 0 ) {
+            drawWall( urz0.mX, urz1.mX,
+                      urz0.mY, lrz0.mY,
+                      urz1.mY, lrz1.mY,
+                      texture);
+        }
+
+        if (static_cast<int>(center.mX) >= 0 ) {
+            drawWall(ulz1.mX, ulz0.mX,
+                     ulz1.mY, llz1.mY,
+                     urz0.mY, lrz0.mY,
+                     texture);
+        }
+
+        drawWall( ulz0.mX, urz0.mX,
+                  ulz0.mY, llz0.mY,
+                  urz0.mY, lrz0.mY,
+                  texture );
+    }
+
+    void CRenderer::drawFloorAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
+
+        if (static_cast<int>(center.mZ) <= 1 ) {
+            return;
+        }
+
+        FixP one{ 1 };
+
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  one, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  one, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one,  one,  one });
+        mVertices[ 3 ].first = ( center + Vec3{  one,  one,  one });
+
+        projectAllVertices();
+
+        auto llz0 = mVertices[0].second;
+        auto lrz0 = mVertices[1].second;
+        auto llz1 = mVertices[2].second;
+        auto lrz1 = mVertices[3].second;
+
+
+        if (static_cast<int>(center.mY) <= 0 ) {
+            drawFloor(llz1.mY, lrz0.mY,
+                      llz1.mX, lrz1.mX,
+                      llz0.mX, lrz0.mX,
+                      texture);
+        }
+    }
+
+    void CRenderer::drawCeilingAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
+
+        if (static_cast<int>(center.mZ) <= 1 ) {
+            return;
+        }
+
+        FixP one{ 1 };
+
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  one, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  one, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one,  one,  one });
+        mVertices[ 3 ].first = ( center + Vec3{  one,  one,  one });
+
+        projectAllVertices();
+
+        auto llz0 = mVertices[0].second;
+        auto lrz0 = mVertices[1].second;
+        auto llz1 = mVertices[2].second;
+        auto lrz1 = mVertices[3].second;
+
+
+        if (static_cast<int>(center.mY) >= 0 ) {
+            drawFloor(llz1.mY, lrz0.mY,
+                      llz1.mX, lrz1.mX,
+                      llz0.mX, lrz0.mX,
+                      texture);
+        }
+    }
+
+    void CRenderer::drawLeftNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
+
+        if (static_cast<int>(center.mZ) <= 1 ) {
+            return;
+        }
+
+        FixP one{ 1 };
+
+        mVertices[ 0 ].first = ( center + Vec3{ -one, -one, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one, -one, one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one,  one, -one });
+        mVertices[ 3 ].first = ( center + Vec3{  one,  one, one });
+
+        projectAllVertices();
+
+        auto ulz0 = mVertices[0].second;
+        auto urz0 = mVertices[1].second;
+        auto llz0 = mVertices[2].second;
+        auto lrz0 = mVertices[3].second;
+
+        drawWall( ulz0.mX, urz0.mX,
+                  ulz0.mY, llz0.mY,
+                  urz0.mY, lrz0.mY,
+                  texture );
+    }
+
+
+    void CRenderer::drawRightNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
+        if (static_cast<int>(center.mZ) <= 1 ) {
+            return;
+        }
+
+        FixP one{ 1 };
+
+        mVertices[ 0 ].first = ( center + Vec3{ -one, -one, one });
+        mVertices[ 1 ].first = ( center + Vec3{  one, -one, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one,  one, one });
+        mVertices[ 3 ].first = ( center + Vec3{  one,  one, -one });
+
+        projectAllVertices();
+
+        auto ulz0 = mVertices[0].second;
+        auto urz0 = mVertices[1].second;
+        auto llz0 = mVertices[2].second;
+        auto lrz0 = mVertices[3].second;
+
+        drawWall( ulz0.mX, urz0.mX,
+                  ulz0.mY, llz0.mY,
+                  urz0.mY, lrz0.mY,
+                  texture );
     }
 
 

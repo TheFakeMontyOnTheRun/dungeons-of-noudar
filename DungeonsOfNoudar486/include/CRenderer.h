@@ -24,6 +24,16 @@ namespace odb {
 
         void drawCubeAt(const Vec3 &center, std::shared_ptr<odb::NativeBitmap> texture );
 
+        void drawFloorAt(const Vec3 &center, std::shared_ptr<odb::NativeBitmap> texture );
+
+        void drawCeilingAt(const Vec3 &center, std::shared_ptr<odb::NativeBitmap> texture );
+
+        void drawLeftNear(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture );
+
+        void drawRightNear(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture );
+
+        void drawColumnAt(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture );
+
         Vec2 project(const Vec3 &p);
 
         void loadTextures( vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap& tileProperties );
