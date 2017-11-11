@@ -142,7 +142,7 @@ namespace odb {
         }
     }
 
-    void CRenderer::putRaw(uint16_t x, uint16_t y, uint32_t pixel) {
+    void CRenderer::putRaw(int16_t x, int16_t y, uint32_t pixel) {
         SDL_Rect rect;
         rect.x = x;
         rect.y = y;

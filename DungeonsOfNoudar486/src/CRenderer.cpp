@@ -19,6 +19,7 @@ using sg14::fixed_point;
 
 #include <EASTL/vector.h>
 #include <EASTL/array.h>
+#include <NativeBitmap.h>
 
 using eastl::vector;
 using eastl::array;
@@ -104,9 +105,6 @@ namespace odb {
     void CRenderer::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
         auto mapCamera = current->getPosition();
 //        mCamera = Vec3{ mapCamera.x, 0, mapCamera.y};
-        mAngle = (static_cast<int>(current->getDirection()) * 90);
-        FixP angle{-45};
-        FixP increment = FixP{ 9 } / FixP{ 32 };
 
         if (!mCached ) {
             mCached = true;
@@ -153,8 +151,6 @@ namespace odb {
             return;
         }
 
-        FixP height = FixP(1);
-        FixP distance{ 4 };
         FixP one{ 1 };
 
         mVertices[ 0 ].first = ( center + Vec3{ -one, -one, -one });
@@ -211,16 +207,7 @@ namespace odb {
                   urz0.mY, lrz0.mY,
                   texture );
 
-        if ( kShouldDrawOutline ) {
-            drawLine(ulz0,urz0);
-            drawLine(llz0,lrz0);
-            drawLine(ulz0, llz0);
-            drawLine(urz0, lrz0);
 
-            drawLine(ulz1,urz1);
-            drawLine(llz1,lrz1);
-            drawLine(ulz1, llz1);
-            drawLine(urz1, lrz1);
 
             drawLine(ulz0, ulz1);
             drawLine(llz0, llz1);
@@ -259,8 +246,8 @@ namespace odb {
             x0y1 = x0y1 - x1y1;
         }
 
-        auto x = static_cast<uint16_t >(x0);
-        auto limit = static_cast<uint16_t >(x1);
+        auto x = static_cast<int16_t >(x0);
+        auto limit = static_cast<int16_t >(x1);
 
         if ( x == limit ) {
             return;
@@ -312,8 +299,8 @@ namespace odb {
             FixP v{0};
             auto iu = static_cast<uint8_t >(u);
 
-            auto iY0 = static_cast<uint16_t >(y0);
-            auto iY1 = static_cast<uint16_t >(y1);
+            auto iY0 = static_cast<int16_t >(y0);
+            auto iY1 = static_cast<int16_t >(y1);
 
             for ( auto iy = iY0; iy < iY1; ++iy ) {
 
@@ -367,8 +354,8 @@ namespace odb {
             x1y0 = x1y0 - x1y1;
         }
 
-        auto y = static_cast<uint16_t >(y0);
-        auto limit = static_cast<uint16_t >(y1);
+        auto y = static_cast<int16_t >(y0);
+        auto limit = static_cast<int16_t >(y1);
 
         if ( y == limit ) {
             return;
@@ -404,7 +391,7 @@ namespace odb {
         uint8_t lastU = 0xFF;
         uint8_t lastV = 0xFF;
 
-        auto iy = static_cast<uint16_t >(y);
+        auto iy = static_cast<int16_t >(y);
 
         int* data = texture->getPixelData();
         int8_t textureWidth = texture->getWidth();
@@ -414,8 +401,8 @@ namespace odb {
 
         for (; iy < limit; ++iy ) {
 
-            auto iX0 = static_cast<uint16_t >(x0);
-            auto iX1 = static_cast<uint16_t >(x1);
+            auto iX0 = static_cast<int16_t >(x0);
+            auto iX1 = static_cast<int16_t >(x1);
 
             FixP du = textureSize / ( x1 - x0 );
             FixP u{0};
@@ -449,19 +436,19 @@ namespace odb {
     }
 
     void CRenderer::drawLine(const Vec2& p0, const Vec2& p1) {
-        drawLine(static_cast<uint16_t >(p0.mX),
-                 static_cast<uint16_t >(p0.mY),
-                 static_cast<uint16_t >(p1.mX),
-                 static_cast<uint16_t >(p1.mY)
+        drawLine(static_cast<int16_t >(p0.mX),
+                 static_cast<int16_t >(p0.mY),
+                 static_cast<int16_t >(p1.mX),
+                 static_cast<int16_t >(p1.mY)
         );
     }
 
-    void CRenderer::drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
+    void CRenderer::drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
 
         if ( x0 == x1 ) {
 
-            uint16_t _y0 = y0;
-            uint16_t _y1 = y1;
+            int16_t _y0 = y0;
+            int16_t _y1 = y1;
 
             if ( y0 > y1 ) {
                 _y0 = y1;
@@ -475,8 +462,8 @@ namespace odb {
         }
 
         if ( y0 == y1 ) {
-            uint16_t _x0 = x0;
-            uint16_t _x1 = x1;
+            int16_t _x0 = x0;
+            int16_t _x1 = x1;
 
             if ( x0 > x1 ) {
                 _x0 = x1;
@@ -505,7 +492,7 @@ namespace odb {
         FixP fDeltatY = FixP{ y1 - y0 } / FixP{ x1 - x0 };
 
         for ( int x = x0; x <= x1; ++x ) {
-            putRaw( x, static_cast<uint16_t >(fy), 0xFFFFFFFF);
+            putRaw( x, static_cast<int16_t >(fy), 0xFFFFFFFF);
             fy += fDeltatY;
         }
     }

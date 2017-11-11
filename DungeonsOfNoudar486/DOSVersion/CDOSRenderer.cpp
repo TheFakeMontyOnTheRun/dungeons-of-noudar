@@ -57,7 +57,7 @@ namespace odb {
     uint8_t shade;
     long frame = 0;
 
-    void CRenderer::putRaw(uint16_t x, uint16_t y, uint32_t pixel) {
+    void CRenderer::putRaw(int16_t x, int16_t y, uint32_t pixel) {
 
         if (x < 0 || x >= 320 || y < 0 || y > 199) {
             return;
