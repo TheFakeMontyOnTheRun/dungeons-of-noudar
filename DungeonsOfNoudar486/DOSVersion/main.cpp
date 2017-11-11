@@ -88,27 +88,28 @@ void gameLoopTick() {
     renderer->handleSystemEvents();
 }
 
+std::shared_ptr<Knights::CGame> game;
 
 int main() {
 
     const auto LEVEL_LIMIT = 2;
-    renderer = std::make_shared<odb::CRenderer>();
-
     auto delegate = std::make_shared<Knights::CGameDelegate>();
+    auto fileLoader = std::make_shared<Knights::CPlainFileLoader>();
 
-    auto fileLoader =  std::make_shared<Knights::CPlainFileLoader>("res\\");
+    renderer = std::make_shared<odb::CRenderer>();
+    game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
 
     fileLoader->setFilenameTransformation( kDosLongFileNameTransformer );
 
-    auto tileProperties = odb::CTile3DProperties::parsePropertyList(fileLoader->loadFileFromPath("tiles0.prp"));
-
-    renderer->loadTextures( odb::loadTexturesForLevel(0, fileLoader), tileProperties);
-
-    auto game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
+    auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
+    renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
     auto onLevelLoaded = [&]() {
         if ( game->getLevelNumber() >= LEVEL_LIMIT ) {
             game->setIsPlaying( false );
+        } else {
+            auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
+            renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
         }
     };
 

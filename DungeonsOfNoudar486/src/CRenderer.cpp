@@ -20,6 +20,8 @@ using sg14::fixed_point;
 #include <EASTL/vector.h>
 #include <EASTL/array.h>
 #include <NativeBitmap.h>
+#include <ETextures.h>
+#include <unordered_map>
 
 using eastl::vector;
 using eastl::array;
@@ -61,6 +63,18 @@ namespace odb {
         }
 
         return toReturn;
+    }
+
+    odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+        std::stringstream roomName("");
+        roomName << "tiles";
+        roomName << levelNumber;
+        roomName << ".prp";
+        std::string filename = roomName.str();
+
+        auto data = fileLoader->loadFileFromPath( filename );
+
+        return odb::CTile3DProperties::parsePropertyList( data );
     }
 
 
@@ -290,12 +304,10 @@ namespace odb {
         auto lrz1 = mVertices[3].second;
 
 
-        if (static_cast<int>(center.mY) <= 0 ) {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
                       texture);
-        }
     }
 
     void CRenderer::drawCeilingAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
@@ -319,12 +331,10 @@ namespace odb {
         auto lrz1 = mVertices[3].second;
 
 
-        if (static_cast<int>(center.mY) >= 0 ) {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
                       texture);
-        }
     }
 
     void CRenderer::drawLeftNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
@@ -458,7 +468,13 @@ namespace odb {
 
         for (; ix < limit; ++ix ) {
 
-            FixP dv = textureSize / ( y1 - y0 );
+            auto diffY = ( y1 - y0 );
+
+            if ( diffY == 0 ) {
+                continue;
+            }
+
+            FixP dv = textureSize / diffY;
             FixP v{0};
             auto iu = static_cast<uint8_t >(u);
 
@@ -564,10 +580,16 @@ namespace odb {
 
         for (; iy < limit; ++iy ) {
 
+            auto diffX = ( x1 - x0 );
+
+            if ( diffX == 0 ) {
+                continue;
+            }
+
             auto iX0 = static_cast<int16_t >(x0);
             auto iX1 = static_cast<int16_t >(x1);
 
-            FixP du = textureSize / ( x1 - x0 );
+            FixP du = textureSize / diffX;
             FixP u{0};
             auto iv = static_cast<uint8_t >(v);
 
@@ -688,15 +710,51 @@ namespace odb {
                 clear();
             }
 
-            //milliseconds ms0 = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+            for (int z = 0; z <40; ++z ) {
+                for ( int x = 0; x < 40; ++x ) {
 
-            drawCubeAt( mCamera + Vec3{ FixP{-4}, FixP{ 1}, FixP{16}}, mTextures[ 0 ][ 0 ] );
-            drawCubeAt( mCamera + Vec3{ FixP{ 2}, FixP{ 1}, FixP{ 8}}, mTextures[ 1 ][ 0 ] );
-            drawCubeAt( mCamera + Vec3{ FixP{-2}, FixP{-3}, FixP{ 1}}, mTextures[ 2 ][ 0 ] );
+                    auto element = mElementsMap[z][x];
+                    auto tileProp = mTileProperties[element];
 
-            //milliseconds ms1 = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+                    Vec3 position = mCamera + Vec3{ FixP{- 2 * ( x / 2)}, FixP{ -2 }, FixP{2 * z}};
 
-            //std::cout << "took " << ( ms1 - ms0 ).count() << std::endl;
+                    if ( tileProp.mFloorTextureIndex != -1 ) {
+                        drawFloorAt( position + Vec3{ 0, tileProp.mFloorHeight, 0}, mTextures[ tileProp.mFloorTextureIndex ][ 0 ] );
+                    }
+
+                    if ( tileProp.mFloorRepeatedTextureIndex > 0 ) {
+                        drawColumnAt(position + Vec3{ 0, tileProp.mFloorHeight + FixP{1}, 0}, {1, 1, 1}, mTextures[ tileProp.mFloorRepeatedTextureIndex ][ 0 ] );
+                    }
+
+                    if ( tileProp.mMainWallTextureIndex > 0 ) {
+
+                        auto scale = tileProp.mCeilingHeight - tileProp.mFloorHeight;
+
+                        switch (tileProp.mGeometryType ) {
+                            case kRightNearWall:
+                                drawRightNear(position + Vec3{ 0, tileProp.mFloorHeight + divide(scale , 2), 0}, {1, scale, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                break;
+
+                            case kLeftNearWall:
+                                drawLeftNear(position + Vec3{ 0, tileProp.mFloorHeight + divide(scale , 2), 0}, {1, scale, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                break;
+
+                            case kCube:
+                            default:
+                                drawColumnAt(position + Vec3{ 0, tileProp.mFloorHeight + divide(scale , 2), 0}, {1, scale, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                break;
+                        }
+                    }
+
+                    if ( tileProp.mCeilingRepeatedTextureIndex > 0 ) {
+                        drawColumnAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, {1, tileProp.mCeilingRepetitions, 1}, mTextures[ tileProp.mCeilingRepeatedTextureIndex ][ 0 ] );
+                    }
+
+                    if ( tileProp.mCeilingTextureIndex != -1 ) {
+                        drawCeilingAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, mTextures[ tileProp.mCeilingTextureIndex ][ 0 ] );
+                    }
+                }
+            }
         }
 
         flip();
@@ -705,5 +763,44 @@ namespace odb {
     void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {
         mTextures = textureList;
         mTileProperties = tile3DProperties;
+
+        std::unordered_map<std::string, TextureIndex > textureRegistry;
+        textureRegistry["null"] = -1;
+        textureRegistry["sky"] = ETextures::Skybox;
+        textureRegistry["grass"] = ETextures::Grass;
+        textureRegistry["lava"] = ETextures::Lava;
+        textureRegistry["floor"] = ETextures::Floor;
+        textureRegistry["bricks"] = ETextures::Bricks;
+        textureRegistry["arch"] = ETextures::Arch;
+        textureRegistry["bars"] = ETextures::Bars;
+        textureRegistry["begin"] = ETextures::Begin;
+        textureRegistry["exit"] = ETextures::Exit;
+        textureRegistry["bricksblood"] = ETextures::BricksBlood;
+        textureRegistry["brickscandles"] = ETextures::BricksCandles;
+        textureRegistry["stonegrassfar"] = ETextures::StoneGrassFar;
+        textureRegistry["grassstonefar"] = ETextures::GrassStoneFar;
+        textureRegistry["stonegrassnear"] = ETextures::StoneGrassNear;
+        textureRegistry["grassstonenear"] = ETextures::GrassStoneNear;
+        textureRegistry["ceiling"] = ETextures::Ceiling;
+        textureRegistry["ceilingdoor"] = ETextures::CeilingDoor;
+        textureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
+        textureRegistry["ceilingend"] = ETextures::CeilingEnd;
+        textureRegistry["ceilingbars"] = ETextures::CeilingBars;
+        textureRegistry["rope"] = ETextures::Rope;
+        textureRegistry["slot"] = ETextures::Slot;
+        textureRegistry["magicseal"] = ETextures::MagicSeal;
+        textureRegistry["shutdoor"] = ETextures::ShutDoor;
+        textureRegistry["cobblestone"] = ETextures::Cobblestone;
+        textureRegistry["fence"] = ETextures::Fence;
+
+        for ( auto& propMap : mTileProperties ) {
+            auto tileProp = propMap.second;
+            tileProp.mCeilingTextureIndex = (textureRegistry[tileProp.mCeilingTexture]);
+            tileProp.mFloorTextureIndex = (textureRegistry[tileProp.mFloorTexture]);
+            tileProp.mCeilingRepeatedTextureIndex = (textureRegistry[tileProp.mCeilingRepeatedWallTexture]);
+            tileProp.mFloorRepeatedTextureIndex = (textureRegistry[tileProp.mFloorRepeatedWallTexture]);
+            tileProp.mMainWallTextureIndex = (textureRegistry[tileProp.mMainWallTexture]);
+            propMap.second = tileProp;
+        }
     }
 }

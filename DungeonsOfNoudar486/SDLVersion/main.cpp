@@ -84,16 +84,18 @@ int main() {
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<Knights::CPlainFileLoader>();
 
-    auto tileProperties = odb::CTile3DProperties::parsePropertyList(fileLoader->loadFileFromPath("tiles0.prp"));
-
     renderer = std::make_shared<odb::CRenderer>();
-    renderer->loadTextures( odb::loadTexturesForLevel(0, fileLoader), tileProperties);
-
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
+
+    auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
+    renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
     auto onLevelLoaded = [&]() {
         if ( game->getLevelNumber() >= LEVEL_LIMIT ) {
             game->setIsPlaying( false );
+        } else {
+            auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
+            renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
         }
     };
 

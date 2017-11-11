@@ -9,6 +9,7 @@ namespace odb {
     class CTile3DProperties;
 
     using CTileId = uint8_t;
+    using TextureIndex = int16_t;
 
     using CTilePropertyMap = std::map< CTileId, CTile3DProperties >;
 
@@ -22,9 +23,19 @@ namespace odb {
         TextureName mCeilingTexture;
         TextureName mFloorTexture;
         TextureName mMainWallTexture;
+
+        TextureIndex mCeilingTextureIndex;
+        TextureIndex mFloorTextureIndex;
+        TextureIndex mMainWallTextureIndex;
+
         GeometryType mGeometryType;
+
         TextureName mCeilingRepeatedWallTexture;
         TextureName mFloorRepeatedWallTexture;
+
+        TextureIndex mCeilingRepeatedTextureIndex;
+        TextureIndex mFloorRepeatedTextureIndex;
+
         uint8_t mCeilingRepetitions;
         uint8_t mFloorRepetitions;
         FixP mCeilingHeight;
