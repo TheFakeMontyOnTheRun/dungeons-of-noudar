@@ -136,6 +136,9 @@ namespace odb {
 
         for ( auto& vertex : mVertices ) {
 
+            if (vertex.first.mZ == 0 ) {
+                continue;
+            }
             FixP oneOver = divide( halfHeight, vertex.first.mZ );
 
             vertex.second = {
