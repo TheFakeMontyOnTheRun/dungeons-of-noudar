@@ -46,7 +46,6 @@ using sg14::fixed_point;
 #include "commands/IGameCommand.h"
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
-#include "DOSHacks.h"
 
 std::shared_ptr<odb::CRenderer> renderer;
 
