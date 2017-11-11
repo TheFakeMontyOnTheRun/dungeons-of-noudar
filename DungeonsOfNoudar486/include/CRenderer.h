@@ -7,6 +7,7 @@ namespace odb {
 
     class CRenderer  : public Knights::IRenderer {
         bool mCached = false;
+        char mElementsMap[40][40];
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;
     public:

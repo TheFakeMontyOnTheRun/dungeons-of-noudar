@@ -106,6 +106,12 @@ namespace odb {
         auto mapCamera = current->getPosition();
 //        mCamera = Vec3{ mapCamera.x, 0, mapCamera.y};
 
+        for ( int z = 0; z < 40; ++z ) {
+            for ( int x = 0; x < 40; ++x ) {
+                mElementsMap[z][x] = map.getElementAt({ x, z });
+            }
+        }
+
         if (!mCached ) {
             mCached = true;
             mNeedsToRedraw = true;
@@ -139,6 +145,7 @@ namespace odb {
             if (vertex.first.mZ == 0 ) {
                 continue;
             }
+
             FixP oneOver = divide( halfHeight, vertex.first.mZ );
 
             vertex.second = {
