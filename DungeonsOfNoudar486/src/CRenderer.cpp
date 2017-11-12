@@ -152,7 +152,7 @@ namespace odb {
     void CRenderer::projectAllVertices() {
         FixP halfWidth{160};
         FixP halfHeight{100};
-
+        FixP two{2};
 
         for ( auto& vertex : mVertices ) {
 
@@ -160,18 +160,16 @@ namespace odb {
                 continue;
             }
 
-            FixP oneOver = divide( halfHeight, vertex.first.mZ );
+            FixP oneOver = divide( halfHeight, divide(vertex.first.mZ, two) );
 
-            vertex.second = {
-                    halfWidth + multiply(vertex.first.mX, oneOver),
-                    halfHeight - multiply(vertex.first.mY, oneOver)
-            };
+            vertex.second.mX = halfWidth + multiply(vertex.first.mX, oneOver);
+            vertex.second.mY = halfHeight - multiply(vertex.first.mY, oneOver);
         }
     }
 
     void CRenderer::drawCubeAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
 
-        if (static_cast<int>(center.mZ) <= 1 ) {
+        if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
 
@@ -234,7 +232,7 @@ namespace odb {
 
     void CRenderer::drawColumnAt(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
 
-        if (static_cast<int>(center.mZ) <= 1 ) {
+        if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
 
@@ -243,14 +241,14 @@ namespace odb {
 
         auto halfScale = divide(scale.mY, two);
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one, -halfScale, -one });
-        mVertices[ 1 ].first = ( center + Vec3{  one, -halfScale, -one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one,  halfScale, -one });
-        mVertices[ 3 ].first = ( center + Vec3{  one,  halfScale, -one });
-        mVertices[ 4 ].first = ( center + Vec3{ -one, -halfScale,  one });
-        mVertices[ 5 ].first = ( center + Vec3{  one, -halfScale,  one });
-        mVertices[ 6 ].first = ( center + Vec3{ -one,  halfScale,  one });
-        mVertices[ 7 ].first = ( center + Vec3{  one,  halfScale,  one });
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale + scale.mY, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale + scale.mY, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -one });
+        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, -one });
+        mVertices[ 4 ].first = ( center + Vec3{ -one,  halfScale + scale.mY,  one });
+        mVertices[ 5 ].first = ( center + Vec3{  one,  halfScale + scale.mY,  one });
+        mVertices[ 6 ].first = ( center + Vec3{ -one, -halfScale,  one });
+        mVertices[ 7 ].first = ( center + Vec3{  one, -halfScale,  one });
 
         projectAllVertices();
 
@@ -285,7 +283,7 @@ namespace odb {
 
     void CRenderer::drawFloorAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
 
-        if (static_cast<int>(center.mZ) <= 1 ) {
+        if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
 
@@ -312,7 +310,7 @@ namespace odb {
 
     void CRenderer::drawCeilingAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
 
-        if (static_cast<int>(center.mZ) <= 1 ) {
+        if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
 
@@ -339,16 +337,18 @@ namespace odb {
 
     void CRenderer::drawLeftNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
 
-        if (static_cast<int>(center.mZ) <= 1 ) {
+        if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
 
         FixP one{ 1 };
+        FixP two{ 2 };
+        auto halfScale = divide( scale.mY, two );
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one, -one, -one });
-        mVertices[ 1 ].first = ( center + Vec3{  one, -one, one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one,  one, -one });
-        mVertices[ 3 ].first = ( center + Vec3{  one,  one, one });
+        mVertices[ 0 ].first = ( center + Vec3{ -one, halfScale + scale.mY, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one, halfScale + scale.mY, one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -one });
+        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, one });
 
         projectAllVertices();
 
@@ -364,17 +364,19 @@ namespace odb {
     }
 
 
-    void CRenderer::drawRightNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
-        if (static_cast<int>(center.mZ) <= 1 ) {
+    void CRenderer:: drawRightNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
+        if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
 
         FixP one{ 1 };
+        FixP two{ 2 };
+        auto halfScale = divide( scale.mY, two );
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one, -one, one });
-        mVertices[ 1 ].first = ( center + Vec3{  one, -one, -one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one,  one, one });
-        mVertices[ 3 ].first = ( center + Vec3{  one,  one, -one });
+        mVertices[ 0 ].first = ( center + Vec3{ -one, halfScale + scale.mY, one });
+        mVertices[ 1 ].first = ( center + Vec3{  one, halfScale + scale.mY, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, one });
+        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, -one });
 
         projectAllVertices();
 
@@ -713,18 +715,29 @@ namespace odb {
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
 
-                    auto element = mElementsMap[z][x];
+                    auto element = mElementsMap[z][40 - x];
                     auto tileProp = mTileProperties[element];
+                    auto heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
+                    auto halfHeightDiff = divide( heightDiff, two );
+                    Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ -2 }, FixP{2 * (40 - z)}};
 
-                    Vec3 position = mCamera + Vec3{ FixP{- 2 * ( x / 2)}, FixP{ -2 }, FixP{2 * z}};
+
+                    if ( tileProp.mFloorRepeatedTextureIndex > 0 ) {
+                        drawColumnAt(position + Vec3{ 0, tileProp.mFloorHeight - divide(heightDiff, two), 0}, {1, FixP{tileProp.mFloorRepetitions}, 1}, mTextures[ tileProp.mFloorRepeatedTextureIndex ][ 0 ] );
+                    }
+
+                    if ( tileProp.mCeilingRepeatedTextureIndex > 0 ) {
+                        drawColumnAt(position + Vec3{ 0, tileProp.mCeilingHeight + divide(heightDiff, two), 0}, {1, FixP{tileProp.mCeilingRepetitions}, 1}, mTextures[ tileProp.mCeilingRepeatedTextureIndex ][ 0 ] );
+                    }
 
                     if ( tileProp.mFloorTextureIndex != -1 ) {
                         drawFloorAt( position + Vec3{ 0, tileProp.mFloorHeight, 0}, mTextures[ tileProp.mFloorTextureIndex ][ 0 ] );
                     }
 
-                    if ( tileProp.mFloorRepeatedTextureIndex > 0 ) {
-                        drawColumnAt(position + Vec3{ 0, tileProp.mFloorHeight + FixP{1}, 0}, {1, 1, 1}, mTextures[ tileProp.mFloorRepeatedTextureIndex ][ 0 ] );
+                    if ( tileProp.mCeilingTextureIndex != -1 ) {
+                        drawCeilingAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, mTextures[ tileProp.mCeilingTextureIndex ][ 0 ] );
                     }
+
 
                     if ( tileProp.mMainWallTextureIndex > 0 ) {
 
@@ -732,29 +745,25 @@ namespace odb {
 
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
-                                drawRightNear(position + Vec3{ 0, tileProp.mFloorHeight + divide(scale , 2), 0}, {1, scale, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                drawRightNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
                                 break;
 
                             case kLeftNearWall:
-                                drawLeftNear(position + Vec3{ 0, tileProp.mFloorHeight + divide(scale , 2), 0}, {1, scale, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                drawLeftNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
                                 break;
 
                             case kCube:
                             default:
-                                drawColumnAt(position + Vec3{ 0, tileProp.mFloorHeight + divide(scale , 2), 0}, {1, scale, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                drawColumnAt(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
                                 break;
                         }
                     }
 
-                    if ( tileProp.mCeilingRepeatedTextureIndex > 0 ) {
-                        drawColumnAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, {1, tileProp.mCeilingRepetitions, 1}, mTextures[ tileProp.mCeilingRepeatedTextureIndex ][ 0 ] );
-                    }
 
-                    if ( tileProp.mCeilingTextureIndex != -1 ) {
-                        drawCeilingAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, mTextures[ tileProp.mCeilingTextureIndex ][ 0 ] );
-                    }
                 }
             }
+
+
         }
 
         flip();
