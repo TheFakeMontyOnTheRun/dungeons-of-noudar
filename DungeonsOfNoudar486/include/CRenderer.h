@@ -10,6 +10,7 @@ namespace odb {
         char mElementsMap[40][40];
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;
+        std::shared_ptr<NativeBitmap> mFrameBuffer;
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;

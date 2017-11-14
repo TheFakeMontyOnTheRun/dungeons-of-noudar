@@ -49,7 +49,7 @@ using sg14::fixed_point;
 
 namespace odb {
 
-    array<uint32_t, 320 * 200> mBuffer;
+    int* mBuffer;
     array<uint8_t, 320 * 200> mMemorySnapshot;
 
     uint32_t origin = 0;
@@ -92,6 +92,9 @@ namespace odb {
                 }
             }
         }
+
+        mFrameBuffer = std::make_shared<NativeBitmap>( "video", 320, 200, new int[ 320 * 200 ] );
+        mBuffer = mFrameBuffer->getPixelData();
     }
 
     void CRenderer::sleep(long ms) {
@@ -170,7 +173,7 @@ namespace odb {
     }
 
     void CRenderer::flip() {
-        auto source = std::begin(mBuffer);
+        auto source = mBuffer;
         auto destination = std::begin(mMemorySnapshot);
         for (int offset = 0; offset < 320 * 200; ++offset) {
 
@@ -184,7 +187,7 @@ namespace odb {
 
             *destination = shade;
 
-            source = std::next(source);
+            source = ++source;
             destination = std::next(destination);
         }
 
@@ -197,6 +200,6 @@ namespace odb {
     }
 
     void CRenderer::clear() {
-        std::fill(std::begin(mBuffer), std::end(mBuffer), 0);
+        std::fill(mBuffer, mBuffer + (320*200), 0);
     }
 }
