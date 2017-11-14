@@ -548,18 +548,19 @@ namespace odb {
                 if ( iy < 128 && ix < 256 ) {
                     auto iv = static_cast<uint8_t >(v);
 
-                if ( iv != lastV || iu != lastU ) {
-                    pixel = data[ (iv * textureWidth ) + iu];
+                    if ( iv != lastV || iu != lastU ) {
+                        pixel = data[ (iv * textureWidth ) + iu];
+                    }
+
+                    lastU = iu;
+                    lastV = iv;
+
+                    if ( pixel & 0xFF000000 ) {
+                        putRaw( ix, iy, pixel);
+                    }
+
+                    v += dv;
                 }
-
-                lastU = iu;
-                lastV = iv;
-
-                if ( pixel & 0xFF000000 ) {
-                    putRaw( ix, iy, pixel);
-                }
-
-                v += dv;
             }
 
             y0 += upperDyDx;
@@ -661,20 +662,21 @@ namespace odb {
                 if ( iy < 128 && ix < 256 ) {
                     auto iu = static_cast<uint8_t >(u);
 
-                //only fetch the next texel if we really changed the u, v coordinates
-                //(otherwise, would fetch the same thing anyway)
-                if ( iv != lastV || iu != lastU ) {
-                    pixel = data[ (iv * textureWidth ) + iu];
+                    //only fetch the next texel if we really changed the u, v coordinates
+                    //(otherwise, would fetch the same thing anyway)
+                    if (iv != lastV || iu != lastU) {
+                        pixel = data[(iv * textureWidth) + iu];
+                    }
+
+                    lastU = iu;
+                    lastV = iv;
+
+                    if (pixel & 0xFF000000) {
+                        putRaw(ix, iy, pixel);
+                    }
+
+                    u += du;
                 }
-
-                lastU = iu;
-                lastV = iv;
-
-                if ( pixel & 0xFF000000 ) {
-                    putRaw( ix, iy, pixel);
-                }
-
-                u += du;
             }
 
             x0 += leftDxDy;
