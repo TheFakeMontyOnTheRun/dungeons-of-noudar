@@ -45,6 +45,7 @@ using namespace std::chrono;
 namespace odb {
 
     const static bool kShouldDrawOutline = false;
+    const static bool kShouldDrawTextures = true;
 
     vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
         auto data = fileLoader->loadFileFromPath( filename );
@@ -139,8 +140,8 @@ namespace odb {
     }
 
     Vec2 CRenderer::project(const Vec3&  p ) {
-        FixP halfWidth{160};
-        FixP halfHeight{100};
+        FixP halfWidth{128};
+        FixP halfHeight{64};
         FixP oneOver = divide( halfHeight, p.mZ );
 
         return {
@@ -150,8 +151,8 @@ namespace odb {
     }
 
     void CRenderer::projectAllVertices() {
-        FixP halfWidth{160};
-        FixP halfHeight{100};
+        FixP halfWidth{128};
+        FixP halfHeight{64};
         FixP two{2};
 
         for ( auto& vertex : mVertices ) {
@@ -261,24 +262,42 @@ namespace odb {
         auto llz1 = mVertices[6].second;
         auto lrz1 = mVertices[7].second;
 
-        if (static_cast<int>(center.mX) <= 0 ) {
-            drawWall( urz0.mX, urz1.mX,
+        if (kShouldDrawTextures) {
+            if (static_cast<int>(center.mX) <= 0 ) {
+                drawWall( urz0.mX, urz1.mX,
+                          urz0.mY, lrz0.mY,
+                          urz1.mY, lrz1.mY,
+                          texture);
+            }
+
+            if (static_cast<int>(center.mX) >= 0 ) {
+                drawWall(ulz1.mX, ulz0.mX,
+                         ulz1.mY, llz1.mY,
+                         urz0.mY, lrz0.mY,
+                         texture);
+            }
+
+            drawWall( ulz0.mX, urz0.mX,
+                      ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      urz1.mY, lrz1.mY,
-                      texture);
+                      texture );
         }
 
-        if (static_cast<int>(center.mX) >= 0 ) {
-            drawWall(ulz1.mX, ulz0.mX,
-                     ulz1.mY, llz1.mY,
-                     urz0.mY, lrz0.mY,
-                     texture);
-        }
 
-        drawWall( ulz0.mX, urz0.mX,
-                  ulz0.mY, llz0.mY,
-                  urz0.mY, lrz0.mY,
-                  texture );
+        if (kShouldDrawOutline) {
+            drawLine( ulz0, urz0 );
+            drawLine( ulz0, llz0 );
+            drawLine( urz0, lrz0 );
+            drawLine( llz0, lrz0 );
+
+            drawLine( ulz0, ulz1 );
+            drawLine( llz0, llz1 );
+            drawLine( ulz1, llz1 );
+
+            drawLine( urz0, urz1 );
+            drawLine( lrz0, lrz1 );
+            drawLine( urz1, lrz1 );
+        }
     }
 
     void CRenderer::drawFloorAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
@@ -301,11 +320,19 @@ namespace odb {
         auto llz1 = mVertices[2].second;
         auto lrz1 = mVertices[3].second;
 
-
+        if ( kShouldDrawTextures ) {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
                       texture);
+        }
+
+        if ( kShouldDrawOutline) {
+            drawLine( llz0, lrz0 );
+            drawLine( llz0, llz1 );
+            drawLine( lrz0, lrz1 );
+            drawLine( llz1, lrz1 );
+        }
     }
 
     void CRenderer::drawCeilingAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
@@ -328,11 +355,20 @@ namespace odb {
         auto llz1 = mVertices[2].second;
         auto lrz1 = mVertices[3].second;
 
-
+        if (kShouldDrawTextures){
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
                       texture);
+        }
+
+        if (kShouldDrawOutline) {
+            drawLine( llz0, lrz0 );
+            drawLine( llz0, llz1 );
+            drawLine( lrz0, lrz1 );
+            drawLine( llz1, lrz1 );
+        }
+
     }
 
     void CRenderer::drawLeftNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
@@ -357,14 +393,23 @@ namespace odb {
         auto llz0 = mVertices[2].second;
         auto lrz0 = mVertices[3].second;
 
-        drawWall( ulz0.mX, urz0.mX,
-                  ulz0.mY, llz0.mY,
-                  urz0.mY, lrz0.mY,
-                  texture );
+        if (kShouldDrawTextures) {
+            drawWall( ulz0.mX, urz0.mX,
+                      ulz0.mY, llz0.mY,
+                      urz0.mY, lrz0.mY,
+                      texture );
+        }
+
+        if (kShouldDrawOutline){
+            drawLine( ulz0, urz0 );
+            drawLine( llz0, ulz0 );
+            drawLine( llz0, lrz0 );
+            drawLine( urz0, lrz0 );
+        }
     }
 
 
-    void CRenderer:: drawRightNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
+    void CRenderer::drawRightNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
@@ -385,10 +430,20 @@ namespace odb {
         auto llz0 = mVertices[2].second;
         auto lrz0 = mVertices[3].second;
 
-        drawWall( ulz0.mX, urz0.mX,
-                  ulz0.mY, llz0.mY,
-                  urz0.mY, lrz0.mY,
-                  texture );
+        if (kShouldDrawTextures) {
+            drawWall( ulz0.mX, urz0.mX,
+                      ulz0.mY, llz0.mY,
+                      urz0.mY, lrz0.mY,
+                      texture );
+        }
+
+        if (kShouldDrawOutline) {
+            drawLine( ulz0, urz0 );
+            drawLine( llz0, ulz0 );
+            drawLine( llz0, lrz0 );
+            drawLine( urz0, lrz0 );
+        }
+
     }
 
 
@@ -485,7 +540,8 @@ namespace odb {
 
             for ( auto iy = iY0; iy < iY1; ++iy ) {
 
-                auto iv = static_cast<uint8_t >(v);
+                if ( iy < 128 && ix < 256 ) {
+                    auto iv = static_cast<uint8_t >(v);
 
                 if ( iv != lastV || iu != lastU ) {
                     pixel = data[ (iv * textureWidth ) + iu];
@@ -597,7 +653,8 @@ namespace odb {
 
             for ( auto ix = iX0; ix < iX1; ++ix ) {
 
-                auto iu = static_cast<uint8_t >(u);
+                if ( iy < 128 && ix < 256 ) {
+                    auto iu = static_cast<uint8_t >(u);
 
                 //only fetch the next texel if we really changed the u, v coordinates
                 //(otherwise, would fetch the same thing anyway)
