@@ -121,6 +121,11 @@ namespace odb {
         auto mapCamera = current->getPosition();
 //        mCamera = Vec3{ mapCamera.x, 0, mapCamera.y};
 
+        if (mCached ) {
+            return;
+        }
+        mCameraPosition = mapCamera;
+
         for ( int z = 0; z < 40; ++z ) {
             for ( int x = 0; x < 40; ++x ) {
                 mElementsMap[z][x] = map.getElementAt({ x, z });

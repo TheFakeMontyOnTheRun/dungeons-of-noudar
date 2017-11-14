@@ -77,6 +77,7 @@ namespace odb {
         };
 
         CTilePropertyMap mTileProperties;
+        Knights::Vec2i mCameraPosition;
     };
 
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>
