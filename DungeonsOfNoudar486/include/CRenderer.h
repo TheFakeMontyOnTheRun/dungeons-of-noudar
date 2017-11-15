@@ -19,6 +19,8 @@ namespace odb {
      public:
         CRenderer();
 
+        int* getBufferData();
+
         void fillSidebar();
 
         void fillUnderbar();
@@ -50,6 +52,8 @@ namespace odb {
         void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture );
 
         void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture);
+
+        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeBitmap> texture );
 
         void clear();
 

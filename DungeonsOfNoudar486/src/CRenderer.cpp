@@ -282,9 +282,8 @@ namespace odb {
                          texture);
             }
 
-            drawWall( ulz0.mX, urz0.mX,
-                      ulz0.mY, llz0.mY,
-                      urz0.mY, lrz0.mY,
+            drawFrontWall( ulz0.mX, ulz0.mY,
+                      lrz0.mX, lrz0.mY,
                       texture );
         }
 
@@ -568,6 +567,100 @@ namespace odb {
             u += du;
         }
 
+    }
+
+    int* CRenderer::getBufferData() {
+        return mFrameBuffer->getPixelData();
+    }
+
+    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeBitmap> texture ) {
+        //if we have a trapezoid in which the base is smaller
+        if ( y0 > y1) {
+            //switch y0 with y1
+            y0 = y0 + y1;
+            y1 = y0 - y1;
+            y0 = y0 - y1;
+        }
+
+        auto y = static_cast<int16_t >(y0);
+        auto limit = static_cast<int16_t >(y1);
+
+        if ( y == limit ) {
+            return;
+        }
+
+        //what if the trapezoid is flipped horizontally?
+        if ( x0 > x1 ) {
+            x0 = x0 + x1;
+            x1 = x0 - x1;
+            x0 = x0 - x1;
+        };
+
+        FixP dY = y1 - y0;
+
+        uint32_t pixel = 0 ;
+
+        FixP v{0};
+
+        //0xFF here acts as a dirty value, indicating there is no last value. But even if we had
+        //textures this big, it would be only at the end of the run.
+        uint8_t lastU = 0xFF;
+        uint8_t lastV = 0xFF;
+
+        auto iy = static_cast<int16_t >(y);
+
+        int* data = texture->getPixelData();
+        int8_t textureWidth = texture->getWidth();
+        FixP textureSize{ textureWidth };
+
+        FixP dv = textureSize / (dY);
+
+        auto diffX = ( x1 - x0 );
+
+        auto iX0 = static_cast<int16_t >(x0);
+        auto iX1 = static_cast<int16_t >(x1);
+
+        if ( iX0 == iX1 ) {
+            return;
+        }
+
+
+        FixP du = textureSize / diffX;
+
+        int* bufferData = getBufferData();
+
+        for (; iy < limit; ++iy ) {
+            if (iy < 128 && iy >= 0) {
+                FixP u{0};
+                auto iv = static_cast<uint8_t >(v);
+                auto sourceLineStart = data + (iv * textureWidth);
+                auto destinationLine = bufferData + (320 * iy) + iX0;
+
+                for (auto ix = iX0; ix < iX1; ++ix) {
+
+                    if (ix < 256 && ix >= 0 ) {
+                        auto iu = static_cast<uint8_t >(u);
+
+                        //only fetch the next texel if we really changed the u, v coordinates
+                        //(otherwise, would fetch the same thing anyway)
+                        if (iv != lastV || iu != lastU) {
+                            pixel = *(sourceLineStart + iu );
+                        }
+
+                        lastU = iu;
+                        lastV = iv;
+
+                        if (pixel & 0xFF000000) {
+                            *(destinationLine) = pixel;
+                        }
+                    }
+                    ++destinationLine;
+                    u += du;
+                }
+
+            }
+            v += dv;
+        }
     }
 
 
