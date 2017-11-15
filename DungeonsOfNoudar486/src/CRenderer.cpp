@@ -528,40 +528,40 @@ namespace odb {
         auto ix = x;
 
         for (; ix < limit; ++ix ) {
+            if ( ix >= 0 && ix < 256 ) {
 
-            auto diffY = ( y1 - y0 );
+                auto diffY = (y1 - y0);
 
-            if ( diffY == 0 ) {
-                continue;
-            }
+                if (diffY == 0) {
+                    continue;
+                }
 
-            FixP dv = textureSize / diffY;
-            FixP v{0};
-            auto iu = static_cast<uint8_t >(u);
+                FixP dv = textureSize / diffY;
+                FixP v{0};
+                auto iu = static_cast<uint8_t >(u);
 
-            auto iY0 = static_cast<int16_t >(y0);
-            auto iY1 = static_cast<int16_t >(y1);
+                auto iY0 = static_cast<int16_t >(y0);
+                auto iY1 = static_cast<int16_t >(y1);
+                auto sourceLineStart = data + (iu * textureWidth);
+                for (auto iy = iY0; iy < iY1; ++iy) {
 
-            for ( auto iy = iY0; iy < iY1; ++iy ) {
+                    if (iy < 128 && iy >= 0 ) {
+                        auto iv = static_cast<uint8_t >(v);
 
-                if ( iy < 128 && ix < 256 ) {
-                    auto iv = static_cast<uint8_t >(v);
+                        if (iv != lastV || iu != lastU) {
+                            pixel = *(sourceLineStart + iv);
+                        }
 
-                    if ( iv != lastV || iu != lastU ) {
-                        pixel = data[ (iv * textureWidth ) + iu];
+                        lastU = iu;
+                        lastV = iv;
+
+                        if (pixel & 0xFF000000) {
+                            putRaw(ix, iy, pixel);
+                        }
                     }
-
-                    lastU = iu;
-                    lastV = iv;
-
-                    if ( pixel & 0xFF000000 ) {
-                        putRaw( ix, iy, pixel);
-                    }
-
                     v += dv;
                 }
             }
-
             y0 += upperDyDx;
             y1 += lowerDyDx;
             u += du;
@@ -737,44 +737,45 @@ namespace odb {
 
         for (; iy < limit; ++iy ) {
 
-            auto diffX = ( x1 - x0 );
+            if ( iy < 128 && iy >= 0 ) {
 
-            if ( diffX == 0 ) {
-                continue;
-            }
+                auto diffX = (x1 - x0);
 
-            auto iX0 = static_cast<int16_t >(x0);
-            auto iX1 = static_cast<int16_t >(x1);
+                if (diffX == 0) {
+                    continue;
+                }
 
-            FixP du = textureSize / diffX;
-            FixP u{0};
-            auto iv = static_cast<uint8_t >(v);
+                auto iX0 = static_cast<int16_t >(x0);
+                auto iX1 = static_cast<int16_t >(x1);
 
-            for ( auto ix = iX0; ix < iX1; ++ix ) {
+                FixP du = textureSize / diffX;
+                FixP u{0};
+                auto iv = static_cast<uint8_t >(v);
+                auto sourceLineStart = data + (iv * textureWidth);
+                for (auto ix = iX0; ix < iX1; ++ix) {
 
-                if ( iy < 128 && ix < 256 ) {
-                    auto iu = static_cast<uint8_t >(u);
+                    if (ix >= 0 && ix < 256) {
+                        auto iu = static_cast<uint8_t >(u);
 
-                    //only fetch the next texel if we really changed the u, v coordinates
-                    //(otherwise, would fetch the same thing anyway)
-                    if (iv != lastV || iu != lastU) {
-                        pixel = data[(iv * textureWidth) + iu];
+                        //only fetch the next texel if we really changed the u, v coordinates
+                        //(otherwise, would fetch the same thing anyway)
+                        if (iv != lastV || iu != lastU) {
+                            pixel = *(sourceLineStart + iu);
+                        }
+
+                        lastU = iu;
+                        lastV = iv;
+
+                        if (pixel & 0xFF000000) {
+                            putRaw(ix, iy, pixel);
+                        }
                     }
-
-                    lastU = iu;
-                    lastV = iv;
-
-                    if (pixel & 0xFF000000) {
-                        putRaw(ix, iy, pixel);
-                    }
-
                     u += du;
                 }
             }
 
             x0 += leftDxDy;
             x1 += rightDxDy;
-
             v += dv;
         }
     }
