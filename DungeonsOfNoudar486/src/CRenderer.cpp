@@ -526,6 +526,8 @@ namespace odb {
 
         FixP du = textureSize / (dX);
         auto ix = x;
+        int* bufferData = getBufferData();
+
 
         for (; ix < limit; ++ix ) {
             if ( ix >= 0 && ix < 256 ) {
@@ -543,6 +545,8 @@ namespace odb {
                 auto iY0 = static_cast<int16_t >(y0);
                 auto iY1 = static_cast<int16_t >(y1);
                 auto sourceLineStart = data + (iu * textureWidth);
+                auto destinationLine = bufferData + (320 * iY0) + ix;
+
                 for (auto iy = iY0; iy < iY1; ++iy) {
 
                     if (iy < 128 && iy >= 0 ) {
@@ -556,9 +560,10 @@ namespace odb {
                         lastV = iv;
 
                         if (pixel & 0xFF000000) {
-                            putRaw(ix, iy, pixel);
+                            *(destinationLine) = pixel;
                         }
                     }
+                    destinationLine += (320);
                     v += dv;
                 }
             }
@@ -729,6 +734,7 @@ namespace odb {
 
         auto iy = static_cast<int16_t >(y);
 
+        int* bufferData = getBufferData();
         int* data = texture->getPixelData();
         int8_t textureWidth = texture->getWidth();
         FixP textureSize{ textureWidth };
@@ -752,6 +758,8 @@ namespace odb {
                 FixP u{0};
                 auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
+                auto destinationLine = bufferData + (320 * iy) + iX0;
+
                 for (auto ix = iX0; ix < iX1; ++ix) {
 
                     if (ix >= 0 && ix < 256) {
@@ -767,9 +775,10 @@ namespace odb {
                         lastV = iv;
 
                         if (pixel & 0xFF000000) {
-                            putRaw(ix, iy, pixel);
+                            *(destinationLine) = pixel;
                         }
                     }
+                    ++destinationLine;
                     u += du;
                 }
             }
