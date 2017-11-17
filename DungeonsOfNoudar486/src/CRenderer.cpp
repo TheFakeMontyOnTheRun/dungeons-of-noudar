@@ -546,6 +546,8 @@ namespace odb {
                 auto iY1 = static_cast<int16_t >(y1);
                 auto sourceLineStart = data + (iu * textureWidth);
                 auto destinationLine = bufferData + (320 * iY0) + ix;
+                lastV = 0;
+                pixel = *(sourceLineStart);
 
                 for (auto iy = iY0; iy < iY1; ++iy) {
 
@@ -553,9 +555,9 @@ namespace odb {
                         auto iv = static_cast<uint8_t >(v);
 
                         if (iv != lastV || iu != lastU) {
-                            pixel = *(sourceLineStart + iv);
+                            pixel = *(sourceLineStart);
                         }
-
+                        sourceLineStart += (iv - lastV);
                         lastU = iu;
                         lastV = iv;
 
@@ -641,6 +643,21 @@ namespace odb {
                 auto sourceLineStart = data + (iv * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
 
+                lastU = 0;
+
+                if ( iv == lastV ) {
+                    v += dv;
+                    destinationLine = bufferData + (320 * iy);
+                    sourceLineStart = destinationLine - 320;
+
+                    auto start = std::max<int16_t >( 0, iX0 );
+                    auto finish = std::min<int16_t >( 255, iX1 );
+                    std::copy( (sourceLineStart + start ), (sourceLineStart + finish), destinationLine + start);
+                    continue;
+                }
+
+                pixel = *(sourceLineStart);
+
                 for (auto ix = iX0; ix < iX1; ++ix) {
 
                     if (ix < 256 && ix >= 0 ) {
@@ -649,9 +666,10 @@ namespace odb {
                         //only fetch the next texel if we really changed the u, v coordinates
                         //(otherwise, would fetch the same thing anyway)
                         if (iv != lastV || iu != lastU) {
-                            pixel = *(sourceLineStart + iu );
+                            pixel = *(sourceLineStart );
                         }
 
+                        sourceLineStart += ( iu - lastU);
                         lastU = iu;
                         lastV = iv;
 
@@ -759,6 +777,8 @@ namespace odb {
                 auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
+                lastU = 0;
+                pixel = *(sourceLineStart);
 
                 for (auto ix = iX0; ix < iX1; ++ix) {
 
@@ -768,9 +788,9 @@ namespace odb {
                         //only fetch the next texel if we really changed the u, v coordinates
                         //(otherwise, would fetch the same thing anyway)
                         if (iv != lastV || iu != lastU) {
-                            pixel = *(sourceLineStart + iu);
+                            pixel = *(sourceLineStart);
                         }
-
+                        sourceLineStart += ( iu - lastU );
                         lastU = iu;
                         lastV = iv;
 
