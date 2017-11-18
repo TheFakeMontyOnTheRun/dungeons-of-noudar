@@ -5,7 +5,7 @@
 
 namespace odb {
     constexpr const static auto NATIVE_TEXTURE_SIZE = 16;
-    constexpr const static auto XRES = 128;
+    constexpr const static auto XRES = 256;
     constexpr const static auto YRES = 128;
 
     constexpr const static auto HALF_XRES = XRES / 2;
