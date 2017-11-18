@@ -4,12 +4,20 @@
 #include <CTile3DProperties.h>
 
 namespace odb {
+    constexpr const static auto NATIVE_TEXTURE_SIZE = 16;
+    constexpr const static auto XRES = 128;
+    constexpr const static auto YRES = 128;
 
-    using NativeTexture = array<uint8_t , 32 * 32 >;
+    constexpr const static auto HALF_XRES = XRES / 2;
+    constexpr const static auto HALF_YRES = YRES / 2;
+
+
+    using NativeTexture = array<uint8_t , NATIVE_TEXTURE_SIZE * NATIVE_TEXTURE_SIZE >;
     using TexturePair = std::pair<std::shared_ptr<NativeTexture >, std::shared_ptr<NativeTexture >>;
 
     class CRenderer  : public Knights::IRenderer {
         bool mCached = false;
+
         char mElementsMap[40][40];
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;

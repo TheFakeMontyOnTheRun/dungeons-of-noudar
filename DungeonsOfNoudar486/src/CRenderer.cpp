@@ -127,12 +127,18 @@ namespace odb {
             auto nativeTexture = std::make_shared<NativeTexture >();
             auto rotatedTexture = std::make_shared<NativeTexture>();
 
-            for ( int y = 0; y < 32; ++y ) {
-                for ( int x = 0; x < 32; ++x ) {
-                    uint32_t pixel = (texture[0])->getPixelData()[ ( 32 * y ) + x ];
+            auto width = texture[0]->getWidth();
+            auto sourceData = (texture[0])->getPixelData();
+            auto destRegularData = nativeTexture->data();
+            auto destRotatedData = rotatedTexture->data();
+            int ratio = width / NATIVE_TEXTURE_SIZE;
+
+            for ( int y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
+                for ( int x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
+                    uint32_t pixel = (texture[0])->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
                     auto converted = CRenderer::getPaletteEntry( pixel );
-                    nativeTexture->data()[ ( 32 * y ) + x ] = converted;
-                    rotatedTexture->data()[ ( 32 * x ) + y ] = converted;
+                    nativeTexture->data()[ ( NATIVE_TEXTURE_SIZE * y ) + x ] = converted;
+                    rotatedTexture->data()[ ( NATIVE_TEXTURE_SIZE * x ) + y ] = converted;
                 }
             }
 
@@ -171,8 +177,8 @@ namespace odb {
     }
 
     Vec2 CRenderer::project(const Vec3&  p ) {
-        FixP halfWidth{128};
-        FixP halfHeight{64};
+        const static FixP halfWidth{HALF_XRES};
+        const static FixP halfHeight{HALF_YRES};
         FixP oneOver = divide( halfHeight, p.mZ );
 
         return {
@@ -182,9 +188,9 @@ namespace odb {
     }
 
     void CRenderer::projectAllVertices() {
-        FixP halfWidth{128};
-        FixP halfHeight{64};
-        FixP two{2};
+        const static FixP halfWidth{HALF_XRES};
+        const static FixP halfHeight{HALF_YRES};
+        const static FixP two{2};
 
         for ( auto& vertex : mVertices ) {
 
@@ -268,8 +274,8 @@ namespace odb {
             return;
         }
 
-        FixP one{ 1 };
-        FixP two{ 2 };
+        const static FixP one{ 1 };
+        const static FixP two{ 2 };
 
         auto halfScale = divide(scale.mY, two);
 
@@ -336,7 +342,7 @@ namespace odb {
             return;
         }
 
-        FixP one{ 1 };
+        const static FixP one{ 1 };
 
         mVertices[ 0 ].first = ( center + Vec3{ -one,  one, -one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  one, -one });
@@ -371,7 +377,7 @@ namespace odb {
             return;
         }
 
-        FixP one{ 1 };
+        const static FixP one{ 1 };
 
         mVertices[ 0 ].first = ( center + Vec3{ -one,  one, -one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  one, -one });
@@ -407,8 +413,8 @@ namespace odb {
             return;
         }
 
-        FixP one{ 1 };
-        FixP two{ 2 };
+        const static FixP one{ 1 };
+        const static FixP two{ 2 };
         auto halfScale = divide( scale.mY, two );
 
         mVertices[ 0 ].first = ( center + Vec3{ -one, halfScale + scale.mY, -one });
@@ -444,8 +450,8 @@ namespace odb {
             return;
         }
 
-        FixP one{ 1 };
-        FixP two{ 2 };
+        const static FixP one{ 1 };
+        const static FixP two{ 2 };
         auto halfScale = divide( scale.mY, two );
 
         mVertices[ 0 ].first = ( center + Vec3{ -one, halfScale + scale.mY, one });
@@ -547,7 +553,7 @@ namespace odb {
         //we can use this statically, since the textures are already loaded.
         //we don't need to fetch that data on every run.
         uint8_t * data = texture.second->data();
-        int8_t textureWidth = 32;
+        int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         FixP textureSize{ textureWidth };
 
         FixP du = textureSize / (dX);
@@ -556,7 +562,7 @@ namespace odb {
 
 
         for (; ix < limit; ++ix ) {
-            if ( ix >= 0 && ix < 256 ) {
+            if ( ix >= 0 && ix < XRES ) {
 
                 auto diffY = (y1 - y0);
 
@@ -577,7 +583,7 @@ namespace odb {
 
                 for (auto iy = iY0; iy < iY1; ++iy) {
 
-                    if (iy < 128 && iy >= 0 ) {
+                    if (iy < YRES && iy >= 0 ) {
                         auto iv = static_cast<uint8_t >(v);
 
                         if (iv != lastV || iu != lastU) {
@@ -641,7 +647,7 @@ namespace odb {
         auto iy = static_cast<int16_t >(y);
 
         uint8_t* data = texture.first->data();
-        int8_t textureWidth = 32;
+        int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         FixP textureSize{ textureWidth };
 
         FixP dv = textureSize / (dY);
@@ -661,7 +667,7 @@ namespace odb {
         uint8_t * bufferData = getBufferData();
 
         for (; iy < limit; ++iy ) {
-            if (iy < 128 && iy >= 0) {
+            if (iy < YRES && iy >= 0) {
                 FixP u{0};
                 auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
@@ -675,7 +681,7 @@ namespace odb {
                     sourceLineStart = destinationLine - 320;
 
                     auto start = std::max<int16_t >( 0, iX0 );
-                    auto finish = std::min<int16_t >( 255, iX1 );
+                    auto finish = std::min<int16_t >( (XRES - 1), iX1 );
                     std::copy( (sourceLineStart + start ), (sourceLineStart + finish), destinationLine + start);
                     continue;
                 }
@@ -684,7 +690,7 @@ namespace odb {
 
                 for (auto ix = iX0; ix < iX1; ++ix) {
 
-                    if (ix < 256 && ix >= 0 ) {
+                    if (ix < XRES && ix >= 0 ) {
                         auto iu = static_cast<uint8_t >(u);
 
                         //only fetch the next texel if we really changed the u, v coordinates
@@ -776,14 +782,14 @@ namespace odb {
 
         uint8_t * bufferData = getBufferData();
         uint8_t * data = texture.first->data();
-        int8_t textureWidth = 32;
+        int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         FixP textureSize{ textureWidth };
 
         FixP dv = textureSize / (dY);
 
         for (; iy < limit; ++iy ) {
 
-            if ( iy < 128 && iy >= 0 ) {
+            if ( iy < YRES && iy >= 0 ) {
 
                 auto diffX = (x1 - x0);
 
@@ -804,7 +810,7 @@ namespace odb {
 
                 for (auto ix = iX0; ix < iX1; ++ix) {
 
-                    if (ix >= 0 && ix < 256) {
+                    if (ix >= 0 && ix < XRES) {
                         auto iu = static_cast<uint8_t >(u);
 
                         //only fetch the next texel if we really changed the u, v coordinates
