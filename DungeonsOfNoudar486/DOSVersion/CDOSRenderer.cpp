@@ -78,7 +78,6 @@ namespace odb {
                 }
             }
         }
-
     }
 
     void CRenderer::sleep(long ms) {
@@ -137,12 +136,12 @@ namespace odb {
                 break;
 
             case 7777:
-                mSpeed.mZ += delta;
+                mSpeed.mZ -= delta;
                 mNeedsToRedraw = true;
                 break;
 
             case 11386:
-                mSpeed.mZ -= delta;
+                mSpeed.mZ += delta;
                 mNeedsToRedraw = true;
                 break;
 
