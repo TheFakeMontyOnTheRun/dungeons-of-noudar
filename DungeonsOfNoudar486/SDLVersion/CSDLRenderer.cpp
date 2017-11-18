@@ -65,7 +65,17 @@ namespace odb {
     CRenderer::CRenderer() {
         SDL_Init( SDL_INIT_EVERYTHING );
         video = SDL_SetVideoMode( 320, 200, 32, 0 );
-        mFrameBuffer = std::make_shared<NativeBitmap>( "video", 320, 200, new int[ 320 * 200 ] );
+
+        for ( int r = 0; r < 256; ++r ) {
+            for ( int g = 0; g < 256; ++g ) {
+                for ( int b = 0; b < 256; ++b ) {
+                    auto pixel = ( r << 16 ) + ( g << 8 ) + ( b );
+                    auto paletteEntry = getPaletteEntry( pixel );
+                    mPalette[ paletteEntry ] = pixel;
+                }
+            }
+        }
+
 #ifdef __EMSCRIPTEN__
         enterFullScreenMode();
 #endif
@@ -149,19 +159,19 @@ namespace odb {
             return;
         }
 
-        mFrameBuffer->getPixelData()[ (320 * y ) + x ] = pixel;
+        mBuffer[ (320 * y ) + x ] = pixel;
     }
 
     void CRenderer::flip() {
 
-        for ( int y = 0; y  < 200; ++y ) {
+        for ( int y = 0; y  < 128; ++y ) {
             for ( int x = 0; x < 320; ++x ) {
                 SDL_Rect rect;
                 rect.x = x;
                 rect.y = y;
                 rect.w = 1;
                 rect.h = 1;
-                auto pixel = mFrameBuffer->getPixelData()[ (320 * y ) + x ];
+                auto pixel = mPalette[ mBuffer[ (320 * y ) + x ] ];
 
                 SDL_FillRect(video, &rect, SDL_MapRGB(video->format, ((pixel & 0x000000FF)), ((pixel & 0x0000FF00) >> 8),
                                                       ((pixel & 0x00FF0000) >> 16)));
@@ -173,8 +183,8 @@ namespace odb {
     }
 
     void CRenderer::clear() {
-        auto beginFrame = mFrameBuffer->getPixelData();
-        auto endFrame = beginFrame + ( 320 * 200 );
+        auto beginFrame = std::begin( mBuffer );
+        auto endFrame = std::end( mBuffer );
         std::fill( beginFrame, endFrame, 0 );
         SDL_FillRect(video, nullptr, 0);
     }

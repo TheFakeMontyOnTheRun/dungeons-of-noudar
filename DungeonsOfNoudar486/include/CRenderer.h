@@ -5,12 +5,16 @@
 
 namespace odb {
 
+    using NativeTexture = array<uint8_t , 32 * 32 >;
+    using TexturePair = std::pair<std::shared_ptr<NativeTexture >, std::shared_ptr<NativeTexture >>;
+
     class CRenderer  : public Knights::IRenderer {
         bool mCached = false;
         char mElementsMap[40][40];
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;
-        std::shared_ptr<NativeBitmap> mFrameBuffer;
+        array< uint8_t, 320 * 128 > mBuffer;
+        array< uint32_t , 256 > mPalette;
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;
@@ -19,23 +23,23 @@ namespace odb {
      public:
         CRenderer();
 
-        int* getBufferData();
+        uint8_t * getBufferData();
 
         void fillSidebar();
 
         void fillUnderbar();
 
-        void drawCubeAt(const Vec3 &center, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawCubeAt(const Vec3 &center, TexturePair texture );
 
-        void drawFloorAt(const Vec3 &center, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawFloorAt(const Vec3 &center, TexturePair texture );
 
-        void drawCeilingAt(const Vec3 &center, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawCeilingAt(const Vec3 &center, TexturePair texture );
 
-        void drawLeftNear(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawLeftNear(const Vec3 &center, const Vec3 &scale, TexturePair texture );
 
-        void drawRightNear(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawRightNear(const Vec3 &center, const Vec3 &scale, TexturePair texture );
 
-        void drawColumnAt(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture );
 
         Vec2 project(const Vec3 &p);
 
@@ -49,11 +53,11 @@ namespace odb {
 
         void putRaw(int16_t x, int16_t y, uint32_t pixel);
 
-        void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture );
 
-        void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture);
+        void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, TexturePair texture);
 
-        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeBitmap> texture );
+        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, TexturePair texture );
 
         void clear();
 
@@ -66,6 +70,8 @@ namespace odb {
         void drawLine(const Vec2 &p0, const Vec2 &p1);
 
         void projectAllVertices();
+
+        static unsigned char getPaletteEntry(int origin);
 
         vector<vector<std::shared_ptr<odb::NativeBitmap>>> mTextures;
 
@@ -83,6 +89,7 @@ namespace odb {
 
         CTilePropertyMap mTileProperties;
         Knights::Vec2i mCameraPosition;
+        static vector<TexturePair> mNativeTextures;
     };
 
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>

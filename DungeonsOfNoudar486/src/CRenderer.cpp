@@ -47,6 +47,8 @@ namespace odb {
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
 
+    vector<TexturePair> CRenderer::mNativeTextures;
+
     vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
         auto data = fileLoader->loadFileFromPath( filename );
         std::stringstream dataStream;
@@ -78,6 +80,13 @@ namespace odb {
         return odb::CTile3DProperties::parsePropertyList( data );
     }
 
+    unsigned char CRenderer::getPaletteEntry(int origin) {
+        unsigned char shade = 0;
+        shade += (((((origin & 0x0000FF)) << 2) >> 8)) << 6;
+        shade += (((((origin & 0x00FF00) >> 8) << 3) >> 8)) << 3;
+        shade += (((((origin & 0xFF0000) >> 16) << 3) >> 8)) << 0;
+        return shade;
+    }
 
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
@@ -111,6 +120,23 @@ namespace odb {
             }
 
             tilesToLoad.push_back(textures);
+        }
+
+        for ( const auto& texture : tilesToLoad ) {
+
+            auto nativeTexture = std::make_shared<NativeTexture >();
+            auto rotatedTexture = std::make_shared<NativeTexture>();
+
+            for ( int y = 0; y < 32; ++y ) {
+                for ( int x = 0; x < 32; ++x ) {
+                    uint32_t pixel = (texture[0])->getPixelData()[ ( 32 * y ) + x ];
+                    auto converted = CRenderer::getPaletteEntry( pixel );
+                    nativeTexture->data()[ ( 32 * y ) + x ] = converted;
+                    rotatedTexture->data()[ ( 32 * x ) + y ] = converted;
+                }
+            }
+
+            CRenderer::mNativeTextures.push_back( std::make_pair(nativeTexture, rotatedTexture ) );
         }
 
         return tilesToLoad;
@@ -173,7 +199,7 @@ namespace odb {
         }
     }
 
-    void CRenderer::drawCubeAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
+    void CRenderer::drawCubeAt(const Vec3& center, TexturePair texture) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -236,7 +262,7 @@ namespace odb {
                   texture );
     }
 
-    void CRenderer::drawColumnAt(const Vec3 &center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
+    void CRenderer::drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -304,7 +330,7 @@ namespace odb {
         }
     }
 
-    void CRenderer::drawFloorAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
+    void CRenderer::drawFloorAt(const Vec3& center, TexturePair texture) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -339,7 +365,7 @@ namespace odb {
         }
     }
 
-    void CRenderer::drawCeilingAt(const Vec3& center, std::shared_ptr<odb::NativeBitmap> texture) {
+    void CRenderer::drawCeilingAt(const Vec3& center, TexturePair texture) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -375,7 +401,7 @@ namespace odb {
 
     }
 
-    void CRenderer::drawLeftNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
+    void CRenderer::drawLeftNear(const Vec3& center, const Vec3 &scale, TexturePair texture) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -413,7 +439,7 @@ namespace odb {
     }
 
 
-    void CRenderer::drawRightNear(const Vec3& center, const Vec3 &scale, std::shared_ptr<odb::NativeBitmap> texture) {
+    void CRenderer::drawRightNear(const Vec3& center, const Vec3 &scale, TexturePair texture) {
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
@@ -461,7 +487,7 @@ namespace odb {
      *        \ |
      *         \| x1y1
      */
-    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture ) {
+    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture ) {
 
         if ( x0 > x1) {
             //switch x0 with x1
@@ -509,7 +535,7 @@ namespace odb {
         FixP upperDyDx = upperDy / dX;
         FixP lowerDyDx = lowerDy / dX;
 
-        uint32_t pixel = 0;
+        uint8_t pixel = 0;
 
         FixP u{0};
 
@@ -520,13 +546,13 @@ namespace odb {
 
         //we can use this statically, since the textures are already loaded.
         //we don't need to fetch that data on every run.
-        int* data = texture->getPixelData();
-        int8_t textureWidth = texture->getWidth();
+        uint8_t * data = texture.second->data();
+        int8_t textureWidth = 32;
         FixP textureSize{ textureWidth };
 
         FixP du = textureSize / (dX);
         auto ix = x;
-        int* bufferData = getBufferData();
+        uint8_t * bufferData = getBufferData();
 
 
         for (; ix < limit; ++ix ) {
@@ -561,9 +587,7 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
 
-                        if (pixel & 0xFF000000) {
-                            *(destinationLine) = pixel;
-                        }
+                        *(destinationLine) = pixel;
                     }
                     destinationLine += (320);
                     v += dv;
@@ -576,11 +600,11 @@ namespace odb {
 
     }
 
-    int* CRenderer::getBufferData() {
-        return mFrameBuffer->getPixelData();
+    uint8_t * CRenderer::getBufferData() {
+        return &mBuffer[0];
     }
 
-    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeBitmap> texture ) {
+    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, TexturePair texture ) {
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
             //switch y0 with y1
@@ -605,7 +629,7 @@ namespace odb {
 
         FixP dY = y1 - y0;
 
-        uint32_t pixel = 0 ;
+        uint8_t pixel = 0 ;
 
         FixP v{0};
 
@@ -616,8 +640,8 @@ namespace odb {
 
         auto iy = static_cast<int16_t >(y);
 
-        int* data = texture->getPixelData();
-        int8_t textureWidth = texture->getWidth();
+        uint8_t* data = texture.first->data();
+        int8_t textureWidth = 32;
         FixP textureSize{ textureWidth };
 
         FixP dv = textureSize / (dY);
@@ -634,7 +658,7 @@ namespace odb {
 
         FixP du = textureSize / diffX;
 
-        int* bufferData = getBufferData();
+        uint8_t * bufferData = getBufferData();
 
         for (; iy < limit; ++iy ) {
             if (iy < 128 && iy >= 0) {
@@ -673,9 +697,7 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
 
-                        if (pixel & 0xFF000000) {
-                            *(destinationLine) = pixel;
-                        }
+                        *(destinationLine) = pixel;
                     }
                     ++destinationLine;
                     u += du;
@@ -693,7 +715,7 @@ namespace odb {
      *        /             \
      *  x0y1 /______________\ x1y1
      */
-    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, std::shared_ptr<odb::NativeBitmap> texture ) {
+    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, TexturePair texture ) {
 
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
@@ -741,7 +763,7 @@ namespace odb {
         FixP x0 = upperX0;
         FixP x1 = upperX1;
 
-        uint32_t pixel = 0 ;
+        uint8_t pixel = 0 ;
 
         FixP v{0};
 
@@ -752,9 +774,9 @@ namespace odb {
 
         auto iy = static_cast<int16_t >(y);
 
-        int* bufferData = getBufferData();
-        int* data = texture->getPixelData();
-        int8_t textureWidth = texture->getWidth();
+        uint8_t * bufferData = getBufferData();
+        uint8_t * data = texture.first->data();
+        int8_t textureWidth = 32;
         FixP textureSize{ textureWidth };
 
         FixP dv = textureSize / (dY);
@@ -794,9 +816,7 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
 
-                        if (pixel & 0xFF000000) {
-                            *(destinationLine) = pixel;
-                        }
+                        *(destinationLine) = pixel;
                     }
                     ++destinationLine;
                     u += du;
@@ -910,19 +930,19 @@ namespace odb {
 
 
                     if ( tileProp.mFloorRepeatedTextureIndex > 0 ) {
-                        drawColumnAt(position + Vec3{ 0, tileProp.mFloorHeight - divide(heightDiff, two), 0}, {1, FixP{tileProp.mFloorRepetitions}, 1}, mTextures[ tileProp.mFloorRepeatedTextureIndex ][ 0 ] );
+                        drawColumnAt(position + Vec3{ 0, tileProp.mFloorHeight - divide(heightDiff, two), 0}, {1, FixP{tileProp.mFloorRepetitions}, 1}, mNativeTextures[ tileProp.mFloorRepeatedTextureIndex ] );
                     }
 
                     if ( tileProp.mCeilingRepeatedTextureIndex > 0 ) {
-                        drawColumnAt(position + Vec3{ 0, tileProp.mCeilingHeight + divide(heightDiff, two), 0}, {1, FixP{tileProp.mCeilingRepetitions}, 1}, mTextures[ tileProp.mCeilingRepeatedTextureIndex ][ 0 ] );
+                        drawColumnAt(position + Vec3{ 0, tileProp.mCeilingHeight + divide(heightDiff, two), 0}, {1, FixP{tileProp.mCeilingRepetitions}, 1}, mNativeTextures[ tileProp.mCeilingRepeatedTextureIndex ] );
                     }
 
                     if ( tileProp.mFloorTextureIndex != -1 ) {
-                        drawFloorAt( position + Vec3{ 0, tileProp.mFloorHeight, 0}, mTextures[ tileProp.mFloorTextureIndex ][ 0 ] );
+                        drawFloorAt( position + Vec3{ 0, tileProp.mFloorHeight, 0}, mNativeTextures[ tileProp.mFloorTextureIndex ] );
                     }
 
                     if ( tileProp.mCeilingTextureIndex != -1 ) {
-                        drawCeilingAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, mTextures[ tileProp.mCeilingTextureIndex ][ 0 ] );
+                        drawCeilingAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, mNativeTextures[ tileProp.mCeilingTextureIndex ] );
                     }
 
 
@@ -932,16 +952,16 @@ namespace odb {
 
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
-                                drawRightNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                drawRightNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
                             case kLeftNearWall:
-                                drawLeftNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                drawLeftNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
                             case kCube:
                             default:
-                                drawColumnAt(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mTextures[ tileProp.mMainWallTextureIndex ][ 0 ] );
+                                drawColumnAt(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
                         }
                     }

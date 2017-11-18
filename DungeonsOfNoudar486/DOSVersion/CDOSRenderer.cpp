@@ -49,29 +49,15 @@ using sg14::fixed_point;
 
 namespace odb {
 
-    int* mBuffer;
-    array<uint8_t, 320 * 200> mMemorySnapshot;
-
-    uint32_t origin = 0;
-    uint32_t lastOrigin = -1;
-    uint8_t shade;
     long frame = 0;
 
     void CRenderer::putRaw(int16_t x, int16_t y, uint32_t pixel) {
 
-        if (x < 0 || x >= 320 || y < 0 || y > 199) {
+        if (x < 0 || x >= 320 || y < 0 || y >= 128) {
             return;
         }
 
         mBuffer[(320 * y) + x] = pixel;
-    }
-
-    unsigned char getPaletteEntry(int origin) {
-        unsigned char shade = 0;
-        shade += (((((origin & 0x0000FF)) << 2) >> 8)) << 6;
-        shade += (((((origin & 0x00FF00) >> 8) << 3) >> 8)) << 3;
-        shade += (((((origin & 0xFF0000) >> 16) << 3) >> 8)) << 0;
-        return shade;
     }
 
     CRenderer::CRenderer() {
@@ -93,8 +79,6 @@ namespace odb {
             }
         }
 
-        mFrameBuffer = std::make_shared<NativeBitmap>( "video", 320, 200, new int[ 320 * 200 ] );
-        mBuffer = mFrameBuffer->getPixelData();
     }
 
     void CRenderer::sleep(long ms) {
@@ -173,33 +157,10 @@ namespace odb {
     }
 
     void CRenderer::flip() {
-        auto source = mBuffer;
-        auto destination = std::begin(mMemorySnapshot);
-        for (int offset = 0; offset < 320 * 200; ++offset) {
-
-            auto origin = *source;
-
-            if (origin != lastOrigin) {
-                shade = getPaletteEntry(origin);
-            }
-
-            lastOrigin = origin;
-
-            *destination = shade;
-
-            source = ++source;
-            destination = std::next(destination);
-        }
-
-        dosmemput(&mMemorySnapshot[0], 320 * 200, 0xa0000);
-
-//        gotoxy(1, 1);
-//        printf("%d", ++frame);
-
-
+        dosmemput(&mBuffer[0], 320 * 128, 0xa0000);
     }
 
     void CRenderer::clear() {
-        std::fill(mBuffer, mBuffer + (320*200), 0);
+        std::fill( std::begin(mBuffer), std::end(mBuffer), 0);
     }
 }
