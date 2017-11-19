@@ -277,16 +277,25 @@ namespace odb {
         const static FixP one{ 1 };
         const static FixP two{ 2 };
 
-        auto halfScale = divide(scale.mY, two);
+        auto halfScale = scale.mY;
+        auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale + scale.mY, -one });
-        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale + scale.mY, -one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -one });
-        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, -one });
-        mVertices[ 4 ].first = ( center + Vec3{ -one,  halfScale + scale.mY,  one });
-        mVertices[ 5 ].first = ( center + Vec3{  one,  halfScale + scale.mY,  one });
-        mVertices[ 6 ].first = ( center + Vec3{ -one, -halfScale,  one });
-        mVertices[ 7 ].first = ( center + Vec3{  one, -halfScale,  one });
+        //    |\4            /|5
+        //    | \  center   / |
+        //    |  \    *    /  |
+        //    |   \0__|__1/   |7
+        //    |6  |   |  |   /
+        //     \  |   X  |  /
+        //      \ |      | /
+        //       \|2____3|/
+        mVertices[ 0 ].first = ( scaledCenter + Vec3{ -one,  halfScale, -one });
+        mVertices[ 1 ].first = ( scaledCenter + Vec3{  one,  halfScale, -one });
+        mVertices[ 2 ].first = ( scaledCenter + Vec3{ -one, -halfScale, -one });
+        mVertices[ 3 ].first = ( scaledCenter + Vec3{  one, -halfScale, -one });
+        mVertices[ 4 ].first = ( scaledCenter + Vec3{ -one,  halfScale,  one });
+        mVertices[ 5 ].first = ( scaledCenter + Vec3{  one,  halfScale,  one });
+        mVertices[ 6 ].first = ( scaledCenter + Vec3{ -one, -halfScale,  one });
+        mVertices[ 7 ].first = ( scaledCenter + Vec3{  one, -halfScale,  one });
 
         projectAllVertices();
 
@@ -344,10 +353,10 @@ namespace odb {
 
         const static FixP one{ 1 };
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one,  one, -one });
-        mVertices[ 1 ].first = ( center + Vec3{  one,  one, -one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one,  one,  one });
-        mVertices[ 3 ].first = ( center + Vec3{  one,  one,  one });
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  0, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  0, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one,  0,  one });
+        mVertices[ 3 ].first = ( center + Vec3{  one,  0,  one });
 
         projectAllVertices();
 
@@ -415,10 +424,10 @@ namespace odb {
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-        auto halfScale = divide( scale.mY, two );
+        auto halfScale = scale.mY;
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one, halfScale + scale.mY, -one });
-        mVertices[ 1 ].first = ( center + Vec3{  one, halfScale + scale.mY, one });
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, one });
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -one });
         mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, one });
 
@@ -452,10 +461,10 @@ namespace odb {
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-        auto halfScale = divide( scale.mY, two );
+        auto halfScale = scale.mY;
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one, halfScale + scale.mY, one });
-        mVertices[ 1 ].first = ( center + Vec3{  one, halfScale + scale.mY, -one });
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, one });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -one });
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, one });
         mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, -one });
 
@@ -900,6 +909,7 @@ namespace odb {
     void CRenderer::render(long ms) {
 
         const static FixP two{2};
+        const static FixP one{1};
 
         if ( mSpeed.mX ) {
             mSpeed.mX /= two;
@@ -931,8 +941,9 @@ namespace odb {
                     auto element = mElementsMap[z][40 - x];
                     auto tileProp = mTileProperties[element];
                     auto heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
-                    auto halfHeightDiff = divide( heightDiff, two );
-                    Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ -2 }, FixP{2 * (40 - z)}};
+                    auto twiceHeight = multiply( heightDiff, two );
+                    auto halfHeightDiff = heightDiff / two;
+                    Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{2 * (40 - z)}};
 
 
                     if ( tileProp.mFloorRepeatedTextureIndex > 0 ) {
@@ -944,13 +955,12 @@ namespace odb {
                     }
 
                     if ( tileProp.mFloorTextureIndex != -1 ) {
-                        drawFloorAt( position + Vec3{ 0, tileProp.mFloorHeight, 0}, mNativeTextures[ tileProp.mFloorTextureIndex ] );
+                        drawFloorAt( position + Vec3{ 0, multiply(tileProp.mFloorHeight, two) - one, 0}, mNativeTextures[ tileProp.mFloorTextureIndex ] );
                     }
 
                     if ( tileProp.mCeilingTextureIndex != -1 ) {
-                        drawCeilingAt(position + Vec3{ 0, tileProp.mCeilingHeight, 0}, mNativeTextures[ tileProp.mCeilingTextureIndex ] );
+                        drawCeilingAt(position + Vec3{ 0, multiply(tileProp.mCeilingHeight, two), 0}, mNativeTextures[ tileProp.mCeilingTextureIndex ] );
                     }
-
 
                     if ( tileProp.mMainWallTextureIndex > 0 ) {
 
@@ -958,16 +968,25 @@ namespace odb {
 
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
-                                drawRightNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mNativeTextures[ tileProp.mMainWallTextureIndex ] );
+                                drawRightNear(
+                                        position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
+                                        {1, twiceHeight, 1},
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
                             case kLeftNearWall:
-                                drawLeftNear(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mNativeTextures[ tileProp.mMainWallTextureIndex ] );
+                                drawLeftNear(
+                                        position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
+                                        {1, twiceHeight, 1},
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
                             case kCube:
                             default:
-                                drawColumnAt(position + Vec3{ 0, halfHeightDiff, 0}, {1, heightDiff, 1}, mNativeTextures[ tileProp.mMainWallTextureIndex ] );
+                                drawColumnAt(
+                                        position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
+                                        {1, twiceHeight, 1},
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
                         }
                     }
