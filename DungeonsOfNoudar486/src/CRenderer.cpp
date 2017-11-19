@@ -388,10 +388,10 @@ namespace odb {
 
         const static FixP one{ 1 };
 
-        mVertices[ 0 ].first = ( center + Vec3{ -one,  one, -one });
-        mVertices[ 1 ].first = ( center + Vec3{  one,  one, -one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one,  one,  one });
-        mVertices[ 3 ].first = ( center + Vec3{  one,  one,  one });
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  0, -one });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  0, -one });
+        mVertices[ 2 ].first = ( center + Vec3{ -one,  0,  one });
+        mVertices[ 3 ].first = ( center + Vec3{  one,  0,  one });
 
         projectAllVertices();
 
