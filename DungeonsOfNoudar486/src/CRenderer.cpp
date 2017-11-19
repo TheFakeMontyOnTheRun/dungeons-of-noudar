@@ -314,6 +314,7 @@ namespace odb {
         const static FixP two{ 2 };
 
         auto halfScale = scale.mY;
+        auto textureScale = halfScale / two;
         auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
 
         //    |\4            /|5
@@ -349,19 +350,19 @@ namespace odb {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
-                          texture, halfScale);
+                          texture, textureScale);
             }
 
             if (static_cast<int>(center.mX) >= 0 ) {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
-                         texture, halfScale);
+                         texture, textureScale);
             }
 
             drawFrontWall( ulz0.mX, ulz0.mY,
                       lrz0.mX, lrz0.mY,
-                      texture, halfScale, enableAlpha );
+                      texture, textureScale, enableAlpha );
         }
 
 
@@ -461,7 +462,7 @@ namespace odb {
         const static FixP one{ 1 };
         const static FixP two{ 2 };
         auto halfScale = scale.mY;
-
+        auto textureScale = halfScale / two;
         mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, -one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, one });
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -one });
@@ -478,7 +479,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      texture, halfScale );
+                      texture, textureScale );
         }
 
         if (kShouldDrawOutline){
@@ -498,7 +499,7 @@ namespace odb {
         const static FixP one{ 1 };
         const static FixP two{ 2 };
         auto halfScale = scale.mY;
-
+        auto textureScale = halfScale / two;
         mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -one });
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, one });
@@ -515,7 +516,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      texture, halfScale );
+                      texture, textureScale );
         }
 
         if (kShouldDrawOutline) {
@@ -582,7 +583,7 @@ namespace odb {
         FixP y0 = upperY0;
         FixP y1 = lowerY0;
 
-        FixP dX{limit - x};
+        FixP dX = FixP{limit - x};
         FixP upperDyDx = upperDy / dX;
         FixP lowerDyDx = lowerDy / dX;
 
@@ -609,7 +610,7 @@ namespace odb {
         for (; ix < limit; ++ix ) {
             if ( ix >= 0 && ix < XRES ) {
 
-                auto diffY = (y1 - y0);
+                FixP diffY = (y1 - y0) / textureScaleY;
 
                 if (diffY == 0) {
                     continue;
@@ -622,9 +623,10 @@ namespace odb {
                 auto iY0 = static_cast<int16_t >(y0);
                 auto iY1 = static_cast<int16_t >(y1);
                 auto sourceLineStart = data + (iu * textureWidth);
+                auto lineOffset = sourceLineStart;
                 auto destinationLine = bufferData + (320 * iY0) + ix;
                 lastV = 0;
-                pixel = *(sourceLineStart);
+                pixel = *(lineOffset);
 
                 for (auto iy = iY0; iy < iY1; ++iy) {
 
@@ -632,9 +634,9 @@ namespace odb {
                         auto iv = static_cast<uint8_t >(v);
 
                         if (iv != lastV || iu != lastU) {
-                            pixel = *(sourceLineStart);
+                            pixel = *(lineOffset);
                         }
-                        sourceLineStart += (iv - lastV);
+                        lineOffset = ((iv % textureWidth) + sourceLineStart);
                         lastU = iu;
                         lastV = iv;
                         if (pixel != mTransparency) {
@@ -679,7 +681,7 @@ namespace odb {
             x0 = x0 - x1;
         };
 
-        FixP dY = y1 - y0;
+        FixP dY = (y1 - y0) / textureScaleY;
 
         uint8_t pixel = 0 ;
 
@@ -715,7 +717,7 @@ namespace odb {
             if (iy < YRES && iy >= 0) {
                 FixP u{0};
                 auto iv = static_cast<uint8_t >(v);
-                auto sourceLineStart = data + (iv * textureWidth);
+                auto sourceLineStart = data + ((iv % textureWidth) * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
 
                 lastU = 0;
@@ -984,7 +986,7 @@ namespace odb {
                     auto halfHeightDiff = heightDiff / two;
                     Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{2 * (40 - z)}};
 
-                    if ( tileProp.mFloorRepeatedTextureIndex > 0 ) {
+                    if ( tileProp.mFloorRepeatedTextureIndex > 0 && tileProp.mFloorRepetitions > 0) {
 
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
@@ -1012,7 +1014,7 @@ namespace odb {
                         }
                     }
 
-                    if ( tileProp.mCeilingRepeatedTextureIndex > 0 ) {
+                    if ( tileProp.mCeilingRepeatedTextureIndex > 0 && tileProp.mCeilingRepetitions > 0 ) {
 
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
