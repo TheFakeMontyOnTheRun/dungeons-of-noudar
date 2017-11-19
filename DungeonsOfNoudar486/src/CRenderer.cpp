@@ -978,23 +978,20 @@ namespace odb {
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
                                 drawRightNear(
-                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + one + tileProp.mCeilingRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) - one + tileProp.mCeilingRepetitions, 0},
                                         {1, tileProp.mCeilingRepetitions, 1},
-                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);
-
-                                break;
+                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
-                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) -one + tileProp.mCeilingRepetitions, 0},
                                         {1, tileProp.mCeilingRepetitions, 1},
-                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);
-                                break;
+                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
 
                             case kCube:
                             default:
                                 drawColumnAt(
-                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + one + tileProp.mCeilingRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) -one + tileProp.mCeilingRepetitions, 0},
                                         {1, tileProp.mCeilingRepetitions, 1},
                                         mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);
                                 break;
@@ -1006,7 +1003,7 @@ namespace odb {
                     }
 
                     if ( tileProp.mCeilingTextureIndex != -1 ) {
-                        drawCeilingAt(position + Vec3{ 0, multiply(tileProp.mCeilingHeight, two), 0}, mNativeTextures[ tileProp.mCeilingTextureIndex ] );
+                        drawCeilingAt(position + Vec3{ 0, multiply(tileProp.mCeilingHeight, two) - one, 0}, mNativeTextures[ tileProp.mCeilingTextureIndex ] );
                     }
 
                     if ( tileProp.mMainWallTextureIndex > 0 ) {
