@@ -950,7 +950,7 @@ namespace odb {
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
                                 drawRightNear(
-                                        position + Vec3{0, multiply(tileProp.mFloorHeight, two) - one - tileProp.mFloorRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
                                         {1, tileProp.mFloorRepetitions, 1},
                                         mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
 
@@ -958,7 +958,7 @@ namespace odb {
 
                             case kLeftNearWall:
                                 drawLeftNear(
-                                        position + Vec3{0, multiply(tileProp.mFloorHeight, two) - one - tileProp.mFloorRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
                                         {1, tileProp.mFloorRepetitions, 1},
                                         mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
                                 break;
@@ -966,7 +966,7 @@ namespace odb {
                             case kCube:
                             default:
                                 drawColumnAt(
-                                        position + Vec3{0, multiply(tileProp.mFloorHeight, two) - one - tileProp.mFloorRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
                                         {1, tileProp.mFloorRepetitions, 1},
                                         mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
                                 break;
@@ -978,20 +978,20 @@ namespace odb {
                         switch (tileProp.mGeometryType ) {
                             case kRightNearWall:
                                 drawRightNear(
-                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) - one + tileProp.mCeilingRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
                                         {1, tileProp.mCeilingRepetitions, 1},
                                         mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
-                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) -one + tileProp.mCeilingRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
                                         {1, tileProp.mCeilingRepetitions, 1},
                                         mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
 
                             case kCube:
                             default:
                                 drawColumnAt(
-                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) -one + tileProp.mCeilingRepetitions, 0},
+                                        position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
                                         {1, tileProp.mCeilingRepetitions, 1},
                                         mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);
                                 break;
@@ -999,11 +999,11 @@ namespace odb {
                     }
 
                     if ( tileProp.mFloorTextureIndex != -1 ) {
-                        drawFloorAt( position + Vec3{ 0, multiply(tileProp.mFloorHeight, two) - one, 0}, mNativeTextures[ tileProp.mFloorTextureIndex ] );
+                        drawFloorAt( position + Vec3{ 0, multiply(tileProp.mFloorHeight, two), 0}, mNativeTextures[ tileProp.mFloorTextureIndex ] );
                     }
 
                     if ( tileProp.mCeilingTextureIndex != -1 ) {
-                        drawCeilingAt(position + Vec3{ 0, multiply(tileProp.mCeilingHeight, two) - one, 0}, mNativeTextures[ tileProp.mCeilingTextureIndex ] );
+                        drawCeilingAt(position + Vec3{ 0, multiply(tileProp.mCeilingHeight, two), 0}, mNativeTextures[ tileProp.mCeilingTextureIndex ] );
                     }
 
                     if ( tileProp.mMainWallTextureIndex > 0 ) {
