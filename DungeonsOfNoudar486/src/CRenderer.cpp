@@ -938,7 +938,7 @@ namespace odb {
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
 
-                    auto element = mElementsMap[z][40 - x];
+                    auto element = mElementsMap[z][39 - x];
                     auto tileProp = mTileProperties[element];
                     auto heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
                     auto twiceHeight = multiply( heightDiff, two );
