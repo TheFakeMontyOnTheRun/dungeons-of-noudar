@@ -23,6 +23,7 @@ namespace odb {
         bool mNeedsToRedraw = true;
         array< uint8_t, 320 * 128 > mBuffer;
         array< uint32_t , 256 > mPalette;
+
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;
@@ -43,11 +44,11 @@ namespace odb {
 
         void drawCeilingAt(const Vec3 &center, TexturePair texture );
 
-        void drawLeftNear(const Vec3 &center, const Vec3 &scale, TexturePair texture );
+        void drawLeftNear(const Vec3 &center, const Vec3 &scale, TexturePair texture);
 
-        void drawRightNear(const Vec3 &center, const Vec3 &scale, TexturePair texture );
+        void drawRightNear(const Vec3 &center, const Vec3 &scale, TexturePair texture);
 
-        void drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture );
+        void drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture, bool enableAlpha = false );
 
         Vec2 project(const Vec3 &p);
 
@@ -61,11 +62,11 @@ namespace odb {
 
         void putRaw(int16_t x, int16_t y, uint32_t pixel);
 
-        void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture );
+        void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture, FixP textureScaleY );
 
         void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, TexturePair texture);
 
-        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, TexturePair texture );
+        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, TexturePair texture, FixP textureScaleY, bool enableAlpha = false );
 
         void clear();
 
@@ -98,6 +99,8 @@ namespace odb {
         CTilePropertyMap mTileProperties;
         Knights::Vec2i mCameraPosition;
         static vector<TexturePair> mNativeTextures;
+
+        const static uint8_t mTransparency;
     };
 
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>

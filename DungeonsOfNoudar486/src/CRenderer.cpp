@@ -51,6 +51,8 @@ namespace odb {
 
     vector<TexturePair> CRenderer::mNativeTextures;
 
+    const uint8_t CRenderer::mTransparency = getPaletteEntry(0xFFFF00FF);
+
     vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
         auto data = fileLoader->loadFileFromPath( filename );
         std::stringstream dataStream;
@@ -83,6 +85,11 @@ namespace odb {
     }
 
     unsigned char CRenderer::getPaletteEntry(int origin) {
+
+        if ( !(origin & 0xFF000000) ) {
+            return mTransparency;
+        }
+
         unsigned char shade = 0;
         shade += (((((origin & 0x0000FF)) << 2) >> 8)) << 6;
         shade += (((((origin & 0x00FF00) >> 8) << 3) >> 8)) << 3;
@@ -182,6 +189,9 @@ namespace odb {
         if (mCached ) {
             return;
         }
+
+        mCamera = Vec3{ (39 - (mapCamera.x)) * 2, -2, 39 - ((mapCamera.y)) * 2};
+
         mCameraPosition = mapCamera;
 
         for ( int z = 0; z < 40; ++z ) {
@@ -263,7 +273,7 @@ namespace odb {
             drawWall( urz0.mX, urz1.mX,
                       urz0.mY, lrz0.mY,
                       urz1.mY, lrz1.mY,
-                      texture);
+                      texture, one);
         }
 
 
@@ -285,16 +295,16 @@ namespace odb {
             drawWall(ulz1.mX, ulz0.mX,
                      ulz1.mY, llz1.mY,
                      urz0.mY, lrz0.mY,
-                     texture);
+                     texture, one);
         }
 
         drawWall( ulz0.mX, urz0.mX,
                   ulz0.mY, llz0.mY,
                   urz0.mY, lrz0.mY,
-                  texture );
+                  texture, one );
     }
 
-    void CRenderer::drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture) {
+    void CRenderer::drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture, bool enableAlpha) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -339,19 +349,19 @@ namespace odb {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
-                          texture);
+                          texture, halfScale);
             }
 
             if (static_cast<int>(center.mX) >= 0 ) {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
-                         texture);
+                         texture, halfScale);
             }
 
             drawFrontWall( ulz0.mX, ulz0.mY,
                       lrz0.mX, lrz0.mY,
-                      texture );
+                      texture, halfScale, enableAlpha );
         }
 
 
@@ -468,7 +478,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      texture );
+                      texture, halfScale );
         }
 
         if (kShouldDrawOutline){
@@ -505,7 +515,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      texture );
+                      texture, halfScale );
         }
 
         if (kShouldDrawOutline) {
@@ -528,7 +538,7 @@ namespace odb {
      *        \ |
      *         \| x1y1
      */
-    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture ) {
+    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture, FixP textureScaleY ) {
 
         if ( x0 > x1) {
             //switch x0 with x1
@@ -627,8 +637,9 @@ namespace odb {
                         sourceLineStart += (iv - lastV);
                         lastU = iu;
                         lastV = iv;
-
-                        *(destinationLine) = pixel;
+                        if (pixel != mTransparency) {
+                            *(destinationLine) = pixel;
+                        }
                     }
                     destinationLine += (320);
                     v += dv;
@@ -645,7 +656,7 @@ namespace odb {
         return &mBuffer[0];
     }
 
-    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, TexturePair texture ) {
+    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, TexturePair texture, FixP textureScaleY, bool enableAlpha) {
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
             //switch y0 with y1
@@ -696,7 +707,6 @@ namespace odb {
             return;
         }
 
-
         FixP du = textureSize / diffX;
 
         uint8_t * bufferData = getBufferData();
@@ -710,7 +720,7 @@ namespace odb {
 
                 lastU = 0;
 
-                if ( iv == lastV ) {
+                if ( iv == lastV && !enableAlpha ) {
                     v += dv;
                     destinationLine = bufferData + (320 * iy);
                     sourceLineStart = destinationLine - 320;
@@ -737,8 +747,9 @@ namespace odb {
                         sourceLineStart += ( iu - lastU);
                         lastU = iu;
                         lastV = iv;
-
-                        *(destinationLine) = pixel;
+                        if (pixel != mTransparency) {
+                            *(destinationLine) = pixel;
+                        }
                     }
                     ++destinationLine;
                     u += du;
@@ -1058,7 +1069,7 @@ namespace odb {
                                 drawColumnAt(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
                                         {1, twiceHeight, 1},
-                                        mNativeTextures[ tileProp.mMainWallTextureIndex ] );
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ], tileProp.mNeedsAlphaTest );
                                 break;
                         }
                     }
