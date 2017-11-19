@@ -160,6 +160,7 @@ namespace odb {
     }
 
     void CRenderer::clear() {
-        std::fill( std::begin(mBuffer), std::end(mBuffer), 0);
+        const static auto grey = getPaletteEntry(0xFFAAAAAA);
+        std::fill( std::begin(mBuffer), std::end(mBuffer),grey);
     }
 }

@@ -47,6 +47,8 @@ namespace odb {
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
 
+    TexturePair skybox;
+
     vector<TexturePair> CRenderer::mNativeTextures;
 
     vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
@@ -143,6 +145,30 @@ namespace odb {
             }
 
             CRenderer::mNativeTextures.push_back( std::make_pair(nativeTexture, rotatedTexture ) );
+        }
+
+        auto sky = loadPNG("clouds.png", fileLoader);
+        {
+            auto nativeTexture = std::make_shared<NativeTexture >();
+            auto rotatedTexture = std::make_shared<NativeTexture>();
+
+            auto width = sky->getWidth();
+            auto sourceData = sky->getPixelData();
+            auto destRegularData = nativeTexture->data();
+            auto destRotatedData = rotatedTexture->data();
+            int ratio = width / NATIVE_TEXTURE_SIZE;
+
+            for ( int y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
+                for ( int x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
+                    uint32_t pixel = sky->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
+                    auto converted = CRenderer::getPaletteEntry( pixel );
+                    nativeTexture->data()[ ( NATIVE_TEXTURE_SIZE * y ) + x ] = converted;
+                    rotatedTexture->data()[ ( NATIVE_TEXTURE_SIZE * x ) + y ] = converted;
+                }
+            }
+
+            skybox.first = nativeTexture;
+            skybox.second = rotatedTexture;
         }
 
         return tilesToLoad;
@@ -934,6 +960,8 @@ namespace odb {
             if ( clearScr ) {
                 clear();
             }
+
+            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0},  FixP{XRES}, skybox);
 
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
