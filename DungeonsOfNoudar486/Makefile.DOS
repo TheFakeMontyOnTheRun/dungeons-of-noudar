@@ -1,7 +1,7 @@
 CXX = i586-pc-msdosdjgpp-g++
 LD = i586-pc-msdosdjgpp-ld
 
-CXXFLAGS = -g -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -mtune=i486 -march=i486 -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer
+CXXFLAGS = -g -DVGA -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -mtune=i486 -march=i486 -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer
 
 LDFLAGS = -lemu
 
