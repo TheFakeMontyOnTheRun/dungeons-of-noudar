@@ -90,7 +90,7 @@ void gameLoopTick() {
 
 std::shared_ptr<Knights::CGame> game;
 
-int main() {
+int main(int argc, char **argv) {
 
     const auto LEVEL_LIMIT = 2;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
@@ -100,6 +100,11 @@ int main() {
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
 
     fileLoader->setFilenameTransformation( kDosLongFileNameTransformer );
+
+    if ( argc > 1 ) {
+        game->playLevel(atoi( argv[1]));
+    }
+
 
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
     renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);

@@ -78,7 +78,7 @@ void sysTick() {
     gameLoopTick();
 }
 
-int main() {
+int main( int argc, char **argv) {
 
     const auto LEVEL_LIMIT = 2;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
