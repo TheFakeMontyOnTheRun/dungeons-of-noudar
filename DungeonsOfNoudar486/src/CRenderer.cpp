@@ -91,9 +91,12 @@ namespace odb {
         }
 
         unsigned char shade = 0;
-        shade += (((((origin & 0x0000FF)) << 2) >> 8)) << 6;
-        shade += (((((origin & 0x00FF00) >> 8) << 3) >> 8)) << 3;
+
+
+        shade += (((((origin & 0x0000FF)      ) << 2) >> 8)) << 6;
+        shade += (((((origin & 0x00FF00)  >> 8) << 3) >> 8)) << 3;
         shade += (((((origin & 0xFF0000) >> 16) << 3) >> 8)) << 0;
+
         return shade;
     }
 

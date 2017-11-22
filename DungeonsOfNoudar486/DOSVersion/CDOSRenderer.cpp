@@ -72,7 +72,7 @@ namespace odb {
         for (int r = 0; r < 4; ++r) {
             for (int g = 0; g < 8; ++g) {
                 for (int b = 0; b < 8; ++b) {
-                    outp(0x03c9, (r * (21)));
+                    outp(0x03c9, (r * (16)));
                     outp(0x03c9, (g * (8)));
                     outp(0x03c9, (b * (8)));
                 }
