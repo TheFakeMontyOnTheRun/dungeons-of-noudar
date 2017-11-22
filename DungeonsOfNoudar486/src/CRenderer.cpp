@@ -1058,14 +1058,14 @@ namespace odb {
                             case kRightNearWall:
                                 drawRightNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
-                                        {1, twiceHeight, 1},
+                                        {1, heightDiff, 1},
                                         mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
-                                        {1, twiceHeight, 1},
+                                        {1, heightDiff, 1},
                                         mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
@@ -1073,7 +1073,7 @@ namespace odb {
                             default:
                                 drawColumnAt(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
-                                        {1, twiceHeight, 1},
+                                        {1, heightDiff, 1},
                                         mNativeTextures[ tileProp.mMainWallTextureIndex ], tileProp.mNeedsAlphaTest );
                                 break;
                         }
