@@ -365,7 +365,7 @@ namespace odb {
 
             drawFrontWall( ulz0.mX, ulz0.mY,
                       lrz0.mX, lrz0.mY,
-                      texture, textureScale, enableAlpha );
+                      texture, (textureScale *  two), enableAlpha );
         }
 
 
@@ -465,7 +465,7 @@ namespace odb {
         const static FixP one{ 1 };
         const static FixP two{ 2 };
         auto halfScale = scale.mY;
-        auto textureScale = halfScale / two;
+        auto textureScale = halfScale;
         mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, -one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, one });
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -one });
@@ -502,7 +502,7 @@ namespace odb {
         const static FixP one{ 1 };
         const static FixP two{ 2 };
         auto halfScale = scale.mY;
-        auto textureScale = halfScale / two;
+        auto textureScale = halfScale ;
         mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -one });
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, one });
