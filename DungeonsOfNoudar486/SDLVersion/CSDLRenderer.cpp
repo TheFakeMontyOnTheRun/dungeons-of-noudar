@@ -66,9 +66,9 @@ namespace odb {
         SDL_Init( SDL_INIT_EVERYTHING );
         video = SDL_SetVideoMode( 640, 400, 32, 0 );
 
-        for ( int r = 0; r < 256; ++r ) {
-            for ( int g = 0; g < 256; ++g ) {
-                for ( int b = 0; b < 256; ++b ) {
+        for ( int r = 0; r < 256; r += 16 ) {
+            for ( int g = 0; g < 256; g += 8 ) {
+                for ( int b = 0; b < 256; b += 8 ) {
                     auto pixel = 0xFF000000 + ( r << 16 ) + ( g << 8 ) + ( b );
                     auto paletteEntry = getPaletteEntry( pixel );
                     mPalette[ paletteEntry ] = pixel;
