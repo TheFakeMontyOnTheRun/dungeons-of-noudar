@@ -182,10 +182,6 @@ namespace odb {
     }
 
     void CRenderer::clear() {
-        const static auto grey = getPaletteEntry(0xFFAAAAAA);
-        auto beginFrame = std::begin( mBuffer );
-        auto endFrame = std::end( mBuffer );
-        std::fill( beginFrame, endFrame, grey );
         SDL_FillRect(video, nullptr, 0);
     }
 }

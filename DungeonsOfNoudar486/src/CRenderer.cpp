@@ -1159,17 +1159,16 @@ namespace odb {
         }
 
 
-        for ( int c = 1; c < 9; ++c ) {
+        for ( int c = 0; c < 8; ++c ) {
             drawSprite( c * 32, 128, mBackground );
         }
 
         for ( int c = 0; c < (192/32); ++c ) {
             drawSprite( 320 - 32, c * 32, mBackground );
-            drawSprite( 0, c * 32, mBackground );
+            drawSprite( 320 - 64, c * 32, mBackground );
         }
 
         const static auto black = 0;
-        fill( 32, 160, 320 - 64, 32, black );
         flip();
     }
 
