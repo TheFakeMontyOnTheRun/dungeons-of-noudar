@@ -490,10 +490,16 @@ namespace odb {
         const static FixP two{ 2 };
         auto halfScale = scale;
         auto textureScale = halfScale;
-        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, -one });
-        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -one });
-        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, one });
+        FixP depth{1};
+
+        if (mCameraDirection == Knights::EDirection::kWest || mCameraDirection == Knights::EDirection::kEast ) {
+            depth = FixP{-1};
+        }
+
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, -depth });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, depth });
+        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -depth });
+        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, depth });
 
         projectAllVertices();
 
@@ -528,10 +534,16 @@ namespace odb {
         const static FixP two{ 2 };
         auto halfScale = scale;
         auto textureScale = halfScale ;
-        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, one });
-        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -one });
-        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, one });
-        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, -one });
+        FixP depth{1};
+
+        if (mCameraDirection == Knights::EDirection::kWest || mCameraDirection == Knights::EDirection::kEast ) {
+            depth = FixP{-1};
+        }
+
+        mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, depth });
+        mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -depth });
+        mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, depth });
+        mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, -depth });
 
         projectAllVertices();
 
