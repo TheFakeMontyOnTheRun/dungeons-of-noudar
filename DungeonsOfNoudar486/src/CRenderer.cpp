@@ -288,6 +288,7 @@ namespace odb {
             drawWall( urz0.mX, urz1.mX,
                       urz0.mY, lrz0.mY,
                       urz1.mY, lrz1.mY,
+                      0, 0,
                       texture, one);
         }
 
@@ -296,6 +297,7 @@ namespace odb {
             drawFloor(ulz1.mY, urz0.mY,
                       ulz1.mX, urz1.mX,
                       ulz0.mX, urz0.mX,
+                      0, 0,
                       texture);
         }
 
@@ -303,6 +305,7 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
+                      0, 0,
                       texture);
         }
 
@@ -310,12 +313,14 @@ namespace odb {
             drawWall(ulz1.mX, ulz0.mX,
                      ulz1.mY, llz1.mY,
                      urz0.mY, lrz0.mY,
+                     0, 0,
                      texture, one);
         }
 
         drawWall( ulz0.mX, urz0.mX,
                   ulz0.mY, llz0.mY,
                   urz0.mY, lrz0.mY,
+                  0, 0,
                   texture, one );
     }
 
@@ -365,6 +370,7 @@ namespace odb {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
+                          0, 0,
                           texture, textureScale);
             }
 
@@ -372,12 +378,14 @@ namespace odb {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
+                         0, 0,
                          texture, textureScale);
             }
 
             if ( mask[ 1 ] ) {
                 drawFrontWall( ulz0.mX, ulz0.mY,
                                lrz0.mX, lrz0.mY,
+                               0,
                                texture, (textureScale *  two), enableAlpha );
             }
         }
@@ -423,6 +431,7 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
+                      0, 0,
                       texture);
         }
 
@@ -458,6 +467,7 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
+                      0, 0,
                       texture);
         }
 
@@ -496,6 +506,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
+                      0, 0,
                       texture, textureScale );
         }
 
@@ -533,6 +544,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
+                      0, 0,
                       texture, textureScale );
         }
 
@@ -556,7 +568,7 @@ namespace odb {
      *        \ |
      *         \| x1y1
      */
-    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture, FixP textureScaleY ) {
+    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, FixP z0, FixP z1, TexturePair texture, FixP textureScaleY ) {
 
         if ( x0 > x1) {
             //switch x0 with x1
@@ -675,7 +687,7 @@ namespace odb {
         return &mBuffer[0];
     }
 
-    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, TexturePair texture, FixP textureScaleY, bool enableAlpha) {
+    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, TexturePair texture, FixP textureScaleY, bool enableAlpha) {
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
             //switch y0 with y1
@@ -786,7 +798,7 @@ namespace odb {
      *        /             \
      *  x0y1 /______________\ x1y1
      */
-    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, TexturePair texture ) {
+    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, TexturePair texture ) {
 
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
@@ -989,8 +1001,10 @@ namespace odb {
 
             clear();
 
-            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0},  FixP{XRES}, skybox);
+            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{255}, FixP{255}, skybox);
             bool facesMask[3];
+
+            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{255} );
 
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
