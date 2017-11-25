@@ -118,37 +118,36 @@ namespace odb {
                         break;
 
                     case SDLK_LEFT:
-                        mSpeed.mX += delta;
+                        mBufferedCommand = Knights::kTurnPlayerLeftCommand;
                         mNeedsToRedraw = true;
                         break;
                     case SDLK_RIGHT:
-                        mSpeed.mX -= delta;
+                        mBufferedCommand = Knights::kTurnPlayerRightCommand;
                         mNeedsToRedraw = true;
                         break;
                     case SDLK_UP:
-                        mSpeed.mY -= delta;
+                        mBufferedCommand = Knights::kMovePlayerForwardCommand;
                         mNeedsToRedraw = true;
                         break;
                     case SDLK_DOWN:
-                        mSpeed.mY += delta;
+                        mBufferedCommand = Knights::kMovePlayerBackwardCommand;
                         mNeedsToRedraw = true;
                         break;
 
                     case SDLK_z:
-                        mSpeed.mZ += delta;
+                        mBufferedCommand = Knights::kStrafeLeftCommand;
                         mNeedsToRedraw = true;
                         break;
 
-                    case SDLK_a:
-                        mSpeed.mZ -= delta;
+                    case SDLK_x:
+                        mBufferedCommand = Knights::kStrafeRightCommand;
                         mNeedsToRedraw = true;
                         break;
 
                     default:
-                        break;
+                        return;
                 }
             }
-
         }
     }
 

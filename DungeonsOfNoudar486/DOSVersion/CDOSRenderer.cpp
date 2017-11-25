@@ -94,28 +94,29 @@ namespace odb {
         switch (lastKey) {
             case 18656:
                 //up
-                mSpeed.mY -= delta;
+//                mSpeed.mY -= delta;
+                mBufferedCommand = Knights::kMovePlayerForwardCommand;
                 mNeedsToRedraw = true;
                 break;
 
             case 8051:
             case 20704:
                 //down
-                mSpeed.mY += delta;
+                mBufferedCommand = Knights::kMovePlayerBackwardCommand;
                 mNeedsToRedraw = true;
                 break;
 
             case 19424: //right arrow
             case 4209: //q
                 //left
-                mSpeed.mX += delta;
+                mBufferedCommand = Knights::kTurnPlayerLeftCommand;
                 mNeedsToRedraw = true;
                 break;
 
             case 4709: //e
             case 19936: //right arrow
                 //right
-                mSpeed.mX -= delta;
+                mBufferedCommand = Knights::kTurnPlayerRightCommand;
                 mNeedsToRedraw = true;
                 break;
 
@@ -141,10 +142,13 @@ namespace odb {
                 break;
 
             case 11386:
-                mSpeed.mZ += delta;
+                mBufferedCommand = Knights::kStrafeLeftCommand;
                 mNeedsToRedraw = true;
                 break;
-
+            case 11640:
+                mBufferedCommand = Knights::kStrafeRightCommand;
+                mNeedsToRedraw = true;
+                break;
             case 0:
                 break;
             default:
