@@ -17,13 +17,14 @@ namespace odb {
 
     class CRenderer  : public Knights::IRenderer {
         bool mCached = false;
-
+        bool mHudDrawn = false;
         char mElementsMap[40][40];
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;
-        array< uint8_t, 320 * 128 > mBuffer;
+        array< uint8_t, 320 * 200 > mBuffer;
         array< uint32_t , 256 > mPalette;
-
+        EActorsSnapshotElement mActors[40][40];
+        Knights::EDirection mCameraDirection;
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;
@@ -50,6 +51,8 @@ namespace odb {
 
         void drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[3], bool enableAlpha = false );
 
+        void drawSprite( int x, int y, std::shared_ptr<odb::NativeBitmap> tile );
+
         Vec2 project(const Vec3 &p);
 
         void loadTextures( vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap& tileProperties );
@@ -61,6 +64,8 @@ namespace odb {
         void sleep(long ms);
 
         void putRaw(int16_t x, int16_t y, uint32_t pixel);
+
+        void fill( int x, int y, int dx, int dy, uint8_t pixel );
 
         void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture, FixP textureScaleY );
 

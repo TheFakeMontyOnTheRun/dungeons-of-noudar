@@ -48,6 +48,7 @@ namespace odb {
     const static bool kShouldDrawTextures = true;
     const static auto xOffset = 32;
     TexturePair skybox;
+    std::shared_ptr<odb::NativeBitmap> mBackground;
 
     vector<TexturePair> CRenderer::mNativeTextures;
 
@@ -157,6 +158,16 @@ namespace odb {
             CRenderer::mNativeTextures.push_back( std::make_pair(nativeTexture, rotatedTexture ) );
         }
 
+        mBackground = loadPNG("tile.png", fileLoader);
+
+        for ( int y = 0; y < 32; ++y ) {
+            for ( int x = 0; x < 32; ++x ) {
+                uint32_t pixel = mBackground->getPixelData()[ ( 32 * y ) + x ];
+                auto converted = CRenderer::getPaletteEntry( pixel );
+                mBackground->getPixelData()[ ( 32 * y ) + x ] = converted;
+            }
+        }
+
         auto sky = loadPNG("clouds.png", fileLoader);
         {
             auto nativeTexture = std::make_shared<NativeTexture >();
@@ -187,25 +198,27 @@ namespace odb {
 
     void CRenderer::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
         auto mapCamera = current->getPosition();
-//        mCamera = Vec3{ mapCamera.x, 0, mapCamera.y};
 
         if (mCached ) {
-//            return;
+            return;
         }
 
+        mCached = true;
+        mNeedsToRedraw = true;
         mCamera = Vec3{ FixP{(39 - (mapCamera.x)) * 2}, FixP{-2}, FixP{  ( 2 * (mapCamera.y)) - 79} };
-
+        mCameraDirection = current->getDirection();
         mCameraPosition = mapCamera;
 
         for ( int z = 0; z < 40; ++z ) {
             for ( int x = 0; x < 40; ++x ) {
-                mElementsMap[z][x] = map.getElementAt({ x, z });
-            }
-        }
+                Knights::Vec2i v = { x, z };
+                mElementsMap[z][x] = map.getElementAt(v);
 
-        if (!mCached ) {
-            mCached = true;
-            mNeedsToRedraw = true;
+                auto actor = map.getActorAt( v );
+                if ( actor != nullptr && actor != current ) {
+                    mActors[ z ][ x ] = EActorsSnapshotElement::kFallenAttacking1;
+                }
+            }
         }
     }
 
@@ -982,6 +995,9 @@ namespace odb {
 
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
+                    facesMask[ 0 ] = true;
+                    facesMask[ 1 ] = true;
+                    facesMask[ 2 ] = true;
 
                     auto element = mElementsMap[z][39 - x];
                     auto tileProp = mTileProperties[element];
@@ -1102,11 +1118,48 @@ namespace odb {
                     }
                 }
             }
-
-
         }
 
+
+        for ( int c = 1; c < 9; ++c ) {
+            drawSprite( c * 32, 128, mBackground );
+        }
+
+        for ( int c = 0; c < (192/32); ++c ) {
+            drawSprite( 320 - 32, c * 32, mBackground );
+            drawSprite( 0, c * 32, mBackground );
+        }
+
+        const static auto black = 0;
+        fill( 32, 160, 320 - 64, 32, black );
         flip();
+    }
+
+    void CRenderer::fill( int x, int y, int dx, int dy, uint8_t pixel ) {
+        auto destination = getBufferData();
+
+        for ( int py = 0; py < dy; ++py ) {
+            auto destinationLineStart = destination + ( 320 * (y + py) ) + x;
+            for ( int px = 0; px < dx; ++px ) {
+                (*destinationLineStart) = pixel;
+                ++destinationLineStart;
+            }
+        }
+    }
+
+    void CRenderer::drawSprite( int dx, int dy, std::shared_ptr<odb::NativeBitmap> tile ) {
+        auto destination = getBufferData();
+        auto sourceLine = tile->getPixelData();
+
+        for ( int y = 0; y < 32; ++y ) {
+            auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
+            auto sourceLineStart = sourceLine + ( 32 * y );
+            for ( int x = 0; x < 32; ++x ) {
+                (*destinationLineStart) = (*sourceLineStart);
+                ++destinationLineStart;
+                ++sourceLineStart;
+            }
+        }
     }
 
     void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {

@@ -114,34 +114,34 @@ namespace odb {
                 switch (event.key.keysym.sym) {
                     case SDLK_SPACE:
                         exit(0);
-                        mNeedsToRedraw = true;
+                        mCached = false;
                         break;
 
                     case SDLK_LEFT:
                         mBufferedCommand = Knights::kTurnPlayerLeftCommand;
-                        mNeedsToRedraw = true;
+                        mCached = false;
                         break;
                     case SDLK_RIGHT:
                         mBufferedCommand = Knights::kTurnPlayerRightCommand;
-                        mNeedsToRedraw = true;
+                        mCached = false;
                         break;
                     case SDLK_UP:
                         mBufferedCommand = Knights::kMovePlayerForwardCommand;
-                        mNeedsToRedraw = true;
+                        mCached = false;
                         break;
                     case SDLK_DOWN:
                         mBufferedCommand = Knights::kMovePlayerBackwardCommand;
-                        mNeedsToRedraw = true;
+                        mCached = false;
                         break;
 
                     case SDLK_z:
                         mBufferedCommand = Knights::kStrafeLeftCommand;
-                        mNeedsToRedraw = true;
+                        mCached = false;
                         break;
 
                     case SDLK_x:
                         mBufferedCommand = Knights::kStrafeRightCommand;
-                        mNeedsToRedraw = true;
+                        mCached = false;
                         break;
 
                     default:
@@ -163,7 +163,7 @@ namespace odb {
 
     void CRenderer::flip() {
 
-        for ( int y = 0; y  < 128; ++y ) {
+        for ( int y = 0; y  < 200; ++y ) {
             for ( int x = 0; x < 320; ++x ) {
                 SDL_Rect rect;
                 rect.x = 2 * x;

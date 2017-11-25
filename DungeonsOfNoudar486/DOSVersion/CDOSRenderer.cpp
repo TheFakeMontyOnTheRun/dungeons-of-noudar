@@ -96,28 +96,28 @@ namespace odb {
                 //up
 //                mSpeed.mY -= delta;
                 mBufferedCommand = Knights::kMovePlayerForwardCommand;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
 
             case 8051:
             case 20704:
                 //down
                 mBufferedCommand = Knights::kMovePlayerBackwardCommand;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
 
             case 19424: //right arrow
             case 4209: //q
                 //left
                 mBufferedCommand = Knights::kTurnPlayerLeftCommand;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
 
             case 4709: //e
             case 19936: //right arrow
                 //right
                 mBufferedCommand = Knights::kTurnPlayerRightCommand;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
 
             case 3849:
@@ -128,26 +128,24 @@ namespace odb {
                 exit(0);
                 break;
             case 561:
-                clearScr = true;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
             case 818:
-                clearScr = false;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
 
             case 7777:
                 mSpeed.mZ -= delta;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
 
             case 11386:
                 mBufferedCommand = Knights::kStrafeLeftCommand;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
             case 11640:
                 mBufferedCommand = Knights::kStrafeRightCommand;
-                mNeedsToRedraw = true;
+                mCached = false;
                 break;
             case 0:
                 break;
@@ -160,7 +158,7 @@ namespace odb {
     }
 
     void CRenderer::flip() {
-        dosmemput(&mBuffer[0], 320 * 128, 0xa0000);
+        dosmemput(&mBuffer[0], 320 * 200, 0xa0000);
     }
 
     void CRenderer::clear() {
