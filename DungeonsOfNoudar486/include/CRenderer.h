@@ -72,7 +72,6 @@ namespace odb {
 
         Vec3 mCamera{ FixP{1}, FixP{1}, FixP{1}};
         Vec3 mSpeed{0, 0, 0};
-        bool clearScr = true;
 
         void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1);
 

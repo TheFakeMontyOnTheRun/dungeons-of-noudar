@@ -975,9 +975,7 @@ namespace odb {
         if ( mNeedsToRedraw ) {
             mNeedsToRedraw = false;
 
-            if ( clearScr ) {
-                clear();
-            }
+            clear();
 
             drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0},  FixP{XRES}, skybox);
             bool facesMask[3];
