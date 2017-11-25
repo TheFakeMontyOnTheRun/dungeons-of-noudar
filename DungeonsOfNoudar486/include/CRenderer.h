@@ -44,11 +44,11 @@ namespace odb {
 
         void drawCeilingAt(const Vec3 &center, TexturePair texture );
 
-        void drawLeftNear(const Vec3 &center, const Vec3 &scale, TexturePair texture);
+        void drawLeftNear(const Vec3 &center, const FixP &scale, TexturePair texture);
 
-        void drawRightNear(const Vec3 &center, const Vec3 &scale, TexturePair texture);
+        void drawRightNear(const Vec3 &center, const FixP &scale, TexturePair texture);
 
-        void drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture, bool enableAlpha = false );
+        void drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[3], bool enableAlpha = false );
 
         Vec2 project(const Vec3 &p);
 

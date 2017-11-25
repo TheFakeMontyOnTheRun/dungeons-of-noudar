@@ -307,7 +307,7 @@ namespace odb {
                   texture, one );
     }
 
-    void CRenderer::drawColumnAt(const Vec3 &center, const Vec3 &scale, TexturePair texture, bool enableAlpha) {
+    void CRenderer::drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[3],bool enableAlpha) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -316,7 +316,7 @@ namespace odb {
         const static FixP one{ 1 };
         const static FixP two{ 2 };
 
-        auto halfScale = scale.mY;
+        auto halfScale = scale;
         auto textureScale = halfScale / two;
         auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
 
@@ -349,23 +349,25 @@ namespace odb {
         auto lrz1 = mVertices[7].second;
 
         if (kShouldDrawTextures) {
-            if (static_cast<int>(center.mX) <= 0 ) {
+            if ( mask[0] && static_cast<int>(center.mX) <= 0 ) {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
                           texture, textureScale);
             }
 
-            if (static_cast<int>(center.mX) >= 0 ) {
+            if ( mask[2] && static_cast<int>(center.mX) >= 0 ) {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
                          texture, textureScale);
             }
 
-            drawFrontWall( ulz0.mX, ulz0.mY,
-                      lrz0.mX, lrz0.mY,
-                      texture, (textureScale *  two), enableAlpha );
+            if ( mask[ 1 ] ) {
+                drawFrontWall( ulz0.mX, ulz0.mY,
+                               lrz0.mX, lrz0.mY,
+                               texture, (textureScale *  two), enableAlpha );
+            }
         }
 
 
@@ -456,7 +458,7 @@ namespace odb {
 
     }
 
-    void CRenderer::drawLeftNear(const Vec3& center, const Vec3 &scale, TexturePair texture) {
+    void CRenderer::drawLeftNear(const Vec3& center, const FixP &scale, TexturePair texture) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
@@ -464,7 +466,7 @@ namespace odb {
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-        auto halfScale = scale.mY;
+        auto halfScale = scale;
         auto textureScale = halfScale;
         mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, -one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, one });
@@ -494,14 +496,14 @@ namespace odb {
     }
 
 
-    void CRenderer::drawRightNear(const Vec3& center, const Vec3 &scale, TexturePair texture) {
+    void CRenderer::drawRightNear(const Vec3& center, const FixP &scale, TexturePair texture) {
         if (static_cast<int>(center.mZ) <= 2 ) {
             return;
         }
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-        auto halfScale = scale.mY;
+        auto halfScale = scale;
         auto textureScale = halfScale ;
         mVertices[ 0 ].first = ( center + Vec3{ -one,  halfScale, one });
         mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -one });
@@ -978,6 +980,7 @@ namespace odb {
             }
 
             drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0},  FixP{XRES}, skybox);
+            bool facesMask[3];
 
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
@@ -989,6 +992,24 @@ namespace odb {
                     auto halfHeightDiff = heightDiff / two;
                     Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
 
+                    facesMask[ 0 ] = true;
+                    facesMask[ 1 ] = true;
+                    facesMask[ 2 ] = true;
+
+                    //remember, bounds - 1!
+                    if ( x > 0 && mElementsMap[z][39 - (x - 1)] == element) {
+                        facesMask[ 0 ] = false;
+                    }
+
+                    if ( x < 39 && mElementsMap[z][39 - (x + 1)] == element) {
+                        facesMask[ 2 ] = false;
+                    }
+
+
+                    if ( z < 40 && mElementsMap[z + 1][39 - x] == element) {
+                        facesMask[ 1 ] = false;
+                    }
+
 
                     if ( tileProp.mFloorRepeatedTextureIndex > 0 && tileProp.mFloorRepetitions > 0) {
 
@@ -996,7 +1017,7 @@ namespace odb {
                             case kRightNearWall:
                                 drawRightNear(
                                         position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
-                                        {1, tileProp.mFloorRepetitions, 1},
+                                        tileProp.mFloorRepetitions,
                                         mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
 
                                 break;
@@ -1004,7 +1025,7 @@ namespace odb {
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
-                                        {1, tileProp.mFloorRepetitions, 1},
+                                        tileProp.mFloorRepetitions,
                                         mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
                                 break;
 
@@ -1012,8 +1033,9 @@ namespace odb {
                             default:
                                 drawColumnAt(
                                         position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
-                                        {1, tileProp.mFloorRepetitions, 1},
-                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
+                                        tileProp.mFloorRepetitions,
+                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex],
+                                        facesMask);
                                 break;
                         }
                     }
@@ -1024,21 +1046,22 @@ namespace odb {
                             case kRightNearWall:
                                 drawRightNear(
                                         position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
-                                        {1, tileProp.mCeilingRepetitions, 1},
+                                        tileProp.mCeilingRepetitions,
                                         mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
-                                        {1, tileProp.mCeilingRepetitions, 1},
+                                        tileProp.mCeilingRepetitions,
                                         mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
 
                             case kCube:
                             default:
                                 drawColumnAt(
                                         position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
-                                        {1, tileProp.mCeilingRepetitions, 1},
-                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);
+                                        tileProp.mCeilingRepetitions,
+                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex],
+                                        facesMask);
                                 break;
                         }
                     }
@@ -1059,14 +1082,14 @@ namespace odb {
                             case kRightNearWall:
                                 drawRightNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
-                                        {1, heightDiff, 1},
+                                        heightDiff,
                                         mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
-                                        {1, heightDiff, 1},
+                                        heightDiff,
                                         mNativeTextures[ tileProp.mMainWallTextureIndex ] );
                                 break;
 
@@ -1074,8 +1097,8 @@ namespace odb {
                             default:
                                 drawColumnAt(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
-                                        {1, heightDiff, 1},
-                                        mNativeTextures[ tileProp.mMainWallTextureIndex ], tileProp.mNeedsAlphaTest );
+                                        heightDiff,
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ], facesMask, tileProp.mNeedsAlphaTest );
                                 break;
                         }
                     }
