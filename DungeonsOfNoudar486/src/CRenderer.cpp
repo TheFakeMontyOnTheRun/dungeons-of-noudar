@@ -190,10 +190,10 @@ namespace odb {
 //        mCamera = Vec3{ mapCamera.x, 0, mapCamera.y};
 
         if (mCached ) {
-            return;
+//            return;
         }
 
-        mCamera = Vec3{ (39 - (mapCamera.x)) * 2, -2, 39 - ((mapCamera.y)) * 2};
+        mCamera = Vec3{ FixP{(39 - (mapCamera.x)) * 2}, FixP{-2}, FixP{  ( 2 * (mapCamera.y)) - 79} };
 
         mCameraPosition = mapCamera;
 
@@ -987,7 +987,8 @@ namespace odb {
                     auto heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
                     auto twiceHeight = multiply( heightDiff, two );
                     auto halfHeightDiff = heightDiff / two;
-                    Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{2 * (40 - z)}};
+                    Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+
 
                     if ( tileProp.mFloorRepeatedTextureIndex > 0 && tileProp.mFloorRepetitions > 0) {
 
