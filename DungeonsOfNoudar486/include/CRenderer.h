@@ -11,6 +11,41 @@ namespace odb {
     constexpr const static auto HALF_XRES = XRES / 2;
     constexpr const static auto HALF_YRES = YRES / 2;
 
+    enum class EActorsSnapshotElement : uint8_t {
+        kNothing,
+        kHeroStanding0,
+        kHeroStanding1,
+        kHeroAttacking0,
+        kHeroAttacking1,
+        kWeakenedDemonAttacking0,
+        kWeakenedDemonAttacking1,
+        kWeakenedDemonStanding0,
+        kWeakenedDemonStanding1,
+        kStrongDemonAttacking0,
+        kStrongDemonAttacking1,
+        kStrongDemonStanding0,
+        kStrongDemonStanding1,
+        kCocoonStanding0,
+        kCocoonStanding1,
+        kEvilSpiritAttacking0,
+        kEvilSpiritAttacking1,
+        kEvilSpiritStanding0,
+        kEvilSpiritStanding1,
+        kWarthogAttacking0,
+        kWarthogAttacking1,
+        kWarthogStanding0,
+        kWarthogStanding1,
+        kMonkAttacking0,
+        kMonkAttacking1,
+        kMonkStanding0,
+        kMonkStanding1,
+        kFallenAttacking0,
+        kFallenAttacking1,
+        kFallenStanding0,
+        kFallenStanding1,
+        kRope,
+        kMagicSeal
+    };
 
     using NativeTexture = array<uint8_t , NATIVE_TEXTURE_SIZE * NATIVE_TEXTURE_SIZE >;
     using TexturePair = std::pair<std::shared_ptr<NativeTexture >, std::shared_ptr<NativeTexture >>;
