@@ -47,7 +47,7 @@ using sg14::fixed_point;
 #endif
 
 namespace odb {
-
+    bool drawZBuffer = false;
     SDL_Surface *video;
 
 #ifdef __EMSCRIPTEN__
@@ -134,6 +134,12 @@ namespace odb {
                         mCached = false;
                         break;
 
+                    case SDLK_a:
+                    case SDLK_s:
+                        drawZBuffer = (event.key.keysym.sym == SDLK_a );
+                        mCached = false;
+                        break;
+
                     case SDLK_z:
                         mBufferedCommand = Knights::kStrafeLeftCommand;
                         mCached = false;
@@ -170,7 +176,7 @@ namespace odb {
                 rect.y = 2 * y;
                 rect.w = 2;
                 rect.h = 2;
-                auto pixel = mPalette[ mBuffer[ (320 * y ) + x ] ];
+                auto pixel = drawZBuffer ? static_cast<uint8_t >(mDepthBuffer[ (320 * y) + x ]) : mPalette[ mBuffer[ (320 * y ) + x ] ];
 
                 SDL_FillRect(video, &rect, SDL_MapRGB(video->format, ((pixel & 0x000000FF)), ((pixel & 0x0000FF00) >> 8),
                                                       ((pixel & 0x00FF0000) >> 16)));
