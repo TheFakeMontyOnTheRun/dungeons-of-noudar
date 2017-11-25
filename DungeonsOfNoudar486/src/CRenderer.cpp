@@ -46,7 +46,7 @@ namespace odb {
 
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
-
+    const static auto xOffset = 32;
     TexturePair skybox;
 
     vector<TexturePair> CRenderer::mNativeTextures;
@@ -563,8 +563,8 @@ namespace odb {
             x0y1 = x0y1 - x1y1;
         }
 
-        auto x = static_cast<int16_t >(x0);
-        auto limit = static_cast<int16_t >(x1);
+        auto x = static_cast<int16_t >(x0) + xOffset;
+        auto limit = static_cast<int16_t >(x1) + xOffset;
 
         if ( x == limit ) {
             return;
@@ -707,8 +707,8 @@ namespace odb {
 
         auto diffX = ( x1 - x0 );
 
-        auto iX0 = static_cast<int16_t >(x0);
-        auto iX1 = static_cast<int16_t >(x1);
+        auto iX0 = static_cast<int16_t >(x0) + xOffset;
+        auto iX1 = static_cast<int16_t >(x1) + xOffset;
 
         if ( iX0 == iX1 ) {
             return;
@@ -850,8 +850,8 @@ namespace odb {
                     continue;
                 }
 
-                auto iX0 = static_cast<int16_t >(x0);
-                auto iX1 = static_cast<int16_t >(x1);
+                auto iX0 = static_cast<int16_t >(x0) + xOffset;
+                auto iX1 = static_cast<int16_t >(x1) + xOffset;
 
                 FixP du = textureSize / diffX;
                 FixP u{0};
@@ -909,7 +909,7 @@ namespace odb {
             }
 
             for ( int y = _y0; y <= _y1; ++y ) {
-                putRaw( x0, y, 0xFFFFFFFF);
+                putRaw( xOffset + x0, y, 0xFFFFFFFF);
             }
             return;
         }
@@ -924,7 +924,7 @@ namespace odb {
             }
 
             for ( int x = _x0; x <= _x1; ++x ) {
-                putRaw( x, y0, 0xFFFFFFFF);
+                putRaw( xOffset + x, y0, 0xFFFFFFFF);
             }
             return;
         }
@@ -945,7 +945,7 @@ namespace odb {
         FixP fDeltatY = FixP{ y1 - y0 } / FixP{ x1 - x0 };
 
         for ( int x = x0; x <= x1; ++x ) {
-            putRaw( x, static_cast<int16_t >(fy), 0xFFFFFFFF);
+            putRaw( xOffset + x, static_cast<int16_t >(fy), 0xFFFFFFFF);
             fy += fDeltatY;
         }
     }
