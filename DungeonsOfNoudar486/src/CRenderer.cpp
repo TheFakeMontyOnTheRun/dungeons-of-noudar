@@ -1027,23 +1027,29 @@ namespace odb {
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
                             break;
                         case Knights::EDirection::kWest:
-                            element = mElementsMap[x][z];
+                            element = mElementsMap[x][39 - z];
 
-                            mCamera = Vec3{ FixP{ 80 - ( 2 * mCameraPosition.x ) },
+                            mCamera = Vec3{
+                                            FixP{ ( 2 * mCameraPosition.y ) },
                                             FixP{-1},
-                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
+                                            FixP{ ( 2 * mCameraPosition.x ) }
+                            };
 
-                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+
+                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ ( 2 * z) - 80}};
                             break;
 
                             case Knights::EDirection::kEast:
-                                element = mElementsMap[39 - x][39 - z];
+                                element = mElementsMap[x][z];
 
-                            mCamera = Vec3{ FixP{ 80 - ( 2 * mCameraPosition.x ) },
-                                            FixP{-1},
-                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
+                            mCamera = Vec3{
+                                    FixP{ - ( 2 * mCameraPosition.y ) },
+                                    FixP{-1},
+                                    FixP{ 80 - ( 2 * mCameraPosition.x ) }
+                            };
 
-                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+
+                            position = mCamera + Vec3{ FixP{- 2 * ( - x)}, FixP{ 0 }, FixP{ ( 2 * z) - 80}};
                             break;
 
                     }
