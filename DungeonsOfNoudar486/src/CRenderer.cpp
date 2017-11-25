@@ -205,7 +205,6 @@ namespace odb {
 
         mCached = true;
         mNeedsToRedraw = true;
-        mCamera = Vec3{ FixP{(39 - (mapCamera.x)) * 2}, FixP{-2}, FixP{  ( 2 * (mapCamera.y)) - 79} };
         mCameraDirection = current->getDirection();
         mCameraPosition = mapCamera;
 
@@ -999,31 +998,64 @@ namespace odb {
                     facesMask[ 1 ] = true;
                     facesMask[ 2 ] = true;
 
-                    auto element = mElementsMap[z][39 - x];
+                    char element;
+                    Vec3 position;
+                    switch (mCameraDirection) {
+                        case Knights::EDirection::kNorth:
+
+                            element = mElementsMap[z][39 - x];
+
+                            mCamera = Vec3{ FixP{ 80 - ( 2 * mCameraPosition.x ) },
+                                            FixP{-1},
+                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
+
+                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+
+                            //remember, bounds - 1!
+                            facesMask[ 0 ] = !( x > 0 && mElementsMap[z][39 - (x - 1)] == element);
+                            facesMask[ 2 ] = !( x < 39 && mElementsMap[z][39 - (x + 1)] == element);
+                            facesMask[ 1 ] = !( z < 40 && mElementsMap[z + 1][39 - x] == element);
+                            break;
+
+                        case Knights::EDirection::kSouth:
+                            element = mElementsMap[39 - z][x];
+
+                            mCamera = Vec3{ FixP{ ( 2 * mCameraPosition.x ) },
+                                            FixP{-1},
+                                            FixP{ ( 2 * (39 - mCameraPosition.y) ) - 79} };
+
+                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+                            break;
+                        case Knights::EDirection::kWest:
+                            element = mElementsMap[x][z];
+
+                            mCamera = Vec3{ FixP{ 80 - ( 2 * mCameraPosition.x ) },
+                                            FixP{-1},
+                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
+
+                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+                            break;
+
+                            case Knights::EDirection::kEast:
+                                element = mElementsMap[39 - x][39 - z];
+
+                            mCamera = Vec3{ FixP{ 80 - ( 2 * mCameraPosition.x ) },
+                                            FixP{-1},
+                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
+
+                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+                            break;
+
+                    }
+
+
+
+
+
                     auto tileProp = mTileProperties[element];
                     auto heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
                     auto twiceHeight = multiply( heightDiff, two );
                     auto halfHeightDiff = heightDiff / two;
-                    Vec3 position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
-
-                    facesMask[ 0 ] = true;
-                    facesMask[ 1 ] = true;
-                    facesMask[ 2 ] = true;
-
-                    //remember, bounds - 1!
-                    if ( x > 0 && mElementsMap[z][39 - (x - 1)] == element) {
-                        facesMask[ 0 ] = false;
-                    }
-
-                    if ( x < 39 && mElementsMap[z][39 - (x + 1)] == element) {
-                        facesMask[ 2 ] = false;
-                    }
-
-
-                    if ( z < 40 && mElementsMap[z + 1][39 - x] == element) {
-                        facesMask[ 1 ] = false;
-                    }
-
 
                     if ( tileProp.mFloorRepeatedTextureIndex > 0 && tileProp.mFloorRepetitions > 0) {
 
