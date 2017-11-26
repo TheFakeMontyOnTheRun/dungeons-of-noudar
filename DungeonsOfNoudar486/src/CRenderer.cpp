@@ -1344,6 +1344,7 @@ namespace odb {
         }
 
         const static auto black = 0;
+        fill( 0, 160, 256, 40, black );
         flip();
     }
 
