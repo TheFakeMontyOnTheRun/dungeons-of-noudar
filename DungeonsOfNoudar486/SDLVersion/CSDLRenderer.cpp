@@ -110,22 +110,22 @@ namespace odb {
                         mCached = false;
                         break;
 
-                    case SDLK_q:
+                    case SDLK_w:
                         mBufferedCommand = Knights::kPickItemCommand;
                         mCached = false;
                         break;
 
-                    case SDLK_a:
+                    case SDLK_s:
                         mBufferedCommand = Knights::kDropItemCommand;
                         mCached = false;
                         break;
 
-                    case SDLK_PLUS:
+                    case SDLK_e:
                         mBufferedCommand = Knights::kCycleRightInventoryCommand;
                         mCached = false;
                         break;
 
-                    case SDLK_MINUS:
+                    case SDLK_q:
                         mBufferedCommand = Knights::kCycleRightInventoryCommand;
                         mCached = false;
                         break;
@@ -148,7 +148,7 @@ namespace odb {
                         break;
 
                     case SDLK_d:
-                    case SDLK_s:
+                    case SDLK_a:
                         drawZBuffer = (event.key.keysym.sym == SDLK_a );
                         mCached = false;
                         break;
