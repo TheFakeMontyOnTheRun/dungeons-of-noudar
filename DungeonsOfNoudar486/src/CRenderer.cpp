@@ -41,6 +41,9 @@ using namespace std::chrono;
 #include "CRenderer.h"
 #include "LoadPNG.h"
 
+#ifndef SDLSW
+#include <conio.h>
+#endif
 
 namespace odb {
 
@@ -245,7 +248,15 @@ namespace odb {
         mCameraDirection = current->getDirection();
         mCameraPosition = mapCamera;
         Knights::ElementView view;
-#ifndef __DJGPP__
+
+        mHealth = current->getHP();
+        if (current->getSelectedItem() != nullptr ) {
+            mItemName = current->getSelectedItem()->to_string();
+        } else {
+            mItemName = "";
+        }
+
+#ifdef SDLSW
         std::cout << "\n\n" << std::endl;
 #endif
 
@@ -271,11 +282,11 @@ namespace odb {
                 } else {
                     view = map.getElementAt(v);
                 }
-#ifndef __DJGPP__
+#ifdef SDLSW
                 std::cout << view;
 #endif
             }
-#ifndef __DJGPP__
+#ifdef SDLSW
             std::cout << std::endl;
 #endif
         }
@@ -1331,21 +1342,24 @@ namespace odb {
 
                 }
             }
+
+            for ( int c = 0; c < 8; ++c ) {
+                drawSprite( c * 32, 128, mBackground );
+            }
+
+            for ( int c = 0; c < (192/32); ++c ) {
+                drawSprite( 320 - 32, c * 32, mBackground );
+                drawSprite( 320 - 64, c * 32, mBackground );
+            }
+
+            const static auto black = 0;
+            fill( 0, 160, 256, 40, black );
+            flip();
+#ifndef SDLSW
+            gotoxy(1, 22 );
+            printf("HP %d\n%s", mHealth, mItemName.c_str());
+#endif
         }
-
-
-        for ( int c = 0; c < 8; ++c ) {
-            drawSprite( c * 32, 128, mBackground );
-        }
-
-        for ( int c = 0; c < (192/32); ++c ) {
-            drawSprite( 320 - 32, c * 32, mBackground );
-            drawSprite( 320 - 64, c * 32, mBackground );
-        }
-
-        const static auto black = 0;
-        fill( 0, 160, 256, 40, black );
-        flip();
     }
 
     void CRenderer::fill( int x, int y, int dx, int dy, uint8_t pixel ) {

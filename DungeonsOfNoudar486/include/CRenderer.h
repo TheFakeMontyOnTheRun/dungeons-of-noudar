@@ -70,6 +70,8 @@ namespace odb {
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
+        int mHealth;
+        std::string mItemName;
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;
