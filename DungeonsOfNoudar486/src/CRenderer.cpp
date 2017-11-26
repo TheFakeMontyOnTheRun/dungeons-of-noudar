@@ -49,6 +49,8 @@ namespace odb {
 
     TexturePair skybox;
     std::shared_ptr<odb::NativeBitmap> mBackground;
+    std::shared_ptr<odb::NativeTexture> foe;
+    std::shared_ptr<odb::NativeTexture> bow;
 
     vector<TexturePair> CRenderer::mNativeTextures;
 
@@ -167,9 +169,44 @@ namespace odb {
                 mBackground->getPixelData()[ ( 32 * y ) + x ] = converted;
             }
         }
-
-        auto sky = loadPNG("clouds.png", fileLoader);
         {
+            auto foeBitmap = loadPNG("MonkAttack0.png", fileLoader);
+            foe = std::make_shared<odb::NativeTexture>();
+
+            auto width = foeBitmap->getWidth();
+            auto sourceData = foeBitmap->getPixelData();
+            auto destRegularData = foe->data();
+            int ratio = width / NATIVE_TEXTURE_SIZE;
+
+            for (int y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
+                for (int x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
+                    uint32_t pixel = foeBitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
+                    auto converted = CRenderer::getPaletteEntry(pixel);
+                    foe->data()[(NATIVE_TEXTURE_SIZE * y) + x] = converted;
+                }
+            }
+        }
+
+        {
+            auto bowBitmap = loadPNG("crossbow.png", fileLoader);
+            bow = std::make_shared<odb::NativeTexture>();
+
+            auto width = bowBitmap->getWidth();
+            auto sourceData = bowBitmap->getPixelData();
+            auto destRegularData = foe->data();
+            int ratio = width / NATIVE_TEXTURE_SIZE;
+
+            for (int y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
+                for (int x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
+                    uint32_t pixel = bowBitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
+                    auto converted = CRenderer::getPaletteEntry(pixel);
+                    bow->data()[(NATIVE_TEXTURE_SIZE * y) + x] = converted;
+                }
+            }
+        }
+
+        {
+            auto sky = loadPNG("clouds.png", fileLoader);
             auto nativeTexture = std::make_shared<NativeTexture >();
             auto rotatedTexture = std::make_shared<NativeTexture>();
 
