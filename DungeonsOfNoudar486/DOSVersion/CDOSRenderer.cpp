@@ -84,6 +84,8 @@ namespace odb {
     }
 
     void CRenderer::handleSystemEvents() {
+        gotoxy(1,1);
+        printf("%d", ++mFrame);
 
         const static FixP delta{2};
 
@@ -155,6 +157,11 @@ namespace odb {
                 printf("WTF is %d", lastKey);
                 exit(0);
         }
+    }
+
+    void CRenderer::drawTextAt( int x, int y, const char* text ) {
+        gotoxy(x, y );
+        printf("%s", text);
     }
 
     void CRenderer::flip() {

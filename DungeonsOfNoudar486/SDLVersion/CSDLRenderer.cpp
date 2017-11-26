@@ -180,6 +180,10 @@ namespace odb {
         mBuffer[(320 * y) + x] = pixel;
     }
 
+    void CRenderer::drawTextAt( int x, int y, const char* text ) {
+
+    }
+
     void CRenderer::flip() {
 
         for (int y = 0; y < 200; ++y) {

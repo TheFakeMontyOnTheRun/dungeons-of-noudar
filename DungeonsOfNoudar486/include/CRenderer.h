@@ -71,6 +71,7 @@ namespace odb {
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
         int mHealth;
+        short mFrame = 0;
         std::string mItemName;
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
@@ -88,6 +89,8 @@ namespace odb {
 
         void drawCubeAt(const Vec3 &center, TexturePair texture );
 
+        void drawTextAt( int x, int y, const char* text );
+
         void drawFloorAt(const Vec3 &center, TexturePair texture );
 
         void drawCeilingAt(const Vec3 &center, TexturePair texture );
@@ -101,8 +104,6 @@ namespace odb {
         void drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture );
 
         void drawSprite( int x, int y, std::shared_ptr<odb::NativeBitmap> tile );
-
-        Vec2 project(const Vec3 &p);
 
         void loadTextures( vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap& tileProperties );
 
