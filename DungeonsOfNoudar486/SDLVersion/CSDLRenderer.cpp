@@ -99,21 +99,34 @@ namespace odb {
 #endif
             }
 
-            if (event.type == SDL_KEYUP) {
-                switch (event.key.keysym.sym) {
-                    case SDLK_q:
-#ifndef __EMSCRIPTEN__
-                        exit(0);
-#endif
-                    default:
-                        break;
-                }
-            }
-
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
-                    case SDLK_SPACE:
+                    case SDLK_ESCAPE:
                         exit(0);
+                        mCached = false;
+                        break;
+                    case SDLK_SPACE:
+                        mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
+                        mCached = false;
+                        break;
+
+                    case SDLK_q:
+                        mBufferedCommand = Knights::kPickItemCommand;
+                        mCached = false;
+                        break;
+
+                    case SDLK_a:
+                        mBufferedCommand = Knights::kDropItemCommand;
+                        mCached = false;
+                        break;
+
+                    case SDLK_PLUS:
+                        mBufferedCommand = Knights::kCycleRightInventoryCommand;
+                        mCached = false;
+                        break;
+
+                    case SDLK_MINUS:
+                        mBufferedCommand = Knights::kCycleRightInventoryCommand;
                         mCached = false;
                         break;
 
@@ -134,7 +147,7 @@ namespace odb {
                         mCached = false;
                         break;
 
-                    case SDLK_a:
+                    case SDLK_d:
                     case SDLK_s:
                         drawZBuffer = (event.key.keysym.sym == SDLK_a );
                         mCached = false;

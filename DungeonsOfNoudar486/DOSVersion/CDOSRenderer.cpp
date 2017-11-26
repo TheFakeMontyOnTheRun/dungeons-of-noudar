@@ -92,58 +92,60 @@ namespace odb {
         bdos(0xC, 0, 0);
 
         switch (lastKey) {
-            case 18656:
-                //up
-//                mSpeed.mY -= delta;
+            case 18656: //up
                 mBufferedCommand = Knights::kMovePlayerForwardCommand;
                 mCached = false;
                 break;
 
-            case 8051:
-            case 20704:
-                //down
+            case 20704: //down
                 mBufferedCommand = Knights::kMovePlayerBackwardCommand;
                 mCached = false;
                 break;
 
-            case 19424: //right arrow
-            case 4209: //q
-                //left
+            case 19424: //left
                 mBufferedCommand = Knights::kTurnPlayerLeftCommand;
                 mCached = false;
                 break;
 
+            case 4209: //q
+                mBufferedCommand = Knights::kCycleLeftInventoryCommand;
+                mCached = false;
+                break;
+
+            case 4471: //w
+                mBufferedCommand = Knights::kPickItemCommand;
+                mCached = false;
+                break;
+
             case 4709: //e
+                mBufferedCommand = Knights::kCycleRightInventoryCommand;
+                mCached = false;
+                break;
+
+            case 8051: //s
+                mBufferedCommand = Knights::kDropItemCommand;
+                mCached = false;
+                break;
+
             case 19936: //right arrow
-                //right
                 mBufferedCommand = Knights::kTurnPlayerRightCommand;
                 mCached = false;
                 break;
 
-            case 3849:
-            case 14624:
-            case 11785: //c
-            case 5236: //t
-                //space
+            case 14624: //space
+                mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
+                mCached = false;
+                break;
+
+            case 283: //esc
                 exit(0);
                 break;
-            case 561:
-                mCached = false;
-                break;
-            case 818:
-                mCached = false;
-                break;
 
-            case 7777:
-                mSpeed.mZ -= delta;
-                mCached = false;
-                break;
-
-            case 11386:
+            case 11386: //z
                 mBufferedCommand = Knights::kStrafeLeftCommand;
                 mCached = false;
                 break;
-            case 11640:
+            case 11640: //x
                 mBufferedCommand = Knights::kStrafeRightCommand;
                 mCached = false;
                 break;
@@ -152,9 +154,7 @@ namespace odb {
             default:
                 printf("WTF is %d", lastKey);
                 exit(0);
-
         }
-
     }
 
     void CRenderer::flip() {
