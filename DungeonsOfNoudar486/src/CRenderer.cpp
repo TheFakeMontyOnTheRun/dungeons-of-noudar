@@ -395,15 +395,13 @@ namespace odb {
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-
-        auto halfScale = two;
-        auto textureScale = halfScale / two;
+        auto textureScale = one / two;
         auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
 
-        mVertices[ 0 ].first = ( scaledCenter + Vec3{ -one,  halfScale, 0 });
-        mVertices[ 1 ].first = ( scaledCenter + Vec3{  one,  halfScale, 0 });
-        mVertices[ 2 ].first = ( scaledCenter + Vec3{ -one, -halfScale, 0 });
-        mVertices[ 3 ].first = ( scaledCenter + Vec3{  one, -halfScale, 0 });
+        mVertices[ 0 ].first = ( scaledCenter + Vec3{ -one,  two, 0 });
+        mVertices[ 1 ].first = ( scaledCenter + Vec3{  one,  two, 0 });
+        mVertices[ 2 ].first = ( scaledCenter + Vec3{ -one, 0, 0 });
+        mVertices[ 3 ].first = ( scaledCenter + Vec3{  one, 0, 0 });
 
         projectAllVertices();
 
