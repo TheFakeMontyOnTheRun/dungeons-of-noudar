@@ -399,7 +399,7 @@ namespace odb {
         auto halfScale = two;
         auto textureScale = halfScale / two;
         auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
-        
+
         mVertices[ 0 ].first = ( scaledCenter + Vec3{ -one,  halfScale, 0 });
         mVertices[ 1 ].first = ( scaledCenter + Vec3{  one,  halfScale, 0 });
         mVertices[ 2 ].first = ( scaledCenter + Vec3{ -one, -halfScale, 0 });
@@ -1145,6 +1145,8 @@ namespace odb {
 
             drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{250}, skybox);
             bool facesMask[3];
+            EActorsSnapshotElement actorsSnapshotElement = EActorsSnapshotElement::kNothing;
+            EItemsSnapshotElement itemsSnapshotElement = EItemsSnapshotElement::kNothing;
 
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
@@ -1158,8 +1160,10 @@ namespace odb {
                         case Knights::EDirection::kNorth:
 
                             element = mElementsMap[z][39 - x];
+                            actorsSnapshotElement = mActors[z][39 - x ];
+                            itemsSnapshotElement = mItems[z][39 - x ];
 
-                            mCamera = Vec3{ FixP{ 80 - ( 2 * mCameraPosition.x ) },
+                            mCamera = Vec3{ FixP{ 78 - ( 2 * mCameraPosition.x ) },
                                             FixP{-1},
                                             FixP{ ( 2 * mCameraPosition.y ) - 79} };
 
@@ -1173,6 +1177,8 @@ namespace odb {
 
                         case Knights::EDirection::kSouth:
                             element = mElementsMap[39 - z][x];
+                            actorsSnapshotElement = mActors[39 - z][x];
+                            itemsSnapshotElement = mItems[39 - z][ x ];
 
                             mCamera = Vec3{ FixP{ ( 2 * mCameraPosition.x ) },
                                             FixP{-1},
@@ -1187,6 +1193,8 @@ namespace odb {
                             break;
                         case Knights::EDirection::kWest:
                             element = mElementsMap[x][39 - z];
+                            itemsSnapshotElement = mItems[x][39 - z ];
+                            actorsSnapshotElement = mActors[x][39 - z ];
 
                             mCamera = Vec3{
                                             FixP{ ( 2 * mCameraPosition.y ) },
@@ -1205,6 +1213,8 @@ namespace odb {
 
                             case Knights::EDirection::kEast:
                                 element = mElementsMap[x][z];
+                                actorsSnapshotElement = mActors[x][z ];
+                                itemsSnapshotElement = mItems[x][z ];
 
                             mCamera = Vec3{
                                     FixP{ - ( 2 * mCameraPosition.y ) },
@@ -1317,6 +1327,22 @@ namespace odb {
                                 break;
                         }
                     }
+
+
+                    if ( actorsSnapshotElement != EActorsSnapshotElement::kNothing ) {
+                        drawBillboardAt(
+                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
+                                foe );
+                    }
+
+
+                    if ( itemsSnapshotElement != EItemsSnapshotElement ::kNothing ) {
+                        drawBillboardAt(
+                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
+                                bow );
+                    }
+
+
                 }
             }
         }
