@@ -63,15 +63,15 @@ namespace odb {
 
 
     CRenderer::CRenderer() {
-        SDL_Init( SDL_INIT_EVERYTHING );
-        video = SDL_SetVideoMode( 640, 400, 32, 0 );
+        SDL_Init(SDL_INIT_EVERYTHING);
+        video = SDL_SetVideoMode(640, 400, 32, 0);
 
-        for ( int r = 0; r < 256; r += 16 ) {
-            for ( int g = 0; g < 256; g += 8 ) {
-                for ( int b = 0; b < 256; b += 8 ) {
-                    auto pixel = 0xFF000000 + ( r << 16 ) + ( g << 8 ) + ( b );
-                    auto paletteEntry = getPaletteEntry( pixel );
-                    mPalette[ paletteEntry ] = pixel;
+        for (int r = 0; r < 256; r += 16) {
+            for (int g = 0; g < 256; g += 8) {
+                for (int b = 0; b < 256; b += 8) {
+                    auto pixel = 0xFF000000 + (r << 16) + (g << 8) + (b);
+                    auto paletteEntry = getPaletteEntry(pixel);
+                    mPalette[paletteEntry] = pixel;
                 }
             }
         }
@@ -149,7 +149,7 @@ namespace odb {
 
                     case SDLK_d:
                     case SDLK_a:
-                        drawZBuffer = (event.key.keysym.sym == SDLK_a );
+                        drawZBuffer = (event.key.keysym.sym == SDLK_a);
                         mCached = false;
                         break;
 
@@ -173,26 +173,28 @@ namespace odb {
     void CRenderer::putRaw(int16_t x, int16_t y, uint32_t pixel) {
 
 
-        if ( x < 0 || x >= 256 || y < 0 || y >= 128 ) {
+        if (x < 0 || x >= 256 || y < 0 || y >= 128) {
             return;
         }
 
-        mBuffer[ (320 * y ) + x ] = pixel;
+        mBuffer[(320 * y) + x] = pixel;
     }
 
     void CRenderer::flip() {
 
-        for ( int y = 0; y  < 200; ++y ) {
-            for ( int x = 0; x < 320; ++x ) {
+        for (int y = 0; y < 200; ++y) {
+            for (int x = 0; x < 320; ++x) {
                 SDL_Rect rect;
                 rect.x = 2 * x;
                 rect.y = 2 * y;
                 rect.w = 2;
                 rect.h = 2;
-                auto pixel = drawZBuffer ? static_cast<uint8_t >(mDepthBuffer[ (320 * y) + x ]) : mPalette[ mBuffer[ (320 * y ) + x ] ];
+                auto pixel = drawZBuffer ? static_cast<uint8_t >(mDepthBuffer[(320 * y) + x]) : mPalette[mBuffer[
+                        (320 * y) + x]];
 
-                SDL_FillRect(video, &rect, SDL_MapRGB(video->format, ((pixel & 0x000000FF)), ((pixel & 0x0000FF00) >> 8),
-                                                      ((pixel & 0x00FF0000) >> 16)));
+                SDL_FillRect(video, &rect,
+                             SDL_MapRGB(video->format, ((pixel & 0x000000FF)), ((pixel & 0x0000FF00) >> 8),
+                                        ((pixel & 0x00FF0000) >> 16)));
 
             }
         }
