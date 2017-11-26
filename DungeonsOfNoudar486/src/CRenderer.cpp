@@ -1352,10 +1352,7 @@ namespace odb {
 
         for ( int py = 0; py < dy; ++py ) {
             auto destinationLineStart = destination + ( 320 * (y + py) ) + x;
-            for ( int px = 0; px < dx; ++px ) {
-                (*destinationLineStart) = pixel;
-                ++destinationLineStart;
-            }
+            std::fill( destinationLineStart, destinationLineStart + dx, pixel );
         }
     }
 
@@ -1366,11 +1363,7 @@ namespace odb {
         for ( int y = 0; y < 32; ++y ) {
             auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
             auto sourceLineStart = sourceLine + ( 32 * y );
-            for ( int x = 0; x < 32; ++x ) {
-                (*destinationLineStart) = (*sourceLineStart);
-                ++destinationLineStart;
-                ++sourceLineStart;
-            }
+            std::copy( sourceLineStart, sourceLineStart + 32, destinationLineStart );
         }
     }
 
