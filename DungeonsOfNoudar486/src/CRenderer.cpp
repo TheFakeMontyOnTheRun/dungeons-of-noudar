@@ -244,6 +244,10 @@ namespace odb {
         mNeedsToRedraw = true;
         mCameraDirection = current->getDirection();
         mCameraPosition = mapCamera;
+        Knights::ElementView view;
+#ifndef __DJGPP__
+        std::cout << "\n\n" << std::endl;
+#endif
 
         for ( int z = 0; z < 40; ++z ) {
             for ( int x = 0; x < 40; ++x ) {
@@ -251,11 +255,33 @@ namespace odb {
                 mElementsMap[z][x] = map.getElementAt(v);
 
                 auto actor = map.getActorAt( v );
-                if ( actor != nullptr && actor != current ) {
-                    mActors[ z ][ x ] = EActorsSnapshotElement::kFallenAttacking1;
+                auto item = map.getItemAt(v);
+                mActors[ z ][ x ] = EActorsSnapshotElement::kNothing;
+                mItems[ z ][ x ] = EItemsSnapshotElement::kNothing;
+
+                if ( actor != nullptr ) {
+                    if (actor != current) {
+                        mActors[ z ][ x ] = EActorsSnapshotElement::kFallenAttacking1;
+                    }
+                    view = actor->getView();
+
+                } else if ( item != nullptr ) {
+                    mItems[ z ][ x ] = EItemsSnapshotElement ::kCrossbow;
+                    view = item->getView();
+                } else {
+                    view = map.getElementAt(v);
                 }
+#ifndef __DJGPP__
+                std::cout << view;
+#endif
             }
+#ifndef __DJGPP__
+            std::cout << std::endl;
+#endif
         }
+#ifndef __DJGPP__
+        std::cout << std::endl;
+#endif
     }
 
     Knights::CommandType CRenderer::getInput() {
