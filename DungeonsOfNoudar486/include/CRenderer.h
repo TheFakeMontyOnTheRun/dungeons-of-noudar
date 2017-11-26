@@ -47,6 +47,14 @@ namespace odb {
         kMagicSeal
     };
 
+    enum class EItemsSnapshotElement : uint8_t {
+        kNothing,
+        kSword,
+        kCrossbow,
+        kCross,
+        kShield
+    };
+
     using NativeTexture = array<uint8_t , NATIVE_TEXTURE_SIZE * NATIVE_TEXTURE_SIZE >;
     using TexturePair = std::pair<std::shared_ptr<NativeTexture >, std::shared_ptr<NativeTexture >>;
 
@@ -60,6 +68,7 @@ namespace odb {
         array< FixP, 320 * 200 > mDepthBuffer;
         array< uint32_t , 256 > mPalette;
         EActorsSnapshotElement mActors[40][40];
+        EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
@@ -87,6 +96,8 @@ namespace odb {
 
         void drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[3], bool enableAlpha = false );
 
+        void drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture );
+
         void drawSprite( int x, int y, std::shared_ptr<odb::NativeBitmap> tile );
 
         Vec2 project(const Vec3 &p);
@@ -107,7 +118,7 @@ namespace odb {
 
         void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, TexturePair texture);
 
-        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, TexturePair texture, FixP textureScaleY, bool enableAlpha = false );
+        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha = false );
 
         void clear();
 

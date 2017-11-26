@@ -324,6 +324,47 @@ namespace odb {
                   texture, one );
     }
 
+
+    void CRenderer::drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture ) {
+        if (static_cast<int>(center.mZ) <= 2 ) {
+            return;
+        }
+
+        const static FixP one{ 1 };
+        const static FixP two{ 2 };
+
+        auto halfScale = two;
+        auto textureScale = halfScale / two;
+        auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
+        
+        mVertices[ 0 ].first = ( scaledCenter + Vec3{ -one,  halfScale, 0 });
+        mVertices[ 1 ].first = ( scaledCenter + Vec3{  one,  halfScale, 0 });
+        mVertices[ 2 ].first = ( scaledCenter + Vec3{ -one, -halfScale, 0 });
+        mVertices[ 3 ].first = ( scaledCenter + Vec3{  one, -halfScale, 0 });
+
+        projectAllVertices();
+
+        auto ulz0 = mVertices[0].second;
+        auto urz0 = mVertices[1].second;
+        auto llz0 = mVertices[2].second;
+        auto lrz0 = mVertices[3].second;
+
+        if (kShouldDrawTextures) {
+                drawFrontWall( ulz0.mX, ulz0.mY,
+                               lrz0.mX, lrz0.mY,
+                               mVertices[ 2 ].first.mZ,
+                               texture, (textureScale *  two), true );
+        }
+
+
+        if (kShouldDrawOutline) {
+            drawLine( ulz0, urz0 );
+            drawLine( ulz0, llz0 );
+            drawLine( urz0, lrz0 );
+            drawLine( llz0, lrz0 );
+        }
+    }
+
     void CRenderer::drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[3],bool enableAlpha) {
 
         if (static_cast<int>(center.mZ) <= 2 ) {
@@ -383,10 +424,13 @@ namespace odb {
             }
 
             if ( mask[ 1 ] ) {
+
+
+                std::shared_ptr<odb::NativeTexture > front = texture.first;
                 drawFrontWall( ulz0.mX, ulz0.mY,
                                lrz0.mX, lrz0.mY,
                                mVertices[ 2 ].first.mZ,
-                               texture, (textureScale *  two), enableAlpha );
+                               front, (textureScale *  two), enableAlpha );
             }
         }
 
@@ -707,7 +751,7 @@ namespace odb {
         return &mBuffer[0];
     }
 
-    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, TexturePair texture, FixP textureScaleY, bool enableAlpha) {
+    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha) {
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
             //switch y0 with y1
@@ -743,7 +787,7 @@ namespace odb {
 
         auto iy = static_cast<int16_t >(y);
 
-        uint8_t* data = texture.first->data();
+        uint8_t* data = texture->data();
         int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         FixP textureSize{ textureWidth };
 
