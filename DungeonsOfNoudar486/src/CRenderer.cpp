@@ -370,7 +370,7 @@ namespace odb {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
-                          0, 0,
+                          mVertices[ 4 ].first.mZ, mVertices[ 0 ].first.mZ,
                           texture, textureScale);
             }
 
@@ -378,14 +378,14 @@ namespace odb {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
-                         0, 0,
+                         mVertices[ 5 ].first.mZ, mVertices[ 1 ].first.mZ,
                          texture, textureScale);
             }
 
             if ( mask[ 1 ] ) {
                 drawFrontWall( ulz0.mX, ulz0.mY,
                                lrz0.mX, lrz0.mY,
-                               0,
+                               mVertices[ 2 ].first.mZ,
                                texture, (textureScale *  two), enableAlpha );
             }
         }
@@ -431,9 +431,11 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      0, 0,
+                      mVertices[ 0 ].first.mZ, mVertices[ 2 ].first.mZ,
                       texture);
         }
+
+
 
         if ( kShouldDrawOutline) {
             drawLine( llz0, lrz0 );
@@ -467,7 +469,7 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      0, 0,
+                      center.mZ + one, center.mZ - one,
                       texture);
         }
 
@@ -512,7 +514,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      0, 0,
+                      center.mZ - one, center.mZ + one,
                       texture, textureScale );
         }
 
@@ -556,7 +558,7 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      0, 0,
+                      center.mZ - one, center.mZ + one,
                       texture, textureScale );
         }
 
@@ -627,7 +629,9 @@ namespace odb {
         FixP dX = FixP{limit - x};
         FixP upperDyDx = upperDy / dX;
         FixP lowerDyDx = lowerDy / dX;
-
+        FixP dZ = ( z1 - z0 );
+        FixP dzDx = dZ / dX;
+        FixP z = z0;
         uint8_t pixel = 0;
 
         FixP u{0};
@@ -646,7 +650,7 @@ namespace odb {
         FixP du = textureSize / (dX);
         auto ix = x;
         uint8_t * bufferData = getBufferData();
-
+        auto zBuffer = mDepthBuffer.data();
 
         for (; ix < limit; ++ix ) {
             if ( ix >= 0 && ix < XRES ) {
@@ -660,12 +664,13 @@ namespace odb {
                 FixP dv = textureSize / diffY;
                 FixP v{0};
                 auto iu = static_cast<uint8_t >(u);
-
+                auto iz = static_cast<int16_t >(z);
                 auto iY0 = static_cast<int16_t >(y0);
                 auto iY1 = static_cast<int16_t >(y1);
                 auto sourceLineStart = data + (iu * textureWidth);
                 auto lineOffset = sourceLineStart;
                 auto destinationLine = bufferData + (320 * iY0) + ix;
+                auto zBufferLineStart = zBuffer + (320 * iY0) + ix;
                 lastV = 0;
                 pixel = *(lineOffset);
 
@@ -680,17 +685,20 @@ namespace odb {
                         lineOffset = ((iv % textureWidth) + sourceLineStart);
                         lastU = iu;
                         lastV = iv;
-                        if (pixel != mTransparency) {
+                        if (pixel != mTransparency && ( *zBufferLineStart ) >= iz ) {
+                            *zBufferLineStart = iz;
                             *(destinationLine) = pixel;
                         }
                     }
                     destinationLine += (320);
+                    zBufferLineStart += 320;
                     v += dv;
                 }
             }
             y0 += upperDyDx;
             y1 += lowerDyDx;
             u += du;
+            z += dzDx;
         }
 
     }
@@ -742,9 +750,10 @@ namespace odb {
         FixP dv = textureSize / (dY);
 
         auto diffX = ( x1 - x0 );
-
+        auto zBuffer = mDepthBuffer.data();
         auto iX0 = static_cast<int16_t >(x0);
         auto iX1 = static_cast<int16_t >(x1);
+        auto iz = static_cast<int16_t >(z);
 
         if ( iX0 == iX1 ) {
             return;
@@ -760,19 +769,20 @@ namespace odb {
                 auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + ((iv % textureWidth) * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
+                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
 
                 lastU = 0;
 
-                if ( iv == lastV && !enableAlpha ) {
-                    v += dv;
-                    destinationLine = bufferData + (320 * iy);
-                    sourceLineStart = destinationLine - 320;
-
-                    auto start = std::max<int16_t >( 0, iX0 );
-                    auto finish = std::min<int16_t >( (XRES - 1), iX1 );
-                    std::copy( (sourceLineStart + start ), (sourceLineStart + finish), destinationLine + start);
-                    continue;
-                }
+//                if ( iv == lastV && !enableAlpha ) {
+//                    v += dv;
+//                    destinationLine = bufferData + (320 * iy);
+//                    sourceLineStart = destinationLine - 320;
+//
+//                    auto start = std::max<int16_t >( 0, iX0 );
+//                    auto finish = std::min<int16_t >( (XRES - 1), iX1 );
+//                    std::copy( (sourceLineStart + start ), (sourceLineStart + finish), destinationLine + start);
+//                    continue;
+//                }
 
                 pixel = *(sourceLineStart);
 
@@ -790,11 +800,13 @@ namespace odb {
                         sourceLineStart += ( iu - lastU);
                         lastU = iu;
                         lastV = iv;
-                        if (pixel != mTransparency) {
+                        if (pixel != mTransparency && ( *zBufferLineStart ) >= iz ) {
+                            *zBufferLineStart = iz;
                             *(destinationLine) = pixel;
                         }
                     }
                     ++destinationLine;
+                    ++zBufferLineStart;
                     u += du;
                 }
 
@@ -868,13 +880,16 @@ namespace odb {
         uint8_t lastV = 0xFF;
 
         auto iy = static_cast<int16_t >(y);
-
+        auto zBuffer = mDepthBuffer.data();
         uint8_t * bufferData = getBufferData();
         uint8_t * data = texture.first->data();
         int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         FixP textureSize{ textureWidth };
 
         FixP dv = textureSize / (dY);
+        FixP dZ = ( z1 - z0 );
+        FixP dzDy = dZ / dY;
+        FixP z = z0;
 
         for (; iy < limit; ++iy ) {
 
@@ -888,12 +903,14 @@ namespace odb {
 
                 auto iX0 = static_cast<int16_t >(x0);
                 auto iX1 = static_cast<int16_t >(x1);
+                auto iz = static_cast<int16_t >(z);
 
                 FixP du = textureSize / diffX;
                 FixP u{0};
                 auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
+                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
                 lastU = 0;
                 pixel = *(sourceLineStart);
 
@@ -911,9 +928,13 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
 
-                        *(destinationLine) = pixel;
+                        if (pixel != mTransparency && ( *zBufferLineStart ) >= iz ) {
+                            *zBufferLineStart = iz;
+                            *(destinationLine) = pixel;
+                        }
                     }
                     ++destinationLine;
+                    ++zBufferLineStart;
                     u += du;
                 }
             }
@@ -921,6 +942,7 @@ namespace odb {
             x0 += leftDxDy;
             x1 += rightDxDy;
             v += dv;
+            z += dzDy;
         }
     }
 
@@ -1012,11 +1034,10 @@ namespace odb {
             mNeedsToRedraw = false;
 
             clear();
-
-            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{255}, FixP{255}, skybox);
-            bool facesMask[3];
-
             std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{255} );
+
+            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{250}, skybox);
+            bool facesMask[3];
 
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
