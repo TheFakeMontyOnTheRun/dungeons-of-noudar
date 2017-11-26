@@ -1203,7 +1203,7 @@ namespace odb {
                             };
 
 
-                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ ( 2 * z) - 80}};
+                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ ( 2 * z) - 76}};
                             //remember, bounds - 1!
                             facesMask[ 0 ] = !( x > 0 && mElementsMap[x - 1][39 - z] == element);
                             facesMask[ 2 ] = !( x < 39 && mElementsMap[x + 1][39 - z] == element);
@@ -1222,7 +1222,7 @@ namespace odb {
                                     FixP{ 80 - ( 2 * mCameraPosition.x ) }
                             };
 
-                            position = mCamera + Vec3{ FixP{- 2 * ( - x)}, FixP{ 0 }, FixP{ ( 2 * z) - 80}};
+                            position = mCamera + Vec3{ FixP{- 2 * ( - x)}, FixP{ 0 }, FixP{ ( 2 * z) - 78}};
                             //remember, bounds - 1!
                             facesMask[ 2 ] = !( x > 0 && mElementsMap[x - 1][z] == element);
                             facesMask[ 0 ] = !( x < 39 && mElementsMap[x + 1][z] == element);
