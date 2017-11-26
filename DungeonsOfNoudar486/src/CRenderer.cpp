@@ -1051,6 +1051,11 @@ namespace odb {
                                             FixP{ ( 2 * (39 - mCameraPosition.y) ) - 79} };
 
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+                            //remember, bounds - 1!
+                            facesMask[ 0 ] = !( x > 0 && mElementsMap[39 - z][(x - 1)] == element);
+                            facesMask[ 2 ] = !( x < 39 && mElementsMap[39 - z][(x + 1)] == element);
+                            facesMask[ 1 ] = !( z < 40 && mElementsMap[39 - (z + 1)][x] == element);
+
                             break;
                         case Knights::EDirection::kWest:
                             element = mElementsMap[x][39 - z];
@@ -1063,6 +1068,11 @@ namespace odb {
 
 
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ ( 2 * z) - 80}};
+                            //remember, bounds - 1!
+                            facesMask[ 0 ] = !( x > 0 && mElementsMap[x - 1][39 - z] == element);
+                            facesMask[ 2 ] = !( x < 39 && mElementsMap[x + 1][39 - z] == element);
+                            facesMask[ 1 ] = !( z > 0 && mElementsMap[x][39 - (z - 1)] == element);
+
                             break;
 
                             case Knights::EDirection::kEast:
@@ -1074,15 +1084,14 @@ namespace odb {
                                     FixP{ 80 - ( 2 * mCameraPosition.x ) }
                             };
 
-
                             position = mCamera + Vec3{ FixP{- 2 * ( - x)}, FixP{ 0 }, FixP{ ( 2 * z) - 80}};
+                            //remember, bounds - 1!
+                            facesMask[ 2 ] = !( x > 0 && mElementsMap[x - 1][z] == element);
+                            facesMask[ 0 ] = !( x < 39 && mElementsMap[x + 1][z] == element);
+                            facesMask[ 1 ] = !( z < 39 && mElementsMap[x][(z - 1)] == element);
                             break;
 
                     }
-
-
-
-
 
                     auto tileProp = mTileProperties[element];
                     auto heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
