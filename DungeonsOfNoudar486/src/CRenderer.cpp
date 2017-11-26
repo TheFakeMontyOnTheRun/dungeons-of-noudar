@@ -41,10 +41,6 @@ using namespace std::chrono;
 #include "CRenderer.h"
 #include "LoadPNG.h"
 
-#ifndef SDLSW
-#include <conio.h>
-#endif
-
 namespace odb {
 
     const static bool kShouldDrawOutline = false;
@@ -299,17 +295,6 @@ namespace odb {
         auto toReturn = mBufferedCommand;
         mBufferedCommand = '.';
         return toReturn;
-    }
-
-    Vec2 CRenderer::project(const Vec3&  p ) {
-        const static FixP halfWidth{HALF_XRES};
-        const static FixP halfHeight{HALF_YRES};
-        FixP oneOver = divide( halfHeight, p.mZ );
-
-        return {
-                halfWidth + multiply(p.mX, oneOver),
-                halfHeight - multiply(p.mY, oneOver)
-        };
     }
 
     void CRenderer::projectAllVertices() {
@@ -1355,10 +1340,11 @@ namespace odb {
             const static auto black = 0;
             fill( 0, 160, 256, 40, black );
             flip();
-#ifndef SDLSW
-            gotoxy(1, 22 );
-            printf("HP %d\n%s", mHealth, mItemName.c_str());
-#endif
+
+            char buffer[9];
+            snprintf(buffer, 8, "HP: %d", mHealth);
+            drawTextAt( 1, 22, buffer );
+            drawTextAt( 1, 23, mItemName.c_str() );
         }
     }
 
