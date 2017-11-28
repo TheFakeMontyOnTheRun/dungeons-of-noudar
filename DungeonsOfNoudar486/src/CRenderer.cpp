@@ -1100,6 +1100,7 @@ namespace odb {
     void CRenderer::render(long ms) {
 
         const static FixP two{2};
+        const static FixP eight{6};
         const static FixP one{1};
 
         if ( mSpeed.mX ) {
@@ -1130,6 +1131,8 @@ namespace odb {
             EActorsSnapshotElement actorsSnapshotElement = EActorsSnapshotElement::kNothing;
             EItemsSnapshotElement itemsSnapshotElement = EItemsSnapshotElement::kNothing;
 
+            auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
+
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
                     facesMask[ 0 ] = true;
@@ -1146,8 +1149,8 @@ namespace odb {
                             itemsSnapshotElement = mItems[z][39 - x ];
 
                             mCamera = Vec3{ FixP{ 78 - ( 2 * mCameraPosition.x ) },
-                                            FixP{-1},
-                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
+                                            FixP{ cameraHeight -1},
+                                            FixP{ ( 2 * mCameraPosition.y ) - 78} };
 
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
 
@@ -1163,7 +1166,7 @@ namespace odb {
                             itemsSnapshotElement = mItems[39 - z][ x ];
 
                             mCamera = Vec3{ FixP{ ( 2 * mCameraPosition.x ) },
-                                            FixP{-1},
+                                            FixP{cameraHeight -1},
                                             FixP{ ( 2 * (39 - mCameraPosition.y) ) - 79} };
 
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
@@ -1180,7 +1183,7 @@ namespace odb {
 
                             mCamera = Vec3{
                                             FixP{ ( 2 * mCameraPosition.y ) },
-                                            FixP{-1},
+                                            FixP{cameraHeight-1},
                                             FixP{ ( 2 * mCameraPosition.x ) }
                             };
 
@@ -1200,7 +1203,7 @@ namespace odb {
 
                             mCamera = Vec3{
                                     FixP{ - ( 2 * mCameraPosition.y ) },
-                                    FixP{-1},
+                                    FixP{cameraHeight-1},
                                     FixP{ 80 - ( 2 * mCameraPosition.x ) }
                             };
 
