@@ -4,7 +4,6 @@
 
 #include <functional>
 #include <memory>
-#include <iostream>
 #include <cmath>
 #include <algorithm>
 #include <sg14/fixed_point>
@@ -13,7 +12,6 @@
 
 using eastl::vector;
 using eastl::array;
-
 using sg14::fixed_point;
 
 #include "RasterizerCommon.h"

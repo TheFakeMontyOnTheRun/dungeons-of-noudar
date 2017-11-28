@@ -1,3 +1,13 @@
+#include <conio.h>
+#include <iterator>
+#include <dpmi.h>
+#include <go32.h>
+#include <pc.h>
+#include <bios.h>
+#include <sys/movedata.h>
+#include <sys/farptr.h>
+#include <sys/nearptr.h>
+
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
@@ -7,7 +17,6 @@
 #include <functional>
 #include <memory>
 #include <algorithm>
-#include <iostream>
 #include <map>
 #include <chrono>
 
@@ -35,17 +44,6 @@ using sg14::fixed_point;
 #include "NativeBitmap.h"
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
-
-#include <conio.h>
-#include <iterator>
-#include <dpmi.h>
-#include <go32.h>
-#include <pc.h>
-#include <bios.h>
-#include <sys/movedata.h>
-#include <sys/farptr.h>
-#include <sys/nearptr.h>
-
 
 namespace odb {
 

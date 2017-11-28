@@ -1,32 +1,30 @@
+#ifdef SDLSW
+#include <iostream>
+#endif
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
 #include <cstring>
 #include <string>
-#include <iostream>
 #include <memory>
 #include <utility>
 #include <map>
+#include <unordered_map>
 #include <functional>
-#include <cstring>
 #include <algorithm>
-#include <iostream>
 #include <chrono>
 #include <sstream>
 #include <sg14/fixed_point>
-
-using sg14::fixed_point;
-
 #include <EASTL/vector.h>
 #include <EASTL/array.h>
-#include <NativeBitmap.h>
-#include <ETextures.h>
-#include <unordered_map>
 
+using sg14::fixed_point;
 using eastl::vector;
 using eastl::array;
 using namespace std::chrono;
 
+#include "NativeBitmap.h"
+#include "ETextures.h"
 #include "IFileLoaderDelegate.h"
 #include "NativeBitmap.h"
 #include "Vec2i.h"

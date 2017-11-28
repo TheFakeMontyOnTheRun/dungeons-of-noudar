@@ -10,6 +10,8 @@
 #include <iostream>
 #include <map>
 #include <chrono>
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 #include <sg14/fixed_point>
 #include <EASTL/vector.h>
@@ -35,11 +37,6 @@ using sg14::fixed_point;
 #include "NativeBitmap.h"
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
-
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-#include <cmath>
-#include "NativeBitmap.h"
 #include "LoadPNG.h"
 
 #ifdef __EMSCRIPTEN__

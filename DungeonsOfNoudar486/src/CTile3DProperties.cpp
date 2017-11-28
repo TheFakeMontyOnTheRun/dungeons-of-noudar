@@ -5,18 +5,15 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include <iostream>
 #include <sstream>
 #include <iterator>
 #include <unordered_set>
 #include <map>
 #include <sg14/fixed_point>
-
-using sg14::fixed_point;
-
 #include <EASTL/vector.h>
 #include <EASTL/array.h>
 
+using sg14::fixed_point;
 using eastl::vector;
 using eastl::array;
 
