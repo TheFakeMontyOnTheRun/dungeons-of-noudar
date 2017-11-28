@@ -126,7 +126,6 @@ namespace odb {
         void clear();
 
         Vec3 mCamera{ FixP{1}, FixP{1}, FixP{1}};
-        Vec3 mSpeed{0, 0, 0};
 
         void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1);
 

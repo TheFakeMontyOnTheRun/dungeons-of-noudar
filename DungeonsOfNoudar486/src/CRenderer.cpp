@@ -1101,23 +1101,6 @@ namespace odb {
         const static FixP eight{6};
         const static FixP one{1};
 
-        if ( mSpeed.mX ) {
-            mSpeed.mX /= two;
-            mNeedsToRedraw = true;
-        }
-
-        if  ( mSpeed.mY ) {
-            mSpeed.mY /= two;
-            mNeedsToRedraw = true;
-        }
-
-        if  ( mSpeed.mZ ) {
-            mSpeed.mZ /= two;
-            mNeedsToRedraw = true;
-        }
-
-        mCamera += mSpeed;
-
         if ( mNeedsToRedraw ) {
             mNeedsToRedraw = false;
 
