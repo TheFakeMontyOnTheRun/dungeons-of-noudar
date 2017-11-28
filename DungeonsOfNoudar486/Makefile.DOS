@@ -47,6 +47,7 @@ TARGET = game.exe
 
 $(TARGET):	$(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS) $(LDFLAGS)
+	i586-pc-msdosdjgpp-strip $(TARGET)
 
 all:   $(TARGET)
 
