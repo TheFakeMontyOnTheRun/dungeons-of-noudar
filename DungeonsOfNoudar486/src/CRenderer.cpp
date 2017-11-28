@@ -466,7 +466,7 @@ namespace odb {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
-                          mVertices[ 4 ].first.mZ, mVertices[ 0 ].first.mZ,
+                          mVertices[ 0 ].first.mZ, mVertices[ 4 ].first.mZ,
                           texture, textureScale);
             }
 
@@ -530,7 +530,8 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      mVertices[ 0 ].first.mZ, mVertices[ 2 ].first.mZ,
+                      getZIndex( mVertices[ 2 ].first ),
+                      getZIndex( mVertices[ 0 ].first ),
                       texture);
         }
 
@@ -542,6 +543,10 @@ namespace odb {
             drawLine( lrz0, lrz1 );
             drawLine( llz1, lrz1 );
         }
+    }
+
+    FixP CRenderer::getZIndex( const Vec3& v ) {
+        return (v.mY) + (v.mZ);
     }
 
     void CRenderer::drawCeilingAt(const Vec3& center, TexturePair texture) {
@@ -568,7 +573,8 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      center.mZ + one, center.mZ - one,
+                      getZIndex( mVertices[ 2 ].first ),
+                      getZIndex( mVertices[ 0 ].first ),
                       texture);
         }
 
@@ -613,7 +619,9 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      center.mZ - one, center.mZ + one,
+                      center.mZ - depth,
+                      center.mZ + depth,
+
                       texture, textureScale );
         }
 
@@ -657,7 +665,8 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      center.mZ - one, center.mZ + one,
+                      center.mZ - depth,
+                      center.mZ + depth,
                       texture, textureScale );
         }
 

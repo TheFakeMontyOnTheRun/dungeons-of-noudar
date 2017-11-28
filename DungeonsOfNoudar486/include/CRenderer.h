@@ -83,6 +83,8 @@ namespace odb {
 
         uint8_t * getBufferData();
 
+        FixP getZIndex( const Vec3& v );
+
         void fillSidebar();
 
         void fillUnderbar();
