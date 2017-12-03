@@ -65,7 +65,7 @@ namespace odb {
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;
         array< uint8_t, 320 * 200 > mBuffer;
-        array< FixP, 320 * 200 > mDepthBuffer;
+//        array< FixP, 320 * 200 > mDepthBuffer;
         array< uint32_t , 256 > mPalette;
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];

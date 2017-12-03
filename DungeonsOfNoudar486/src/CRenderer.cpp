@@ -1,6 +1,7 @@
 #ifdef SDLSW
 #include <iostream>
 #endif
+#include <cassert>
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -52,6 +53,7 @@ namespace odb {
 
     VisMap visMap;
     IntMap intMap;
+    DistanceDistribution distances;
 
     vector<TexturePair> CRenderer::mNativeTextures;
 
@@ -253,7 +255,21 @@ namespace odb {
         std::cout << std::endl;
 #endif
 
-        VisibilityStrategy::castVisibility(visMap, intMap, mCameraPosition, mCameraDirection, true);
+        VisibilityStrategy::castVisibility(visMap, intMap, mCameraPosition, mCameraDirection, true, distances);
+#ifndef __DJGPP__
+        for (int z = 0; z < 40; ++z) {
+            for (int x = 0; x < 40; ++x) {
+                if (visMap[z][x] == EVisibility::kVisible) {
+                    view = intMap[z][x];
+                } else {
+                    view = '.';
+                }
+                std::cout << view;
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+#endif
     }
 
     Knights::CommandType CRenderer::getInput() {
@@ -513,7 +529,7 @@ namespace odb {
     }
 
     FixP CRenderer::getZIndex( const Vec3& v ) {
-        return (v.mY) + (v.mZ);
+        return (v.mZ);
     }
 
     void CRenderer::drawCeilingAt(const Vec3& center, TexturePair texture) {
@@ -728,7 +744,7 @@ namespace odb {
         FixP du = textureSize / (dX);
         auto ix = x;
         uint8_t * bufferData = getBufferData();
-        auto zBuffer = mDepthBuffer.data();
+//        auto zBuffer = mDepthBuffer.data();
 
         for (; ix < limit; ++ix ) {
             if ( ix >= 0 && ix < XRES ) {
@@ -747,7 +763,7 @@ namespace odb {
                 auto sourceLineStart = data + (iu * textureWidth);
                 auto lineOffset = sourceLineStart;
                 auto destinationLine = bufferData + (320 * iY0) + ix;
-                auto zBufferLineStart = zBuffer + (320 * iY0) + ix;
+//                auto zBufferLineStart = zBuffer + (320 * iY0) + ix;
                 lastV = 0;
                 pixel = *(lineOffset);
 
@@ -762,13 +778,15 @@ namespace odb {
                         lineOffset = ((iv % textureWidth) + sourceLineStart);
                         lastU = iu;
                         lastV = iv;
-                        if (pixel != mTransparency && ( *zBufferLineStart ) >= z ) {
-                            *zBufferLineStart = z;
-                            *(destinationLine) = pixel;
+                        if (pixel != mTransparency ) {
+//                            if (( *zBufferLineStart ) >= z) {
+//                                *zBufferLineStart = z;
+                                *(destinationLine) = pixel;
+//                            }
                         }
                     }
                     destinationLine += (320);
-                    zBufferLineStart += 320;
+//                    zBufferLineStart += 320;
                     v += dv;
                 }
             }
@@ -827,7 +845,7 @@ namespace odb {
         FixP dv = textureSize / (dY);
 
         auto diffX = ( x1 - x0 );
-        auto zBuffer = mDepthBuffer.data();
+//        auto zBuffer = mDepthBuffer.data();
         auto iX0 = static_cast<int16_t >(x0);
         auto iX1 = static_cast<int16_t >(x1);
 
@@ -845,7 +863,7 @@ namespace odb {
                 auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + ((iv % textureWidth) * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
-                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
+//                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
 
                 lastU = 0;
                 pixel = *(sourceLineStart);
@@ -864,13 +882,15 @@ namespace odb {
                         sourceLineStart += ( iu - lastU);
                         lastU = iu;
                         lastV = iv;
-                        if (pixel != mTransparency && ( *zBufferLineStart ) >= z ) {
-                            *zBufferLineStart = z;
-                            *(destinationLine) = pixel;
+                        if (pixel != mTransparency) {
+//                            if ( ( *zBufferLineStart ) >= z ) {
+//                            *zBufferLineStart = z;
+                                *(destinationLine) = pixel;
+//                            }
                         }
                     }
                     ++destinationLine;
-                    ++zBufferLineStart;
+//                    ++zBufferLineStart;
                     u += du;
                 }
 
@@ -944,7 +964,7 @@ namespace odb {
         uint8_t lastV = 0xFF;
 
         auto iy = static_cast<int16_t >(y);
-        auto zBuffer = mDepthBuffer.data();
+//        auto zBuffer = mDepthBuffer.data();
         uint8_t * bufferData = getBufferData();
         uint8_t * data = texture->data();
         int8_t textureWidth = NATIVE_TEXTURE_SIZE;
@@ -973,7 +993,7 @@ namespace odb {
                 auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
-                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
+//                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
                 lastU = 0;
                 pixel = *(sourceLineStart);
 
@@ -991,13 +1011,15 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
 
-                        if (pixel != mTransparency && ( *zBufferLineStart ) >= z ) {
-                            *zBufferLineStart = z;
-                            *(destinationLine) = pixel;
+                        if (pixel != mTransparency ) {
+//                            if (( *zBufferLineStart ) >= z) {
+//                                *zBufferLineStart = z;
+                                *(destinationLine) = pixel;
+//                            }
                         }
                     }
                     ++destinationLine;
-                    ++zBufferLineStart;
+//                    ++zBufferLineStart;
                     u += du;
                 }
             }
@@ -1081,7 +1103,7 @@ namespace odb {
             mNeedsToRedraw = false;
 
             clear();
-            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{1024} );
+//            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{1024} );
 
             drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
             drawFloor( FixP{YRES}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
@@ -1099,8 +1121,11 @@ namespace odb {
 
             auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
 
-            for (int z = 0; z <40; ++z ) {
-                for ( int x = 0; x < 40; ++x ) {
+            for ( int distance = 79; distance >= 0; --distance ) {
+                for ( const auto& visPos : distances[ distance ] ) {
+
+                    int x = 0;
+                    int z = 0;
 
                     facesMask[ 0 ] = true;
                     facesMask[ 1 ] = true;
@@ -1110,6 +1135,8 @@ namespace odb {
                     Vec3 position;
                     switch (mCameraDirection) {
                         case Knights::EDirection::kNorth:
+                            x = 39 - visPos.x;
+                            z = visPos.y;
 
                             element = mElementsMap[z][39 - x];
 
@@ -1135,6 +1162,9 @@ namespace odb {
                             break;
 
                         case Knights::EDirection::kSouth:
+                            x = visPos.x;
+                            z = 39 - visPos.y;
+
                             element = mElementsMap[39 - z][x];
 
                             if (visMap[39 - z][x] != EVisibility::kVisible) {
@@ -1158,6 +1188,9 @@ namespace odb {
 
                             break;
                         case Knights::EDirection::kWest:
+                            x = visPos.y;
+                            z = 39 - visPos.x;
+
                             element = mElementsMap[x][39 - z];
 
                             if (visMap[x][39 - z] != EVisibility::kVisible) {
@@ -1185,7 +1218,10 @@ namespace odb {
                             break;
 
                             case Knights::EDirection::kEast:
-                                element = mElementsMap[x][z];
+                                x = visPos.y;
+                                z = visPos.x;
+
+                            element = mElementsMap[x][z];
                             if (visMap[x][z] != EVisibility::kVisible) {
                                 continue;
                             }
