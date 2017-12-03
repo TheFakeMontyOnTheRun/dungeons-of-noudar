@@ -47,6 +47,7 @@ namespace odb {
     std::shared_ptr<odb::NativeTexture> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> bow;
+    std::shared_ptr<odb::NativeTexture> token;
     std::shared_ptr<NativeTexture > skybox;
 
     VisMap visMap;
@@ -180,6 +181,7 @@ namespace odb {
         mBackground = makeTexture("tile.png", fileLoader);
         foe = makeTexture("MonkAttack0.png", fileLoader);
         bow = makeTexture("crossbow.png", fileLoader);
+        token = makeTexture("token.png", fileLoader);
         skybox = makeTexture("clouds.png", fileLoader);
 
         return tilesToLoad;
@@ -228,7 +230,13 @@ namespace odb {
                     view = actor->getView();
 
                 } else if (item != nullptr) {
-                    mItems[z][x] = EItemsSnapshotElement::kCrossbow;
+                    if (item->getView() == 'y') {
+                        mItems[z][x] = EItemsSnapshotElement::kCrossbow;
+                    } else if (item->getView() == '+') {
+                        mItems[z][x] = EItemsSnapshotElement::kCross;
+                    }
+
+
                     view = item->getView();
                 } else {
                     view = map.getElementAt(v);
@@ -1311,7 +1319,8 @@ namespace odb {
                     if ( itemsSnapshotElement != EItemsSnapshotElement ::kNothing ) {
                         drawBillboardAt(
                                 position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
-                                bow );
+                                itemsSnapshotElement == EItemsSnapshotElement::kCrossbow ? bow : token
+                        );
                     }
 
 
