@@ -1081,7 +1081,10 @@ namespace odb {
             mNeedsToRedraw = false;
 
             clear();
-            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{255} );
+            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{1024} );
+
+            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
+            drawFloor( FixP{YRES}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
 
             drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{250}, skybox);
             bool facesMask[3];
