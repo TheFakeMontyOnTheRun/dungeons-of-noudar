@@ -540,8 +540,10 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      getZIndex( mVertices[ 2 ].first ),
+                      //despite the order seeming backwards, it is draw top to bottom
+                      //so, it needs to be reversed.
                       getZIndex( mVertices[ 0 ].first ),
+                      getZIndex( mVertices[ 2 ].first ),
                       texture.first);
         }
 
