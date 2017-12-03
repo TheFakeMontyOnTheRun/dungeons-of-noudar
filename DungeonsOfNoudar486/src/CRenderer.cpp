@@ -450,7 +450,7 @@ namespace odb {
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
                           mVertices[ 0 ].first.mZ, mVertices[ 4 ].first.mZ,
-                          texture, textureScale);
+                          texture, (textureScale *  two));
             }
 
             if ( mask[2] && static_cast<int>(center.mX) >= 0 ) {
@@ -458,7 +458,7 @@ namespace odb {
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
                          mVertices[ 5 ].first.mZ, mVertices[ 1 ].first.mZ,
-                         texture, textureScale);
+                         texture, (textureScale *  two));
             }
 
             if ( mask[ 1 ] ) {
