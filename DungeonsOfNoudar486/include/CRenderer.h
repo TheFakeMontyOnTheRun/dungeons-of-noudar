@@ -121,7 +121,7 @@ namespace odb {
 
         void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, FixP z0, FixP z1, TexturePair texture, FixP textureScaleY );
 
-        void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, TexturePair texture);
+        void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, std::shared_ptr<NativeTexture > texture);
 
         void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha = false );
 
@@ -157,6 +157,8 @@ namespace odb {
 
         const static uint8_t mTransparency;
     };
+
+    std::shared_ptr<odb::NativeTexture> makeTexture(const std::string& path, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
 
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);

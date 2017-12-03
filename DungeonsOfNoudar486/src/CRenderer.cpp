@@ -45,10 +45,10 @@ namespace odb {
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
 
-    TexturePair skybox;
     std::shared_ptr<odb::NativeBitmap> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> bow;
+    std::shared_ptr<NativeTexture > skybox;
 
     VisMap visMap;
     IntMap intMap;
@@ -104,6 +104,24 @@ namespace odb {
         return shade;
     }
 
+
+    std::shared_ptr<odb::NativeTexture> makeTexture(const std::string& path, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+        auto bitmap = loadPNG(path, fileLoader);
+        auto texture = std::make_shared<odb::NativeTexture>();
+
+        auto width = bitmap->getWidth();
+        int ratio = width / NATIVE_TEXTURE_SIZE;
+
+        for (int y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
+            for (int x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
+                uint32_t pixel = bitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
+                auto converted = CRenderer::getPaletteEntry(pixel);
+                texture->data()[(NATIVE_TEXTURE_SIZE * y) + x] = converted;
+            }
+        }
+
+        return texture;
+    }
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
 
@@ -170,65 +188,10 @@ namespace odb {
                 mBackground->getPixelData()[ ( 32 * y ) + x ] = converted;
             }
         }
-        {
-            auto foeBitmap = loadPNG("MonkAttack0.png", fileLoader);
-            foe = std::make_shared<odb::NativeTexture>();
 
-            auto width = foeBitmap->getWidth();
-            auto sourceData = foeBitmap->getPixelData();
-            auto destRegularData = foe->data();
-            int ratio = width / NATIVE_TEXTURE_SIZE;
-
-            for (int y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
-                for (int x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
-                    uint32_t pixel = foeBitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
-                    auto converted = CRenderer::getPaletteEntry(pixel);
-                    foe->data()[(NATIVE_TEXTURE_SIZE * y) + x] = converted;
-                }
-            }
-        }
-
-        {
-            auto bowBitmap = loadPNG("crossbow.png", fileLoader);
-            bow = std::make_shared<odb::NativeTexture>();
-
-            auto width = bowBitmap->getWidth();
-            auto sourceData = bowBitmap->getPixelData();
-            auto destRegularData = foe->data();
-            int ratio = width / NATIVE_TEXTURE_SIZE;
-
-            for (int y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
-                for (int x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
-                    uint32_t pixel = bowBitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
-                    auto converted = CRenderer::getPaletteEntry(pixel);
-                    bow->data()[(NATIVE_TEXTURE_SIZE * y) + x] = converted;
-                }
-            }
-        }
-
-        {
-            auto sky = loadPNG("clouds.png", fileLoader);
-            auto nativeTexture = std::make_shared<NativeTexture >();
-            auto rotatedTexture = std::make_shared<NativeTexture>();
-
-            auto width = sky->getWidth();
-            auto sourceData = sky->getPixelData();
-            auto destRegularData = nativeTexture->data();
-            auto destRotatedData = rotatedTexture->data();
-            int ratio = width / NATIVE_TEXTURE_SIZE;
-
-            for ( int y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
-                for ( int x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
-                    uint32_t pixel = sky->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
-                    auto converted = CRenderer::getPaletteEntry( pixel );
-                    nativeTexture->data()[ ( NATIVE_TEXTURE_SIZE * y ) + x ] = converted;
-                    rotatedTexture->data()[ ( NATIVE_TEXTURE_SIZE * x ) + y ] = converted;
-                }
-            }
-
-            skybox.first = nativeTexture;
-            skybox.second = rotatedTexture;
-        }
+        foe = makeTexture("MonkAttack0.png", fileLoader);
+        bow = makeTexture("crossbow.png", fileLoader);
+        skybox = makeTexture("clouds.png", fileLoader);
 
         return tilesToLoad;
     }
@@ -362,7 +325,7 @@ namespace odb {
                       ulz1.mX, urz1.mX,
                       ulz0.mX, urz0.mX,
                       0, 0,
-                      texture);
+                      texture.first);
         }
 
         if (static_cast<int>(center.mY) <= 0 ) {
@@ -370,7 +333,7 @@ namespace odb {
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
                       0, 0,
-                      texture);
+                      texture.first);
         }
 
         if (static_cast<int>(center.mX) >= 0 ) {
@@ -539,7 +502,7 @@ namespace odb {
                       llz0.mX, lrz0.mX,
                       getZIndex( mVertices[ 2 ].first ),
                       getZIndex( mVertices[ 0 ].first ),
-                      texture);
+                      texture.first);
         }
 
 
@@ -582,7 +545,7 @@ namespace odb {
                       llz0.mX, lrz0.mX,
                       getZIndex( mVertices[ 2 ].first ),
                       getZIndex( mVertices[ 0 ].first ),
-                      texture);
+                      texture.first);
         }
 
         if (kShouldDrawOutline) {
@@ -925,7 +888,7 @@ namespace odb {
      *        /             \
      *  x0y1 /______________\ x1y1
      */
-    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, TexturePair texture ) {
+    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, std::shared_ptr<NativeTexture > texture ) {
 
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
@@ -985,7 +948,7 @@ namespace odb {
         auto iy = static_cast<int16_t >(y);
         auto zBuffer = mDepthBuffer.data();
         uint8_t * bufferData = getBufferData();
-        uint8_t * data = texture.first->data();
+        uint8_t * data = texture->data();
         int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         FixP textureSize{ textureWidth };
 
