@@ -13,7 +13,6 @@
 #include <functional>
 #include <algorithm>
 #include <chrono>
-#include <sstream>
 #include <sg14/fixed_point>
 #include <EASTL/vector.h>
 #include <EASTL/array.h>
@@ -57,33 +56,44 @@ namespace odb {
 
     const uint8_t CRenderer::mTransparency = getPaletteEntry(0xFFFF00FF);
 
+    vector<std::string> splitLists(const std::string& data) {
+        vector<std::string> toReturn;
+        auto buffer = std::string(data);
+        buffer.push_back('\n');
+        int lastPoint = 0;
+        int since = 0;
+        auto bufferBegin = std::begin( buffer );
+        for (const auto& c : buffer ) {
+            ++since;
+            if ( c == '\n' ) {
+                auto item = std::string( bufferBegin + lastPoint, bufferBegin + lastPoint + since - 1 );
+                lastPoint += since;
+                if ( !item.empty()) {
+                    toReturn.push_back(item);
+                }
+                since = 0;
+            }
+        }
+
+        return toReturn;
+    }
+
     vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
-        auto data = fileLoader->loadFileFromPath( filename );
-        std::stringstream dataStream;
-
-        dataStream << data;
-
-        std::string buffer;
-
         vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
-
-        while (dataStream.good()) {
-            std::getline(dataStream, buffer);
-
-            toReturn.push_back(loadPNG(buffer, fileLoader));
+        auto buffer = fileLoader->loadFileFromPath( filename );
+        auto list = splitLists(buffer);
+        for (const auto& filename : list ) {
+            toReturn.push_back(loadPNG(filename, fileLoader));
         }
 
         return toReturn;
     }
 
     odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
-        std::stringstream roomName("");
-        roomName << "tiles";
-        roomName << levelNumber;
-        roomName << ".prp";
-        std::string filename = roomName.str();
+        char buffer[64];
+        snprintf(buffer, 64, "tiles%d.prp", levelNumber);
 
-        auto data = fileLoader->loadFileFromPath( filename );
+        auto data = fileLoader->loadFileFromPath( buffer );
 
         return odb::CTile3DProperties::parsePropertyList( data );
     }
@@ -122,61 +132,49 @@ namespace odb {
 
         return texture;
     }
+
+    TexturePair makeTexturePair( std::shared_ptr<odb::NativeBitmap> bitmap ) {
+        auto nativeTexture = std::make_shared<NativeTexture >();
+        auto rotatedTexture = std::make_shared<NativeTexture>();
+
+        auto width = bitmap->getWidth();
+        int ratio = width / NATIVE_TEXTURE_SIZE;
+
+        for ( int y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
+            for ( int x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
+                uint32_t pixel = bitmap->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
+                auto converted = CRenderer::getPaletteEntry( pixel );
+                nativeTexture->data()[ ( NATIVE_TEXTURE_SIZE * y ) + x ] = converted;
+                rotatedTexture->data()[ ( NATIVE_TEXTURE_SIZE * x ) + y ] = converted;
+            }
+        }
+
+        return std::make_pair(nativeTexture, rotatedTexture );
+    }
+
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
-
-        std::stringstream roomName("");
-        roomName << "tiles";
-        roomName << levelNumber;
-        roomName << ".lst";
-        std::string tilesFilename = roomName.str();
+        char tilesFilename[64];
+        snprintf(tilesFilename, 64, "tiles%d.lst", levelNumber);
         auto data = fileLoader->loadFileFromPath( tilesFilename );
-        std::stringstream dataStream;
-
-        dataStream << data;
-
-        std::string buffer;
+        auto list = splitLists(data);
 
         vector<vector<std::shared_ptr<odb::NativeBitmap>>> tilesToLoad;
 
-        while (dataStream.good()) {
-            std::getline(dataStream, buffer);
+        for ( const auto& frameList : list ) {
             vector<std::shared_ptr<odb::NativeBitmap>> textures;
 
 
-            if (buffer.substr(buffer.length() - 4) == ".lst") {
-                auto frames = loadBitmapList(buffer, fileLoader );
+            if (frameList.substr(frameList.length() - 4) == ".lst") {
+                auto frames = loadBitmapList(frameList, fileLoader );
                 for ( const auto frame : frames ) {
                     textures.push_back(frame);
                 }
             } else {
-                textures.push_back(loadPNG(buffer, fileLoader));
+                textures.push_back(loadPNG(frameList, fileLoader));
             }
 
-            tilesToLoad.push_back(textures);
-        }
-
-        for ( const auto& texture : tilesToLoad ) {
-
-            auto nativeTexture = std::make_shared<NativeTexture >();
-            auto rotatedTexture = std::make_shared<NativeTexture>();
-
-            auto width = texture[0]->getWidth();
-            auto sourceData = (texture[0])->getPixelData();
-            auto destRegularData = nativeTexture->data();
-            auto destRotatedData = rotatedTexture->data();
-            int ratio = width / NATIVE_TEXTURE_SIZE;
-
-            for ( int y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
-                for ( int x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
-                    uint32_t pixel = (texture[0])->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
-                    auto converted = CRenderer::getPaletteEntry( pixel );
-                    nativeTexture->data()[ ( NATIVE_TEXTURE_SIZE * y ) + x ] = converted;
-                    rotatedTexture->data()[ ( NATIVE_TEXTURE_SIZE * x ) + y ] = converted;
-                }
-            }
-
-            CRenderer::mNativeTextures.push_back( std::make_pair(nativeTexture, rotatedTexture ) );
+            CRenderer::mNativeTextures.push_back( makeTexturePair(textures[0]) );
         }
 
         mBackground = makeTexture("tile.png", fileLoader);

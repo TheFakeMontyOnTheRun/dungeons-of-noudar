@@ -160,6 +160,8 @@ namespace odb {
 
     std::shared_ptr<odb::NativeTexture> makeTexture(const std::string& path, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
 
+    TexturePair makeTexturePair( std::shared_ptr<odb::NativeBitmap> bitmap );
+
     vector<vector<std::shared_ptr<odb::NativeBitmap>>>
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
     odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
