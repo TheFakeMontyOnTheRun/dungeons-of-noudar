@@ -45,7 +45,7 @@ namespace odb {
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
 
-    std::shared_ptr<odb::NativeBitmap> mBackground;
+    std::shared_ptr<odb::NativeTexture> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> bow;
     std::shared_ptr<NativeTexture > skybox;
@@ -179,16 +179,7 @@ namespace odb {
             CRenderer::mNativeTextures.push_back( std::make_pair(nativeTexture, rotatedTexture ) );
         }
 
-        mBackground = loadPNG("tile.png", fileLoader);
-
-        for ( int y = 0; y < 32; ++y ) {
-            for ( int x = 0; x < 32; ++x ) {
-                uint32_t pixel = mBackground->getPixelData()[ ( 32 * y ) + x ];
-                auto converted = CRenderer::getPaletteEntry( pixel );
-                mBackground->getPixelData()[ ( 32 * y ) + x ] = converted;
-            }
-        }
-
+        mBackground = makeTexture("tile.png", fileLoader);
         foe = makeTexture("MonkAttack0.png", fileLoader);
         bow = makeTexture("crossbow.png", fileLoader);
         skybox = makeTexture("clouds.png", fileLoader);
@@ -1358,9 +1349,9 @@ namespace odb {
         }
     }
 
-    void CRenderer::drawSprite( int dx, int dy, std::shared_ptr<odb::NativeBitmap> tile ) {
+    void CRenderer::drawSprite( int dx, int dy, std::shared_ptr<odb::NativeTexture> tile ) {
         auto destination = getBufferData();
-        auto sourceLine = tile->getPixelData();
+        auto sourceLine = &((*tile)[0]);
 
         for ( int y = 0; y < 32; ++y ) {
             auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;

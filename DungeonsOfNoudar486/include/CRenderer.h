@@ -105,7 +105,7 @@ namespace odb {
 
         void drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture );
 
-        void drawSprite( int x, int y, std::shared_ptr<odb::NativeBitmap> tile );
+        void drawSprite( int x, int y, std::shared_ptr<odb::NativeTexture > tile );
 
         void loadTextures( vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap& tileProperties );
 
