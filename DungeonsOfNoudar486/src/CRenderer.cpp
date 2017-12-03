@@ -1128,6 +1128,12 @@ namespace odb {
             EActorsSnapshotElement actorsSnapshotElement = EActorsSnapshotElement::kNothing;
             EItemsSnapshotElement itemsSnapshotElement = EItemsSnapshotElement::kNothing;
 
+            CTile3DProperties tileProp;
+            FixP heightDiff;
+            FixP twiceHeight;
+            FixP halfHeightDiff;
+            Knights::ElementView lastElement = 0;
+
             auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
 
             for (int z = 0; z <40; ++z ) {
@@ -1158,9 +1164,11 @@ namespace odb {
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
 
                             //remember, bounds - 1!
-                            facesMask[ 0 ] = !( x > 0 && mElementsMap[z][39 - (x - 1)] == element);
-                            facesMask[ 2 ] = !( x < 39 && mElementsMap[z][39 - (x + 1)] == element);
-                            facesMask[ 1 ] = !( z < 40 && mElementsMap[z + 1][39 - x] == element);
+                            if ( lastElement != element ) {
+                                facesMask[ 0 ] = !( x > 0 && mElementsMap[z][39 - (x - 1)] == element);
+                                facesMask[ 2 ] = !( x < 39 && mElementsMap[z][39 - (x + 1)] == element);
+                                facesMask[ 1 ] = !( z < 40 && mElementsMap[z + 1][39 - x] == element);
+                            }
                             break;
 
                         case Knights::EDirection::kSouth:
@@ -1179,9 +1187,11 @@ namespace odb {
 
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
                             //remember, bounds - 1!
-                            facesMask[ 0 ] = !( x > 0 && mElementsMap[39 - z][(x - 1)] == element);
-                            facesMask[ 2 ] = !( x < 39 && mElementsMap[39 - z][(x + 1)] == element);
-                            facesMask[ 1 ] = !( z < 40 && mElementsMap[39 - (z + 1)][x] == element);
+                            if ( lastElement != element ) {
+                                facesMask[0] = !(x > 0 && mElementsMap[39 - z][(x - 1)] == element);
+                                facesMask[2] = !(x < 39 && mElementsMap[39 - z][(x + 1)] == element);
+                                facesMask[1] = !(z < 40 && mElementsMap[39 - (z + 1)][x] == element);
+                            }
 
                             break;
                         case Knights::EDirection::kWest:
@@ -1203,9 +1213,11 @@ namespace odb {
 
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ ( 2 * z) - 76}};
                             //remember, bounds - 1!
-                            facesMask[ 0 ] = !( x > 0 && mElementsMap[x - 1][39 - z] == element);
-                            facesMask[ 2 ] = !( x < 39 && mElementsMap[x + 1][39 - z] == element);
-                            facesMask[ 1 ] = !( z > 0 && mElementsMap[x][39 - (z - 1)] == element);
+                            if ( lastElement != element ) {
+                                facesMask[0] = !(x > 0 && mElementsMap[x - 1][39 - z] == element);
+                                facesMask[2] = !(x < 39 && mElementsMap[x + 1][39 - z] == element);
+                                facesMask[1] = !(z > 0 && mElementsMap[x][39 - (z - 1)] == element);
+                            }
 
                             break;
 
@@ -1226,17 +1238,23 @@ namespace odb {
 
                             position = mCamera + Vec3{ FixP{- 2 * ( - x)}, FixP{ 0 }, FixP{ ( 2 * z) - 78}};
                             //remember, bounds - 1!
-                            facesMask[ 2 ] = !( x > 0 && mElementsMap[x - 1][z] == element);
-                            facesMask[ 0 ] = !( x < 39 && mElementsMap[x + 1][z] == element);
-                            facesMask[ 1 ] = !( z < 39 && mElementsMap[x][(z - 1)] == element);
+                            if ( lastElement != element ) {
+                                facesMask[2] = !(x > 0 && mElementsMap[x - 1][z] == element);
+                                facesMask[0] = !(x < 39 && mElementsMap[x + 1][z] == element);
+                                facesMask[1] = !(z < 39 && mElementsMap[x][(z - 1)] == element);
+                            }
                             break;
 
                     }
 
-                    auto tileProp = mTileProperties[element];
-                    auto heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
-                    auto twiceHeight = multiply( heightDiff, two );
-                    auto halfHeightDiff = heightDiff / two;
+                    if ( lastElement != element ) {
+                        tileProp = mTileProperties[element];
+                        heightDiff = tileProp.mCeilingHeight - tileProp.mFloorHeight;
+                        twiceHeight = multiply( heightDiff, two );
+                        halfHeightDiff = heightDiff / two;
+                    }
+
+                    lastElement = element;
 
                     if ( tileProp.mFloorRepeatedTextureIndex > 0 && tileProp.mFloorRepetitions > 0) {
 
