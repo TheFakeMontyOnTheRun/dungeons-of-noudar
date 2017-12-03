@@ -739,7 +739,6 @@ namespace odb {
                 FixP dv = textureSize / diffY;
                 FixP v{0};
                 auto iu = static_cast<uint8_t >(u);
-                auto iz = static_cast<int16_t >(z);
                 auto iY0 = static_cast<int16_t >(y0);
                 auto iY1 = static_cast<int16_t >(y1);
                 auto sourceLineStart = data + (iu * textureWidth);
@@ -760,8 +759,8 @@ namespace odb {
                         lineOffset = ((iv % textureWidth) + sourceLineStart);
                         lastU = iu;
                         lastV = iv;
-                        if (pixel != mTransparency && ( *zBufferLineStart ) >= iz ) {
-                            *zBufferLineStart = iz;
+                        if (pixel != mTransparency && ( *zBufferLineStart ) >= z ) {
+                            *zBufferLineStart = z;
                             *(destinationLine) = pixel;
                         }
                     }
@@ -828,7 +827,6 @@ namespace odb {
         auto zBuffer = mDepthBuffer.data();
         auto iX0 = static_cast<int16_t >(x0);
         auto iX1 = static_cast<int16_t >(x1);
-        auto iz = static_cast<int16_t >(z);
 
         if ( iX0 == iX1 ) {
             return;
@@ -863,8 +861,8 @@ namespace odb {
                         sourceLineStart += ( iu - lastU);
                         lastU = iu;
                         lastV = iv;
-                        if (pixel != mTransparency && ( *zBufferLineStart ) >= iz ) {
-                            *zBufferLineStart = iz;
+                        if (pixel != mTransparency && ( *zBufferLineStart ) >= z ) {
+                            *zBufferLineStart = z;
                             *(destinationLine) = pixel;
                         }
                     }
@@ -966,7 +964,6 @@ namespace odb {
 
                 auto iX0 = static_cast<int16_t >(x0);
                 auto iX1 = static_cast<int16_t >(x1);
-                auto iz = static_cast<int16_t >(z);
 
                 FixP du = textureSize / diffX;
                 FixP u{0};
@@ -991,8 +988,8 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
 
-                        if (pixel != mTransparency && ( *zBufferLineStart ) >= iz ) {
-                            *zBufferLineStart = iz;
+                        if (pixel != mTransparency && ( *zBufferLineStart ) >= z ) {
+                            *zBufferLineStart = z;
                             *(destinationLine) = pixel;
                         }
                     }
