@@ -586,8 +586,9 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      center.mZ - depth,
+
                       center.mZ + depth,
+                      center.mZ - depth,
 
                       texture, textureScale );
         }
