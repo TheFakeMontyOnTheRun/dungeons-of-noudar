@@ -61,7 +61,7 @@ namespace odb {
     class CRenderer  : public Knights::IRenderer {
         bool mCached = false;
         bool mHudDrawn = false;
-        char mElementsMap[40][40];
+        array<array<Knights::ElementView , Knights::kMapSize>, Knights::kMapSize> mElementsMap;
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;
         array< uint8_t, 320 * 200 > mBuffer;

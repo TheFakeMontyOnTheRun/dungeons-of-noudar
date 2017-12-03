@@ -22,6 +22,7 @@ set(SOURCE_FILES
         src/NativeBitmap.cpp
         src/RasterizerCommon.cpp
         src/CTile3DProperties.cpp
+        src/VisibilityStrategy.cpp
         include/RasterizerCommon.h
         include/CRenderer.h
         include/RaycastCommon.h

@@ -38,6 +38,7 @@ using namespace std::chrono;
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
 #include "LoadPNG.h"
+#include "VisibilityStrategy.h"
 
 namespace odb {
 
@@ -48,6 +49,9 @@ namespace odb {
     std::shared_ptr<odb::NativeBitmap> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> bow;
+
+    VisMap visMap;
+    IntMap intMap;
 
     vector<TexturePair> CRenderer::mNativeTextures;
 
@@ -233,7 +237,7 @@ namespace odb {
     void CRenderer::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
         auto mapCamera = current->getPosition();
 
-        if (mCached ) {
+        if (mCached) {
             return;
         }
 
@@ -244,7 +248,7 @@ namespace odb {
         Knights::ElementView view;
 
         mHealth = current->getHP();
-        if (current->getSelectedItem() != nullptr ) {
+        if (current->getSelectedItem() != nullptr) {
             mItemName = current->getSelectedItem()->to_string();
         } else {
             mItemName = "";
@@ -254,24 +258,25 @@ namespace odb {
         std::cout << "\n\n" << std::endl;
 #endif
 
-        for ( int z = 0; z < 40; ++z ) {
-            for ( int x = 0; x < 40; ++x ) {
-                Knights::Vec2i v = { x, z };
-                mElementsMap[z][x] = map.getElementAt(v);
-
-                auto actor = map.getActorAt( v );
+        for (int z = 0; z < 40; ++z) {
+            for (int x = 0; x < 40; ++x) {
+                Knights::Vec2i v = {x, z};
+                auto elementView = map.getElementAt(v);;
+                mElementsMap[z][x] = elementView;
+                intMap[z][x] = elementView;
+                auto actor = map.getActorAt(v);
                 auto item = map.getItemAt(v);
-                mActors[ z ][ x ] = EActorsSnapshotElement::kNothing;
-                mItems[ z ][ x ] = EItemsSnapshotElement::kNothing;
+                mActors[z][x] = EActorsSnapshotElement::kNothing;
+                mItems[z][x] = EItemsSnapshotElement::kNothing;
 
-                if ( actor != nullptr ) {
+                if (actor != nullptr) {
                     if (actor != current) {
-                        mActors[ z ][ x ] = EActorsSnapshotElement::kFallenAttacking1;
+                        mActors[z][x] = EActorsSnapshotElement::kFallenAttacking1;
                     }
                     view = actor->getView();
 
-                } else if ( item != nullptr ) {
-                    mItems[ z ][ x ] = EItemsSnapshotElement ::kCrossbow;
+                } else if (item != nullptr) {
+                    mItems[z][x] = EItemsSnapshotElement::kCrossbow;
                     view = item->getView();
                 } else {
                     view = map.getElementAt(v);
@@ -287,6 +292,8 @@ namespace odb {
 #ifndef __DJGPP__
         std::cout << std::endl;
 #endif
+
+        VisibilityStrategy::castVisibility(visMap, intMap, mCameraPosition, mCameraDirection, true);
     }
 
     Knights::CommandType CRenderer::getInput() {
@@ -1125,16 +1132,22 @@ namespace odb {
 
             for (int z = 0; z <40; ++z ) {
                 for ( int x = 0; x < 40; ++x ) {
+
                     facesMask[ 0 ] = true;
                     facesMask[ 1 ] = true;
                     facesMask[ 2 ] = true;
 
-                    char element;
+                    Knights::ElementView element;
                     Vec3 position;
                     switch (mCameraDirection) {
                         case Knights::EDirection::kNorth:
 
                             element = mElementsMap[z][39 - x];
+
+                            if (visMap[z][39 - x] != EVisibility::kVisible) {
+                                continue;
+                            }
+
                             actorsSnapshotElement = mActors[z][39 - x ];
                             itemsSnapshotElement = mItems[z][39 - x ];
 
@@ -1152,6 +1165,11 @@ namespace odb {
 
                         case Knights::EDirection::kSouth:
                             element = mElementsMap[39 - z][x];
+
+                            if (visMap[39 - z][x] != EVisibility::kVisible) {
+                                continue;
+                            }
+
                             actorsSnapshotElement = mActors[39 - z][x];
                             itemsSnapshotElement = mItems[39 - z][ x ];
 
@@ -1168,6 +1186,11 @@ namespace odb {
                             break;
                         case Knights::EDirection::kWest:
                             element = mElementsMap[x][39 - z];
+
+                            if (visMap[x][39 - z] != EVisibility::kVisible) {
+                                continue;
+                            }
+
                             itemsSnapshotElement = mItems[x][39 - z ];
                             actorsSnapshotElement = mActors[x][39 - z ];
 
@@ -1188,6 +1211,10 @@ namespace odb {
 
                             case Knights::EDirection::kEast:
                                 element = mElementsMap[x][z];
+                            if (visMap[x][z] != EVisibility::kVisible) {
+                                continue;
+                            }
+
                                 actorsSnapshotElement = mActors[x][z ];
                                 itemsSnapshotElement = mItems[x][z ];
 
