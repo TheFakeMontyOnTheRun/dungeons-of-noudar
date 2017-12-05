@@ -55,9 +55,7 @@ namespace odb {
     VisMap visMap;
     IntMap intMap;
     DistanceDistribution distances;
-
     vector<TexturePair> CRenderer::mNativeTextures;
-
     const uint8_t CRenderer::mTransparency = getPaletteEntry(0xFFFF00FF);
 
     vector<std::string> splitLists(const std::string& data) {
@@ -66,7 +64,7 @@ namespace odb {
         buffer.push_back('\n');
         int lastPoint = 0;
         int since = 0;
-        auto bufferBegin = std::begin( buffer );
+        const auto bufferBegin = std::begin( buffer );
         for (const auto& c : buffer ) {
             ++since;
             if ( c == '\n' ) {
@@ -84,8 +82,8 @@ namespace odb {
 
     vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
         vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
-        auto buffer = fileLoader->loadFileFromPath( filename );
-        auto list = splitLists(buffer);
+        const auto buffer = fileLoader->loadFileFromPath( filename );
+        const auto list = splitLists(buffer);
         for (const auto& filename : list ) {
             toReturn.push_back(loadPNG(filename, fileLoader));
         }
@@ -97,7 +95,7 @@ namespace odb {
         char buffer[64];
         snprintf(buffer, 64, "tiles%d.prp", levelNumber);
 
-        auto data = fileLoader->loadFileFromPath( buffer );
+        const auto data = fileLoader->loadFileFromPath( buffer );
 
         return odb::CTile3DProperties::parsePropertyList( data );
     }
@@ -120,16 +118,16 @@ namespace odb {
 
 
     std::shared_ptr<odb::NativeTexture> makeTexture(const std::string& path, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
-        auto bitmap = loadPNG(path, fileLoader);
+        const auto bitmap = loadPNG(path, fileLoader);
         auto texture = std::make_shared<odb::NativeTexture>();
 
-        auto width = bitmap->getWidth();
-        int ratio = width / NATIVE_TEXTURE_SIZE;
+        const auto width = bitmap->getWidth();
+        const int ratio = width / NATIVE_TEXTURE_SIZE;
 
         for (int y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
             for (int x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
-                uint32_t pixel = bitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
-                auto converted = CRenderer::getPaletteEntry(pixel);
+                const uint32_t pixel = bitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
+                const auto converted = CRenderer::getPaletteEntry(pixel);
                 texture->data()[(NATIVE_TEXTURE_SIZE * y) + x] = converted;
             }
         }
@@ -141,13 +139,13 @@ namespace odb {
         auto nativeTexture = std::make_shared<NativeTexture >();
         auto rotatedTexture = std::make_shared<NativeTexture>();
 
-        auto width = bitmap->getWidth();
-        int ratio = width / NATIVE_TEXTURE_SIZE;
+        const auto width = bitmap->getWidth();
+        const int ratio = width / NATIVE_TEXTURE_SIZE;
 
         for ( int y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
             for ( int x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
-                uint32_t pixel = bitmap->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
-                auto converted = CRenderer::getPaletteEntry( pixel );
+                const uint32_t pixel = bitmap->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
+                const auto converted = CRenderer::getPaletteEntry( pixel );
                 nativeTexture->data()[ ( NATIVE_TEXTURE_SIZE * y ) + x ] = converted;
                 rotatedTexture->data()[ ( NATIVE_TEXTURE_SIZE * x ) + y ] = converted;
             }
@@ -160,8 +158,8 @@ namespace odb {
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
         char tilesFilename[64];
         snprintf(tilesFilename, 64, "tiles%d.lst", levelNumber);
-        auto data = fileLoader->loadFileFromPath( tilesFilename );
-        auto list = splitLists(data);
+        const auto data = fileLoader->loadFileFromPath( tilesFilename );
+        const auto list = splitLists(data);
 
         vector<vector<std::shared_ptr<odb::NativeBitmap>>> tilesToLoad;
 
@@ -170,7 +168,7 @@ namespace odb {
 
 
             if (frameList.substr(frameList.length() - 4) == ".lst") {
-                auto frames = loadBitmapList(frameList, fileLoader );
+                const auto frames = loadBitmapList(frameList, fileLoader );
                 for ( const auto frame : frames ) {
                     textures.push_back(frame);
                 }
@@ -192,7 +190,7 @@ namespace odb {
 
 
     void CRenderer::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
-        auto mapCamera = current->getPosition();
+        const auto mapCamera = current->getPosition();
 
         if (mCached) {
             return;
@@ -217,12 +215,14 @@ namespace odb {
 
         for (int z = 0; z < 40; ++z) {
             for (int x = 0; x < 40; ++x) {
-                Knights::Vec2i v = {x, z};
+                const Knights::Vec2i v = {x, z};
+                const auto actor = map.getActorAt(v);
+                const auto item = map.getItemAt(v);
+
                 auto elementView = map.getElementAt(v);;
+
                 mElementsMap[z][x] = elementView;
                 intMap[z][x] = elementView;
-                auto actor = map.getActorAt(v);
-                auto item = map.getItemAt(v);
                 mActors[z][x] = EActorsSnapshotElement::kNothing;
                 mItems[z][x] = EItemsSnapshotElement::kNothing;
 
@@ -274,7 +274,7 @@ namespace odb {
     }
 
     Knights::CommandType CRenderer::getInput() {
-        auto toReturn = mBufferedCommand;
+        const auto toReturn = mBufferedCommand;
         mBufferedCommand = '.';
         return toReturn;
     }
@@ -290,7 +290,7 @@ namespace odb {
                 return;
             }
 
-            FixP oneOver = divide( halfHeight, divide(vertex.first.mZ, two) );
+            const FixP oneOver = divide( halfHeight, divide(vertex.first.mZ, two) );
 
             vertex.second.mX = halfWidth + multiply(vertex.first.mX, oneOver);
             vertex.second.mY = halfHeight - multiply(vertex.first.mY, oneOver);
@@ -303,7 +303,7 @@ namespace odb {
             return;
         }
 
-        FixP one{ 1 };
+        const static FixP one{ 1 };
 
         mVertices[ 0 ].first = ( center + Vec3{ -one, -one, -one });
         mVertices[ 1 ].first = ( center + Vec3{  one, -one, -one });
@@ -316,14 +316,14 @@ namespace odb {
 
         projectAllVertices(8);
 
-        auto ulz0 = mVertices[0].second;
-        auto urz0 = mVertices[1].second;
-        auto llz0 = mVertices[2].second;
-        auto lrz0 = mVertices[3].second;
-        auto ulz1 = mVertices[4].second;
-        auto urz1 = mVertices[5].second;
-        auto llz1 = mVertices[6].second;
-        auto lrz1 = mVertices[7].second;
+        const auto ulz0 = mVertices[0].second;
+        const auto urz0 = mVertices[1].second;
+        const auto llz0 = mVertices[2].second;
+        const auto lrz0 = mVertices[3].second;
+        const auto ulz1 = mVertices[4].second;
+        const auto urz1 = mVertices[5].second;
+        const auto llz1 = mVertices[6].second;
+        const auto lrz1 = mVertices[7].second;
 
         if (static_cast<int>(center.mX) <= 0 ) {
             drawWall( urz0.mX, urz1.mX,
@@ -373,8 +373,8 @@ namespace odb {
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-        auto textureScale = one / two;
-        auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
+        const auto textureScale = one / two;
+        const auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
 
         mVertices[ 0 ].first = ( scaledCenter + Vec3{ -one,  two, 0 });
         mVertices[ 1 ].first = ( scaledCenter + Vec3{  one,  two, 0 });
@@ -383,10 +383,10 @@ namespace odb {
 
         projectAllVertices(4);
 
-        auto ulz0 = mVertices[0].second;
-        auto urz0 = mVertices[1].second;
-        auto llz0 = mVertices[2].second;
-        auto lrz0 = mVertices[3].second;
+        const auto ulz0 = mVertices[0].second;
+        const auto urz0 = mVertices[1].second;
+        const auto llz0 = mVertices[2].second;
+        const auto lrz0 = mVertices[3].second;
 
         if (kShouldDrawTextures) {
                 drawFrontWall( ulz0.mX, ulz0.mY,
@@ -413,9 +413,9 @@ namespace odb {
         const static FixP one{ 1 };
         const static FixP two{ 2 };
 
-        auto halfScale = scale;
-        auto textureScale = halfScale / two;
-        auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
+        const auto halfScale = scale;
+        const auto textureScale = halfScale / two;
+        const auto scaledCenter = Vec3{ center.mX, multiply(center.mY, one), center.mZ };
 
         //    |\4            /|5
         //    | \  center   / |
@@ -436,14 +436,14 @@ namespace odb {
 
         projectAllVertices(8);
 
-        auto ulz0 = mVertices[0].second;
-        auto urz0 = mVertices[1].second;
-        auto llz0 = mVertices[2].second;
-        auto lrz0 = mVertices[3].second;
-        auto ulz1 = mVertices[4].second;
-        auto urz1 = mVertices[5].second;
-        auto llz1 = mVertices[6].second;
-        auto lrz1 = mVertices[7].second;
+        const auto ulz0 = mVertices[0].second;
+        const auto urz0 = mVertices[1].second;
+        const auto llz0 = mVertices[2].second;
+        const auto lrz0 = mVertices[3].second;
+        const auto ulz1 = mVertices[4].second;
+        const auto urz1 = mVertices[5].second;
+        const auto llz1 = mVertices[6].second;
+        const auto lrz1 = mVertices[7].second;
 
         if (kShouldDrawTextures) {
             if ( mask[0] && static_cast<int>(center.mX) <= 0 ) {
@@ -472,7 +472,6 @@ namespace odb {
                                front, (textureScale *  two), enableAlpha );
             }
         }
-
 
         if (kShouldDrawOutline) {
             drawLine( ulz0, urz0 );
@@ -505,10 +504,10 @@ namespace odb {
 
         projectAllVertices(4);
 
-        auto llz0 = mVertices[0].second;
-        auto lrz0 = mVertices[1].second;
-        auto llz1 = mVertices[2].second;
-        auto lrz1 = mVertices[3].second;
+        const auto llz0 = mVertices[0].second;
+        const auto lrz0 = mVertices[1].second;
+        const auto llz1 = mVertices[2].second;
+        const auto lrz1 = mVertices[3].second;
 
         if ( kShouldDrawTextures ) {
             drawFloor(llz1.mY, lrz0.mY,
@@ -548,10 +547,10 @@ namespace odb {
 
         projectAllVertices(4);
 
-        auto llz0 = mVertices[0].second;
-        auto lrz0 = mVertices[1].second;
-        auto llz1 = mVertices[2].second;
-        auto lrz1 = mVertices[3].second;
+        const auto llz0 = mVertices[0].second;
+        const auto lrz0 = mVertices[1].second;
+        const auto llz1 = mVertices[2].second;
+        const auto lrz1 = mVertices[3].second;
 
         if (kShouldDrawTextures){
             drawFloor(llz1.mY, lrz0.mY,
@@ -581,8 +580,9 @@ namespace odb {
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-        auto halfScale = scale;
-        auto textureScale = halfScale;
+        const auto halfScale = scale;
+        const auto textureScale = halfScale;
+
         FixP depth{1};
 
         if (mCameraDirection == Knights::EDirection::kWest || mCameraDirection == Knights::EDirection::kEast ) {
@@ -596,19 +596,17 @@ namespace odb {
 
         projectAllVertices(4);
 
-        auto ulz0 = mVertices[0].second;
-        auto urz0 = mVertices[1].second;
-        auto llz0 = mVertices[2].second;
-        auto lrz0 = mVertices[3].second;
+        const auto ulz0 = mVertices[0].second;
+        const auto urz0 = mVertices[1].second;
+        const auto llz0 = mVertices[2].second;
+        const auto lrz0 = mVertices[3].second;
 
         if (kShouldDrawTextures) {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-
                       center.mZ + depth,
                       center.mZ - depth,
-
                       texture, textureScale );
         }
 
@@ -628,8 +626,9 @@ namespace odb {
 
         const static FixP one{ 1 };
         const static FixP two{ 2 };
-        auto halfScale = scale;
-        auto textureScale = halfScale ;
+        const auto halfScale = scale;
+        const auto textureScale = halfScale ;
+
         FixP depth{1};
 
         if (mCameraDirection == Knights::EDirection::kWest || mCameraDirection == Knights::EDirection::kEast ) {
@@ -643,10 +642,10 @@ namespace odb {
 
         projectAllVertices(4);
 
-        auto ulz0 = mVertices[0].second;
-        auto urz0 = mVertices[1].second;
-        auto llz0 = mVertices[2].second;
-        auto lrz0 = mVertices[3].second;
+        const auto ulz0 = mVertices[0].second;
+        const auto urz0 = mVertices[1].second;
+        const auto llz0 = mVertices[2].second;
+        const auto lrz0 = mVertices[3].second;
 
         if (kShouldDrawTextures) {
             drawWall( ulz0.mX, urz0.mX,
@@ -696,8 +695,8 @@ namespace odb {
             x0y1 = x0y1 - x1y1;
         }
 
-        auto x = static_cast<int16_t >(x0);
-        auto limit = static_cast<int16_t >(x1);
+        const auto x = static_cast<int16_t >(x0);
+        const auto limit = static_cast<int16_t >(x1);
 
         if ( x == limit ) {
             return;
@@ -715,20 +714,20 @@ namespace odb {
             lowerY1 = x1y0;
         };
 
-        FixP upperDy = upperY1 - upperY0;
-        FixP lowerDy = lowerY1 - lowerY0;
+        const FixP upperDy = upperY1 - upperY0;
+        const FixP lowerDy = lowerY1 - lowerY0;
 
         FixP y0 = upperY0;
         FixP y1 = lowerY0;
 
-        FixP dX = FixP{limit - x};
-        FixP upperDyDx = upperDy / dX;
-        FixP lowerDyDx = lowerDy / dX;
-        FixP dZ = ( z1 - z0 );
-        FixP dzDx = dZ / dX;
+        const FixP dX = FixP{limit - x};
+        const FixP upperDyDx = upperDy / dX;
+        const FixP lowerDyDx = lowerDy / dX;
+        const FixP dZ = ( z1 - z0 );
+        const FixP dzDx = dZ / dX;
+
         FixP z = z0;
         uint8_t pixel = 0;
-
         FixP u{0};
 
         //0xFF here acts as a dirty value, indicating there is no last value. But even if we had
@@ -738,25 +737,26 @@ namespace odb {
 
         //we can use this statically, since the textures are already loaded.
         //we don't need to fetch that data on every run.
-        uint8_t * data = texture.second->data();
-        int8_t textureWidth = NATIVE_TEXTURE_SIZE;
-        FixP textureSize{ textureWidth };
+        const uint8_t * data = texture.second->data();
+        const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
+        const FixP textureSize{ textureWidth };
 
-        FixP du = textureSize / (dX);
+        const FixP du = textureSize / (dX);
         auto ix = x;
         uint8_t * bufferData = getBufferData();
+
 //        auto zBuffer = mDepthBuffer.data();
 
         for (; ix < limit; ++ix ) {
             if ( ix >= 0 && ix < XRES ) {
 
-                FixP diffY = (y1 - y0) / textureScaleY;
+                const FixP diffY = (y1 - y0) / textureScaleY;
 
                 if (diffY == 0) {
                     continue;
                 }
 
-                FixP dv = textureSize / diffY;
+                const FixP dv = textureSize / diffY;
                 FixP v{0};
                 auto iu = static_cast<uint8_t >(u);
                 auto iY0 = static_cast<int16_t >(y0);
@@ -764,21 +764,25 @@ namespace odb {
                 auto sourceLineStart = data + (iu * textureWidth);
                 auto lineOffset = sourceLineStart;
                 auto destinationLine = bufferData + (320 * iY0) + ix;
+
 //                auto zBufferLineStart = zBuffer + (320 * iY0) + ix;
+
                 lastV = 0;
                 pixel = *(lineOffset);
 
                 for (auto iy = iY0; iy < iY1; ++iy) {
 
                     if (iy < YRES && iy >= 0 ) {
-                        auto iv = static_cast<uint8_t >(v);
+                        const auto iv = static_cast<uint8_t >(v);
 
                         if (iv != lastV || iu != lastU) {
                             pixel = *(lineOffset);
                         }
+
                         lineOffset = ((iv % textureWidth) + sourceLineStart);
                         lastU = iu;
                         lastV = iv;
+
                         if (pixel != mTransparency ) {
 //                            if (( *zBufferLineStart ) >= z) {
 //                                *zBufferLineStart = z;
@@ -812,8 +816,8 @@ namespace odb {
             y0 = y0 - y1;
         }
 
-        auto y = static_cast<int16_t >(y0);
-        auto limit = static_cast<int16_t >(y1);
+        const auto y = static_cast<int16_t >(y0);
+        const auto limit = static_cast<int16_t >(y1);
 
         if ( y == limit ) {
             return;
@@ -826,7 +830,7 @@ namespace odb {
             x0 = x0 - x1;
         };
 
-        FixP dY = (y1 - y0) / textureScaleY;
+        const FixP dY = (y1 - y0) / textureScaleY;
 
         uint8_t pixel = 0 ;
 
@@ -840,13 +844,15 @@ namespace odb {
         auto iy = static_cast<int16_t >(y);
 
         uint8_t* data = texture->data();
-        int8_t textureWidth = NATIVE_TEXTURE_SIZE;
-        FixP textureSize{ textureWidth };
+        const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
+        const FixP textureSize{ textureWidth };
 
-        FixP dv = textureSize / (dY);
+        const FixP dv = textureSize / (dY);
 
-        auto diffX = ( x1 - x0 );
+        const auto diffX = ( x1 - x0 );
+
 //        auto zBuffer = mDepthBuffer.data();
+
         auto iX0 = static_cast<int16_t >(x0);
         auto iX1 = static_cast<int16_t >(x1);
 
@@ -854,16 +860,17 @@ namespace odb {
             return;
         }
 
-        FixP du = textureSize / diffX;
+        const FixP du = textureSize / diffX;
 
         uint8_t * bufferData = getBufferData();
 
         for (; iy < limit; ++iy ) {
             if (iy < YRES && iy >= 0) {
                 FixP u{0};
-                auto iv = static_cast<uint8_t >(v);
+                const auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + ((iv % textureWidth) * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
+
 //                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
 
                 lastU = 0;
@@ -872,7 +879,8 @@ namespace odb {
                 for (auto ix = iX0; ix < iX1; ++ix) {
 
                     if (ix < XRES && ix >= 0 ) {
-                        auto iu = static_cast<uint8_t >(u);
+
+                        const auto iu = static_cast<uint8_t >(u);
 
                         //only fetch the next texel if we really changed the u, v coordinates
                         //(otherwise, would fetch the same thing anyway)
@@ -884,10 +892,14 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
                         if (pixel != mTransparency) {
+
 //                            if ( ( *zBufferLineStart ) >= z ) {
 //                            *zBufferLineStart = z;
+
                                 *(destinationLine) = pixel;
+
 //                            }
+
                         }
                     }
                     ++destinationLine;
@@ -927,8 +939,8 @@ namespace odb {
             x1y0 = x1y0 - x1y1;
         }
 
-        auto y = static_cast<int16_t >(y0);
-        auto limit = static_cast<int16_t >(y1);
+        const auto y = static_cast<int16_t >(y0);
+        const auto limit = static_cast<int16_t >(y1);
 
         if ( y == limit ) {
             return;
@@ -947,11 +959,11 @@ namespace odb {
             lowerX1 = x0y1;
         };
 
-        FixP leftDX = lowerX0 - upperX0;
-        FixP rightDX = lowerX1 - upperX1;
-        FixP dY = y1 - y0;
-        FixP leftDxDy = leftDX / dY;
-        FixP rightDxDy = rightDX / dY;
+        const FixP leftDX = lowerX0 - upperX0;
+        const FixP rightDX = lowerX1 - upperX1;
+        const FixP dY = y1 - y0;
+        const FixP leftDxDy = leftDX / dY;
+        const FixP rightDxDy = rightDX / dY;
         FixP x0 = upperX0;
         FixP x1 = upperX1;
 
@@ -965,22 +977,24 @@ namespace odb {
         uint8_t lastV = 0xFF;
 
         auto iy = static_cast<int16_t >(y);
+
 //        auto zBuffer = mDepthBuffer.data();
+
         uint8_t * bufferData = getBufferData();
         uint8_t * data = texture->data();
-        int8_t textureWidth = NATIVE_TEXTURE_SIZE;
-        FixP textureSize{ textureWidth };
+        const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
+        const FixP textureSize{ textureWidth };
 
-        FixP dv = textureSize / (dY);
-        FixP dZ = ( z1 - z0 );
-        FixP dzDy = dZ / dY;
+        const FixP dv = textureSize / (dY);
+        const FixP dZ = ( z1 - z0 );
+        const FixP dzDy = dZ / dY;
         FixP z = z0;
 
         for (; iy < limit; ++iy ) {
 
             if ( iy < YRES && iy >= 0 ) {
 
-                auto diffX = (x1 - x0);
+                const auto diffX = (x1 - x0);
 
                 if (diffX == 0) {
                     continue;
@@ -989,9 +1003,9 @@ namespace odb {
                 auto iX0 = static_cast<int16_t >(x0);
                 auto iX1 = static_cast<int16_t >(x1);
 
-                FixP du = textureSize / diffX;
+                const FixP du = textureSize / diffX;
                 FixP u{0};
-                auto iv = static_cast<uint8_t >(v);
+                const auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
 //                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
@@ -1001,7 +1015,7 @@ namespace odb {
                 for (auto ix = iX0; ix < iX1; ++ix) {
 
                     if (ix >= 0 && ix < XRES) {
-                        auto iu = static_cast<uint8_t >(u);
+                        const auto iu = static_cast<uint8_t >(u);
 
                         //only fetch the next texel if we really changed the u, v coordinates
                         //(otherwise, would fetch the same thing anyway)
@@ -1120,8 +1134,7 @@ namespace odb {
             FixP halfHeightDiff;
             Knights::ElementView lastElement = 0;
 
-            auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
-
+            const auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
             for ( int distance = 79; distance >= 0; --distance ) {
                 for ( const auto& visPos : distances[ distance ] ) {
 
