@@ -463,13 +463,10 @@ namespace odb {
             }
 
             if ( mask[ 1 ] ) {
-
-
-                std::shared_ptr<odb::NativeTexture > front = texture.first;
                 drawFrontWall( ulz0.mX, ulz0.mY,
                                lrz0.mX, lrz0.mY,
                                mVertices[ 2 ].first.mZ,
-                               front, (textureScale *  two), enableAlpha );
+                               texture.first, (textureScale *  two), enableAlpha );
             }
         }
 
