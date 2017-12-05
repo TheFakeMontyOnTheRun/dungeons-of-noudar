@@ -133,7 +133,7 @@ namespace odb {
 
         void drawLine(const Vec2 &p0, const Vec2 &p1);
 
-        void projectAllVertices();
+        void projectAllVertices(int count);
 
         static unsigned char getPaletteEntry(int origin);
 

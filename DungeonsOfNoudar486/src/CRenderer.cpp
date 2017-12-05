@@ -278,15 +278,15 @@ namespace odb {
         return toReturn;
     }
 
-    void CRenderer::projectAllVertices() {
+    void CRenderer::projectAllVertices( int count ) {
         const static FixP halfWidth{HALF_XRES};
         const static FixP halfHeight{HALF_YRES};
         const static FixP two{2};
 
         for ( auto& vertex : mVertices ) {
 
-            if (vertex.first.mZ == 0 ) {
-                continue;
+            if ( count-- == 0 ) {
+                return;
             }
 
             FixP oneOver = divide( halfHeight, divide(vertex.first.mZ, two) );
@@ -313,7 +313,7 @@ namespace odb {
         mVertices[ 6 ].first = ( center + Vec3{ -one,  one,  one });
         mVertices[ 7 ].first = ( center + Vec3{  one,  one,  one });
 
-        projectAllVertices();
+        projectAllVertices(8);
 
         auto ulz0 = mVertices[0].second;
         auto urz0 = mVertices[1].second;
@@ -380,7 +380,7 @@ namespace odb {
         mVertices[ 2 ].first = ( scaledCenter + Vec3{ -one, 0, 0 });
         mVertices[ 3 ].first = ( scaledCenter + Vec3{  one, 0, 0 });
 
-        projectAllVertices();
+        projectAllVertices(4);
 
         auto ulz0 = mVertices[0].second;
         auto urz0 = mVertices[1].second;
@@ -433,7 +433,7 @@ namespace odb {
         mVertices[ 6 ].first = ( scaledCenter + Vec3{ -one, -halfScale,  one });
         mVertices[ 7 ].first = ( scaledCenter + Vec3{  one, -halfScale,  one });
 
-        projectAllVertices();
+        projectAllVertices(8);
 
         auto ulz0 = mVertices[0].second;
         auto urz0 = mVertices[1].second;
@@ -502,7 +502,7 @@ namespace odb {
         mVertices[ 2 ].first = ( center + Vec3{ -one,  0,  one });
         mVertices[ 3 ].first = ( center + Vec3{  one,  0,  one });
 
-        projectAllVertices();
+        projectAllVertices(4);
 
         auto llz0 = mVertices[0].second;
         auto lrz0 = mVertices[1].second;
@@ -545,7 +545,7 @@ namespace odb {
         mVertices[ 2 ].first = ( center + Vec3{ -one,  0,  one });
         mVertices[ 3 ].first = ( center + Vec3{  one,  0,  one });
 
-        projectAllVertices();
+        projectAllVertices(4);
 
         auto llz0 = mVertices[0].second;
         auto lrz0 = mVertices[1].second;
@@ -593,7 +593,7 @@ namespace odb {
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, -depth });
         mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, depth });
 
-        projectAllVertices();
+        projectAllVertices(4);
 
         auto ulz0 = mVertices[0].second;
         auto urz0 = mVertices[1].second;
@@ -640,7 +640,7 @@ namespace odb {
         mVertices[ 2 ].first = ( center + Vec3{ -one, -halfScale, depth });
         mVertices[ 3 ].first = ( center + Vec3{  one, -halfScale, -depth });
 
-        projectAllVertices();
+        projectAllVertices(4);
 
         auto ulz0 = mVertices[0].second;
         auto urz0 = mVertices[1].second;
