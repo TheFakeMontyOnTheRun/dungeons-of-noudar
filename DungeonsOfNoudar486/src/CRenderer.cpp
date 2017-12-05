@@ -44,6 +44,7 @@ namespace odb {
 
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
+    const static bool kShouldDrawSkybox = false;
     const static auto kMinZCull = FixP{1};
 
     std::shared_ptr<odb::NativeTexture> mBackground;
@@ -1117,11 +1118,16 @@ namespace odb {
             clear();
 //            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{1024} );
 
-            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
-            drawFloor( FixP{YRES}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
+            if ( kShouldDrawSkybox ) {
+                drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
+                drawFloor( FixP{YRES}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
+            } else {
+                auto bufferStart = getBufferData();
+                std::fill( getBufferData(), getBufferData() + (320 * 200 ), 0 );
+            }
 
-            drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{250}, skybox);
             bool facesMask[3];
+
             EActorsSnapshotElement actorsSnapshotElement = EActorsSnapshotElement::kNothing;
             EItemsSnapshotElement itemsSnapshotElement = EItemsSnapshotElement::kNothing;
 
