@@ -8,7 +8,7 @@
 namespace odb {
 
 #ifdef LOWRES
-    using FixP = fixed_point<int16_t, -4>;
+    using FixP = fixed_point<int16_t, -3>;
 #else
     using FixP = fixed_point<int32_t, -16>;
 #endif
