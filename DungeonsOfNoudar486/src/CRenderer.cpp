@@ -44,6 +44,7 @@ namespace odb {
 
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
+    const static auto kMinZCull = FixP{1};
 
     std::shared_ptr<odb::NativeTexture> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
@@ -298,7 +299,7 @@ namespace odb {
 
     void CRenderer::drawCubeAt(const Vec3& center, TexturePair texture) {
 
-        if (static_cast<int>(center.mZ) <= 2 ) {
+        if (center.mZ <= kMinZCull) {
             return;
         }
 
@@ -366,7 +367,7 @@ namespace odb {
 
 
     void CRenderer::drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture ) {
-        if (static_cast<int>(center.mZ) <= 2 ) {
+        if (center.mZ <= kMinZCull) {
             return;
         }
 
@@ -405,7 +406,7 @@ namespace odb {
 
     void CRenderer::drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[3],bool enableAlpha) {
 
-        if (static_cast<int>(center.mZ) <= 2 ) {
+        if (center.mZ <= kMinZCull) {
             return;
         }
 
@@ -491,7 +492,7 @@ namespace odb {
 
     void CRenderer::drawFloorAt(const Vec3& center, TexturePair texture) {
 
-        if (static_cast<int>(center.mZ) <= 2 ) {
+        if (center.mZ <= kMinZCull) {
             return;
         }
 
@@ -534,7 +535,7 @@ namespace odb {
 
     void CRenderer::drawCeilingAt(const Vec3& center, TexturePair texture) {
 
-        if (static_cast<int>(center.mZ) <= 2 ) {
+        if (center.mZ <= kMinZCull) {
             return;
         }
 
@@ -574,7 +575,7 @@ namespace odb {
 
     void CRenderer::drawLeftNear(const Vec3& center, const FixP &scale, TexturePair texture) {
 
-        if (static_cast<int>(center.mZ) <= 2 ) {
+        if (center.mZ <= kMinZCull) {
             return;
         }
 
@@ -621,7 +622,7 @@ namespace odb {
 
 
     void CRenderer::drawRightNear(const Vec3& center, const FixP &scale, TexturePair texture) {
-        if (static_cast<int>(center.mZ) <= 2 ) {
+        if (center.mZ <= kMinZCull) {
             return;
         }
 
