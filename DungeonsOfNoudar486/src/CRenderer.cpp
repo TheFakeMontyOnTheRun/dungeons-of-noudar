@@ -1160,7 +1160,7 @@ namespace odb {
 
                             mCamera = Vec3{ FixP{ 78 - ( 2 * mCameraPosition.x ) },
                                             FixP{ cameraHeight -1},
-                                            FixP{ ( 2 * mCameraPosition.y ) - 78} };
+                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
 
                             position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
 
@@ -1170,6 +1170,11 @@ namespace odb {
                                 facesMask[ 2 ] = !( x < 39 && mElementsMap[z][39 - (x + 1)] == element);
                                 facesMask[ 1 ] = !( z < 40 && mElementsMap[z + 1][39 - x] == element);
                             }
+
+                            if ( z == mCameraPosition.y - 1 ) {
+                                facesMask[ 1 ] = true;
+                            }
+
                             break;
 
                         case Knights::EDirection::kSouth:
@@ -1197,6 +1202,11 @@ namespace odb {
                                 facesMask[1] = !(z < 40 && mElementsMap[39 - (z + 1)][x] == element);
                             }
 
+                            if ( z == (39 - mCameraPosition.y) - 1 ) {
+                                facesMask[ 1 ] = true;
+                            }
+
+
                             break;
                         case Knights::EDirection::kWest:
                             x = visPos.y;
@@ -1214,7 +1224,7 @@ namespace odb {
                             mCamera = Vec3{
                                             FixP{ ( 2 * mCameraPosition.y ) },
                                             FixP{cameraHeight-1},
-                                            FixP{ ( 2 * mCameraPosition.x ) }
+                                            FixP{ ( 2 * mCameraPosition.x ) - 1 }
                             };
 
 
@@ -1225,6 +1235,11 @@ namespace odb {
                                 facesMask[2] = !(x < 39 && mElementsMap[x + 1][39 - z] == element);
                                 facesMask[1] = !(z > 0 && mElementsMap[x][39 - (z - 1)] == element);
                             }
+
+                            if ( z == (39 - mCameraPosition.x) + 1 ) {
+                                facesMask[ 1 ] = true;
+                            }
+
 
                             break;
 
@@ -1243,7 +1258,7 @@ namespace odb {
                             mCamera = Vec3{
                                     FixP{ - ( 2 * mCameraPosition.y ) },
                                     FixP{cameraHeight-1},
-                                    FixP{ 80 - ( 2 * mCameraPosition.x ) }
+                                    FixP{ 79 - ( 2 * mCameraPosition.x ) }
                             };
 
                             position = mCamera + Vec3{ FixP{- 2 * ( - x)}, FixP{ 0 }, FixP{ ( 2 * z) - 78}};
@@ -1253,6 +1268,11 @@ namespace odb {
                                 facesMask[0] = !(x < 39 && mElementsMap[x + 1][z] == element);
                                 facesMask[1] = !(z < 39 && mElementsMap[x][(z - 1)] == element);
                             }
+
+                            if ( z == (mCameraPosition.x) + 1 ) {
+                                facesMask[ 1 ] = true;
+                            }
+
                             break;
 
                     }
