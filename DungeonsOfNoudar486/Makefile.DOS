@@ -53,5 +53,13 @@ $(TARGET):	$(OBJS)
 
 all:   $(TARGET)
 
+packager:
+	rm -f ./packer
+	g++ -std=c++14 -opacker packer.cpp
+	
+data:	packager
+	rm -f ./data.pfs
+	ls res/*.*  | xargs ./packer
+
 clean:
 	rm -f $(OBJS) $(TARGET)
