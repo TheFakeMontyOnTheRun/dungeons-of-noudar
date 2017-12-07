@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cstring>
 #include <functional>
+#include <unordered_map>
 #include <memory>
 #include <utility>
 #include <string>
@@ -42,6 +43,7 @@ using sg14::fixed_point;
 #include "commands/IGameCommand.h"
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
+#include "CPackedFileReader.h"
 
 std::shared_ptr<odb::CRenderer> renderer;
 
@@ -90,12 +92,10 @@ int main(int argc, char **argv) {
 
     const auto LEVEL_LIMIT = 2;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
-    auto fileLoader = std::make_shared<Knights::CPlainFileLoader>();
+    auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
 
     renderer = std::make_shared<odb::CRenderer>();
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
-
-    fileLoader->setFilenameTransformation( kDosLongFileNameTransformer );
 
     if ( argc > 1 ) {
         game->playLevel(atoi( argv[1]));

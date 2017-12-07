@@ -9,6 +9,7 @@ OBJS = src/CRenderer.o \
      src/RasterizerCommon.o \
      src/NativeBitmap.o \
      src/CTile3DProperties.o \
+     src/CPackedFileReader.o \
      src/VisibilityStrategy.o \
      ../gles2-renderer/Logger.o \
     ../gles2-renderer/LoadPNG.o \

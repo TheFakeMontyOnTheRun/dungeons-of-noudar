@@ -82,12 +82,12 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/CStorageItem.h
         ../gles2-renderer/Logger.cpp
         ../gles2-renderer/LoadPNG.cpp
-        )
+        src/CPackedFileReader.cpp include/CPackedFileReader.h)
 
 find_package(OpenGL REQUIRED)
 
 include (FindPkgConfig)
 
-add_executable(DungeonsOfNoudar486 ${SOURCE_FILES})
+add_executable(DungeonsOfNoudar486 ${SOURCE_FILES} src/CPackedFileReader.cpp include/CPackedFileReader.h)
 
 target_link_libraries(DungeonsOfNoudar486 ${OPENGL_LIBRARIES} ${SDL_LIBRARY}   )

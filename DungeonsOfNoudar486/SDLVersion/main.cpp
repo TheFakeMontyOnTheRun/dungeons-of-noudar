@@ -4,6 +4,7 @@
 #include <cstring>
 #include <functional>
 #include <memory>
+#include <unordered_map>
 #include <utility>
 #include <string>
 #include <map>
@@ -43,6 +44,7 @@ using sg14::fixed_point;
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
 #include "CTile3DProperties.h"
+#include "CPackedFileReader.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -77,7 +79,7 @@ int main( int argc, char **argv) {
 
     const auto LEVEL_LIMIT = 2;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
-    auto fileLoader = std::make_shared<Knights::CPlainFileLoader>();
+    auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
 
     renderer = std::make_shared<odb::CRenderer>();
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
