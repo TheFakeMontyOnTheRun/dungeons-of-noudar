@@ -72,6 +72,8 @@ namespace odb {
         Knights::EDirection mCameraDirection;
         int mHealth;
         short mFrame = 0;
+        int32_t mUsefulFrames = 0;
+        int32_t mAccMs = 0;
         std::string mItemName;
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
@@ -81,7 +83,7 @@ namespace odb {
 
      public:
         CRenderer();
-
+        ~CRenderer();
         uint8_t * getBufferData();
 
         FixP getZIndex( const Vec3& v );

@@ -181,6 +181,10 @@ namespace odb {
 
     }
 
+    CRenderer::~CRenderer() {
+
+    }
+
     void CRenderer::flip() {
 //        if (drawZBuffer) {
 //

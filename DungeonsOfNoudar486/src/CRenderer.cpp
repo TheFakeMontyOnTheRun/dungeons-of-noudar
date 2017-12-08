@@ -1118,6 +1118,9 @@ namespace odb {
         if ( mNeedsToRedraw ) {
             mNeedsToRedraw = false;
 
+#ifndef SDLSW
+            auto t0 = uclock();
+#endif
             clear();
 //            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{1024} );
 
@@ -1423,6 +1426,12 @@ namespace odb {
             snprintf(buffer, 8, "HP: %d", mHealth);
             drawTextAt( 1, 22, buffer );
             drawTextAt( 1, 23, mItemName.c_str() );
+
+#ifndef SDLSW
+            auto t1 = uclock();
+            mAccMs += (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
+            mUsefulFrames++;
+#endif
         }
     }
 

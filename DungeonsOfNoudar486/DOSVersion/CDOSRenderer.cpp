@@ -58,6 +58,12 @@ namespace odb {
         mBuffer[(320 * y) + x] = pixel;
     }
 
+    CRenderer::~CRenderer() {
+        textmode(C80);
+        clrscr();
+        printf("Thanks for playing!\nTotal time spent rendering: %d\nFrames rendered: %d\n", mAccMs, mUsefulFrames );
+    }
+
     CRenderer::CRenderer() {
 
         __dpmi_regs reg;
@@ -82,8 +88,8 @@ namespace odb {
     }
 
     void CRenderer::handleSystemEvents() {
-        gotoxy(1,1);
-        printf("%d", ++mFrame);
+//        gotoxy(1,1);
+//        printf("%d", ++mFrame);
 
         const static FixP delta{2};
 
@@ -151,9 +157,9 @@ namespace odb {
                 break;
             case 0:
                 break;
-            default:
-                printf("WTF is %d", lastKey);
-                exit(0);
+//            default:
+//                printf("WTF is %d", lastKey);
+//                exit(0);
         }
     }
 
