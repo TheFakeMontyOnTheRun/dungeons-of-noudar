@@ -1390,14 +1390,14 @@ namespace odb {
 
                     if ( actorsSnapshotElement != EActorsSnapshotElement::kNothing ) {
                         drawBillboardAt(
-                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
+                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
                                 foe );
                     }
 
 
                     if ( itemsSnapshotElement != EItemsSnapshotElement ::kNothing ) {
                         drawBillboardAt(
-                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
+                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
                                 itemsSnapshotElement == EItemsSnapshotElement::kCrossbow ? bow : token
                         );
                     }
