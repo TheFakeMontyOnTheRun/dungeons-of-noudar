@@ -104,7 +104,7 @@ int main( int argc, char **argv) {
 #else
 
     game->endOfTurn(game->getMap());
-
+    game->getMap()->getAvatar()->addHP(500);
     while ( game->isPlaying() ) {
         game->tick();
         renderer->sleep( 33 );
