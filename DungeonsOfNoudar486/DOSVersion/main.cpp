@@ -128,10 +128,6 @@ int main(int argc, char **argv) {
 
     game->endOfTurn(game->getMap());
 
-    auto item = game->getMap()->makeItemWithSymbol('y');
-    auto avatar = game->getMap()->getAvatar();
-    avatar->giveItem(item);
-    avatar->suggestCurrentItem('y');
     auto ready = loadPNG( "enter.png", fileLoader );
     renderer->drawBitmap(0, 0, intro );
     renderer->drawBitmap(0, 180, ready );
