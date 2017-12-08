@@ -91,13 +91,12 @@ void gameLoopTick() {
 std::shared_ptr<Knights::CGame> game;
 
 int main(int argc, char **argv) {
-
+    printf("Dungeons of Noudar 486 tech demo startup. Gonna load some stuff...");
     const auto LEVEL_LIMIT = 2;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
-    renderer = std::make_shared<odb::CRenderer>();
-
     auto intro = loadPNG( "intro.png", fileLoader );
+    renderer = std::make_shared<odb::CRenderer>();
     renderer->drawBitmap(0, 0, intro );
     renderer->flip();
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
