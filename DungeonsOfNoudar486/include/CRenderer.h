@@ -76,8 +76,9 @@ namespace odb {
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;
-    private:
         void flip();
+    private:
+
      public:
         CRenderer();
 
@@ -106,6 +107,8 @@ namespace odb {
         void drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture );
 
         void drawSprite( int x, int y, std::shared_ptr<odb::NativeTexture > tile );
+
+        void drawBitmap( int x, int y, std::shared_ptr<odb::NativeBitmap> tile );
 
         void loadTextures( vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap& tileProperties );
 

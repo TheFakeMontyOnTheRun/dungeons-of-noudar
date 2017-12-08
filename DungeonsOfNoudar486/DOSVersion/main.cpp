@@ -1,3 +1,4 @@
+#include <conio.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -44,6 +45,7 @@ using sg14::fixed_point;
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
 #include "CPackedFileReader.h"
+#include "LoadPNG.h"
 
 std::shared_ptr<odb::CRenderer> renderer;
 
@@ -93,8 +95,11 @@ int main(int argc, char **argv) {
     const auto LEVEL_LIMIT = 2;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
-
     renderer = std::make_shared<odb::CRenderer>();
+
+    auto intro = loadPNG( "intro.png", fileLoader );
+    renderer->drawBitmap(0, 0, intro );
+    renderer->flip();
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
 
     if ( argc > 1 ) {
@@ -127,6 +132,13 @@ int main(int argc, char **argv) {
     auto avatar = game->getMap()->getAvatar();
     avatar->giveItem(item);
     avatar->suggestCurrentItem('y');
+    auto ready = loadPNG( "enter.png", fileLoader );
+    renderer->drawBitmap(0, 0, intro );
+    renderer->drawBitmap(0, 180, ready );
+    renderer->flip();
+
+
+    getch();
 
     while ( game->isPlaying() ) {
         game->tick();

@@ -1446,6 +1446,23 @@ namespace odb {
         }
     }
 
+    void CRenderer::drawBitmap( int dx, int dy, std::shared_ptr<odb::NativeBitmap> tile ) {
+        auto destination = getBufferData();
+        auto sourceLine = tile->getPixelData();
+        auto height = tile->getHeight();
+        auto width = tile->getWidth();
+        for ( int y = 0; y < height; ++y ) {
+            auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
+            auto sourceLineStart = sourceLine + ( width * y );
+            for ( int x = 0; x < width; ++x ) {
+                *destinationLineStart = getPaletteEntry(*sourceLineStart);
+                ++sourceLineStart;
+                ++destinationLineStart;
+            }
+        }
+    }
+
+
     void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {
         mTextures = textureList;
         mTileProperties = tile3DProperties;
