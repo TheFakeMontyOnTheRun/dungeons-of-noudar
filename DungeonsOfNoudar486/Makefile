@@ -59,3 +59,7 @@ packager:
 data:	packager
 	rm -f ./data.pfs
 	ls res/*.*  | xargs ./packer
+
+demodata:	packager
+	rm -f ./data.pfs
+	ls resDemo/*.*  | xargs ./packer
