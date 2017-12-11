@@ -875,6 +875,18 @@ namespace odb {
 //                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
 
                 lastU = 0;
+
+
+                if ( iv == lastV && !enableAlpha ) {
+                    v += dv;
+                    destinationLine = bufferData + (320 * iy);
+                    sourceLineStart = destinationLine - 320;
+                    auto start = std::max<int16_t >( 0, iX0 );
+                    auto finish = std::min<int16_t >( (XRES - 1), iX1 );
+                    std::copy( (sourceLineStart + start ), (sourceLineStart + finish), destinationLine + start);
+                    continue;
+                }
+
                 pixel = *(sourceLineStart);
 
                 for (auto ix = iX0; ix < iX1; ++ix) {
