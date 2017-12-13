@@ -34,7 +34,7 @@ using eastl::array;
 
 namespace odb {
 
-    const bool kNarrowByDistance = false;
+    const bool kNarrowByDistance = true;
 
 	bool VisibilityStrategy::isValid(const Knights::Vec2i& pos) {
 		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
@@ -148,7 +148,7 @@ namespace odb {
             //The -1 is due to the fact I will add a new element.
 
             int distance = ( currentPos.y - originalPos.y );
-            int narrowing = 1;
+            int narrowing = kNarrowByDistance ? distance : 1;
 
 			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) >= -std::abs(narrowing) )&& ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + leftOffset.x, currentPos.y + leftOffset.y};
