@@ -36,7 +36,7 @@ namespace odb {
 
     const bool kNarrowByDistance = false;
 
-	bool VisibilityStrategy::isValid(Knights::Vec2i pos) {
+	bool VisibilityStrategy::isValid(const Knights::Vec2i& pos) {
 		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
 	}
 
@@ -52,7 +52,7 @@ namespace odb {
 		}
 	}
 
-	bool VisibilityStrategy::isBlock(const IntMap& occluders, Knights::EDirection direction, Knights::Vec2i currentPos) {
+	bool VisibilityStrategy::isBlock(const IntMap& occluders, Knights::EDirection direction, const Knights::Vec2i& currentPos) {
 
         auto transformed = transform( direction, currentPos );
 
@@ -67,7 +67,7 @@ namespace odb {
 		return false;
 	}
 
-	void VisibilityStrategy::castVisibility(VisMap &visMap, const IntMap &occluders, Knights::Vec2i pos, Knights::EDirection direction, bool cleanPrevious, DistanceDistribution& distances) {
+	void VisibilityStrategy::castVisibility(VisMap &visMap, const IntMap &occluders, const Knights::Vec2i& pos, Knights::EDirection direction, bool cleanPrevious, DistanceDistribution& distances) {
 		if ( cleanPrevious ) {
 			for (auto &line : visMap) {
 				std::fill(std::begin(line), std::end(line), EVisibility::kInvisible);
@@ -82,17 +82,17 @@ namespace odb {
 		castVisibility(direction, visMap, occluders, transform( direction, pos ), {0, 0}, distances);
 	}
 
-	bool VisibilityStrategy::isVisibleAt(const VisMap& visMap, Knights::EDirection from, Knights::Vec2i currentPos ) {
+	bool VisibilityStrategy::isVisibleAt(const VisMap& visMap, Knights::EDirection from, const Knights::Vec2i& currentPos ) {
 		auto converted = transform( from, currentPos );
 		return visMap[ converted.y ][ converted.x ] == EVisibility::kVisible;
 	}
 
-	void VisibilityStrategy::setIsVisible(VisMap& visMap, Knights::EDirection from, Knights::Vec2i currentPos ) {
+	void VisibilityStrategy::setIsVisible(VisMap& visMap, Knights::EDirection from, const Knights::Vec2i& currentPos ) {
 		auto converted = transform( from, currentPos );
 		visMap[ converted.y ][ converted.x ] = EVisibility::kVisible;
 	}
 
-	Knights::Vec2i VisibilityStrategy::transform( Knights::EDirection from, Knights::Vec2i currentPos ) {
+	Knights::Vec2i VisibilityStrategy::transform( Knights::EDirection from, const Knights::Vec2i& currentPos ) {
 
 		switch( from ) {
 			case Knights::EDirection::kNorth:
@@ -107,7 +107,7 @@ namespace odb {
 	}
 
 	void VisibilityStrategy::castVisibility(Knights::EDirection from, VisMap &visMap, const IntMap &occluders,
-	                                        Knights::Vec2i originalPos, Knights::Vec2i offset, DistanceDistribution& distances) {
+	                                        const Knights::Vec2i& originalPos, const Knights::Vec2i& offset, DistanceDistribution& distances) {
 
 		array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
 		int stackPos = 0;
