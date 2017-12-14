@@ -70,8 +70,8 @@ namespace odb {
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
-        int mHealth;
-        short mFrame = 0;
+        int16_t mHealth;
+        uint16_t mFrame = 0;
         int32_t mUsefulFrames = 0;
         int32_t mAccMs = 0;
         std::string mItemName;
@@ -140,7 +140,7 @@ namespace odb {
 
         void projectAllVertices(int count);
 
-        static unsigned char getPaletteEntry(int origin);
+        static uint8_t getPaletteEntry(uint32_t origin);
 
         vector<vector<std::shared_ptr<odb::NativeBitmap>>> mTextures;
 

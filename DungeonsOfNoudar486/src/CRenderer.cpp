@@ -101,13 +101,13 @@ namespace odb {
         return odb::CTile3DProperties::parsePropertyList( data );
     }
 
-    unsigned char CRenderer::getPaletteEntry(int origin) {
+    uint8_t CRenderer::getPaletteEntry(uint32_t origin) {
 
         if ( !(origin & 0xFF000000) ) {
             return mTransparency;
         }
 
-        unsigned char shade = 0;
+        uint8_t shade = 0;
 
 
         shade += (((((origin & 0x0000FF)      ) << 2) >> 8)) << 6;
@@ -217,8 +217,8 @@ namespace odb {
         std::cout << "\n\n" << std::endl;
 #endif
 
-        for (int z = 0; z < 40; ++z) {
-            for (int x = 0; x < 40; ++x) {
+        for (uint8_t z = 0; z < Knights::kMapSize; ++z) {
+            for (uint8_t x = 0; x < Knights::kMapSize; ++x) {
                 const Knights::Vec2i v = {x, z};
                 const auto actor = map.getActorAt(v);
                 const auto item = map.getItemAt(v);
