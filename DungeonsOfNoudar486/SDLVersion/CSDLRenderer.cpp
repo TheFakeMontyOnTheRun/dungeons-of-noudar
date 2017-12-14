@@ -160,6 +160,17 @@ namespace odb {
                         mCached = false;
                         break;
 
+                    case SDLK_n:
+                        mSlow = true;
+                        mCached = false;
+                        break;
+
+                    case SDLK_m:
+                        mSlow = false;
+                        mCached = false;
+                        break;
+
+
                     default:
                         return;
                 }

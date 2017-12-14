@@ -74,6 +74,10 @@ namespace odb {
         int32_t mUsefulFrames = 0;
         int32_t mAccMs = 0;
         std::string mItemName;
+
+#ifdef SDLSW
+        bool mSlow = false;
+#endif
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;

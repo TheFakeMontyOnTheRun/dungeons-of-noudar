@@ -763,6 +763,13 @@ namespace odb {
                         if (pixel != mTransparency ) {
                                 *(destinationLine) = pixel;
                         }
+
+#ifdef SDLSW
+                        if ( mSlow ) {
+                            flip();
+                        }
+#endif
+
                     }
                     destinationLine += (320);
                     v += dv;
@@ -876,6 +883,11 @@ namespace odb {
                         if (pixel != mTransparency) {
                             *(destinationLine) = pixel;
                         }
+#ifdef SDLSW
+                        if ( mSlow ) {
+                            flip();
+                        }
+#endif
                     }
                     ++destinationLine;
                     u += du;
@@ -997,6 +1009,11 @@ namespace odb {
                         if (pixel != mTransparency ) {
                                 *(destinationLine) = pixel;
                         }
+#ifdef SDLSW
+                        if ( mSlow ) {
+                            flip();
+                        }
+#endif
                     }
                     ++destinationLine;
                     u += du;
