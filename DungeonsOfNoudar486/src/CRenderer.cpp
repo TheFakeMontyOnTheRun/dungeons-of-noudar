@@ -444,6 +444,13 @@ namespace odb {
         const auto lrz1 = mVertices[7].second;
 
         if (kShouldDrawTextures) {
+
+            if ( mask[ 1 ] ) {
+                drawFrontWall( ulz1.mX, ulz1.mY,
+                               lrz1.mX, lrz1.mY,
+                               texture.first, (textureScale *  two), enableAlpha );
+            }
+
             if ( mask[0] && static_cast<int>(center.mX) <= 0 ) {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
