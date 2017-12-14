@@ -65,7 +65,6 @@ namespace odb {
         Knights::CommandType mBufferedCommand = '.';
         bool mNeedsToRedraw = true;
         array< uint8_t, 320 * 200 > mBuffer;
-//        array< FixP, 320 * 200 > mDepthBuffer;
         array< uint32_t , 256 > mPalette;
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
@@ -85,8 +84,6 @@ namespace odb {
         CRenderer();
         ~CRenderer();
         uint8_t * getBufferData();
-
-        FixP getZIndex( const Vec3& v );
 
         void fillSidebar();
 
@@ -124,11 +121,11 @@ namespace odb {
 
         void fill( int x, int y, int dx, int dy, uint8_t pixel );
 
-        void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, FixP z0, FixP z1, TexturePair texture, FixP textureScaleY );
+        void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture, FixP textureScaleY );
 
-        void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, std::shared_ptr<NativeTexture > texture);
+        void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, std::shared_ptr<NativeTexture > texture);
 
-        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha = false );
+        void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha = false );
 
         void clear();
 

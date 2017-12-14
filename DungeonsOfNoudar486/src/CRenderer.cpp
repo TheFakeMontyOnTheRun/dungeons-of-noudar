@@ -333,7 +333,6 @@ namespace odb {
             drawWall( urz0.mX, urz1.mX,
                       urz0.mY, lrz0.mY,
                       urz1.mY, lrz1.mY,
-                      0, 0,
                       texture, one);
         }
 
@@ -342,7 +341,6 @@ namespace odb {
             drawFloor(ulz1.mY, urz0.mY,
                       ulz1.mX, urz1.mX,
                       ulz0.mX, urz0.mX,
-                      0, 0,
                       texture.first);
         }
 
@@ -350,7 +348,6 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      0, 0,
                       texture.first);
         }
 
@@ -358,14 +355,12 @@ namespace odb {
             drawWall(ulz1.mX, ulz0.mX,
                      ulz1.mY, llz1.mY,
                      urz0.mY, lrz0.mY,
-                     0, 0,
                      texture, one);
         }
 
         drawWall( ulz0.mX, urz0.mX,
                   ulz0.mY, llz0.mY,
                   urz0.mY, lrz0.mY,
-                  0, 0,
                   texture, one );
     }
 
@@ -395,7 +390,6 @@ namespace odb {
         if (kShouldDrawTextures) {
                 drawFrontWall( ulz0.mX, ulz0.mY,
                                lrz0.mX, lrz0.mY,
-                               mVertices[ 2 ].first.mZ,
                                texture, (textureScale *  two), true );
         }
 
@@ -454,7 +448,6 @@ namespace odb {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
-                          mVertices[ 0 ].first.mZ, mVertices[ 4 ].first.mZ,
                           texture, (textureScale *  two));
             }
 
@@ -462,14 +455,12 @@ namespace odb {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
-                         mVertices[ 5 ].first.mZ, mVertices[ 1 ].first.mZ,
                          texture, (textureScale *  two));
             }
 
             if ( mask[ 1 ] ) {
                 drawFrontWall( ulz0.mX, ulz0.mY,
                                lrz0.mX, lrz0.mY,
-                               mVertices[ 2 ].first.mZ,
                                texture.first, (textureScale *  two), enableAlpha );
             }
         }
@@ -514,8 +505,6 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      getZIndex( mVertices[ 2 ].first ),
-                      getZIndex( mVertices[ 0 ].first ),
                       texture.first);
         }
 
@@ -527,10 +516,6 @@ namespace odb {
             drawLine( lrz0, lrz1 );
             drawLine( llz1, lrz1 );
         }
-    }
-
-    FixP CRenderer::getZIndex( const Vec3& v ) {
-        return (v.mZ);
     }
 
     void CRenderer::drawCeilingAt(const Vec3& center, TexturePair texture) {
@@ -557,10 +542,6 @@ namespace odb {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
-                      //despite the order seeming backwards, it is draw top to bottom
-                      //so, it needs to be reversed.
-                      getZIndex( mVertices[ 0 ].first ),
-                      getZIndex( mVertices[ 2 ].first ),
                       texture.first);
         }
 
@@ -606,8 +587,6 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      center.mZ + depth,
-                      center.mZ - depth,
                       texture, textureScale );
         }
 
@@ -652,8 +631,6 @@ namespace odb {
             drawWall( ulz0.mX, urz0.mX,
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
-                      center.mZ - depth,
-                      center.mZ + depth,
                       texture, textureScale );
         }
 
@@ -663,7 +640,6 @@ namespace odb {
             drawLine( llz0, lrz0 );
             drawLine( urz0, lrz0 );
         }
-
     }
 
 
@@ -677,7 +653,7 @@ namespace odb {
      *        \ |
      *         \| x1y1
      */
-    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, FixP z0, FixP z1, TexturePair texture, FixP textureScaleY ) {
+    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture, FixP textureScaleY ) {
 
         if ( x0 > x1) {
             //switch x0 with x1
@@ -724,10 +700,7 @@ namespace odb {
         const FixP dX = FixP{limit - x};
         const FixP upperDyDx = upperDy / dX;
         const FixP lowerDyDx = lowerDy / dX;
-        const FixP dZ = ( z1 - z0 );
-        const FixP dzDx = dZ / dX;
 
-        FixP z = z0;
         uint8_t pixel = 0;
         FixP u{0};
 
@@ -745,8 +718,6 @@ namespace odb {
         const FixP du = textureSize / (dX);
         auto ix = x;
         uint8_t * bufferData = getBufferData();
-
-//        auto zBuffer = mDepthBuffer.data();
 
         for (; ix < limit; ++ix ) {
             if ( ix >= 0 && ix < XRES ) {
@@ -766,8 +737,6 @@ namespace odb {
                 auto lineOffset = sourceLineStart;
                 auto destinationLine = bufferData + (320 * iY0) + ix;
 
-//                auto zBufferLineStart = zBuffer + (320 * iY0) + ix;
-
                 lastV = 0;
                 pixel = *(lineOffset);
 
@@ -785,21 +754,16 @@ namespace odb {
                         lastV = iv;
 
                         if (pixel != mTransparency ) {
-//                            if (( *zBufferLineStart ) >= z) {
-//                                *zBufferLineStart = z;
                                 *(destinationLine) = pixel;
-//                            }
                         }
                     }
                     destinationLine += (320);
-//                    zBufferLineStart += 320;
                     v += dv;
                 }
             }
             y0 += upperDyDx;
             y1 += lowerDyDx;
             u += du;
-            z += dzDx;
         }
 
     }
@@ -808,8 +772,8 @@ namespace odb {
         return &mBuffer[0];
     }
 
-    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, FixP z, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha) {
         //if we have a trapezoid in which the base is smaller
+    void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha) {
         if ( y0 > y1) {
             //switch y0 with y1
             y0 = y0 + y1;
@@ -852,8 +816,6 @@ namespace odb {
 
         const auto diffX = ( x1 - x0 );
 
-//        auto zBuffer = mDepthBuffer.data();
-
         auto iX0 = static_cast<int16_t >(x0);
         auto iX1 = static_cast<int16_t >(x1);
 
@@ -871,8 +833,6 @@ namespace odb {
                 const auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + ((iv % textureWidth) * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
-
-//                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
 
                 lastU = 0;
 
@@ -905,18 +865,10 @@ namespace odb {
                         lastU = iu;
                         lastV = iv;
                         if (pixel != mTransparency) {
-
-//                            if ( ( *zBufferLineStart ) >= z ) {
-//                            *zBufferLineStart = z;
-
-                                *(destinationLine) = pixel;
-
-//                            }
-
+                            *(destinationLine) = pixel;
                         }
                     }
                     ++destinationLine;
-//                    ++zBufferLineStart;
                     u += du;
                 }
 
@@ -932,7 +884,7 @@ namespace odb {
      *        /             \
      *  x0y1 /______________\ x1y1
      */
-    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, FixP z0, FixP z1, std::shared_ptr<NativeTexture > texture ) {
+    void CRenderer::drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, std::shared_ptr<NativeTexture > texture ) {
 
         //if we have a trapezoid in which the base is smaller
         if ( y0 > y1) {
@@ -991,17 +943,12 @@ namespace odb {
 
         auto iy = static_cast<int16_t >(y);
 
-//        auto zBuffer = mDepthBuffer.data();
-
         uint8_t * bufferData = getBufferData();
         uint8_t * data = texture->data();
         const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         const FixP textureSize{ textureWidth };
 
         const FixP dv = textureSize / (dY);
-        const FixP dZ = ( z1 - z0 );
-        const FixP dzDy = dZ / dY;
-        FixP z = z0;
 
         for (; iy < limit; ++iy ) {
 
@@ -1021,7 +968,6 @@ namespace odb {
                 const auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
-//                auto zBufferLineStart = zBuffer + (320 * iy) + iX0;
                 lastU = 0;
                 pixel = *(sourceLineStart);
 
@@ -1040,14 +986,10 @@ namespace odb {
                         lastV = iv;
 
                         if (pixel != mTransparency ) {
-//                            if (( *zBufferLineStart ) >= z) {
-//                                *zBufferLineStart = z;
                                 *(destinationLine) = pixel;
-//                            }
                         }
                     }
                     ++destinationLine;
-//                    ++zBufferLineStart;
                     u += du;
                 }
             }
@@ -1055,7 +997,6 @@ namespace odb {
             x0 += leftDxDy;
             x1 += rightDxDy;
             v += dv;
-            z += dzDy;
         }
     }
 
@@ -1134,11 +1075,10 @@ namespace odb {
             auto t0 = uclock();
 #endif
             clear();
-//            std::fill( std::begin(mDepthBuffer), std::end(mDepthBuffer), FixP{1024} );
 
             if ( kShouldDrawSkybox ) {
-                drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
-                drawFloor( FixP{YRES}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, FixP{254}, FixP{255}, skybox);
+                drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, skybox);
+                drawFloor( FixP{YRES}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, skybox);
             } else {
                 auto bufferStart = getBufferData();
                 std::fill( getBufferData(), getBufferData() + (320 * 200 ), 0 );
