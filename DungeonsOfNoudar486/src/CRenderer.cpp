@@ -779,8 +779,8 @@ namespace odb {
         return &mBuffer[0];
     }
 
-        //if we have a trapezoid in which the base is smaller
     void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha) {
+        //if we have a quad in which the base is smaller
         if ( y0 > y1) {
             //switch y0 with y1
             y0 = y0 + y1;
@@ -792,10 +792,11 @@ namespace odb {
         const auto limit = static_cast<int16_t >(y1);
 
         if ( y == limit ) {
+            //degenerate
             return;
         }
 
-        //what if the trapezoid is flipped horizontally?
+        //what if the quad is flipped horizontally?
         if ( x0 > x1 ) {
             x0 = x0 + x1;
             x1 = x0 - x1;
@@ -827,6 +828,7 @@ namespace odb {
         auto iX1 = static_cast<int16_t >(x1);
 
         if ( iX0 == iX1 ) {
+            //degenerate case
             return;
         }
 
