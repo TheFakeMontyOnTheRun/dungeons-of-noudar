@@ -460,7 +460,7 @@ namespace odb {
 
         if (kShouldDrawTextures) {
 
-            if ( mask[ 1 ] ) {
+            if ( enableAlpha && mask[ 1 ] ) {
                 drawFrontWall( ulz1.mX, ulz1.mY,
                                lrz1.mX, lrz1.mY,
                                texture.first, (textureScale *  two), enableAlpha );
