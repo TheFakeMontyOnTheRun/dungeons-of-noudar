@@ -15,10 +15,10 @@ namespace odb {
 	class VisibilityStrategy {
 
 		static bool isValid(const Knights::Vec2i& pos);
-		static void castVisibility(Knights::EDirection from, VisMap &visMap, const IntMap& occluders, const Knights::Vec2i& pos, const Knights::Vec2i& offset, DistanceDistribution& distances);
-		static bool isBlock(const IntMap& occluders, Knights::EDirection from, const Knights::Vec2i& currentPos);
-		static bool isVisibleAt(const VisMap& visMap, Knights::EDirection from, const Knights::Vec2i& currentPos );
-		static void setIsVisible(VisMap& visMap, Knights::EDirection from, const Knights::Vec2i& currentPos );
+		static void castVisibility(Knights::EDirection from, VisMap &visMap, const IntMap& occluders, const Knights::Vec2i& pos, DistanceDistribution& distances);
+		static bool isBlock(const IntMap& occluders, const Knights::Vec2i& transformed);
+		static bool isVisibleAt(const VisMap& visMap, const Knights::Vec2i& transformed );
+		static void setIsVisible(VisMap& visMap, const Knights::Vec2i& transformed );
 	public:
 		static void mergeInto(const VisMap &map1, const VisMap &map2, VisMap &result);
 
