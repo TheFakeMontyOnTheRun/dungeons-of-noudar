@@ -35,6 +35,7 @@ using eastl::array;
 namespace odb {
 
     const bool kNarrowByDistance = true;
+	const bool kConservativeOccluders = false;
 
 	bool VisibilityStrategy::isValid(const Knights::Vec2i& pos) {
 		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
@@ -58,7 +59,15 @@ namespace odb {
 
 		auto tile = occluders[ transformed.y][transformed.x];
 
-		for (auto candidate : {'1', 'I','Y', 'X', 'R', '\\', '/', 'S', 'Z', '|', '%', '<', '>'}) {
+		std::string occluderString = "";
+
+		if (kConservativeOccluders ) {
+			occluderString = "1IYXR";
+		} else {
+			occluderString = "1IYXR\\/SZ|%<>";
+		}
+
+		for (const auto& candidate : occluderString ) {
 			if (candidate == tile) {
 				return true;
 			}
