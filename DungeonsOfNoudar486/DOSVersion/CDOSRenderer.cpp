@@ -93,73 +93,70 @@ namespace odb {
 
         const static FixP delta{2};
 
-        auto lastKey = bioskey(0x11);
+        int lastKey = 0;
 
-        bdos(0xC, 0, 0);
+        if (kbhit()) {
+            auto getched = getch();
+            switch(getched) {
+                case 27:
+                    exit(0);
+                    break;
 
-        switch (lastKey) {
-            case 18656: //up
-                mBufferedCommand = Knights::kMovePlayerForwardCommand;
-                mCached = false;
-                break;
+                case 'w':
+                    mBufferedCommand = Knights::kPickItemCommand;
+                    mCached = false;
+                    break;
+                case 's':
+                    mBufferedCommand = Knights::kDropItemCommand;
+                    mCached = false;
+                    break;
+                case 'q':
+                    mBufferedCommand = Knights::kCycleLeftInventoryCommand;
+                    mCached = false;
+                    break;
 
-            case 20704: //down
-                mBufferedCommand = Knights::kMovePlayerBackwardCommand;
-                mCached = false;
-                break;
+                case 'e':
+                    mBufferedCommand = Knights::kCycleRightInventoryCommand;
+                    mCached = false;
+                    break;
 
-            case 19424: //left
-                mBufferedCommand = Knights::kTurnPlayerLeftCommand;
-                mCached = false;
-                break;
+                case 'z':
+                    mBufferedCommand = Knights::kStrafeLeftCommand;
+                    mCached = false;
+                    break;
+                case 'x':
+                    mBufferedCommand = Knights::kStrafeRightCommand;
+                    mCached = false;
+                    break;
 
-            case 4209: //q
-                mBufferedCommand = Knights::kCycleLeftInventoryCommand;
-                mCached = false;
-                break;
+                case ' ':
+                    mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
+                    mCached = false;
+                    break;
 
-            case 4471: //w
-                mBufferedCommand = Knights::kPickItemCommand;
-                mCached = false;
+                case 224:
+                case 0:
+                    auto arrow = getch();
+                    switch(arrow) {
+                        case 75:
+                            mBufferedCommand = Knights::kTurnPlayerLeftCommand;
+                            mCached = false;
+                            break;
+                        case 72:
+                            mBufferedCommand = Knights::kMovePlayerForwardCommand;
+                            mCached = false;
+                            break;
+                        case 77:
+                            mBufferedCommand = Knights::kTurnPlayerRightCommand;
+                            mCached = false;
+                            break;
+                        case 80:
+                            mBufferedCommand = Knights::kMovePlayerBackwardCommand;
+                            mCached = false;
+                            break;
+                    }
                 break;
-
-            case 4709: //e
-                mBufferedCommand = Knights::kCycleRightInventoryCommand;
-                mCached = false;
-                break;
-
-            case 8051: //s
-                mBufferedCommand = Knights::kDropItemCommand;
-                mCached = false;
-                break;
-
-            case 19936: //right arrow
-                mBufferedCommand = Knights::kTurnPlayerRightCommand;
-                mCached = false;
-                break;
-
-            case 14624: //space
-                mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
-                mCached = false;
-                break;
-
-            case 283: //esc
-                exit(0);
-                break;
-
-            case 11386: //z
-                mBufferedCommand = Knights::kStrafeLeftCommand;
-                mCached = false;
-                break;
-            case 11640: //x
-                mBufferedCommand = Knights::kStrafeRightCommand;
-                mCached = false;
-                break;
-            case 0:
-                break;
-//            default:
-//                printf("WTF is %d", lastKey);
-//                exit(0);
+            }
         }
     }
 
