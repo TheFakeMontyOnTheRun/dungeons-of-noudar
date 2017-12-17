@@ -260,7 +260,17 @@ namespace odb {
         std::cout << std::endl;
 #endif
 
+#ifndef SDLSW
+        auto t0 = uclock();
+#endif
+
         VisibilityStrategy::castVisibility(visMap, intMap, mCameraPosition, mCameraDirection, true, distances);
+#ifndef SDLSW
+        auto t1 = uclock();
+        mProcVisTime += (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
+#endif
+
+
 #ifndef __DJGPP__
         for (int z = 0; z < 40; ++z) {
             for (int x = 0; x < 40; ++x) {

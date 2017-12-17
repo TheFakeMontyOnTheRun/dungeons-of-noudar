@@ -73,6 +73,7 @@ namespace odb {
         uint16_t mFrame = 0;
         int32_t mUsefulFrames = 0;
         int32_t mAccMs = 0;
+        int32_t mProcVisTime = 0;
         std::string mItemName;
 
 #ifdef SDLSW

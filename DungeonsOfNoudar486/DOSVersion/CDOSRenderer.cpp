@@ -61,7 +61,7 @@ namespace odb {
     CRenderer::~CRenderer() {
         textmode(C80);
         clrscr();
-        printf("Thanks for playing!\nTotal time spent rendering: %d\nFrames rendered: %d\n", mAccMs, mUsefulFrames );
+        printf("Thanks for playing!\nTotal time spent rendering: %d\nTotal time spent processing visibility: %d\nFrames rendered: %d\n", mAccMs, mProcVisTime, mUsefulFrames );
     }
 
     CRenderer::CRenderer() {
