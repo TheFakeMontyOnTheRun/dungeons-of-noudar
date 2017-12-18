@@ -36,6 +36,8 @@ namespace odb {
 
     const bool kNarrowByDistance = true;
 	const bool kConservativeOccluders = false;
+	const int kUseLimitedDrawingDistance = false;
+	const int kDrawingDistance = 20;
 
 	bool VisibilityStrategy::isValid(const Knights::Vec2i& pos) {
 		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
@@ -134,6 +136,13 @@ namespace odb {
 			setIsVisible( visMap, transformed );
 
 			int verticalDistance = ( currentPos.y - originalPos.y );
+
+			if (kUseLimitedDrawingDistance ) {
+				if (std::abs(verticalDistance) > kDrawingDistance) {
+					continue;
+				}
+			}
+
             int manhattanDistance = std::abs( verticalDistance ) + std::abs( currentPos.x - originalPos.x );
             distances[ manhattanDistance ].push_back( transformed );
 
