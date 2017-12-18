@@ -466,14 +466,14 @@ namespace odb {
                                texture.first, (textureScale *  two), enableAlpha );
             }
 
-            if ( mask[0] && static_cast<int>(center.mX) <= 0 ) {
+            if ( mask[0] && static_cast<int>(center.mX) < 0 ) {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
                           texture, (textureScale *  two));
             }
 
-            if ( mask[2] && static_cast<int>(center.mX) >= 0 ) {
+            if ( mask[2] && static_cast<int>(center.mX) > 0 ) {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
@@ -767,13 +767,12 @@ namespace odb {
                     if (iy < YRES && iy >= 0 ) {
                         const auto iv = static_cast<uint8_t >(v);
 
-                        if (iv != lastV || iu != lastU) {
+                        if (iv != lastV ) {
                             pixel = *(lineOffset);
+                            lineOffset = ((iv % textureWidth) + sourceLineStart);
+                            lastU = iu;
+                            lastV = iv;
                         }
-
-                        lineOffset = ((iv % textureWidth) + sourceLineStart);
-                        lastU = iu;
-                        lastV = iv;
 
                         if (pixel != mTransparency ) {
                                 *(destinationLine) = pixel;
@@ -888,13 +887,13 @@ namespace odb {
 
                         //only fetch the next texel if we really changed the u, v coordinates
                         //(otherwise, would fetch the same thing anyway)
-                        if (iv != lastV || iu != lastU) {
+                        if ( iu != lastU) {
                             pixel = *(sourceLineStart );
+                            sourceLineStart += ( iu - lastU);
+                            lastU = iu;
+                            lastV = iv;
                         }
 
-                        sourceLineStart += ( iu - lastU);
-                        lastU = iu;
-                        lastV = iv;
                         if (pixel != mTransparency) {
                             *(destinationLine) = pixel;
                         }
@@ -1014,12 +1013,12 @@ namespace odb {
 
                         //only fetch the next texel if we really changed the u, v coordinates
                         //(otherwise, would fetch the same thing anyway)
-                        if (iv != lastV || iu != lastU) {
+                        if ( iu != lastU) {
                             pixel = *(sourceLineStart);
+                            sourceLineStart += ( iu - lastU );
+                            lastU = iu;
+                            lastV = iv;
                         }
-                        sourceLineStart += ( iu - lastU );
-                        lastU = iu;
-                        lastV = iv;
 
                         if (pixel != mTransparency ) {
                                 *(destinationLine) = pixel;
