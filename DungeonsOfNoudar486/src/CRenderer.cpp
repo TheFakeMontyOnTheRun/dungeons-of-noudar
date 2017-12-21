@@ -49,6 +49,8 @@ namespace odb {
 
     std::shared_ptr<odb::NativeTexture> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
+    std::shared_ptr<odb::NativeTexture> rope;
+    std::shared_ptr<odb::NativeTexture> monk;
     std::shared_ptr<odb::NativeTexture> bow;
     std::shared_ptr<odb::NativeTexture> token;
     std::shared_ptr<NativeTexture > skybox;
@@ -181,6 +183,8 @@ namespace odb {
         }
 
         mBackground = makeTexture("tile.png", fileLoader);
+        monk = makeTexture("FallenAttack0.png", fileLoader);
+        rope = makeTexture("rope.png", fileLoader);
         foe = makeTexture("MonkAttack0.png", fileLoader);
         bow = makeTexture("crossbow.png", fileLoader);
         token = makeTexture("token.png", fileLoader);
@@ -237,7 +241,15 @@ namespace odb {
 
                 if (actor != nullptr) {
                     if (actor != current) {
-                        mActors[z][x] = EActorsSnapshotElement::kFallenAttacking1;
+                        if ( actor->getView() == '$') {
+                            mActors[z][x] = EActorsSnapshotElement::kFallenAttacking0;
+                        } else if ( actor->getView() == '@') {
+                            mActors[z][x] = EActorsSnapshotElement::kMonkAttacking0;
+                        } else if ( actor->getView() == 'T') {
+                            mActors[z][x] = EActorsSnapshotElement::kRope;
+                        } else {
+                            mActors[z][x] = EActorsSnapshotElement::kFallenAttacking1;
+                        }
                     }
                     view = actor->getView();
 
@@ -1385,11 +1397,27 @@ namespace odb {
                     }
 
 
-                    if ( actorsSnapshotElement != EActorsSnapshotElement::kNothing ) {
-                        drawBillboardAt(
-                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
-                                foe );
+
+                    switch (actorsSnapshotElement) {
+                        case EActorsSnapshotElement::kMonkAttacking0:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    monk );
+                            break;
+                        case EActorsSnapshotElement::kFallenAttacking0:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    foe );
+                            break;
+                        case EActorsSnapshotElement::kRope:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    rope );
+                            break;
+                        case EActorsSnapshotElement::kNothing:
+                            break;
                     }
+
 
 
                     if ( itemsSnapshotElement != EItemsSnapshotElement ::kNothing ) {
