@@ -348,7 +348,7 @@ namespace odb {
             drawWall( urz0.mX, urz1.mX,
                       urz0.mY, lrz0.mY,
                       urz1.mY, lrz1.mY,
-                      texture, one);
+                      texture.second, one);
         }
 
 
@@ -370,13 +370,13 @@ namespace odb {
             drawWall(ulz1.mX, ulz0.mX,
                      ulz1.mY, llz1.mY,
                      urz0.mY, lrz0.mY,
-                     texture, one);
+                     texture.second, one);
         }
 
         drawWall( ulz0.mX, urz0.mX,
                   ulz0.mY, llz0.mY,
                   urz0.mY, lrz0.mY,
-                  texture, one );
+                  texture.second, one );
     }
 
 
@@ -470,14 +470,14 @@ namespace odb {
                 drawWall( urz0.mX, urz1.mX,
                           urz0.mY, lrz0.mY,
                           urz1.mY, lrz1.mY,
-                          texture, (textureScale *  two));
+                          texture.second, (textureScale *  two));
             }
 
             if ( mask[2] && static_cast<int>(center.mX) > 0 ) {
                 drawWall(ulz1.mX, ulz0.mX,
                          ulz1.mY, llz1.mY,
                          urz0.mY, lrz0.mY,
-                         texture, (textureScale *  two));
+                         texture.second, (textureScale *  two));
             }
 
             if ( mask[ 1 ] ) {
@@ -576,7 +576,7 @@ namespace odb {
 
     }
 
-    void CRenderer::drawLeftNear(const Vec3& center, const FixP &scale, TexturePair texture) {
+    void CRenderer::drawLeftNear(const Vec3& center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture) {
 
         if (center.mZ <= kMinZCull) {
             return;
@@ -621,7 +621,7 @@ namespace odb {
     }
 
 
-    void CRenderer::drawRightNear(const Vec3& center, const FixP &scale, TexturePair texture) {
+    void CRenderer::drawRightNear(const Vec3& center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture) {
         if (center.mZ <= kMinZCull) {
             return;
         }
@@ -675,7 +675,7 @@ namespace odb {
      *        \ |
      *         \| x1y1
      */
-    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, TexturePair texture, FixP textureScaleY ) {
+    void CRenderer::drawWall( FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY ) {
 
         if ( x0 > x1) {
             //switch x0 with x1
@@ -733,7 +733,7 @@ namespace odb {
 
         //we can use this statically, since the textures are already loaded.
         //we don't need to fetch that data on every run.
-        const uint8_t * data = texture.second->data();
+        const uint8_t * data = texture->data();
         const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         const FixP textureSize{ textureWidth };
 
@@ -1297,7 +1297,7 @@ namespace odb {
                                 drawRightNear(
                                         position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
                                         tileProp.mFloorRepetitions,
-                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
+                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex].second);
 
                                 break;
 
@@ -1305,7 +1305,7 @@ namespace odb {
                                 drawLeftNear(
                                         position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
                                         tileProp.mFloorRepetitions,
-                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex]);
+                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex].second);
                                 break;
 
                             case kCube:
@@ -1326,13 +1326,15 @@ namespace odb {
                                 drawRightNear(
                                         position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
                                         tileProp.mCeilingRepetitions,
-                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
+                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex].second);
+                                break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
                                         tileProp.mCeilingRepetitions,
-                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex]);                                break;
+                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex].second);
+                                break;
 
                             case kCube:
                             default:
@@ -1362,14 +1364,14 @@ namespace odb {
                                 drawRightNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
                                         heightDiff,
-                                        mNativeTextures[ tileProp.mMainWallTextureIndex ] );
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ].second );
                                 break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
                                         heightDiff,
-                                        mNativeTextures[ tileProp.mMainWallTextureIndex ] );
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ].second );
                                 break;
 
                             case kCube:
