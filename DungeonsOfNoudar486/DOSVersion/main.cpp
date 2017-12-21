@@ -92,7 +92,8 @@ std::shared_ptr<Knights::CGame> game;
 
 int main(int argc, char **argv) {
     printf("Dungeons of Noudar 486 tech demo startup. Gonna load some stuff...");
-    const auto LEVEL_LIMIT = 2;
+
+    const auto LEVEL_LIMIT = 8;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
     auto intro = loadPNG( "intro.png", fileLoader );

@@ -77,7 +77,7 @@ void sysTick() {
 
 int main( int argc, char **argv) {
 
-    const auto LEVEL_LIMIT = 2;
+    const auto LEVEL_LIMIT = 8;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
 
