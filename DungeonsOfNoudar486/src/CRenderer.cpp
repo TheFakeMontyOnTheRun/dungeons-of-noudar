@@ -44,7 +44,7 @@ namespace odb {
 
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
-    const static bool kShouldDrawSkybox = false;
+    const static bool kShouldDrawSkybox = true;
     const static auto kMinZCull = FixP{1};
 
     std::shared_ptr<odb::NativeTexture> mBackground;
@@ -183,9 +183,9 @@ namespace odb {
         }
 
         mBackground = makeTexture("tile.png", fileLoader);
-        monk = makeTexture("FallenAttack0.png", fileLoader);
+        foe = makeTexture("FallenAttack0.png", fileLoader);
         rope = makeTexture("rope.png", fileLoader);
-        foe = makeTexture("MonkAttack0.png", fileLoader);
+        monk = makeTexture("MonkAttack0.png", fileLoader);
         bow = makeTexture("crossbow.png", fileLoader);
         token = makeTexture("token.png", fileLoader);
 
