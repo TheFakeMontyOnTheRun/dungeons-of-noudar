@@ -9,6 +9,7 @@
 #include <iterator>
 #include <unordered_set>
 #include <map>
+#include <unordered_map>
 #include <sg14/fixed_point>
 #include <EASTL/vector.h>
 #include <EASTL/array.h>

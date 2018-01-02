@@ -304,6 +304,10 @@ namespace odb {
 #endif
     }
 
+    Knights::CommandType CRenderer::peekInput() {
+        return mBufferedCommand;
+    }
+
     Knights::CommandType CRenderer::getInput() {
         const auto toReturn = mBufferedCommand;
         mBufferedCommand = '.';
@@ -535,7 +539,7 @@ namespace odb {
         const auto llz1 = mVertices[2].second;
         const auto lrz1 = mVertices[3].second;
 
-        if ( kShouldDrawTextures ) {
+        if ( kShouldDrawTextures && static_cast<int>(center.mY) <= 0 ) {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
@@ -572,7 +576,7 @@ namespace odb {
         const auto llz1 = mVertices[2].second;
         const auto lrz1 = mVertices[3].second;
 
-        if (kShouldDrawTextures){
+        if ( kShouldDrawTextures && static_cast<int>(center.mY) >= 0 ) {
             drawFloor(llz1.mY, lrz0.mY,
                       llz1.mX, lrz1.mX,
                       llz0.mX, lrz0.mX,
@@ -781,7 +785,7 @@ namespace odb {
 
                         if (iv != lastV ) {
                             pixel = *(lineOffset);
-                            lineOffset = ((iv % textureWidth) + sourceLineStart);
+                            lineOffset = ((iv & (textureWidth - 1)) + sourceLineStart);
                             lastU = iu;
                             lastV = iv;
                         }
@@ -873,7 +877,7 @@ namespace odb {
             if (iy < YRES && iy >= 0) {
                 FixP u{0};
                 const auto iv = static_cast<uint8_t >(v);
-                auto sourceLineStart = data + ((iv % textureWidth) * textureWidth);
+                auto sourceLineStart = data + ((iv & (textureWidth - 1)) * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
 
                 lastU = 0;
@@ -1116,22 +1120,22 @@ namespace odb {
 
     void CRenderer::render(long ms) {
 
-        const static FixP two{2};
-        const static FixP eight{6};
-        const static FixP one{1};
-
         if ( mNeedsToRedraw ) {
-            mNeedsToRedraw = false;
+            const static FixP zero{0};
+            const static FixP two{2};
+            const static FixP eight{6};
+            const static FixP one{1};
 
+            mNeedsToRedraw = false;
 #ifndef SDLSW
             auto t0 = uclock();
 #endif
-            clear();
-
             if ( kShouldDrawSkybox ) {
-                drawFloor( FixP{0}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, skybox);
-                drawFloor( FixP{YRES}, FixP{HALF_YRES}, FixP{ -64}, FixP{ XRES + 64},FixP{0}, FixP{XRES}, skybox);
+                drawFrontWall(zero, zero, FixP{ XRES}, FixP{ YRES}, skybox, FixP{1});
             } else {
+#ifdef SDLSW
+                clear();
+#endif
                 auto bufferStart = getBufferData();
                 std::fill( getBufferData(), getBufferData() + (320 * 200 ), 0 );
             }
@@ -1146,6 +1150,8 @@ namespace odb {
             FixP twiceHeight;
             FixP halfHeightDiff;
             Knights::ElementView lastElement = 0;
+            Knights::ElementView element;
+            Vec3 position;
 
             const auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
             for ( int distance = 79; distance >= 0; --distance ) {
@@ -1158,8 +1164,6 @@ namespace odb {
                     facesMask[ 1 ] = true;
                     facesMask[ 2 ] = true;
 
-                    Knights::ElementView element;
-                    Vec3 position;
                     switch (mCameraDirection) {
                         case Knights::EDirection::kNorth:
                             x = 39 - visPos.x;
@@ -1167,18 +1171,18 @@ namespace odb {
 
                             element = mElementsMap[z][39 - x];
 
-                            if (visMap[z][39 - x] != EVisibility::kVisible) {
-                                continue;
-                            }
-
                             actorsSnapshotElement = mActors[z][39 - x ];
                             itemsSnapshotElement = mItems[z][39 - x ];
 
-                            mCamera = Vec3{ FixP{ 78 - ( 2 * mCameraPosition.x ) },
-                                            FixP{ cameraHeight -1},
-                                            FixP{ ( 2 * mCameraPosition.y ) - 79} };
+                            mCamera.mX = FixP{ 78 - ( 2 * mCameraPosition.x ) };
+                            mCamera.mY = FixP{ cameraHeight -1};
+                            mCamera.mZ = FixP{ ( 2 * mCameraPosition.y ) - 79};
 
-                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+
+
+                            position.mX = mCamera.mX + FixP{- 2 * x};
+                            position.mY = mCamera.mY;
+                            position.mZ = mCamera.mZ + FixP{ 80 - ( 2 * z)};
 
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
@@ -1199,18 +1203,17 @@ namespace odb {
 
                             element = mElementsMap[39 - z][x];
 
-                            if (visMap[39 - z][x] != EVisibility::kVisible) {
-                                continue;
-                            }
-
                             actorsSnapshotElement = mActors[39 - z][x];
                             itemsSnapshotElement = mItems[39 - z][ x ];
 
-                            mCamera = Vec3{ FixP{ ( 2 * mCameraPosition.x ) },
-                                            FixP{cameraHeight -1},
-                                            FixP{ ( 2 * (39 - mCameraPosition.y) ) - 79} };
+                            mCamera.mX = FixP{ ( 2 * mCameraPosition.x ) };
+                            mCamera.mY = FixP{cameraHeight -1};
+                            mCamera.mZ = FixP{ ( 2 * (39 - mCameraPosition.y) ) - 79};
 
-                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ 80 - ( 2 * z)}};
+                            position.mX = mCamera.mX + FixP{- 2 * x};
+                            position.mY = mCamera.mY;
+                            position.mZ = mCamera.mZ + FixP{ 80 - ( 2 * z)};
+
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
                                 facesMask[0] = !(x > 0 && mElementsMap[39 - z][(x - 1)] == element);
@@ -1230,21 +1233,17 @@ namespace odb {
 
                             element = mElementsMap[x][39 - z];
 
-                            if (visMap[x][39 - z] != EVisibility::kVisible) {
-                                continue;
-                            }
-
                             itemsSnapshotElement = mItems[x][39 - z ];
                             actorsSnapshotElement = mActors[x][39 - z ];
 
-                            mCamera = Vec3{
-                                            FixP{ ( 2 * mCameraPosition.y ) },
-                                            FixP{cameraHeight-1},
-                                            FixP{ ( 2 * mCameraPosition.x ) - 1 }
-                            };
+                            mCamera.mX = FixP{ ( 2 * mCameraPosition.y ) };
+                            mCamera.mY = FixP{cameraHeight-1};
+                            mCamera.mZ =FixP{ ( 2 * mCameraPosition.x ) - 1 };
 
+                            position.mX = mCamera.mX + FixP{- 2 * x};
+                            position.mY = mCamera.mY;
+                            position.mZ = mCamera.mZ + FixP{ ( 2 * z) - 76};
 
-                            position = mCamera + Vec3{ FixP{- 2 * x}, FixP{ 0 }, FixP{ ( 2 * z) - 76}};
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
                                 facesMask[0] = !(x > 0 && mElementsMap[x - 1][39 - z] == element);
@@ -1255,29 +1254,27 @@ namespace odb {
                             if ( z == (39 - mCameraPosition.x) + 1 ) {
                                 facesMask[ 1 ] = true;
                             }
-
-
                             break;
 
-                            case Knights::EDirection::kEast:
+                        case Knights::EDirection::kEast:
                                 x = visPos.y;
                                 z = visPos.x;
 
                             element = mElementsMap[x][z];
-                            if (visMap[x][z] != EVisibility::kVisible) {
-                                continue;
-                            }
 
-                                actorsSnapshotElement = mActors[x][z ];
-                                itemsSnapshotElement = mItems[x][z ];
+                            actorsSnapshotElement = mActors[x][z ];
+                            itemsSnapshotElement = mItems[x][z ];
 
-                            mCamera = Vec3{
-                                    FixP{ - ( 2 * mCameraPosition.y ) },
-                                    FixP{cameraHeight-1},
-                                    FixP{ 79 - ( 2 * mCameraPosition.x ) }
-                            };
 
-                            position = mCamera + Vec3{ FixP{- 2 * ( - x)}, FixP{ 0 }, FixP{ ( 2 * z) - 78}};
+
+                            mCamera.mX = FixP{ - ( 2 * mCameraPosition.y ) };
+                            mCamera.mY = FixP{cameraHeight-1};
+                            mCamera.mZ = FixP{ 79 - ( 2 * mCameraPosition.x ) };
+
+                            position.mX = mCamera.mX + FixP{- 2 * ( - x)};
+                            position.mY = mCamera.mY;
+                            position.mZ = mCamera.mZ + FixP{ ( 2 * z) - 78};
+
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
                                 facesMask[2] = !(x > 0 && mElementsMap[x - 1][z] == element);
@@ -1288,7 +1285,6 @@ namespace odb {
                             if ( z == (mCameraPosition.x) + 1 ) {
                                 facesMask[ 1 ] = true;
                             }
-
                             break;
 
                     }
@@ -1391,7 +1387,9 @@ namespace odb {
                                 drawColumnAt(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
                                         heightDiff,
-                                        mNativeTextures[ tileProp.mMainWallTextureIndex ], facesMask, tileProp.mNeedsAlphaTest );
+
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ],
+                                        facesMask, tileProp.mNeedsAlphaTest );
                                 break;
                         }
                     }
@@ -1431,13 +1429,16 @@ namespace odb {
                 }
             }
 
-            for ( int c = 0; c < 8; ++c ) {
-                drawSprite( c * 32, 128, mBackground );
-            }
+            if (!mStaticPartsOfHudDrawn) {
+                for ( int c = 0; c < 8; ++c ) {
+                    drawSprite( c * 32, 128, mBackground );
+                }
 
-            for ( int c = 0; c < (192/32); ++c ) {
-                drawSprite( 320 - 32, c * 32, mBackground );
-                drawSprite( 320 - 64, c * 32, mBackground );
+                for ( int c = 0; c < (192/32); ++c ) {
+                    drawSprite( 320 - 32, c * 32, mBackground );
+                    drawSprite( 320 - 64, c * 32, mBackground );
+                }
+                mStaticPartsOfHudDrawn = true;
             }
 
             const static auto black = 0;

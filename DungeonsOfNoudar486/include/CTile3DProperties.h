@@ -11,7 +11,7 @@ namespace odb {
     using CTileId = uint8_t;
     using TextureIndex = int16_t;
 
-    using CTilePropertyMap = std::map< CTileId, CTile3DProperties >;
+    using CTilePropertyMap = std::unordered_map< CTileId, CTile3DProperties >;
 
     using TextureName = std::string;
 

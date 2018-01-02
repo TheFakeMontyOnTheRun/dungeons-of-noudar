@@ -18,6 +18,7 @@
 #include <memory>
 #include <algorithm>
 #include <map>
+#include <unordered_map>
 #include <chrono>
 
 #include <sg14/fixed_point>

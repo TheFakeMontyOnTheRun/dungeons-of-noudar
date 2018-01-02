@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
+#include <unordered_map>
 #include <chrono>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>

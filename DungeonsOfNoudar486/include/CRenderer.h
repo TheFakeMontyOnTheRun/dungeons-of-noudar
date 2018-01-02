@@ -75,7 +75,7 @@ namespace odb {
         int32_t mAccMs = 0;
         int32_t mProcVisTime = 0;
         std::string mItemName;
-
+        bool mStaticPartsOfHudDrawn = false;
 #ifdef SDLSW
         bool mSlow = false;
 #endif
@@ -86,6 +86,8 @@ namespace odb {
     private:
 
      public:
+        Knights::CommandType peekInput();
+
         CRenderer();
         ~CRenderer();
         uint8_t * getBufferData();
