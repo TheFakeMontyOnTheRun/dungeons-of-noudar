@@ -45,6 +45,7 @@ namespace odb {
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
     const static bool kShouldDrawSkybox = true;
+    const static bool kShouldDrawBlackMasks = true;
     const static auto kMinZCull = FixP{1};
 
     std::shared_ptr<odb::NativeTexture> mBackground;
@@ -1299,7 +1300,7 @@ namespace odb {
 
                             if ( z == mCameraPosition.y - 1 ) {
 
-                                if (isOccluder(mElementsMap[z + 1][(Knights::kMapSize - 1) - x])) {
+                                if (kShouldDrawBlackMasks && isOccluder(mElementsMap[z + 1][(Knights::kMapSize - 1) - x])) {
                                     facesMask[ 1 ] = false;
                                     facesMask[ 3 ] = true;
                                 } else {
@@ -1335,7 +1336,7 @@ namespace odb {
 
                             if ( z == ((Knights::kMapSize - 1) - mCameraPosition.y) - 1 ) {
 
-                                if (isOccluder(mElementsMap[(Knights::kMapSize - 1) - (z + 1)][x])) {
+                                if (kShouldDrawBlackMasks && isOccluder(mElementsMap[(Knights::kMapSize - 1) - (z + 1)][x])) {
                                     facesMask[ 1 ] = false;
                                     facesMask[ 3 ] = true;
                                 } else {
@@ -1371,7 +1372,7 @@ namespace odb {
 
                             if ( z == ((Knights::kMapSize - 1) - mCameraPosition.x) + 1 ) {
 
-                                if (isOccluder(mElementsMap[x][(Knights::kMapSize - 1) - (z - 1)])) {
+                                if (kShouldDrawBlackMasks && isOccluder(mElementsMap[x][(Knights::kMapSize - 1) - (z - 1)])) {
                                     facesMask[ 1 ] = false;
                                     facesMask[ 3 ] = true;
                                 } else {
@@ -1409,7 +1410,7 @@ namespace odb {
 
                             if ( z == (mCameraPosition.x) + 1 ) {
 
-                                if (isOccluder(mElementsMap[x][(z - 1)])) {
+                                if (kShouldDrawBlackMasks && isOccluder(mElementsMap[x][(z - 1)])) {
                                     facesMask[ 1 ] = false;
                                     facesMask[ 3 ] = true;
                                 } else {
