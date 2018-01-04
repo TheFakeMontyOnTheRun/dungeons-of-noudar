@@ -1243,7 +1243,7 @@ namespace odb {
                 clear();
 #endif
                 auto bufferStart = getBufferData();
-                std::fill( getBufferData(), getBufferData() + (320 * 200 ), 0 );
+                std::fill( getBufferData(), getBufferData() + (320 * 128 ), 0 );
             }
 
             bool facesMask[4];
@@ -1568,15 +1568,16 @@ namespace odb {
                 }
             }
 
+            for ( int c = 0; c < (192/32); ++c ) {
+                drawSprite( 320 - 32, c * 32, mBackground );
+                drawSprite( 320 - 64, c * 32, mBackground );
+            }
+
             if (!mStaticPartsOfHudDrawn) {
                 for ( int c = 0; c < 8; ++c ) {
                     drawSprite( c * 32, 128, mBackground );
                 }
 
-                for ( int c = 0; c < (192/32); ++c ) {
-                    drawSprite( 320 - 32, c * 32, mBackground );
-                    drawSprite( 320 - 64, c * 32, mBackground );
-                }
                 mStaticPartsOfHudDrawn = true;
             }
 
