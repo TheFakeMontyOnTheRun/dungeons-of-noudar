@@ -289,8 +289,8 @@ namespace odb {
 
 
 #ifndef __DJGPP__
-        for (int z = 0; z < 40; ++z) {
-            for (int x = 0; x < 40; ++x) {
+        for (int z = 0; z < (Knights::kMapSize ); ++z) {
+            for (int x = 0; x < (Knights::kMapSize ); ++x) {
                 if (visMap[z][x] == EVisibility::kVisible) {
                     view = intMap[z][x];
                 } else {
@@ -1166,13 +1166,13 @@ namespace odb {
 
                     switch (mCameraDirection) {
                         case Knights::EDirection::kNorth:
-                            x = 39 - visPos.x;
+                            x = (Knights::kMapSize - 1) - visPos.x;
                             z = visPos.y;
 
-                            element = mElementsMap[z][39 - x];
+                            element = mElementsMap[z][(Knights::kMapSize - 1) - x];
 
-                            actorsSnapshotElement = mActors[z][39 - x ];
-                            itemsSnapshotElement = mItems[z][39 - x ];
+                            actorsSnapshotElement = mActors[z][(Knights::kMapSize - 1) - x ];
+                            itemsSnapshotElement = mItems[z][(Knights::kMapSize - 1) - x ];
 
                             mCamera.mX = FixP{ 78 - ( 2 * mCameraPosition.x ) };
                             mCamera.mY = FixP{ cameraHeight -1};
@@ -1186,9 +1186,9 @@ namespace odb {
 
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
-                                facesMask[ 0 ] = !( x > 0 && mElementsMap[z][39 - (x - 1)] == element);
-                                facesMask[ 2 ] = !( x < 39 && mElementsMap[z][39 - (x + 1)] == element);
-                                facesMask[ 1 ] = !( z < 40 && mElementsMap[z + 1][39 - x] == element);
+                                facesMask[ 0 ] = !( x > 0 && mElementsMap[z][(Knights::kMapSize - 1) - (x - 1)] == element);
+                                facesMask[ 2 ] = !( x < (Knights::kMapSize - 1) && mElementsMap[z][(Knights::kMapSize - 1) - (x + 1)] == element);
+                                facesMask[ 1 ] = !( z < (Knights::kMapSize ) && mElementsMap[z + 1][(Knights::kMapSize - 1) - x] == element);
                             }
 
                             if ( z == mCameraPosition.y - 1 ) {
@@ -1199,16 +1199,16 @@ namespace odb {
 
                         case Knights::EDirection::kSouth:
                             x = visPos.x;
-                            z = 39 - visPos.y;
+                            z = (Knights::kMapSize - 1) - visPos.y;
 
-                            element = mElementsMap[39 - z][x];
+                            element = mElementsMap[(Knights::kMapSize - 1) - z][x];
 
-                            actorsSnapshotElement = mActors[39 - z][x];
-                            itemsSnapshotElement = mItems[39 - z][ x ];
+                            actorsSnapshotElement = mActors[(Knights::kMapSize - 1) - z][x];
+                            itemsSnapshotElement = mItems[(Knights::kMapSize - 1) - z][ x ];
 
                             mCamera.mX = FixP{ ( 2 * mCameraPosition.x ) };
                             mCamera.mY = FixP{cameraHeight -1};
-                            mCamera.mZ = FixP{ ( 2 * (39 - mCameraPosition.y) ) - 79};
+                            mCamera.mZ = FixP{ ( 2 * ((Knights::kMapSize - 1) - mCameraPosition.y) ) - 79};
 
                             position.mX = mCamera.mX + FixP{- 2 * x};
                             position.mY = mCamera.mY;
@@ -1216,12 +1216,12 @@ namespace odb {
 
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
-                                facesMask[0] = !(x > 0 && mElementsMap[39 - z][(x - 1)] == element);
-                                facesMask[2] = !(x < 39 && mElementsMap[39 - z][(x + 1)] == element);
-                                facesMask[1] = !(z < 40 && mElementsMap[39 - (z + 1)][x] == element);
+                                facesMask[0] = !(x > 0 && mElementsMap[(Knights::kMapSize - 1) - z][(x - 1)] == element);
+                                facesMask[2] = !(x < (Knights::kMapSize - 1) && mElementsMap[(Knights::kMapSize - 1) - z][(x + 1)] == element);
+                                facesMask[1] = !(z < (Knights::kMapSize ) && mElementsMap[(Knights::kMapSize - 1) - (z + 1)][x] == element);
                             }
 
-                            if ( z == (39 - mCameraPosition.y) - 1 ) {
+                            if ( z == ((Knights::kMapSize - 1) - mCameraPosition.y) - 1 ) {
                                 facesMask[ 1 ] = true;
                             }
 
@@ -1229,12 +1229,12 @@ namespace odb {
                             break;
                         case Knights::EDirection::kWest:
                             x = visPos.y;
-                            z = 39 - visPos.x;
+                            z = (Knights::kMapSize - 1) - visPos.x;
 
-                            element = mElementsMap[x][39 - z];
+                            element = mElementsMap[x][(Knights::kMapSize - 1) - z];
 
-                            itemsSnapshotElement = mItems[x][39 - z ];
-                            actorsSnapshotElement = mActors[x][39 - z ];
+                            itemsSnapshotElement = mItems[x][(Knights::kMapSize - 1) - z ];
+                            actorsSnapshotElement = mActors[x][(Knights::kMapSize - 1) - z ];
 
                             mCamera.mX = FixP{ ( 2 * mCameraPosition.y ) };
                             mCamera.mY = FixP{cameraHeight-1};
@@ -1246,12 +1246,12 @@ namespace odb {
 
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
-                                facesMask[0] = !(x > 0 && mElementsMap[x - 1][39 - z] == element);
-                                facesMask[2] = !(x < 39 && mElementsMap[x + 1][39 - z] == element);
-                                facesMask[1] = !(z > 0 && mElementsMap[x][39 - (z - 1)] == element);
+                                facesMask[0] = !(x > 0 && mElementsMap[x - 1][(Knights::kMapSize - 1) - z] == element);
+                                facesMask[2] = !(x < (Knights::kMapSize - 1) && mElementsMap[x + 1][(Knights::kMapSize - 1) - z] == element);
+                                facesMask[1] = !(z > 0 && mElementsMap[x][(Knights::kMapSize - 1) - (z - 1)] == element);
                             }
 
-                            if ( z == (39 - mCameraPosition.x) + 1 ) {
+                            if ( z == ((Knights::kMapSize - 1) - mCameraPosition.x) + 1 ) {
                                 facesMask[ 1 ] = true;
                             }
                             break;
@@ -1278,8 +1278,8 @@ namespace odb {
                             //remember, bounds - 1!
                             if ( lastElement != element ) {
                                 facesMask[2] = !(x > 0 && mElementsMap[x - 1][z] == element);
-                                facesMask[0] = !(x < 39 && mElementsMap[x + 1][z] == element);
-                                facesMask[1] = !(z < 39 && mElementsMap[x][(z - 1)] == element);
+                                facesMask[0] = !(x < (Knights::kMapSize - 1) && mElementsMap[x + 1][z] == element);
+                                facesMask[1] = !(z < (Knights::kMapSize - 1) && mElementsMap[x][(z - 1)] == element);
                             }
 
                             if ( z == (mCameraPosition.x) + 1 ) {
