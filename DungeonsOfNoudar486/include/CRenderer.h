@@ -104,11 +104,11 @@ namespace odb {
 
         void drawCeilingAt(const Vec3 &center, TexturePair texture );
 
-        void drawLeftNear(const Vec3 &center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture);
+        void drawLeftNear(const Vec3 &center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture, bool mask[4]);
 
-        void drawRightNear(const Vec3 &center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture);
+        void drawRightNear(const Vec3 &center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture, bool mask[4]);
 
-        void drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[3], bool enableAlpha = false );
+        void drawColumnAt(const Vec3 &center, const FixP &scale, TexturePair texture, bool mask[4], bool enableAlpha = false );
 
         void drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture );
 
@@ -133,6 +133,8 @@ namespace odb {
         void drawFloor(FixP y0, FixP y1, FixP x0y0, FixP x1y0, FixP x0y1, FixP x1y1, std::shared_ptr<NativeTexture > texture);
 
         void drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha = false );
+
+        void drawMask( FixP x0, FixP y0, FixP x1, FixP y1 );
 
         void clear();
 

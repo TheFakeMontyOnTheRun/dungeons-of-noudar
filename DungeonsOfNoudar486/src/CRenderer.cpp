@@ -501,6 +501,11 @@ namespace odb {
                                lrz0.mX, lrz0.mY,
                                texture.first, (textureScale *  two), enableAlpha );
             }
+
+            if ( mask[ 3 ] ) {
+                drawMask( ulz0.mX, ulz0.mY,
+                               lrz0.mX, lrz0.mY);
+            }
         }
 
         if (kShouldDrawOutline) {
@@ -592,7 +597,7 @@ namespace odb {
 
     }
 
-    void CRenderer::drawLeftNear(const Vec3& center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture) {
+    void CRenderer::drawLeftNear(const Vec3& center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture, bool mask[4]) {
 
         if (center.mZ <= kMinZCull) {
             return;
@@ -626,6 +631,18 @@ namespace odb {
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
                       texture, textureScale );
+
+
+            if (mask[3]) {
+
+                mVertices[ 0 ].first = ( center + Vec3{ -one, -halfScale, -one });
+                mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -one });
+
+                projectAllVertices(2);
+
+                drawMask( mVertices[ 0 ].second.mX, mVertices[ 0 ].second.mY,
+                          mVertices[ 1 ].second.mX, mVertices[ 1 ].second.mY);
+            }
         }
 
         if (kShouldDrawOutline){
@@ -637,7 +654,8 @@ namespace odb {
     }
 
 
-    void CRenderer::drawRightNear(const Vec3& center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture) {
+    void CRenderer::drawRightNear(const Vec3& center, const FixP &scale, std::shared_ptr<odb::NativeTexture> texture, bool mask[4]) {
+
         if (center.mZ <= kMinZCull) {
             return;
         }
@@ -670,6 +688,17 @@ namespace odb {
                       ulz0.mY, llz0.mY,
                       urz0.mY, lrz0.mY,
                       texture, textureScale );
+
+            if (mask[3]) {
+
+                mVertices[ 0 ].first = ( center + Vec3{ -one, -halfScale, -one });
+                mVertices[ 1 ].first = ( center + Vec3{  one,  halfScale, -one });
+
+                projectAllVertices(2);
+
+                drawMask( mVertices[ 0 ].second.mX, mVertices[ 0 ].second.mY,
+                          mVertices[ 1 ].second.mX, mVertices[ 1 ].second.mY);
+            }
         }
 
         if (kShouldDrawOutline) {
@@ -814,6 +843,70 @@ namespace odb {
 
     uint8_t * CRenderer::getBufferData() {
         return &mBuffer[0];
+    }
+
+    void CRenderer::drawMask( FixP x0, FixP y0, FixP x1, FixP y1 ) {
+        //if we have a quad in which the base is smaller
+        if ( y0 > y1) {
+            //switch y0 with y1
+            y0 = y0 + y1;
+            y1 = y0 - y1;
+            y0 = y0 - y1;
+        }
+
+        const auto y = static_cast<int16_t >(y0);
+        const auto limit = static_cast<int16_t >(y1);
+
+        if ( y == limit ) {
+            //degenerate
+            return;
+        }
+
+        //what if the quad is flipped horizontally?
+        if ( x0 > x1 ) {
+            x0 = x0 + x1;
+            x1 = x0 - x1;
+            x0 = x0 - x1;
+        };
+
+        const FixP dY = (y1 - y0);
+
+        uint8_t pixel = 0 ;
+
+        auto iy = static_cast<int16_t >(y);
+
+        const auto diffX = ( x1 - x0 );
+
+        auto iX0 = static_cast<int16_t >(x0);
+        auto iX1 = static_cast<int16_t >(x1);
+
+        if ( iX0 == iX1 ) {
+            //degenerate case
+            return;
+        }
+
+        uint8_t * bufferData = getBufferData();
+
+        for (; iy < limit; ++iy ) {
+            if (iy < YRES && iy >= 0) {
+                auto destinationLine = bufferData + (320 * iy) + iX0;
+
+                for (auto ix = iX0; ix < iX1; ++ix) {
+
+                    if (ix < XRES && ix >= 0 ) {
+
+                        *(destinationLine) = pixel;
+#ifdef SDLSW
+                        if ( mSlow ) {
+                            flip();
+                        }
+#endif
+                    }
+                    ++destinationLine;
+                }
+
+            }
+        }
     }
 
     void CRenderer::drawFrontWall( FixP x0, FixP y0, FixP x1, FixP y1, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY, bool enableAlpha) {
@@ -1118,6 +1211,18 @@ namespace odb {
         }
     }
 
+    bool isOccluder(Knights::ElementView tile  ) {
+        std::string occluderString = "1IYXR\\/SZ|%<>";
+
+        for (const auto& candidate : occluderString ) {
+            if (candidate == tile) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     void CRenderer::render(long ms) {
 
         if ( mNeedsToRedraw ) {
@@ -1140,7 +1245,7 @@ namespace odb {
                 std::fill( getBufferData(), getBufferData() + (320 * 200 ), 0 );
             }
 
-            bool facesMask[3];
+            bool facesMask[4];
 
             EActorsSnapshotElement actorsSnapshotElement = EActorsSnapshotElement::kNothing;
             EItemsSnapshotElement itemsSnapshotElement = EItemsSnapshotElement::kNothing;
@@ -1163,6 +1268,7 @@ namespace odb {
                     facesMask[ 0 ] = true;
                     facesMask[ 1 ] = true;
                     facesMask[ 2 ] = true;
+                    facesMask[ 3 ] = false;
 
                     switch (mCameraDirection) {
                         case Knights::EDirection::kNorth:
@@ -1192,7 +1298,13 @@ namespace odb {
                             }
 
                             if ( z == mCameraPosition.y - 1 ) {
-                                facesMask[ 1 ] = true;
+
+                                if (isOccluder(mElementsMap[z + 1][(Knights::kMapSize - 1) - x])) {
+                                    facesMask[ 1 ] = false;
+                                    facesMask[ 3 ] = true;
+                                } else {
+                                    facesMask[ 1 ] = true;
+                                }
                             }
 
                             break;
@@ -1222,7 +1334,13 @@ namespace odb {
                             }
 
                             if ( z == ((Knights::kMapSize - 1) - mCameraPosition.y) - 1 ) {
-                                facesMask[ 1 ] = true;
+
+                                if (isOccluder(mElementsMap[(Knights::kMapSize - 1) - (z + 1)][x])) {
+                                    facesMask[ 1 ] = false;
+                                    facesMask[ 3 ] = true;
+                                } else {
+                                    facesMask[ 1 ] = true;
+                                }
                             }
 
 
@@ -1252,7 +1370,14 @@ namespace odb {
                             }
 
                             if ( z == ((Knights::kMapSize - 1) - mCameraPosition.x) + 1 ) {
-                                facesMask[ 1 ] = true;
+
+                                if (isOccluder(mElementsMap[x][(Knights::kMapSize - 1) - (z - 1)])) {
+                                    facesMask[ 1 ] = false;
+                                    facesMask[ 3 ] = true;
+                                } else {
+                                    facesMask[ 1 ] = true;
+                                }
+
                             }
                             break;
 
@@ -1283,7 +1408,14 @@ namespace odb {
                             }
 
                             if ( z == (mCameraPosition.x) + 1 ) {
-                                facesMask[ 1 ] = true;
+
+                                if (isOccluder(mElementsMap[x][(z - 1)])) {
+                                    facesMask[ 1 ] = false;
+                                    facesMask[ 3 ] = true;
+                                } else {
+                                    facesMask[ 1 ] = true;
+                                }
+
                             }
                             break;
 
@@ -1305,7 +1437,8 @@ namespace odb {
                                 drawRightNear(
                                         position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
                                         tileProp.mFloorRepetitions,
-                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex].second);
+                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex].second,
+                                        facesMask);
 
                                 break;
 
@@ -1313,7 +1446,8 @@ namespace odb {
                                 drawLeftNear(
                                         position + Vec3{0, multiply(tileProp.mFloorHeight, two) - tileProp.mFloorRepetitions, 0},
                                         tileProp.mFloorRepetitions,
-                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex].second);
+                                        mNativeTextures[tileProp.mFloorRepeatedTextureIndex].second,
+                                        facesMask);
                                 break;
 
                             case kCube:
@@ -1334,14 +1468,16 @@ namespace odb {
                                 drawRightNear(
                                         position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
                                         tileProp.mCeilingRepetitions,
-                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex].second);
+                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex].second,
+                                        facesMask);
                                 break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{0, multiply(tileProp.mCeilingHeight, two) + tileProp.mCeilingRepetitions, 0},
                                         tileProp.mCeilingRepetitions,
-                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex].second);
+                                        mNativeTextures[tileProp.mCeilingRepeatedTextureIndex].second,
+                                        facesMask);
                                 break;
 
                             case kCube:
@@ -1372,14 +1508,16 @@ namespace odb {
                                 drawRightNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
                                         heightDiff,
-                                        mNativeTextures[ tileProp.mMainWallTextureIndex ].second );
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ].second,
+                                        facesMask);
                                 break;
 
                             case kLeftNearWall:
                                 drawLeftNear(
                                         position + Vec3{ 0, multiply( tileProp.mFloorHeight, two) + heightDiff, 0},
                                         heightDiff,
-                                        mNativeTextures[ tileProp.mMainWallTextureIndex ].second );
+                                        mNativeTextures[ tileProp.mMainWallTextureIndex ].second,
+                                        facesMask);
                                 break;
 
                             case kCube:
