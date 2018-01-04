@@ -27,7 +27,7 @@ H 0 ceiling floor null cube brickscandles null 1 0 3 0
 Y 0 null null bricks cube brickscandles null 1 0 1 0
 X 0 null null bricks cube bricks null 2 0 1 0 
 B 0 ceilingbegin floor begin cube null null 2 0 1 0
-E 0 ceilingend floor exit cube null null 1 0 1 0
+E 1 ceilingend floor exit cube null null 1 0 1 0
 > 0 null floor bricks leftnear bricks null 2 0 1 0
 < 0 null floor bricks leftfar bricks null 2 0 1 0
 Z 0 null floor bricks leftnear bricks null 2 0 1 0
