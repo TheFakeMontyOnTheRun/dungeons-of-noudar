@@ -44,7 +44,7 @@ namespace odb {
 
     const static bool kShouldDrawOutline = false;
     const static bool kShouldDrawTextures = true;
-    const static bool kShouldDrawSkybox = true;
+    const static bool kShouldDrawSkybox = false;
     const static bool kShouldDrawBlackMasks = true;
     const static auto kMinZCull = FixP{1};
 
@@ -1568,13 +1568,13 @@ namespace odb {
                 }
             }
 
-            for ( int c = 0; c < (192/32); ++c ) {
-                drawSprite( 320 - 32, c * 32, mBackground );
-                drawSprite( 320 - 64, c * 32, mBackground );
+            for ( int c = 0; c < (128/32); ++c ) {
+                drawSprite( 320 - 32, c * 32, mNativeTextures[2].first );
+                drawSprite( 320 - 64, c * 32, mNativeTextures[2].first );
             }
 
             if (!mStaticPartsOfHudDrawn) {
-                for ( int c = 0; c < 8; ++c ) {
+                for ( int c = 0; c < 10; ++c ) {
                     drawSprite( c * 32, 128, mBackground );
                 }
 

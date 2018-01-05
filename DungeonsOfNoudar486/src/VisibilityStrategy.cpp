@@ -35,7 +35,7 @@ using eastl::array;
 namespace odb {
 
     const bool kNarrowByDistance = true;
-	const bool kConservativeOccluders = false;
+	const bool kConservativeOccluders = true;
 	const int kUseLimitedDrawingDistance = false;
 	const int kDrawingDistance = 20;
 

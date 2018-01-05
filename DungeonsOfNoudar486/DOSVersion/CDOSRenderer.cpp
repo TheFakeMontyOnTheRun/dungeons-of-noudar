@@ -89,8 +89,8 @@ namespace odb {
     }
 
     void CRenderer::handleSystemEvents() {
-//        gotoxy(1,1);
-//        printf("%d", ++mFrame);
+        gotoxy(1,1);
+        printf("%d", ++mFrame);
 
         const static FixP delta{2};
 
