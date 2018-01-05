@@ -49,6 +49,23 @@ using sg14::fixed_point;
 
 std::shared_ptr<odb::CRenderer> renderer;
 
+enum ESoundDriver : uint8_t { kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox };
+
+ESoundDriver soundDriver = kNone;
+int soundTiming = 0;
+
+void initOPL2(int instrument);
+void playTune(const std::string&);
+void setupOPL2(int instrument);
+void stopSounds();
+void soundTick();
+void playMusic(int instrument, const std::string &musicTrack);
+
+void initOPL2(int instrument) {
+    setupOPL2(instrument);
+}
+
+
 std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const std::string& filename ) {
     char c = 219;
     c = 176;
@@ -90,8 +107,36 @@ void gameLoopTick() {
 
 std::shared_ptr<Knights::CGame> game;
 
+int getch_noblock() {
+    if (kbhit())
+        return getch();
+    else
+        return -1;
+}
+
 int main(int argc, char **argv) {
+    int instrument = -1;
     printf("Dungeons of Noudar 486 tech demo startup. Gonna load some stuff...");
+
+    if ( argc >= 2 ) {
+        //  enableSecret = true;
+        if ( !std::strcmp(argv[1], "pcspeaker")) {
+            soundDriver = kPcSpeaker;
+            soundTiming = 100;
+        }
+
+        if ( !std::strcmp(argv[1], "opl2lpt")) {
+            instrument = 80;
+            soundTiming = 1;
+            soundDriver = kOpl2Lpt;
+
+            if (argc >= 3 ) {
+                instrument = atoi(argv[2]);
+            }
+
+            initOPL2(instrument);
+        }
+    }
 
     const auto LEVEL_LIMIT = 8;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
@@ -102,11 +147,11 @@ int main(int argc, char **argv) {
     renderer->flip();
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
 
-    if ( argc > 1 ) {
-        game->playLevel(atoi( argv[1]));
-    }
+//    if ( argc > 1 ) {
+//        game->playLevel(atoi( argv[1]));
+//    }
 
-
+    game->getMap()->getAvatar()->addHP(99);
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
     renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
@@ -121,10 +166,6 @@ int main(int argc, char **argv) {
 
     delegate->setOnLevelLoadedCallback(onLevelLoaded );
 
-#ifdef __EMSCRIPTEN__
-    //  emscripten_request_fullscreen(0, 1);
-  emscripten_set_main_loop( gameLoopTick, 30, 1 );
-#else
 
     game->endOfTurn(game->getMap());
 
@@ -133,15 +174,65 @@ int main(int argc, char **argv) {
     renderer->drawBitmap(0, 180, ready );
     renderer->flip();
 
-
     getch();
 
+    if (soundDriver != kNone ) {
+        playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+    }
+
+    auto noteTime = soundTiming;
+    clock_t t0;
+    clock_t t1;
+
     while ( game->isPlaying() ) {
+        if (soundDriver != kNone ) {
+            t0 = uclock();
+        }
+
         game->tick();
-        renderer->sleep( 33 );
         gameLoopTick();
 
+        if (soundDriver != kNone ) {
+
+            Knights::CommandType command = renderer->peekInput();
+
+            if (command == Knights::kUseCurrentItemInInventoryCommand) {
+                playMusic(20, "020|aca|aca|aca");
+            }
+
+            if (command == Knights::kCycleLeftInventoryCommand) {
+                playMusic(20, "020|ac|ac|ac");
+            }
+
+            if (command == Knights::kCycleRightInventoryCommand) {
+                playMusic(20, "020|ca|ca|ca");
+            }
+
+            if (command == Knights::kPickItemCommand) {
+                playMusic(20, "020|abc|abc|abc");
+            }
+
+            if (command == Knights::kDropItemCommand) {
+                playMusic(20, "020|cba|cba|cba");
+            }
+
+
+
+            t1 = uclock();
+            auto diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
+            if (diff == 0) {
+                diff = 1;
+            }
+            noteTime -= diff;
+
+            if (noteTime < 0) {
+                noteTime = soundTiming;
+                soundTick();
+            }
+        }
+
     }
-#endif
+    stopSounds();
+
     return 0;
 }
