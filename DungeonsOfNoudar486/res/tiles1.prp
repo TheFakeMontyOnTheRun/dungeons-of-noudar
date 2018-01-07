@@ -4,11 +4,11 @@ R 0 null null null cube bricks null 3 0 0 0
 / 0 ceiling floor bricks leftnear bricks null 2 0 2 0.05
 O 0 ceiling floor null floor null null 0 0 2 0.05
 T 0 ceiling floor null floor null null 0 0 2 0.05
-. 0 null grass null null null null 0 0 0 0
+. 0 ceiling floor null floor null null 0 0 2 0.05
+_ 0 ceiling floor null floor null null 0 0 2 0.05
 I 0 null null null cube ceilingend null 6 0 -0.5 0
 0 0 null grass null floor null null 0 0 0 0
 4 0 null grass null floor null null 0 0 0 0
-_ 0 null cobblestone null cube null cobblestone 0 1 0 0.05
 * 0 null floor null cube null null 0 0 0 0
 - 0 ceiling floor null floor null null   0 2 2 -0.6
 = 0 ceiling floor null cube  null bricks 0 1 2 -0.4
