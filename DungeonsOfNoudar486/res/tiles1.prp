@@ -30,7 +30,6 @@ B 0 ceilingbegin floor begin cube null null 2 0 1 0
 < 0 null floor bricks leftfar bricks null 2 0 1 0
 Z 0 null floor bricks leftnear bricks null 2 0 1 0
 S 0 null floor bricks leftfar bricks null 2 0 1 0
-+ 0 null grass null floor null null 0 0 0 0
 t 0 null grass null floor null null 0 0 0 0
 y 0 null grass null floor null null 0 0 0 0
 u 0 null grass null floor null null 0 0 0 0
@@ -38,7 +37,6 @@ U 0 null floor null floor null null 0 0 0 0
 2 0 null grass null floor null null 0 0 0 0
 7 0 null grass null floor null null 0 0 0 0
 v 0 null grass null floor null null 0 0 0 0
-+ 0 ceiling floor null floor null null 0 0 2 0.05
 A 1 ceiling ceiling null cube bricks bricks 2 1 0.8 0.4
 9 0 null grass null floor null null 0 0 0 0
 w 0 null grass null floor null null 0 0 0 0
