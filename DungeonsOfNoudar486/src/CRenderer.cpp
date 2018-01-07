@@ -52,7 +52,14 @@ namespace odb {
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> rope;
     std::shared_ptr<odb::NativeTexture> monk;
+    std::shared_ptr<odb::NativeTexture> weakDemon;
+    std::shared_ptr<odb::NativeTexture> strongDemon;
+    std::shared_ptr<odb::NativeTexture> cocoon;
+    std::shared_ptr<odb::NativeTexture> specter;
+    std::shared_ptr<odb::NativeTexture> warthog;
     std::shared_ptr<odb::NativeTexture> bow;
+    std::shared_ptr<odb::NativeTexture> sword;
+    std::shared_ptr<odb::NativeTexture> shield;
     std::shared_ptr<odb::NativeTexture> token;
     std::shared_ptr<NativeTexture > skybox;
 
@@ -184,11 +191,18 @@ namespace odb {
         }
 
         mBackground = makeTexture("tile.png", fileLoader);
+        warthog = makeTexture("WarthogAttack0.png", fileLoader);
+        strongDemon = makeTexture("StrongDemonAttack0.png", fileLoader);
+        weakDemon = makeTexture("WeakDemonAttack0.png", fileLoader);
+        cocoon = makeTexture("CocoonStanding0.png", fileLoader);
         foe = makeTexture("FallenAttack0.png", fileLoader);
+        specter = makeTexture("EvilSpiritAttack0.png", fileLoader);
         rope = makeTexture("rope.png", fileLoader);
         monk = makeTexture("MonkAttack0.png", fileLoader);
         bow = makeTexture("crossbow.png", fileLoader);
         token = makeTexture("token.png", fileLoader);
+        sword = makeTexture("falcata.png", fileLoader);
+        shield = makeTexture("shield.png", fileLoader);
 
         if ( kShouldDrawSkybox) {
             skybox = makeTexture("clouds.png",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          fileLoader);
@@ -244,8 +258,18 @@ namespace odb {
                     if (actor != current) {
                         if ( actor->getView() == '$') {
                             mActors[z][x] = EActorsSnapshotElement::kFallenAttacking0;
+                        } else if ( actor->getView() == 'C') {
+                            mActors[z][x] = EActorsSnapshotElement::kCocoonStanding0;
                         } else if ( actor->getView() == '@') {
                             mActors[z][x] = EActorsSnapshotElement::kMonkAttacking0;
+                        } else if ( actor->getView() == 'J') {
+                            mActors[z][x] = EActorsSnapshotElement::kWarthogAttacking0;
+                        } else if ( actor->getView() == 'd') {
+                            mActors[z][x] = EActorsSnapshotElement::kWeakenedDemonAttacking0;
+                        } else if ( actor->getView() == 'D') {
+                            mActors[z][x] = EActorsSnapshotElement::kStrongDemonAttacking0;
+                        } else if ( actor->getView() == 'w') {
+                            mActors[z][x] = EActorsSnapshotElement::kEvilSpiritAttacking0;
                         } else if ( actor->getView() == 'T') {
                             mActors[z][x] = EActorsSnapshotElement::kRope;
                         } else {
@@ -259,8 +283,9 @@ namespace odb {
                         mItems[z][x] = EItemsSnapshotElement::kCrossbow;
                     } else if (item->getView() == '+') {
                         mItems[z][x] = EItemsSnapshotElement::kCross;
+                    } else if (item->getView() == 'v') {
+                        mItems[z][x] = EItemsSnapshotElement::kShield;
                     }
-
 
                     view = item->getView();
                 } else {
@@ -1541,6 +1566,31 @@ namespace odb {
                                     position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
                                     monk );
                             break;
+                        case EActorsSnapshotElement::kCocoonStanding0:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    cocoon );
+                            break;
+                        case EActorsSnapshotElement::kWarthogAttacking0:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    warthog );
+                            break;
+                        case EActorsSnapshotElement::kEvilSpiritAttacking0:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    specter );
+                            break;
+                        case EActorsSnapshotElement::kWeakenedDemonAttacking0:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    weakDemon );
+                            break;
+                        case EActorsSnapshotElement::kStrongDemonAttacking0:
+                            drawBillboardAt(
+                                    position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                    strongDemon );
+                            break;
                         case EActorsSnapshotElement::kFallenAttacking0:
                             drawBillboardAt(
                                     position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
@@ -1558,10 +1608,32 @@ namespace odb {
 
 
                     if ( itemsSnapshotElement != EItemsSnapshotElement ::kNothing ) {
-                        drawBillboardAt(
-                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
-                                itemsSnapshotElement == EItemsSnapshotElement::kCrossbow ? bow : token
-                        );
+                        switch (itemsSnapshotElement) {
+                            case EItemsSnapshotElement::kCrossbow:
+                                drawBillboardAt(
+                                        position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                        bow
+                                );
+                                break;
+
+                            case EItemsSnapshotElement::kShield:
+                                drawBillboardAt(
+                                        position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                        shield
+                                );
+                                break;
+
+                            case EItemsSnapshotElement::kCross:
+                                drawBillboardAt(
+                                        position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                        token
+                                );
+                                break;
+
+                            case EItemsSnapshotElement::kSword:
+                                break;
+
+                        }
                     }
 
 
