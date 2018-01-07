@@ -31,6 +31,7 @@ using namespace std::chrono;
 #include "IMapElement.h"
 #include "CTeam.h"
 #include "CItem.h"
+#include "CStorageItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
 #include "CMap.h"
@@ -231,9 +232,25 @@ namespace odb {
         Knights::ElementView view;
 
         mHealth = current->getHP();
-        if (current->getSelectedItem() != nullptr) {
+
+        auto item = current->getSelectedItem();
+
+        if (item != nullptr) {
             mItemName = current->getSelectedItem()->to_string();
+
+            if (item->getView() == 'y') {
+                mCurrentItem = EItemsSnapshotElement::kCrossbow;
+                mItemCapacity = ((Knights::CStorageItem*)(item.get()))->getAmount();
+            } else if (item->getView() == '+') {
+                mCurrentItem = EItemsSnapshotElement::kCross;
+            } else if (item->getView() == 'v') {
+                mCurrentItem = EItemsSnapshotElement::kShield;
+                mItemCapacity = ((Knights::CStorageItem*)(item.get()))->getAmount();
+            } else if (item->getView() == 't') {
+                mCurrentItem = EItemsSnapshotElement::kSword;
+            }
         } else {
+            mCurrentItem = EItemsSnapshotElement::kNothing;
             mItemName = "";
         }
 
@@ -1640,10 +1657,9 @@ namespace odb {
                 }
             }
 
-            for ( int c = 0; c < (128/32); ++c ) {
-                drawSprite( 320 - 32, c * 32, mNativeTextures[2].first );
-                drawSprite( 320 - 64, c * 32, mNativeTextures[2].first );
-            }
+            const static auto black = 0;
+
+            fill( 320 - 64, 0, 64, 128, black );
 
             if (!mStaticPartsOfHudDrawn) {
                 for ( int c = 0; c < 10; ++c ) {
@@ -1653,14 +1669,51 @@ namespace odb {
                 mStaticPartsOfHudDrawn = true;
             }
 
-            const static auto black = 0;
+
             fill( 0, 160, 256, 40, black );
+
+            switch (mCurrentItem) {
+                case EItemsSnapshotElement::kCrossbow:
+                    drawSprite(256 + 16, 8, bow );
+                    break;
+
+                case EItemsSnapshotElement::kShield:
+                    drawSprite(256 + 16, 8, shield );
+                    break;
+
+                case EItemsSnapshotElement::kCross:
+                    drawSprite(256 + 16, 8, token );
+                    break;
+
+                case EItemsSnapshotElement::kSword:
+                    drawSprite(256 + 16, 8, sword );
+                    break;
+            }
+
             flip();
 
             char buffer[9];
-            snprintf(buffer, 8, "HP: %d", mHealth);
-            drawTextAt( 1, 22, buffer );
-            drawTextAt( 1, 23, mItemName.c_str() );
+
+            mItemName.resize(32, ' ');
+
+            drawTextAt( 33, 7, mItemName.substr(0, 8).c_str() );
+            drawTextAt( 33, 8, mItemName.substr(8, 8).c_str() );
+            drawTextAt( 33, 9, mItemName.substr(16, 8).c_str() );
+
+            if ( mCurrentItem == EItemsSnapshotElement::kShield || mCurrentItem == EItemsSnapshotElement::kCrossbow) {
+                snprintf(buffer, 8, "%d", mItemCapacity);
+                drawTextAt( 34, 10, buffer );
+            }
+
+
+            drawTextAt( 34, 12, "Faith:" );
+
+            snprintf(buffer, 8, "%d", mHealth);
+            drawTextAt( 34, 13, buffer );
+
+            char directions[4] = {'N', 'E', 'S', 'W'};
+            snprintf(buffer, 8, "Dir: %c", directions[static_cast<int>(mCameraDirection)]);
+            drawTextAt( 34, 15, buffer );
 
 #ifndef SDLSW
             auto t1 = uclock();
@@ -1686,7 +1739,18 @@ namespace odb {
         for ( int y = 0; y < 32; ++y ) {
             auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
             auto sourceLineStart = sourceLine + ( 32 * y );
-            std::copy( sourceLineStart, sourceLineStart + 32, destinationLineStart );
+
+            for ( int x = 0; x < 32; ++x ) {
+                auto pixel = *sourceLineStart;
+
+                if (pixel != CRenderer::mTransparency ) {
+                    *destinationLineStart = pixel;
+                }
+
+                ++destinationLineStart;
+                ++sourceLineStart;
+            }
+
         }
     }
 

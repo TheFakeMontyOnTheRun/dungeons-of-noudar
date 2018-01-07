@@ -74,7 +74,9 @@ namespace odb {
         int32_t mUsefulFrames = 0;
         int32_t mAccMs = 0;
         int32_t mProcVisTime = 0;
+        EItemsSnapshotElement mCurrentItem = EItemsSnapshotElement::kSword;
         std::string mItemName;
+        int mItemCapacity;
         bool mStaticPartsOfHudDrawn = false;
 #ifdef SDLSW
         bool mSlow = false;
