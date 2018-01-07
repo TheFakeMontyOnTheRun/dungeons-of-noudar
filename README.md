@@ -20,11 +20,13 @@ It is known to build for the following targets:
 - Windows 10 (GL 1.1)
 ![ ](/screenshot_win32.png?raw=true)
 
-- MS-DOS - that's right! (GL 1.1), using Mesa Offscreen renderer
-![ ](/screenshot_DOS.png?raw=true)
+- MS-DOS Software Renderer
+![ ](/screenshot_486.png?raw=true)
 
-- Emscripten (GLES 2.0 transpiled to WebGL)
-live at: http://www.montyprojects.com/noudar/noudar.html
+- SDL Software Renderer
+![ ](/screenshot_SWSDL.png?raw=true)
 
+- MS-DOS (GL 1.1), using Mesa Offscreen renderer (only for faster machines)
+![ ](/screenshot_586.png?raw=true)
 
 
