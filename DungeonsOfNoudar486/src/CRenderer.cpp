@@ -1640,8 +1640,7 @@ namespace odb {
                 mStaticPartsOfHudDrawn = true;
             }
 
-
-            fill( 0, 160, 256, 40, black );
+            fill( 0, 160, 320, 40, black );
 
             switch (mCurrentItem) {
                 case EItemsSnapshotElement::kCrossbow:
