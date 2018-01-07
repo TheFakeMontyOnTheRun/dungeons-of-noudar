@@ -190,7 +190,7 @@ namespace odb {
     }
 
     void CRenderer::drawTextAt( int x, int y, const char* text ) {
-
+        std::cout << "text: " << text << std::endl;
     }
 
     CRenderer::~CRenderer() {
