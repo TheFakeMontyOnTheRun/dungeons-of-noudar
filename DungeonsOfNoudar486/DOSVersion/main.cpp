@@ -184,17 +184,71 @@ int main(int argc, char **argv) {
     clock_t t0;
     clock_t t1;
 
+    int healthAtTargetBefore = 0;
+    int healthAtTargetAfter = 0;
+
     while ( game->isPlaying() ) {
         if (soundDriver != kNone ) {
             t0 = uclock();
         }
 
+        auto playerHealthBefore = game->getMap()->getAvatar()->getHP();
+
+        auto cursorPosition = game->getMap()->getTargetProjection(game->getMap()->getAvatar());
+        auto actorAtTarget = game->getMap()->getActorAt(cursorPosition);
+
+        if ( actorAtTarget != nullptr ) {
+            healthAtTargetBefore = actorAtTarget->getHP();
+        } else {
+            healthAtTargetBefore = 0;
+        }
+
         game->tick();
+        renderer->mTurn = game->getTurn();
         gameLoopTick();
 
-        if (soundDriver != kNone ) {
+        Knights::CommandType command = renderer->peekInput();
 
-            Knights::CommandType command = renderer->peekInput();
+        game->tick();
+
+        if ( command != '.') {
+            char buffer[81];
+            snprintf(buffer, 80, "%s", game->getLastCommand().c_str());
+            renderer->appendToLog( buffer );
+        }
+
+
+        if ( actorAtTarget != nullptr ) {
+            healthAtTargetAfter = actorAtTarget->getHP();
+        } else {
+            healthAtTargetAfter = 0;
+        }
+
+        if ( healthAtTargetAfter < healthAtTargetBefore ) {
+            char buffer[81];
+            snprintf(buffer, 80, "Player dealt %d of damage", ( healthAtTargetBefore - healthAtTargetAfter ) );
+            renderer->appendToLog( buffer );
+        }
+
+
+        auto playerHealthAfter = game->getMap()->getAvatar()->getHP();
+
+        auto diff = playerHealthAfter - playerHealthBefore;
+
+        if ( diff < 0 ) {
+            char buffer[81];
+            snprintf(buffer, 80, "Player took %d of damage", -diff);
+            renderer->appendToLog( buffer );
+        } else if ( diff > 0 ) {
+            char buffer[81];
+            snprintf(buffer, 80, "Player gained %d of faith", diff);
+            renderer->appendToLog( buffer );
+        }
+
+
+
+
+        if (soundDriver != kNone ) {
 
             if (command == Knights::kUseCurrentItemInInventoryCommand) {
                 playMusic(20, "020|aca|aca|aca");
@@ -215,8 +269,6 @@ int main(int argc, char **argv) {
             if (command == Knights::kDropItemCommand) {
                 playMusic(20, "020|cba|cba|cba");
             }
-
-
 
             t1 = uclock();
             auto diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;

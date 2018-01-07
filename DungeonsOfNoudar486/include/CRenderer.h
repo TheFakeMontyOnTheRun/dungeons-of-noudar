@@ -69,6 +69,8 @@ namespace odb {
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
+        std::string mLogBuffer[5];
+        Knights::CommandType mLastCommand = '.';
         int16_t mHealth;
         uint16_t mFrame = 0;
         int32_t mUsefulFrames = 0;
@@ -89,11 +91,11 @@ namespace odb {
 
      public:
         Knights::CommandType peekInput();
-
+        void appendToLog(const char* message);
         CRenderer();
         ~CRenderer();
         uint8_t * getBufferData();
-
+        uint64_t mTurn = 0;
         void fillSidebar();
 
         void fillUnderbar();

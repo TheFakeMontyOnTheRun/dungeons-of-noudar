@@ -254,9 +254,6 @@ namespace odb {
             mItemName = "";
         }
 
-#ifdef SDLSW
-        std::cout << "\n\n" << std::endl;
-#endif
 
         for (uint8_t z = 0; z < Knights::kMapSize; ++z) {
             for (uint8_t x = 0; x < Knights::kMapSize; ++x) {
@@ -308,18 +305,8 @@ namespace odb {
                 } else {
                     view = map.getElementAt(v);
                 }
-#ifdef SDLSW
-                std::cout << view;
-#endif
             }
-#ifdef SDLSW
-            std::cout << std::endl;
-#endif
         }
-#ifndef __DJGPP__
-        std::cout << std::endl;
-#endif
-
 #ifndef SDLSW
         auto t0 = uclock();
 #endif
@@ -328,22 +315,6 @@ namespace odb {
 #ifndef SDLSW
         auto t1 = uclock();
         mProcVisTime += (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
-#endif
-
-
-#ifndef __DJGPP__
-        for (int z = 0; z < (Knights::kMapSize ); ++z) {
-            for (int x = 0; x < (Knights::kMapSize ); ++x) {
-                if (visMap[z][x] == EVisibility::kVisible) {
-                    view = intMap[z][x];
-                } else {
-                    view = '.';
-                }
-                std::cout << view;
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
 #endif
     }
 
@@ -1715,6 +1686,12 @@ namespace odb {
             snprintf(buffer, 8, "Dir: %c", directions[static_cast<int>(mCameraDirection)]);
             drawTextAt( 34, 15, buffer );
 
+            drawTextAt( 1, 21, mLogBuffer[0].c_str() );
+            drawTextAt( 1, 22, mLogBuffer[1].c_str() );
+            drawTextAt( 1, 23, mLogBuffer[2].c_str() );
+            drawTextAt( 1, 24, mLogBuffer[3].c_str() );
+            drawTextAt( 1, 25, mLogBuffer[4].c_str() );
+
 #ifndef SDLSW
             auto t1 = uclock();
             mAccMs += (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
@@ -1768,6 +1745,14 @@ namespace odb {
                 ++destinationLineStart;
             }
         }
+    }
+
+    void CRenderer::appendToLog(const char* message) {
+        mLogBuffer[0] = mLogBuffer[1];
+        mLogBuffer[1] = mLogBuffer[2];
+        mLogBuffer[2] = mLogBuffer[3];
+        mLogBuffer[3] = mLogBuffer[4];
+        mLogBuffer[4] = message;
     }
 
 
