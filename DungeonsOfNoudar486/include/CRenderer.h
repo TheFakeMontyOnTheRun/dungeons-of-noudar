@@ -79,6 +79,7 @@ namespace odb {
         EItemsSnapshotElement mCurrentItem = EItemsSnapshotElement::kSword;
         std::string mItemName;
         int mItemCapacity;
+        int mUsageCost = 0;
         bool mStaticPartsOfHudDrawn = false;
 #ifdef SDLSW
         bool mSlow = false;
@@ -90,6 +91,7 @@ namespace odb {
     private:
 
      public:
+
         Knights::CommandType peekInput();
         void appendToLog(const char* message);
         CRenderer();

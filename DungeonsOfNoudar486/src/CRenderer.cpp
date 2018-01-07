@@ -241,13 +241,17 @@ namespace odb {
             if (item->getView() == 'y') {
                 mCurrentItem = EItemsSnapshotElement::kCrossbow;
                 mItemCapacity = ((Knights::CStorageItem*)(item.get()))->getAmount();
+                mUsageCost = 3;
             } else if (item->getView() == '+') {
                 mCurrentItem = EItemsSnapshotElement::kCross;
+                mUsageCost = 1;
             } else if (item->getView() == 'v') {
                 mCurrentItem = EItemsSnapshotElement::kShield;
                 mItemCapacity = ((Knights::CStorageItem*)(item.get()))->getAmount();
+                mUsageCost = 20;
             } else if (item->getView() == 't') {
                 mCurrentItem = EItemsSnapshotElement::kSword;
+                mUsageCost = 1;
             }
         } else {
             mCurrentItem = EItemsSnapshotElement::kNothing;
@@ -1671,7 +1675,7 @@ namespace odb {
             drawTextAt( 33, 9, mItemName.substr(16, 8).c_str() );
 
             if ( mCurrentItem == EItemsSnapshotElement::kShield || mCurrentItem == EItemsSnapshotElement::kCrossbow) {
-                snprintf(buffer, 8, "%d", mItemCapacity);
+                snprintf(buffer, 8, "%d/%d", mItemCapacity, mUsageCost);
                 drawTextAt( 34, 10, buffer );
             }
 
