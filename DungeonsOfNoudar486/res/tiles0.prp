@@ -19,8 +19,6 @@ L 0 ceiling lava null cube null null 2 0 2 -2
 . 0 null grass null null null null 0 0 0 0
 H 0 ceiling grass null cube brickscandles null 1 0 3 0
 - 0 ceiling grass null cube bricks null 1 0 2 0
-S 0 null floor ceilingend leftfar null null 0 0 3 0
-Z 0 null floor ceilingend leftnear null null 0 0 3 0
 ' 0 null null     bricks cube bricks null 3 0 1 0
 ! 0 ceilingbars floor null cube bricks null 2 0 1 0
 ~ 1 ceilingbars floor arch cube bricks null 2 0 1 0.05
@@ -53,5 +51,7 @@ D 0 null grass null floor null null 0 0 0 0
 T 0 ceiling floor null cube null bricks 0 0 3 0.05
 ( 0 null ceiling bricks leftfar  null null 0 0 2 0
 ) 0 null ceiling bricks leftnear null null 0 0 2 0
-\ 0 null ceiling null leftfar  bricks bricks 6 0 6 0
-/ 0 null ceiling null leftnear bricks bricks 6 0 2 0
+\ 0 null floor bricks leftfar  null null 0 0 6 0
+/ 0 null floor bricks leftnear null null 0 0 6 0
+S 0 null floor ceilingend leftfar null null 0 0 3 0
+Z 0 null floor ceilingend leftnear null null 0 0 3 0

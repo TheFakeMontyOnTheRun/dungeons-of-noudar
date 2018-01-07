@@ -2,7 +2,6 @@
 R 0 null null null cube bricks null 3 0 0 0
 \ 0 ceiling floor bricks leftfar  bricks null 2 0 2 0.05
 / 0 ceiling floor bricks leftnear bricks null 2 0 2 0.05
-O 0 ceiling floor null floor null null 0 0 2 0.05
 T 0 ceiling floor null floor null null 0 0 2 0.05
 . 0 ceiling floor null floor null null 0 0 2 0.05
 _ 0 ceiling floor null floor null null 0 0 2 0.05
@@ -39,7 +38,7 @@ U 0 null floor null floor null null 0 0 0 0
 2 0 null grass null floor null null 0 0 0 0
 7 0 null grass null floor null null 0 0 0 0
 v 0 null grass null floor null null 0 0 0 0
-+ 0 null grass null floor null null 0 0 0 0
++ 0 ceiling floor null floor null null 0 0 2 0.05
 A 1 ceiling ceiling null cube bricks bricks 2 1 0.8 0.4
 9 0 null grass null floor null null 0 0 0 0
 w 0 null grass null floor null null 0 0 0 0
@@ -56,7 +55,7 @@ D 0 null grass null floor null null 0 0 0 0
 3 1 ceilingbars floor magicseal cube bricks null 2 0 1 0
 @ 1 ceilingbars floor slot cube bricks null 2 0 1 0
 v 0 null grass null floor null null 0 0 0 0
-+ 0 null grass null floor null null 0 0 0 0
++ 0 ceiling floor null floor null null 0 0 2 0.05
 w 0 null grass null floor null null 0 0 0 0
 J 0 null grass null floor null null 0 0 0 0
 c 0 null grass null floor null null 0 0 0 0
@@ -64,3 +63,7 @@ d 0 null grass null floor null null 0 0 0 0
 e 0 null grass null floor null null 0 0 0 0
 G 0 null grass null floor null null 0 0 0 0
 D 0 null grass null floor null null 0 0 0 0
+K 0 ceiling ceilingbars null cube null ceilingdoor 0 1 2 0.3
+L 0 ceiling ceilingend null cube null ceilingdoor 0 1 2 0.4
+O 0 ceiling floor null floor null null 0 0 2 0.05
+D 0 ceiling ceilingbars null floor null null 0 0 2 0.05
