@@ -1636,7 +1636,14 @@ namespace odb {
 
             const static auto black = 0;
 
-            fill( 320 - 64, 0, 64, 128, black );
+
+            for ( int c = 0; c < 4; ++c ) {
+                drawSprite( 320 - 32, ( c * 32), mBackground );
+                drawSprite( 320 - 64, ( c * 32), mBackground );
+            }
+
+            fill( 320 - 64, 8, 64, 64 - 8, black );
+            fill( 320 - 64 + 8, 64, 32 + 16, 64 - 8, black );
 
             if (!mStaticPartsOfHudDrawn) {
                 for ( int c = 0; c < 10; ++c ) {
