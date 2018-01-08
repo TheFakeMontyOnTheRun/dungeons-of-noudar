@@ -1764,7 +1764,7 @@ namespace odb {
     void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {
         mTextures.clear();
         mTileProperties.clear();
-
+        mStaticPartsOfHudDrawn = false;
         mTextures = textureList;
         mTileProperties = tile3DProperties;
 

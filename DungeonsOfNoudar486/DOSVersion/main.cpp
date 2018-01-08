@@ -174,6 +174,14 @@ int main(int argc, char **argv) {
     renderer->drawBitmap(0, 180, ready );
     renderer->flip();
 
+    auto onLevelWillLoad = [&]() {
+        renderer->drawBitmap(0, 0, intro );
+        renderer->flip();
+    };
+
+    delegate->setOnLevelWillLoadCallback(onLevelWillLoad );
+
+
     getch();
 
     if (soundDriver != kNone ) {
