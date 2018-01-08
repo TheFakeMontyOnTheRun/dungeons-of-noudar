@@ -175,6 +175,8 @@ namespace odb {
 
         vector<vector<std::shared_ptr<odb::NativeBitmap>>> tilesToLoad;
 
+        CRenderer::mNativeTextures.clear();
+
         for ( const auto& frameList : list ) {
             vector<std::shared_ptr<odb::NativeBitmap>> textures;
 
@@ -1760,6 +1762,9 @@ namespace odb {
 
 
     void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {
+        mTextures.clear();
+        mTileProperties.clear();
+
         mTextures = textureList;
         mTileProperties = tile3DProperties;
 
