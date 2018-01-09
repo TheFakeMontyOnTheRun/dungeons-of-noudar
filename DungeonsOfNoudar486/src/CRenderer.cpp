@@ -1755,7 +1755,12 @@ namespace odb {
     }
 
 
+
     void CRenderer::addSplatAt( const Knights::Vec2i& position ) {
+        mSplats[position.y][position.x] = 0;
+    }
+
+    void CRenderer::addDeathAt( const Knights::Vec2i& position ) {
         mSplats[position.y][position.x] = 2;
     }
 

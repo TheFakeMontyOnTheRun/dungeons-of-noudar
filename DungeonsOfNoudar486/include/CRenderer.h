@@ -106,6 +106,8 @@ namespace odb {
 
         void addSplatAt( const Knights::Vec2i& position );
 
+        void addDeathAt( const Knights::Vec2i& position );
+
         Knights::CommandType peekInput();
         void appendToLog(const char* message);
         CRenderer();
