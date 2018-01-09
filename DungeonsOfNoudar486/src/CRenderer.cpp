@@ -62,6 +62,7 @@ namespace odb {
     std::shared_ptr<odb::NativeTexture> sword;
     std::shared_ptr<odb::NativeTexture> shield;
     std::shared_ptr<odb::NativeTexture> token;
+    std::shared_ptr<odb::NativeTexture> splat[3];
     std::shared_ptr<NativeTexture > skybox;
 
     VisMap visMap;
@@ -206,6 +207,9 @@ namespace odb {
         token = makeTexture("token.png", fileLoader);
         sword = makeTexture("falcata.png", fileLoader);
         shield = makeTexture("shield.png", fileLoader);
+        splat[0] = makeTexture("splat2.png", fileLoader);
+        splat[1] = makeTexture("splat1.png", fileLoader);
+        splat[2] = makeTexture("splat0.png", fileLoader);
 
         if ( kShouldDrawSkybox) {
             skybox = makeTexture("clouds.png",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          fileLoader);
@@ -273,6 +277,7 @@ namespace odb {
                 intMap[z][x] = elementView;
                 mActors[z][x] = EActorsSnapshotElement::kNothing;
                 mItems[z][x] = EItemsSnapshotElement::kNothing;
+                mSplats[z][x] = -1;
 
                 if (actor != nullptr) {
                     if (actor != current) {
@@ -1277,6 +1282,7 @@ namespace odb {
             Knights::ElementView lastElement = 0;
             Knights::ElementView element;
             Vec3 position;
+            int shouldSplat = -1;
 
             const auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
             for ( int distance = 79; distance >= 0; --distance ) {
@@ -1299,6 +1305,7 @@ namespace odb {
 
                             actorsSnapshotElement = mActors[z][(Knights::kMapSize - 1) - x ];
                             itemsSnapshotElement = mItems[z][(Knights::kMapSize - 1) - x ];
+                            shouldSplat = mSplats[z][(Knights::kMapSize - 1) - x ]--;
 
                             mCamera.mX = FixP{ 78 - ( 2 * mCameraPosition.x ) };
                             mCamera.mY = FixP{ cameraHeight -1};
@@ -1337,6 +1344,7 @@ namespace odb {
 
                             actorsSnapshotElement = mActors[(Knights::kMapSize - 1) - z][x];
                             itemsSnapshotElement = mItems[(Knights::kMapSize - 1) - z][ x ];
+                            shouldSplat = mSplats[(Knights::kMapSize - 1) - z][ x ]--;
 
                             mCamera.mX = FixP{ ( 2 * mCameraPosition.x ) };
                             mCamera.mY = FixP{cameraHeight -1};
@@ -1373,6 +1381,7 @@ namespace odb {
 
                             itemsSnapshotElement = mItems[x][(Knights::kMapSize - 1) - z ];
                             actorsSnapshotElement = mActors[x][(Knights::kMapSize - 1) - z ];
+                            shouldSplat = mSplats[x][(Knights::kMapSize - 1) - z ]--;
 
                             mCamera.mX = FixP{ ( 2 * mCameraPosition.y ) };
                             mCamera.mY = FixP{cameraHeight-1};
@@ -1409,7 +1418,7 @@ namespace odb {
 
                             actorsSnapshotElement = mActors[x][z ];
                             itemsSnapshotElement = mItems[x][z ];
-
+                            shouldSplat = mSplats[x][z ]--;
 
 
                             mCamera.mX = FixP{ - ( 2 * mCameraPosition.y ) };
@@ -1599,6 +1608,13 @@ namespace odb {
                             break;
                     }
 
+                    if (shouldSplat >= 0 ) {
+                        drawBillboardAt(
+                                position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
+                                splat[ shouldSplat ] );
+                        mNeedsToRedraw = true;
+                    }
+
 
 
                     if ( itemsSnapshotElement != EItemsSnapshotElement ::kNothing ) {
@@ -1710,6 +1726,10 @@ namespace odb {
             mUsefulFrames++;
 #endif
         }
+    }
+
+    void CRenderer::addSplatAt( const Knights::Vec2i& position ) {
+        mSplats[position.y][position.x] = 2;
     }
 
     void CRenderer::fill( int x, int y, int dx, int dy, uint8_t pixel ) {

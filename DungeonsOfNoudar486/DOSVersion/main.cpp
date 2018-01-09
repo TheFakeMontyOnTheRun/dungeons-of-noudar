@@ -236,6 +236,7 @@ int main(int argc, char **argv) {
             char buffer[81];
             snprintf(buffer, 80, "Player dealt %d of damage", ( healthAtTargetBefore - healthAtTargetAfter ) );
             renderer->appendToLog( buffer );
+            renderer->addSplatAt(actorAtTarget->getPosition());
         }
 
 

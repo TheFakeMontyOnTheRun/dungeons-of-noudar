@@ -84,6 +84,8 @@ namespace odb {
 #ifdef SDLSW
         bool mSlow = false;
 #endif
+        int mSplats[ 40 ][ 40 ];
+
     public:
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;
@@ -91,6 +93,7 @@ namespace odb {
     private:
 
      public:
+        void addSplatAt( const Knights::Vec2i& position );
 
         Knights::CommandType peekInput();
         void appendToLog(const char* message);
