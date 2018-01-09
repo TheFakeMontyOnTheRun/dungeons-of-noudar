@@ -212,7 +212,7 @@ int main(int argc, char **argv) {
         }
 
         game->tick();
-        renderer->mTurn = game->getTurn();
+
         gameLoopTick();
 
         Knights::CommandType command = renderer->peekInput();

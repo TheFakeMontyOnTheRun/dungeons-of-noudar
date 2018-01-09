@@ -63,7 +63,7 @@ namespace odb {
         bool mHudDrawn = false;
         array<array<Knights::ElementView , Knights::kMapSize>, Knights::kMapSize> mElementsMap;
         Knights::CommandType mBufferedCommand = '.';
-        bool mNeedsToRedraw = true;
+
         array< uint8_t, 320 * 200 > mBuffer;
         array< uint32_t , 256 > mPalette;
         EActorsSnapshotElement mActors[40][40];
@@ -80,19 +80,29 @@ namespace odb {
         std::string mItemName;
         int mItemCapacity;
         int mUsageCost = 0;
+        Vec3 mCamera{ FixP{1}, FixP{1}, FixP{1}};
         bool mStaticPartsOfHudDrawn = false;
+        bool mNeedsToRedraw = true;
 #ifdef SDLSW
         bool mSlow = false;
 #endif
         int mSplats[ 40 ][ 40 ];
 
+        CTilePropertyMap mTileProperties;
+        Knights::Vec2i mCameraPosition;
+
+
     public:
+
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
         Knights::CommandType getInput() override;
         void flip();
     private:
 
      public:
+        const static uint8_t mTransparency;
+        static vector<TexturePair> mNativeTextures;
+
         void addSplatAt( const Knights::Vec2i& position );
 
         Knights::CommandType peekInput();
@@ -100,7 +110,7 @@ namespace odb {
         CRenderer();
         ~CRenderer();
         uint8_t * getBufferData();
-        uint64_t mTurn = 0;
+
         void fillSidebar();
 
         void fillUnderbar();
@@ -147,8 +157,6 @@ namespace odb {
 
         void clear();
 
-        Vec3 mCamera{ FixP{1}, FixP{1}, FixP{1}};
-
         void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1);
 
         void drawLine(const Vec2 &p0, const Vec2 &p1);
@@ -170,12 +178,6 @@ namespace odb {
                 {Vec3{0,0,0},Vec2{0,0}},
                 {Vec3{0,0,0},Vec2{0,0}},
         };
-
-        CTilePropertyMap mTileProperties;
-        Knights::Vec2i mCameraPosition;
-        static vector<TexturePair> mNativeTextures;
-
-        const static uint8_t mTransparency;
     };
 
     std::shared_ptr<odb::NativeTexture> makeTexture(const std::string& path, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
