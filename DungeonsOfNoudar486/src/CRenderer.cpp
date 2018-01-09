@@ -1804,14 +1804,10 @@ namespace odb {
         textureRegistry["bricks"] = ETextures::Bricks;
         textureRegistry["arch"] = ETextures::Arch;
         textureRegistry["bars"] = ETextures::Bars;
-        textureRegistry["begin"] = ETextures::Begin;
-        textureRegistry["exit"] = ETextures::Exit;
+        textureRegistry["begin"] = ETextures::Arch;
+        textureRegistry["exit"] = ETextures::Arch;
         textureRegistry["bricksblood"] = ETextures::BricksBlood;
         textureRegistry["brickscandles"] = ETextures::BricksCandles;
-        textureRegistry["stonegrassfar"] = ETextures::StoneGrassFar;
-        textureRegistry["grassstonefar"] = ETextures::GrassStoneFar;
-        textureRegistry["stonegrassnear"] = ETextures::StoneGrassNear;
-        textureRegistry["grassstonenear"] = ETextures::GrassStoneNear;
         textureRegistry["ceiling"] = ETextures::Ceiling;
         textureRegistry["ceilingdoor"] = ETextures::CeilingDoor;
         textureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
