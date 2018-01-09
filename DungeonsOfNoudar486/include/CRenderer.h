@@ -91,7 +91,8 @@ namespace odb {
         CTilePropertyMap mTileProperties;
         Knights::Vec2i mCameraPosition;
 
-
+        int mDamageHighlight = 0;
+        int mHealHighlight = 0;
     public:
 
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;
@@ -114,6 +115,10 @@ namespace odb {
         void fillSidebar();
 
         void fillUnderbar();
+
+        void startHealHighlight();
+
+        void startDamageHighlight();
 
         void drawCubeAt(const Vec3 &center, TexturePair texture );
 

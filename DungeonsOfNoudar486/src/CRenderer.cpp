@@ -1282,6 +1282,7 @@ namespace odb {
             Knights::ElementView lastElement = 0;
             Knights::ElementView element;
             Vec3 position;
+            bool splatDrawn = false;
             int shouldSplat = -1;
 
             const auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
@@ -1613,6 +1614,7 @@ namespace odb {
                                 position + Vec3{ 0, multiply( tileProp.mFloorHeight, two), 0},
                                 splat[ shouldSplat ] );
                         mNeedsToRedraw = true;
+                        splatDrawn = true;
                     }
 
 
@@ -1651,23 +1653,39 @@ namespace odb {
             }
 
             const static auto black = 0;
+            const static auto red = getPaletteEntry( 0xFF0000FF );
+            const static auto green = getPaletteEntry( 0xFF00FF00 );
 
+            auto backgroundColour = black;
+
+            if ( mDamageHighlight > 0 && !splatDrawn ) {
+                mDamageHighlight = 0;
+                backgroundColour = red;
+                mNeedsToRedraw = true;
+            }
+
+            if ( mHealHighlight > 0 && !splatDrawn ) {
+                mHealHighlight = 0;
+                backgroundColour = green;
+                mNeedsToRedraw = true;
+            }
 
             for ( int c = 0; c < 4; ++c ) {
                 drawSprite( 320 - 32, ( c * 32), mBackground );
                 drawSprite( 320 - 64, ( c * 32), mBackground );
             }
 
-            fill( 320 - 64, 8, 64, 64 - 8, black );
-            fill( 320 - 64 + 8, 64, 32 + 16, 64 - 8, black );
+            fill( 320 - 64, 8, 64, 64 - 8, backgroundColour );
+            fill( 320 - 64 + 8, 64, 32 + 16, 64 - 8, backgroundColour );
 
             if (!mStaticPartsOfHudDrawn) {
                 for ( int c = 0; c < 10; ++c ) {
                     drawSprite( c * 32, 128, mBackground );
                 }
-
                 mStaticPartsOfHudDrawn = true;
             }
+
+
 
             fill( 0, 160, 320, 40, black );
 
@@ -1727,6 +1745,15 @@ namespace odb {
 #endif
         }
     }
+
+    void CRenderer::startHealHighlight() {
+        mHealHighlight = 1;
+    }
+
+    void CRenderer::startDamageHighlight() {
+        mDamageHighlight = 1;
+    }
+
 
     void CRenderer::addSplatAt( const Knights::Vec2i& position ) {
         mSplats[position.y][position.x] = 2;

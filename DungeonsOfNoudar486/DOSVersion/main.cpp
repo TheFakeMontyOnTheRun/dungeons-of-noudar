@@ -248,10 +248,12 @@ int main(int argc, char **argv) {
             char buffer[81];
             snprintf(buffer, 80, "Player took %d of damage", -diff);
             renderer->appendToLog( buffer );
+            renderer->startDamageHighlight();
         } else if ( diff > 0 ) {
             char buffer[81];
             snprintf(buffer, 80, "Player gained %d of faith", diff);
             renderer->appendToLog( buffer );
+            renderer->startHealHighlight();
         }
 
 
