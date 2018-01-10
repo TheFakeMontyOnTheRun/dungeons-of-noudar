@@ -5,7 +5,8 @@ I 0 null null null cube null bricks 0 4 0 2
 0 0 ceiling floor null floor null null 0 0 2 0
 O 0 ceiling floor null cube bricks bricks 1 6 2 0
 _ 0 ceiling floor null cube floor null 0 0 2 0
-A 1 ceiling ceiling null cube bricks bricks 2 0 2 -2
+A 0 ceiling ceiling null cube bricks bricks 1 1 1.2 0.2
+X 0 null null bricksblood cube null null 0 0 1.2 0.2
 L 0 ceiling lava null floor null null 0 0 2 -2
 * 0 null floor null cube null null 0 0 0 0
 4 0 ceiling floor null cube null null 0 0 2 0
@@ -25,7 +26,6 @@ H 0 ceiling floor null cube brickscandles null 1 0 3 0
 ! 0 ceilingbars floor null cube bricks null 2 0 1 0
 ~ 1 ceilingbars floor arch cube bricks null 1 0 1 0
 Y 0 null null bricks cube brickscandles null 1 0 1 0
-X 0 null null bricks cube bricks null 2 0 1 0 
 B 0 ceilingbegin floor begin cube null null 2 0 1 0
 E 1 ceilingend floor exit cube null null 1 0 1 0
 > 0 null floor bricks leftnear bricks null 2 0 1 0
