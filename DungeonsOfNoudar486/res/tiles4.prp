@@ -11,11 +11,12 @@ L 0 ceiling lava null floor null null 0 0 2 -2
 4 0 ceiling floor null cube null null 0 0 2 0
 % 1 null floor bricks leftnear bricks null 3 0 1 0
 # 1 ceilingbars floor bars cube bricks null 1 0 1 0
+F 1 ceilingbars floor bars cube bricks null 1 0 1 0
 | 0 null floor bricks leftfar bricks null 3 0 1 0
 \ 0 ceiling floor bricks leftfar  null null 0 0 2 0
 / 0 ceiling floor bricks leftnear null null 0 0 2 0
 . 0 ceiling floor null null null null 0 0 2 0
-H 0 ceiling floor null cube brickscandles null 1 0 3 0
+H 1 ceilingbars floor arch cube bricks null 1 0 1 0
 - 0 ceiling floor null cube bricks null 1 0 2 0
 ( 1 null floorstonefar null null null null 0 0 0 0
 { 1 null floorstonenear null null null null 0 0 0 0
