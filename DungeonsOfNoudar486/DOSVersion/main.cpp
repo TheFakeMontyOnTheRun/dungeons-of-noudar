@@ -142,14 +142,12 @@ int main(int argc, char **argv) {
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
     auto intro = loadPNG( "intro.png", fileLoader );
+    auto ready = loadPNG( "enter.png", fileLoader );
+
     renderer = std::make_shared<odb::CRenderer>();
     renderer->drawBitmap(0, 0, intro );
     renderer->flip();
     game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
-
-//    if ( argc > 1 ) {
-//        game->playLevel(atoi( argv[1]));
-//    }
 
     game->getMap()->getAvatar()->addHP(99);
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
@@ -162,17 +160,14 @@ int main(int argc, char **argv) {
             auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
             renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
         }
+
+        renderer->drawBitmap(0, 0, intro );
+        renderer->drawBitmap(0, 180, ready );
+        renderer->flip();
+        getch();
     };
 
     delegate->setOnLevelLoadedCallback(onLevelLoaded );
-
-
-    game->endOfTurn(game->getMap());
-
-    auto ready = loadPNG( "enter.png", fileLoader );
-    renderer->drawBitmap(0, 0, intro );
-    renderer->drawBitmap(0, 180, ready );
-    renderer->flip();
 
     auto onLevelWillLoad = [&]() {
         renderer->drawBitmap(0, 0, intro );
@@ -181,7 +176,11 @@ int main(int argc, char **argv) {
 
     delegate->setOnLevelWillLoadCallback(onLevelWillLoad );
 
+    game->endOfTurn(game->getMap());
 
+    renderer->drawBitmap(0, 0, intro );
+    renderer->drawBitmap(0, 180, ready );
+    renderer->flip();
     getch();
 
     if (soundDriver != kNone ) {
