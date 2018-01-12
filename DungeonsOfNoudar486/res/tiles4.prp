@@ -1,10 +1,10 @@
 1 0 null null null cube bricks null 2 0 0 0
 R 0 null null null cube bricks null 2 0 0 0
+_ 0 ceiling floor null cube floor null 0 0 2 0
 @ 0 bricks bricks slot cube bricks null 1 0 1 0
 I 0 null null null cube null bricks 0 4 0 2
 0 0 ceiling floor null floor null null 0 0 2 0
 O 0 ceiling floor null cube bricks bricks 1 6 2 0
-_ 0 ceiling floor null cube floor null 0 0 2 0
 A 1 ceiling ceiling null cube bricks bricks 2 0 2 -2
 L 0 ceiling lava null floor null null 0 0 2 -2
 * 0 null floor null cube null null 0 0 0 0
