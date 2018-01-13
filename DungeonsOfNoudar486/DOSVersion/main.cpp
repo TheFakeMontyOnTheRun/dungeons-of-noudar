@@ -1,3 +1,16 @@
+
+#include <time.h>
+#include <array>
+#include <go32.h>
+#include <sys/farptr.h>
+#include <conio.h>
+#include <dpmi.h>
+#include <go32.h>
+#include <pc.h>
+#include <bios.h>
+#include <time.h>
+#include <unistd.h>
+
 #include <conio.h>
 #include <cstdlib>
 #include <cstdio>
@@ -108,10 +121,24 @@ void gameLoopTick() {
 std::shared_ptr<Knights::CGame> game;
 
 int getch_noblock() {
-    if (kbhit())
-        return getch();
-    else
-        return -1;
+
+    if (soundDriver != kNone ) {
+        playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+    }
+
+    while (!kbhit()) {
+
+        if (soundDriver != kNone ) {
+            usleep((75) * 1000);
+            soundTick();
+        }
+    }
+
+    if (soundDriver != kNone ) {
+        stopSounds();
+    }
+
+    return getch();
 }
 
 int main(int argc, char **argv) {
@@ -127,7 +154,7 @@ int main(int argc, char **argv) {
 
         if ( !std::strcmp(argv[1], "opl2lpt")) {
             instrument = 80;
-            soundTiming = 1;
+            soundTiming = 75;
             soundDriver = kOpl2Lpt;
 
             if (argc >= 3 ) {
@@ -164,7 +191,7 @@ int main(int argc, char **argv) {
         renderer->drawBitmap(0, 0, intro );
         renderer->drawBitmap(0, 180, ready );
         renderer->flip();
-        getch();
+        getch_noblock();
     };
 
     delegate->setOnLevelLoadedCallback(onLevelLoaded );
@@ -181,11 +208,8 @@ int main(int argc, char **argv) {
     renderer->drawBitmap(0, 0, intro );
     renderer->drawBitmap(0, 180, ready );
     renderer->flip();
-    getch();
+    getch_noblock();
 
-    if (soundDriver != kNone ) {
-        playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-    }
 
     auto noteTime = soundTiming;
     clock_t t0;
