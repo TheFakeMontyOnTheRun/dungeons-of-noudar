@@ -18,13 +18,23 @@ _go32_dpmi_seginfo OldISR, NewISR;
 #include <conio.h>
 
 
-static volatile unsigned long timer_ticks;
+static volatile unsigned int timer_ticks;
 static unsigned timer_counter;
+static unsigned timer_sum;
 
 void timer_handler() {
+    unsigned short old_sum = timer_sum;
+
     ++timer_ticks;
 
-    outp(0x20, 0x20);
+    timer_sum += timer_counter;
+
+
+    if (timer_sum < old_sum) {
+        _go32_dpmi_chain_protected_mode_interrupt_vector(TIMER,&OldISR);
+    } else {
+        outp(0x20, 0x20);
+    }
 }
 
 void timer_reset(unsigned short frequency) {
