@@ -100,7 +100,7 @@ namespace odb {
             auto getched = getch();
             switch(getched) {
                 case 27:
-                    exit(0);
+                    mBufferedCommand = Knights::kQuitGameCommand;
                     break;
 
                 case 'w':
