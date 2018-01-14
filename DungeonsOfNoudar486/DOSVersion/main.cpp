@@ -166,6 +166,37 @@ void playSoundForAction(Knights::CommandType command ) {
     }
 }
 
+void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int targetHealthDiff, std::shared_ptr<odb::CRenderer> renderer, std::shared_ptr<Knights::CActor> actorAtTarget ) {
+    if ( command != '.') {
+        char buffer[81];
+        snprintf(buffer, 80, "%s", game->getLastCommand().c_str());
+        renderer->appendToLog( buffer );
+    }
+
+    if ( targetHealthDiff < 0 ) {
+        char buffer[81];
+        snprintf(buffer, 80, "Player dealt %d of damage", -targetHealthDiff );
+        renderer->appendToLog( buffer );
+        if (actorAtTarget == nullptr || !actorAtTarget->isAlive()) {
+            renderer->addDeathAt(actorAtTarget->getPosition());
+        } else {
+            renderer->addSplatAt(actorAtTarget->getPosition());
+        }
+    }
+
+    if ( playerHealthDiff < 0 ) {
+        char buffer[81];
+        snprintf(buffer, 80, "Player took %d of damage", -playerHealthDiff);
+        renderer->appendToLog( buffer );
+        renderer->startDamageHighlight();
+    } else if ( playerHealthDiff > 0 ) {
+        char buffer[81];
+        snprintf(buffer, 80, "Player gained %d of faith", playerHealthDiff);
+        renderer->appendToLog( buffer );
+        renderer->startHealHighlight();
+    }
+}
+
 int main(int argc, char **argv) {
     int instrument = -1;
 
@@ -240,6 +271,7 @@ int main(int argc, char **argv) {
     auto noteTime = soundTiming;
 
     while ( game->isPlaying() ) {
+
         if (soundDriver != kNone ) {
             t0 = uclock();
         }
@@ -265,38 +297,11 @@ int main(int argc, char **argv) {
             healthAtTargetAfter = 0;
         }
 
-        if ( command != '.') {
-            char buffer[81];
-            snprintf(buffer, 80, "%s", game->getLastCommand().c_str());
-            renderer->appendToLog( buffer );
-        }
-
-        if ( healthAtTargetAfter < healthAtTargetBefore ) {
-            char buffer[81];
-            snprintf(buffer, 80, "Player dealt %d of damage", ( healthAtTargetBefore - healthAtTargetAfter ) );
-            renderer->appendToLog( buffer );
-            if (actorAtTarget == nullptr || !actorAtTarget->isAlive()) {
-                renderer->addDeathAt(actorAtTarget->getPosition());
-            } else {
-                renderer->addSplatAt(actorAtTarget->getPosition());
-            }
-        }
-
+        auto targetHealthDiff = healthAtTargetAfter - healthAtTargetBefore;
         auto playerHealthAfter = game->getMap()->getAvatar()->getHP();
+        auto playerHealthDiff = playerHealthAfter - playerHealthBefore;
 
-        auto diff = playerHealthAfter - playerHealthBefore;
-
-        if ( diff < 0 ) {
-            char buffer[81];
-            snprintf(buffer, 80, "Player took %d of damage", -diff);
-            renderer->appendToLog( buffer );
-            renderer->startDamageHighlight();
-        } else if ( diff > 0 ) {
-            char buffer[81];
-            snprintf(buffer, 80, "Player gained %d of faith", diff);
-            renderer->appendToLog( buffer );
-            renderer->startHealHighlight();
-        }
+        handleConsoleLines( command, playerHealthDiff, targetHealthDiff, renderer, actorAtTarget );
 
         if (soundDriver != kNone ) {
 
@@ -316,6 +321,7 @@ int main(int argc, char **argv) {
         }
 
     }
+
     stopSounds();
 
     return 0;
