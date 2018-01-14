@@ -78,7 +78,6 @@ void initOPL2(int instrument) {
     setupOPL2(instrument);
 }
 
-
 std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const std::string& filename ) {
     char c = 219;
     c = 176;
@@ -113,40 +112,76 @@ void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, cons
     return malloc( size );
 }
 
-void gameLoopTick() {
+void renderTick() {
     renderer->render( 33 );
     renderer->handleSystemEvents();
 }
 
 std::shared_ptr<Knights::CGame> game;
 
-int getch_noblock() {
+int getchWithSoundTicks() {
 
     if (soundDriver != kNone ) {
-        playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-    }
-
-    while (!kbhit()) {
-
-        if (soundDriver != kNone ) {
+        while (!kbhit()) {
             usleep((75) * 1000);
             soundTick();
         }
-    }
 
-    if (soundDriver != kNone ) {
         stopSounds();
     }
 
     return getch();
 }
 
+
+void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string& mainText, const std::string& bottom ) {
+    renderer->drawBitmap(0, 0, bg );
+    renderer->fill(0, 64, 320, 200 - 64, 0 );
+    renderer->flip();
+    gotoxy(1,9);
+    puts(mainText.c_str());
+    gotoxy(1,25);
+    printf(bottom.c_str());
+}
+
+void playSoundForAction(Knights::CommandType command ) {
+    if (command == Knights::kUseCurrentItemInInventoryCommand) {
+        playTune("aca");
+    }
+
+    if (command == Knights::kCycleLeftInventoryCommand) {
+        playTune("ac");
+    }
+
+    if (command == Knights::kCycleRightInventoryCommand) {
+        playTune("ca");
+    }
+
+    if (command == Knights::kPickItemCommand) {
+        playTune("abc");
+    }
+
+    if (command == Knights::kDropItemCommand) {
+        playTune("cba");
+    }
+}
+
 int main(int argc, char **argv) {
     int instrument = -1;
-    printf("Dungeons of Noudar 486 tech demo startup. Gonna load some stuff...");
+
+    const auto LEVEL_LIMIT = 7;
+    clock_t t0;
+    clock_t t1;
+    int healthAtTargetBefore = 0;
+    int healthAtTargetAfter = 0;
+    auto delegate = std::make_shared<Knights::CGameDelegate>();
+    auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
+    auto bg = loadPNG( "intro.png", fileLoader );
+    auto introText = fileLoader->loadFileFromPath("intro.txt");
+
+    puts("Dungeons of Noudar 486 tech demo startup. Gonna load some stuff...");
 
     if ( argc >= 2 ) {
-        //  enableSecret = true;
         if ( !std::strcmp(argv[1], "pcspeaker")) {
             soundDriver = kPcSpeaker;
             soundTiming = 100;
@@ -165,58 +200,39 @@ int main(int argc, char **argv) {
         }
     }
 
-    const auto LEVEL_LIMIT = 7;
-    auto delegate = std::make_shared<Knights::CGameDelegate>();
-    auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
-    auto intro = loadPNG( "intro.png", fileLoader );
-    auto ready = loadPNG( "enter.png", fileLoader );
-
     renderer = std::make_shared<odb::CRenderer>();
-    renderer->drawBitmap(0, 0, intro );
-    renderer->flip();
-    game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
 
-    game->getMap()->getAvatar()->addHP(99);
+    auto onLevelWillLoad = [&]() {
+        showText(bg, "", "Loading...");
+    };
+    delegate->setOnLevelWillLoadCallback(onLevelWillLoad );
+
+    game = std::make_shared<Knights::CGame>( fileLoader, renderer, delegate );
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
     renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
+    playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+    showText(bg, introText, "Press any key to start" );
+    getchWithSoundTicks();
+
     auto onLevelLoaded = [&]() {
-        if ( game->getLevelNumber() >= LEVEL_LIMIT ) {
-            game->setIsPlaying( false );
-        } else {
-            auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
-            renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
+
+        if (game != nullptr ) {
+            if ( game->getLevelNumber() >= LEVEL_LIMIT ) {
+                game->setIsPlaying( false );
+            } else {
+                auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
+                renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
+            }
         }
 
-        renderer->drawBitmap(0, 0, intro );
-        renderer->drawBitmap(0, 180, ready );
-        renderer->flip();
-        getch_noblock();
+        playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+        showText(bg, "", "Press any key to start");
+        getchWithSoundTicks();
     };
-
     delegate->setOnLevelLoadedCallback(onLevelLoaded );
 
-    auto onLevelWillLoad = [&]() {
-        renderer->drawBitmap(0, 0, intro );
-        renderer->flip();
-    };
-
-    delegate->setOnLevelWillLoadCallback(onLevelWillLoad );
-
-    game->endOfTurn(game->getMap());
-
-    renderer->drawBitmap(0, 0, intro );
-    renderer->drawBitmap(0, 180, ready );
-    renderer->flip();
-    getch_noblock();
-
-
     auto noteTime = soundTiming;
-    clock_t t0;
-    clock_t t1;
-
-    int healthAtTargetBefore = 0;
-    int healthAtTargetAfter = 0;
 
     while ( game->isPlaying() ) {
         if (soundDriver != kNone ) {
@@ -224,7 +240,6 @@ int main(int argc, char **argv) {
         }
 
         auto playerHealthBefore = game->getMap()->getAvatar()->getHP();
-
         auto cursorPosition = game->getMap()->getTargetProjection(game->getMap()->getAvatar());
         auto actorAtTarget = game->getMap()->getActorAt(cursorPosition);
 
@@ -235,24 +250,20 @@ int main(int argc, char **argv) {
         }
 
         game->tick();
-
-        gameLoopTick();
-
+        renderTick();
         Knights::CommandType command = renderer->peekInput();
-
         game->tick();
-
-        if ( command != '.') {
-            char buffer[81];
-            snprintf(buffer, 80, "%s", game->getLastCommand().c_str());
-            renderer->appendToLog( buffer );
-        }
-
 
         if ( actorAtTarget != nullptr ) {
             healthAtTargetAfter = actorAtTarget->getHP();
         } else {
             healthAtTargetAfter = 0;
+        }
+
+        if ( command != '.') {
+            char buffer[81];
+            snprintf(buffer, 80, "%s", game->getLastCommand().c_str());
+            renderer->appendToLog( buffer );
         }
 
         if ( healthAtTargetAfter < healthAtTargetBefore ) {
@@ -264,9 +275,7 @@ int main(int argc, char **argv) {
             } else {
                 renderer->addSplatAt(actorAtTarget->getPosition());
             }
-
         }
-
 
         auto playerHealthAfter = game->getMap()->getAvatar()->getHP();
 
@@ -284,30 +293,9 @@ int main(int argc, char **argv) {
             renderer->startHealHighlight();
         }
 
-
-
-
         if (soundDriver != kNone ) {
 
-            if (command == Knights::kUseCurrentItemInInventoryCommand) {
-                playTune("aca");
-            }
-
-            if (command == Knights::kCycleLeftInventoryCommand) {
-                playTune("ac");
-            }
-
-            if (command == Knights::kCycleRightInventoryCommand) {
-                playTune("ca");
-            }
-
-            if (command == Knights::kPickItemCommand) {
-                playTune("abc");
-            }
-
-            if (command == Knights::kDropItemCommand) {
-                playTune("cba");
-            }
+            playSoundForAction(command);
 
             t1 = uclock();
             auto diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
