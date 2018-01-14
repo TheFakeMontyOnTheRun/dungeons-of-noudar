@@ -1,0 +1,15 @@
+Dungeons of Noudar 486 (c) 2016-2018
+
+A game by Daniel Monteiro.
+Art by Stone Soup project.
+
+Controls:
+* arrows to move and turn.
+* z and x to strafe left and right.
+* q and e to cycle thru the inventory.
+* w and s to pick and drop items.
+* space to use the current item.
+* esc to quit (but why?!).
+
+Many thanks to the folks at 
+Retromania.pt and DOSHaven.eu!

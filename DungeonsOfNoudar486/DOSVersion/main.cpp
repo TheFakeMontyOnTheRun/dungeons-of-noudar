@@ -177,6 +177,7 @@ int main(int argc, char **argv) {
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
     auto bg = loadPNG( "intro.png", fileLoader );
+
     auto introText = fileLoader->loadFileFromPath("intro.txt");
 
     puts("Dungeons of Noudar 486 tech demo startup. Gonna load some stuff...");
@@ -201,6 +202,10 @@ int main(int argc, char **argv) {
     }
 
     renderer = std::make_shared<odb::CRenderer>();
+
+    auto titleText = fileLoader->loadFileFromPath("title.txt");
+    showText(bg, titleText, "Press any key to continue");
+    getchWithSoundTicks();
 
     auto onLevelWillLoad = [&]() {
         showText(bg, "", "Loading...");
