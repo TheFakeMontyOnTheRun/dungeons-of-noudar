@@ -290,23 +290,23 @@ int main(int argc, char **argv) {
         if (soundDriver != kNone ) {
 
             if (command == Knights::kUseCurrentItemInInventoryCommand) {
-                playMusic(20, "020|aca|aca|aca");
+                playTune("aca");
             }
 
             if (command == Knights::kCycleLeftInventoryCommand) {
-                playMusic(20, "020|ac|ac|ac");
+                playTune("ac");
             }
 
             if (command == Knights::kCycleRightInventoryCommand) {
-                playMusic(20, "020|ca|ca|ca");
+                playTune("ca");
             }
 
             if (command == Knights::kPickItemCommand) {
-                playMusic(20, "020|abc|abc|abc");
+                playTune("abc");
             }
 
             if (command == Knights::kDropItemCommand) {
-                playMusic(20, "020|cba|cba|cba");
+                playTune("cba");
             }
 
             t1 = uclock();
