@@ -15,7 +15,7 @@ E 0 ceiling floor null cube  null bricks 0 1 2 -0.2
 % 1 null floor bricks leftnear bricks null 3 0 1 0
 # 1 ceilingbars floor bars cube bricks null 2 0 1 0.05
 | 1 null floor fence cube null bricks 0 1 1 0.05
-H 0 null null  null cube bricks null 3 0 -1 -1
+P 0 null null  null cube bricksblood null 3 0 -1 -1
 ( 1 null grassstonefar null null null null 0 0 0 0
 { 1 null grassstonenear null null null null 0 0 0 0
 ) 1 null stonegrassnear null null null null 0 0 0 0

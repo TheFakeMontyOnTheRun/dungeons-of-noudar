@@ -1,4 +1,5 @@
 1 0 null null null cube bricks null 2 0 0 0
+P 0 null null null cube magicseal null 2 0 0 0
 R 0 null null null cube bricks null 2 0 0 0
 _ 0 ceiling floor null cube floor null 0 0 2 0
 @ 0 bricks bricks slot cube bricks null 1 0 1 0
@@ -52,3 +53,4 @@ e 0 ceiling floor null floor null null 0 0 2 0
 G 0 ceiling floor null floor null null 0 0 2 0
 = 0 ceiling floor null cube bricks bricks 0 0 2 0
 K 0 ceiling ceilingend null cube null ceilingdoor 0 1 2 0.3
+H 1 ceilingbars floor arch cube magicseal null 1 0 1 0

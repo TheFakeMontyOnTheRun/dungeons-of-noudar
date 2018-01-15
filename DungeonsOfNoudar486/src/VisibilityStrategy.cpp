@@ -50,9 +50,9 @@ namespace odb {
 		std::string occluderString = "";
 
 		if (kConservativeOccluders ) {
-			occluderString = "1IYXR";
+			occluderString = "1IYXPR";
 		} else {
-			occluderString = "1IYXR\\/SZ|%<>";
+			occluderString = "1IYXPR\\/SZ|%<>";
 		}
 
 		for (const auto& candidate : occluderString ) {

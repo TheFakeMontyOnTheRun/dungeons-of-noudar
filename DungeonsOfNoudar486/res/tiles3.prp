@@ -8,7 +8,7 @@ I 0 null null bricks cube bricks bricks 3 1 1 0
 Y 0 null null brickscandles cube bricks bricks 3 1 1 0
 * 0 null floor null cube null null 0 0 0 0
 4 0 null floor null cube null null 0 0 0 0
-% 1 null floor bricks leftnear bricks null 3 0 1 0
+% 1 null floor magicseal leftnear magicseal null 3 0 1 0
 # 1 ceilingbars floor bars cube bricks null 3 0 1 0
 K 1 null floor fence cube null bricks 0 1 2 0.25
 | 0 null floor bricks leftfar bricks null 3 0 1 0
@@ -51,6 +51,7 @@ G 0 null grass null floor null null 0 0 0 0
 E 0 ceiling floor null cube  null bricks 0 1 2 -0.2
 H 0 ceiling floor null cube  null bricks 0 1 2 -0.4
 % 0 null null  null cube null bricks 0 4 5 3
+P 0 null null  null cube null magicseal 0 4 5 3
 V 0 null grass null floor null null 0 0 0 -1
 \ 0 null ceiling null leftfar  bricks bricks 6 0 -1 -1
 / 0 null ceiling null leftnear bricks bricks 6 0 -1 -1

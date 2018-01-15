@@ -1237,7 +1237,7 @@ namespace odb {
     }
 
     bool isOccluder(Knights::ElementView tile  ) {
-        std::string occluderString = "1IYXR\\/SZ|%<>";
+        std::string occluderString = "1IYXPR\\/SZ|%<>";
 
         for (const auto& candidate : occluderString ) {
             if (candidate == tile) {
