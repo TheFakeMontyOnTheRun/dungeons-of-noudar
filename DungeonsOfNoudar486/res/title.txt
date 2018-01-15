@@ -1,4 +1,4 @@
-Dungeons of Noudar 486 (c) 2016-2018
+Dungeons of Noudar 3D (c) 2014-2018
 
 A game by Daniel Monteiro.
 Art by Stone Soup project.
@@ -12,4 +12,4 @@ Controls:
 * esc to quit (but why?!).
 
 Many thanks to the folks at 
-Retromania.pt and DOSHaven.eu!
+Serdaco, Retromania.pt and DOSHaven.eu!
