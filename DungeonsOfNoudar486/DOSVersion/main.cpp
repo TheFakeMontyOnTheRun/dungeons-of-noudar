@@ -150,19 +150,19 @@ void playSoundForAction(Knights::CommandType command ) {
     }
 
     if (command == Knights::kCycleLeftInventoryCommand) {
-        playTune("ac");
-    }
-
-    if (command == Knights::kCycleRightInventoryCommand) {
-        playTune("ca");
-    }
-
-    if (command == Knights::kPickItemCommand) {
         playTune("abc");
     }
 
-    if (command == Knights::kDropItemCommand) {
+    if (command == Knights::kCycleRightInventoryCommand) {
         playTune("cba");
+    }
+
+    if (command == Knights::kPickItemCommand) {
+        playTune("defg");
+    }
+
+    if (command == Knights::kDropItemCommand) {
+        playTune("gfed");
     }
 }
 
