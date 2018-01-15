@@ -209,8 +209,6 @@ int main(int argc, char **argv) {
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
     auto bg = loadPNG( "intro.png", fileLoader );
 
-    auto introText = fileLoader->loadFileFromPath("intro.txt");
-
     puts("Dungeons of Noudar 486 tech demo startup. Gonna load some stuff...");
 
     if ( argc >= 2 ) {
@@ -247,6 +245,10 @@ int main(int argc, char **argv) {
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
     renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
+    char buffer[40];
+    snprintf(buffer, 40, "chapter%d.txt", game->getLevelNumber() );
+    auto introText = fileLoader->loadFileFromPath(buffer);
+
     playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
     showText(bg, introText, "Press any key to start" );
     getchWithSoundTicks();
@@ -259,12 +261,16 @@ int main(int argc, char **argv) {
             } else {
                 auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
                 renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
+
+                char buffer[40];
+                snprintf(buffer, 40, "chapter%d.txt", game->getLevelNumber() );
+                auto chapterText = fileLoader->loadFileFromPath(buffer);
+
+                playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+                showText(bg, chapterText, "Press any key to start");
+                getchWithSoundTicks();
             }
         }
-
-        playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-        showText(bg, "", "Press any key to start");
-        getchWithSoundTicks();
     };
     delegate->setOnLevelLoadedCallback(onLevelLoaded );
 
