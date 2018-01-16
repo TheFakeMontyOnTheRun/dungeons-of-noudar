@@ -261,15 +261,15 @@ int main(int argc, char **argv) {
             } else {
                 auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
                 renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
-
-                char buffer[40];
-                snprintf(buffer, 40, "chapter%d.txt", game->getLevelNumber() );
-                auto chapterText = fileLoader->loadFileFromPath(buffer);
-
-                playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-                showText(bg, chapterText, "Press any key to start");
-                getchWithSoundTicks();
             }
+
+            char buffer[40];
+            snprintf(buffer, 40, "chapter%d.txt", game->getLevelNumber() );
+            auto chapterText = fileLoader->loadFileFromPath(buffer);
+
+            playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+            showText(bg, chapterText, "Press any key to start");
+            getchWithSoundTicks();
         }
     };
     delegate->setOnLevelLoadedCallback(onLevelLoaded );
@@ -324,6 +324,16 @@ int main(int argc, char **argv) {
                 noteTime = soundTiming;
                 soundTick();
             }
+        }
+
+
+        if ( !game->getMap()->getAvatar()->isAlive()) {
+            game->setIsPlaying(false);
+            auto chapterText = fileLoader->loadFileFromPath("gameover.txt");
+
+            playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+            showText(bg, chapterText, "Press any key to start");
+            getchWithSoundTicks();
         }
 
     }
