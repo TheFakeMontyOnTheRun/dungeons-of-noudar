@@ -1,6 +1,6 @@
 I 0 null null null cube bricks null 6 0 0 0
 O 0 ceiling floor null cube null bricks 0 0 3 0.05
-8 0 ceiling ceilingbars null cube null bricks 0 0 3 0.05
+8 0 ceiling floor null cube null bricks 0 0 3 0.05
 K 0 ceiling ceilingend null cube null ceilingdoor 0 1 3 0.3
 R 0 null null null cube bricks null   4 0 0 0
 1 0 null null null cube bricks null   4 0 0 0
