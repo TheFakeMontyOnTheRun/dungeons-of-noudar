@@ -78,30 +78,6 @@ void initOPL2(int instrument) {
     setupOPL2(instrument);
 }
 
-std::function< std::string(std::string)> kDosLongFileNameTransformer = [](const std::string& filename ) {
-    char c = 219;
-    c = 176;
-    c = 177;
-    c = 178;
-    c = '.';
-    std::cout << c;
-    std::cout.flush();
-
-    auto dotPosition = std::find( std::begin(filename), std::end( filename), '.');
-    auto indexDot =  std::distance( std::begin( filename ), dotPosition );
-    auto extension = filename.substr( indexDot + 1, 3 );
-
-    if ( indexDot >  8 ) {
-        return filename.substr( 0, 6 ) + "~1." + extension;
-    }
-
-    if ( filename.length() - indexDot > 4 ) {
-        return filename.substr( 0, indexDot ) + "~1." + extension;
-    }
-
-    return filename;
-};
-
 void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags,
                      const char* file, int line) {
     return malloc( size );
