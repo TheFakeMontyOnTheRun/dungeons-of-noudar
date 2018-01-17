@@ -1812,7 +1812,7 @@ namespace odb {
     }
 
     void CRenderer::appendToLog(const char* message) {
-        mLogBuffer[0] = mLogBuffer[1];
+//        mLogBuffer[0] = mLogBuffer[1];
         mLogBuffer[1] = mLogBuffer[2];
         mLogBuffer[2] = mLogBuffer[3];
         mLogBuffer[3] = mLogBuffer[4];
