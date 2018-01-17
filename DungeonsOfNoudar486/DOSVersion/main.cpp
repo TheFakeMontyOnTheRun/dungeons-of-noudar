@@ -144,14 +144,14 @@ void playSoundForAction(Knights::CommandType command ) {
 
 void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int targetHealthDiff, std::shared_ptr<odb::CRenderer> renderer, std::shared_ptr<Knights::CActor> actorAtTarget ) {
     if ( command != '.') {
-        char buffer[81];
-        snprintf(buffer, 80, "%s", game->getLastCommand().c_str());
+        char buffer[40];
+        snprintf(buffer, 39, "%s", game->getLastCommand().c_str());
         renderer->appendToLog( buffer );
     }
 
     if ( targetHealthDiff < 0 ) {
-        char buffer[81];
-        snprintf(buffer, 80, "Player dealt %d of damage", -targetHealthDiff );
+        char buffer[40];
+        snprintf(buffer, 39, "Player dealt %d of damage", -targetHealthDiff );
         renderer->appendToLog( buffer );
         if (actorAtTarget == nullptr || !actorAtTarget->isAlive()) {
             renderer->addDeathAt(actorAtTarget->getPosition());
@@ -161,13 +161,13 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
     }
 
     if ( playerHealthDiff < 0 ) {
-        char buffer[81];
-        snprintf(buffer, 80, "Player took %d of damage", -playerHealthDiff);
+        char buffer[40];
+        snprintf(buffer, 39, "Player took %d of damage", -playerHealthDiff);
         renderer->appendToLog( buffer );
         renderer->startDamageHighlight();
     } else if ( playerHealthDiff > 0 ) {
-        char buffer[81];
-        snprintf(buffer, 80, "Player gained %d of faith", playerHealthDiff);
+        char buffer[40];
+        snprintf(buffer, 39, "Player gained %d of faith", playerHealthDiff);
         renderer->appendToLog( buffer );
         renderer->startHealHighlight();
     }

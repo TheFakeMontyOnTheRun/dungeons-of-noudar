@@ -1817,6 +1817,7 @@ namespace odb {
         mLogBuffer[2] = mLogBuffer[3];
         mLogBuffer[3] = mLogBuffer[4];
         mLogBuffer[4] = message;
+        mLogBuffer[4].resize(39, ' ');
     }
 
 
