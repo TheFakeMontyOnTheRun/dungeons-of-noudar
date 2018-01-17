@@ -62,7 +62,9 @@ namespace odb {
     CRenderer::~CRenderer() {
         textmode(C80);
         clrscr();
-        printf("Thanks for playing!\nTotal time spent rendering: %d\nTotal time spent processing visibility: %d\nFrames rendered: %d\n", mAccMs, mProcVisTime, mUsefulFrames );
+#ifdef PROFILEBUILD
+        printf("Total time spent rendering: %d\nTotal time spent processing visibility: %d\nFrames rendered: %d\n", mAccMs, mProcVisTime, mUsefulFrames );
+#endif
     }
 
     CRenderer::CRenderer() {
@@ -89,9 +91,10 @@ namespace odb {
     }
 
     void CRenderer::handleSystemEvents() {
+#ifdef PROFILEBUILD
         gotoxy(1,1);
         printf("%d", ++mFrame);
-
+#endif
         const static FixP delta{2};
 
         int lastKey = 0;

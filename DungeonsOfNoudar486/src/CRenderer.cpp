@@ -1257,7 +1257,7 @@ namespace odb {
             const static FixP one{1};
 
             mNeedsToRedraw = false;
-#ifndef SDLSW
+#ifdef PROFILEBUILD
             auto t0 = uclock();
 #endif
             if ( kShouldDrawSkybox ) {
@@ -1738,7 +1738,7 @@ namespace odb {
             drawTextAt( 1, 24, mLogBuffer[3].c_str() );
             drawTextAt( 1, 25, mLogBuffer[4].c_str() );
 
-#ifndef SDLSW
+#ifdef PROFILEBUILD
             auto t1 = uclock();
             mAccMs += (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
             mUsefulFrames++;
