@@ -49,7 +49,7 @@ OBJS = src/CRenderer.o \
     DOSVersion/main.o \
     DOSVersion/CDOSRenderer.o \
 
-TARGET = game.exe
+TARGET = noudar.exe
 
 $(TARGET):	$(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS) $(LDFLAGS)
