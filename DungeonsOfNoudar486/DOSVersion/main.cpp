@@ -244,7 +244,7 @@ int main(int argc, char **argv) {
             auto chapterText = fileLoader->loadFileFromPath(buffer);
 
             playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-            showText(bg, chapterText, "Press any key to start");
+            showText(bg, chapterText, "Press any key to continue");
             getchWithSoundTicks();
         }
     };
@@ -308,7 +308,7 @@ int main(int argc, char **argv) {
             auto chapterText = fileLoader->loadFileFromPath("gameover.txt");
 
             playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-            showText(bg, chapterText, "Press any key to start");
+            showText(bg, chapterText, "Press any key to continue");
             getchWithSoundTicks();
         }
 
