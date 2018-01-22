@@ -62,7 +62,7 @@ namespace odb {
     CRenderer::~CRenderer() {
         textmode(C80);
         clrscr();
-        printf("Thanks for playing!\nI would like to thank Ivan Odintsoff for the help,\nmy coworkers in the Lisbon office,\nmy family and most of all, my wife for keeping me human.\n\n" );
+        printf("Thanks for playing!\nI would like to thank Ivan Odintsoff for the help,\nmy coworkers in the Lisbon office,\nmy family and most of all, my wife for keeping me human.\n\nDOS is back with a vengeance. This is only the first blow.\n\n" );
 #ifdef PROFILEBUILD
         printf("Total time spent rendering: %d\nTotal time spent processing visibility: %d\nFrames rendered: %d\n", mAccMs, mProcVisTime, mUsefulFrames );
 #endif
