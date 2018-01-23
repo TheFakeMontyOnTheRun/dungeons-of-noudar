@@ -19,8 +19,8 @@ _go32_dpmi_seginfo OldISR, NewISR;
 
 
 static volatile unsigned int timer_ticks;
-static unsigned timer_counter;
-static unsigned timer_sum;
+static unsigned int timer_counter;
+static unsigned int timer_sum;
 
 void timer_handler() {
     unsigned short old_sum = timer_sum;
@@ -40,6 +40,7 @@ void timer_handler() {
 void timer_reset(unsigned short frequency) {
     timer_ticks = 0;
     timer_counter = 0x1234DD / frequency;
+    timer_sum = 0;
 }
 
 void timer_setup(unsigned short frequency) {
@@ -61,6 +62,12 @@ void timer_setup(unsigned short frequency) {
 }
 
 void timer_shutdown() {
+    disable();
+    outp(0x43, 0x34);
+    outp(0x40, 0);
+    outp(0x40, 0);
+    enable();
+
     _go32_dpmi_set_protected_mode_interrupt_vector(TIMER, &OldISR);
 }
 
