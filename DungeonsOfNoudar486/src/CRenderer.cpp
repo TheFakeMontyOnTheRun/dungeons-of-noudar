@@ -1941,7 +1941,6 @@ namespace odb {
         textureRegistry["rope"] = ETextures::Rope;
         textureRegistry["slot"] = ETextures::Slot;
         textureRegistry["magicseal"] = ETextures::MagicSeal;
-        textureRegistry["shutdoor"] = ETextures::ShutDoor;
         textureRegistry["cobblestone"] = ETextures::Cobblestone;
         textureRegistry["fence"] = ETextures::Fence;
 

@@ -36,7 +36,6 @@ namespace odb {
         Rope,
         Slot,
         MagicSeal,
-        ShutDoor,
         Cobblestone,
         Fence
     };
