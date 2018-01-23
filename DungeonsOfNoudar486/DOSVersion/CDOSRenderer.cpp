@@ -45,6 +45,7 @@ using sg14::fixed_point;
 #include "NativeBitmap.h"
 #include "RasterizerCommon.h"
 #include "CRenderer.h"
+#include "LoadPNG.h"
 
 namespace odb {
 
@@ -60,6 +61,9 @@ namespace odb {
     }
 
     CRenderer::~CRenderer() {
+
+        mNativeTextures.clear();
+
         textmode(C80);
         clrscr();
         printf("Thanks for playing!\nI would like to thank Ivan Odintsoff for the help,\nmy coworkers in the Lisbon office,\nmy family and most of all, my wife for keeping me human.\n\nDOS is back with a vengeance. This is only the first blow.\n\n" );
@@ -68,7 +72,7 @@ namespace odb {
 #endif
     }
 
-    CRenderer::CRenderer() {
+    CRenderer::CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
 
         __dpmi_regs reg;
 
@@ -86,6 +90,8 @@ namespace odb {
                 }
             }
         }
+
+        mFont = loadPNG("font.png", fileLoader );
     }
 
     void CRenderer::sleep(long ms) {
@@ -163,11 +169,6 @@ namespace odb {
                 break;
             }
         }
-    }
-
-    void CRenderer::drawTextAt( int x, int y, const char* text ) {
-        gotoxy(x, y );
-        printf("%s", text);
     }
 
     void CRenderer::flip() {

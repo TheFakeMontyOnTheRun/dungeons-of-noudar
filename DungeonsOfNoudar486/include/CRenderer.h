@@ -63,13 +63,14 @@ namespace odb {
         bool mHudDrawn = false;
         array<array<Knights::ElementView , Knights::kMapSize>, Knights::kMapSize> mElementsMap;
         Knights::CommandType mBufferedCommand = '.';
-
+        std::shared_ptr<NativeBitmap > mFont;
         array< uint8_t, 320 * 200 > mBuffer;
         array< uint32_t , 256 > mPalette;
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
         char mLogBuffer[5][41];
+        uint8_t mLineColour[5];
         Knights::CommandType mLastCommand = '.';
         int16_t mHealth;
         uint16_t mFrame = 0;
@@ -111,8 +112,8 @@ namespace odb {
         void addDeathAt( const Knights::Vec2i& position );
 
         Knights::CommandType peekInput();
-        void appendToLog(const char* message);
-        CRenderer();
+        void appendToLog(const char* message, uint8_t colour );
+        CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
         ~CRenderer();
         uint8_t * getBufferData();
 
@@ -126,7 +127,7 @@ namespace odb {
 
         void drawCubeAt(const Vec3 &center, TexturePair texture );
 
-        void drawTextAt( int x, int y, const char* text );
+        void drawTextAt( int x, int y, const char* text, uint8_t colour );
 
         void drawFloorAt(const Vec3 &center, TexturePair texture );
 

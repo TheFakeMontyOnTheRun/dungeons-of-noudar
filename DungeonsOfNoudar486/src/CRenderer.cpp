@@ -66,11 +66,14 @@ namespace odb {
     std::shared_ptr<odb::NativeTexture> splat[3];
     std::shared_ptr<NativeTexture > skybox;
 
+
     VisMap visMap;
     IntMap intMap;
     DistanceDistribution distances;
     vector<TexturePair> CRenderer::mNativeTextures;
     const uint8_t CRenderer::mTransparency = getPaletteEntry(0xFFFF00FF);
+
+
 
     vector<std::string> splitLists(const std::string& data) {
         vector<std::string> toReturn;
@@ -213,7 +216,7 @@ namespace odb {
         splat[2] = makeTexture("splat0.png", fileLoader);
 
         if ( kShouldDrawSkybox) {
-            skybox = makeTexture("clouds.png",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          fileLoader);
+//            skybox = makeTexture("clouds.png", fileLoader );                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          fileLoader);
         }
 
         for ( auto& distanceLine : distances ) {
@@ -221,9 +224,47 @@ namespace odb {
         }
 
 
+
         return tilesToLoad;
     }
 
+    void CRenderer::drawTextAt( int x, int y, const char* text, uint8_t colour = 15 ) {
+        int len = strlen(text);
+        int dstX = (x - 1) * 8;
+        int dstY = (y - 1) * 8;
+        auto dstBuffer = getBufferData();
+
+        for ( int c = 0; c < len; ++c ) {
+            int ascii = text[c] - ' ';
+            int line = ascii / 32;
+            int col = ascii % 32;
+            auto letter = mFont->getPixelData() + ( col * 8 ) + ( mFont->getWidth() * ( line * 8 ) );
+
+            if ( text[c] == '\n' || dstX >= 312 ) {
+                dstX = 0;
+                dstY += 8;
+                continue;
+            }
+
+            for ( int srcY = 0; srcY < 8; ++srcY ) {
+
+                auto letterSrc = letter + ( mFont->getWidth() * srcY );
+                auto letterDst = dstBuffer + dstX + ( 320 * (dstY + srcY ) );
+
+                for (int srcX = 0; srcX < 8; ++srcX ) {
+                    uint8_t texel = getPaletteEntry(*letterSrc);
+
+                    if (texel != mTransparency ) {
+                        *letterDst = colour;
+                    }
+
+                    ++letterSrc;
+                    ++letterDst;
+                }
+            }
+            dstX += 8;
+        }
+    }
 
     void CRenderer::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
         const auto mapCamera = current->getPosition();
@@ -278,7 +319,7 @@ namespace odb {
                 intMap[z][x] = elementView;
                 mActors[z][x] = EActorsSnapshotElement::kNothing;
                 mItems[z][x] = EItemsSnapshotElement::kNothing;
-//                mSplats[z][x] = -1;
+                mSplats[z][x] = -1;
 
                 if (actor != nullptr) {
                     if (actor != current) {
@@ -1738,7 +1779,6 @@ namespace odb {
                     break;
             }
 
-            flip();
 
             char buffer[9];
 
@@ -1763,11 +1803,15 @@ namespace odb {
             snprintf(buffer, 8, "Dir: %c", directions[static_cast<int>(mCameraDirection)]);
             drawTextAt( 34, 15, buffer );
 
-            drawTextAt( 1, 21, mLogBuffer[0] );
-            drawTextAt( 1, 22, mLogBuffer[1] );
-            drawTextAt( 1, 23, mLogBuffer[2] );
-            drawTextAt( 1, 24, mLogBuffer[3] );
-            drawTextAt( 1, 25, mLogBuffer[4] );
+            fill(0, 160, 320, 40, black );
+            drawTextAt( 1, 21, mLogBuffer[0], mLineColour[0] );
+            drawTextAt( 1, 22, mLogBuffer[1], mLineColour[1] );
+            drawTextAt( 1, 23, mLogBuffer[2], mLineColour[2] );
+            drawTextAt( 1, 24, mLogBuffer[3], mLineColour[3] );
+            drawTextAt( 1, 25, mLogBuffer[4], mLineColour[4] );
+
+            flip();
+
 
 #ifdef PROFILEBUILD
             auto t1 = uclock();
@@ -1846,7 +1890,13 @@ namespace odb {
         }
     }
 
-    void CRenderer::appendToLog(const char* message) {
+    void CRenderer::appendToLog(const char* message, uint8_t colour = 15) {
+        mLineColour[0] = mLineColour[1];
+        mLineColour[1] = mLineColour[2];
+        mLineColour[2] = mLineColour[3];
+        mLineColour[3] = mLineColour[4];
+        mLineColour[4] = colour;
+
         snprintf(mLogBuffer[0], 39, "%s", &mLogBuffer[1][0] );
         snprintf(mLogBuffer[1], 39, "%s", &mLogBuffer[2][0] );
         snprintf(mLogBuffer[2], 39, "%s", &mLogBuffer[3][0] );

@@ -80,7 +80,6 @@ int getch() {
 
 
 namespace odb {
-//    bool drawZBuffer = false;
     SDL_Surface *video;
 
 #ifdef __EMSCRIPTEN__
@@ -95,7 +94,7 @@ namespace odb {
 #endif
 
 
-    CRenderer::CRenderer() {
+    CRenderer::CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
         SDL_Init(SDL_INIT_EVERYTHING);
         video = SDL_SetVideoMode(640, 400, 32, 0);
 
@@ -112,6 +111,7 @@ namespace odb {
 #ifdef __EMSCRIPTEN__
         enterFullScreenMode();
 #endif
+        mFont = loadPNG("font.png", fileLoader );
     }
 
     void CRenderer::sleep(long ms) {
@@ -179,12 +179,6 @@ namespace odb {
                         mCached = false;
                         break;
 
-                    case SDLK_d:
-                    case SDLK_a:
-//                        drawZBuffer = (event.key.keysym.sym == SDLK_a);
-                        mCached = false;
-                        break;
-
                     case SDLK_z:
                         mBufferedCommand = Knights::kStrafeLeftCommand;
                         mCached = false;
@@ -223,55 +217,16 @@ namespace odb {
         mBuffer[(320 * y) + x] = pixel;
     }
 
-    void CRenderer::drawTextAt( int x, int y, const char* text ) {
-        std::cout << "text: " << text << std::endl;
-    }
+
 
     CRenderer::~CRenderer() {
         SDL_FreeSurface(video);
         SDL_Quit();
+
+        mNativeTextures.clear();
     }
 
     void CRenderer::flip() {
-//        if (drawZBuffer) {
-//
-//            float smaller = 0.0f;
-//            float bigger = 0.0f;
-//
-//            for ( const auto& value : mDepthBuffer ) {
-//                float fv = static_cast<float>(value);
-//                if ( fv < smaller ) {
-//                    smaller = fv;
-//                }
-//
-//                if ( fv > bigger && fv < 255.0f ) {
-//                    bigger = fv;
-//                }
-//            }
-//
-//            float range = bigger - smaller;
-//            float greys = 255.0f;
-//
-//            for (int y = 0; y < 200; ++y) {
-//                for (int x = 0; x < 320; ++x) {
-//                    SDL_Rect rect;
-//                    rect.x = 2 * x;
-//                    rect.y = 2 * y;
-//                    rect.w = 2;
-//                    rect.h = 2;
-//                    float depth = static_cast<float>(mDepthBuffer[(320 * y) + x]);
-//
-//                    auto value = ((depth - smaller) / range) * greys;
-//
-//                    auto pixel = static_cast<uint8_t >(value);
-//
-//                    SDL_FillRect(video, &rect,
-//                                 SDL_MapRGB(video->format, ((pixel & 0x000000FF)), ((pixel & 0x0000FF00) >> 8),
-//                                            ((pixel & 0x00FF0000) >> 16)));
-//
-//                }
-//            }
-//        } else {
             for (int y = 0; y < 200; ++y) {
                 for (int x = 0; x < 320; ++x) {
                     SDL_Rect rect;
@@ -288,9 +243,6 @@ namespace odb {
 
                 }
             }
-//        }
-
-
 
         SDL_Flip(video);
     }

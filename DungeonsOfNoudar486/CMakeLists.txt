@@ -17,7 +17,6 @@ include_directories(../gles2-renderer)
 
 set(SOURCE_FILES
         SDLVersion/CSDLRenderer.cpp
-        SDLVersion/main.cpp
         src/CRenderer.cpp
         src/NativeBitmap.cpp
         src/RasterizerCommon.cpp
@@ -26,6 +25,7 @@ set(SOURCE_FILES
         include/RasterizerCommon.h
         include/CRenderer.h
         include/RaycastCommon.h
+        main.cpp
         ../noudar-core/noudar-core/include/commands/CMoveActorCommand.h
         ../noudar-core/noudar-core/include/commands/CEndTurnCommand.h
         ../noudar-core/noudar-core/include/commands/CLoadNewLevelCommand.h
