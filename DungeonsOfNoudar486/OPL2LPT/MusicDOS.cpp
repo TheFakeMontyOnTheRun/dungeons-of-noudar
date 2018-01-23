@@ -26,6 +26,7 @@ std::vector<int> noSound;
 std::vector<int> melody;
 std::vector<int>::const_iterator currentSoundPosition;
 int currentNote = 0;
+std::string buffer[3];
 
 short get_lpt_port(int i) {
     return _farpeekw(_dos_ds, 0x0408 + (2 * (i - 1)));
@@ -86,27 +87,26 @@ void playSound(const std::vector<int> &sound) {
 }
 
 
-void playMusic(int instrument, const std::string &musicTrack) {
+void playMusic(const std::string &music) {
     if (enableOPL2) {
-        if (musicTrack.empty()) {
+        if (music.empty()) {
             music_set("", "", "");
             return;
         }
-        auto trackBeginPosition = musicTrack.find('|');
-        auto instrumentDefinition = atoi(musicTrack.substr(0, trackBeginPosition).c_str());
-        music_instrument = instrumentDefinition;
-        auto music = musicTrack.substr(trackBeginPosition + 1 );
-        auto melody1 = music.substr(0, music.find('|'));
-        auto melody2 = music.substr( music.find('|') + 1 );
-        auto melody3 = melody2.substr( melody2.find('|') + 1 );
-        melody2 = melody2.substr(0, melody2.find('|'));
-        music_set(melody1.c_str(), melody2.c_str(), melody3.c_str());
+        auto melody1 = music.substr(0, music.find(';'));
+        auto melody2 = music.substr( music.find(';') + 1 );
+        auto melody3 = melody2.substr( melody2.find(';') + 1 );
+        melody2 = melody2.substr(0, melody2.find(';'));
+        buffer[0] = melody1;
+        buffer[1] = melody2;
+        buffer[2] = melody3;
+        music_set(buffer[0].c_str(), buffer[1].c_str(), buffer[2].c_str());
         return;
     }
 
     int frequency = 0;
     melody.clear();
-    for (const auto &note : musicTrack) {
+    for (const auto &note : music) {
         switch (note) {
             case 'a':
             case 'A':
@@ -136,7 +136,7 @@ void playMusic(int instrument, const std::string &musicTrack) {
             case 'g':
                 frequency = 1568;
                 break;
-            case '|':
+            case ';':
                 melody.clear();
                 continue;
         }
@@ -151,22 +151,18 @@ void muteSound() {
         melody.clear();
         currentNote = 0;
     } else {
-        playMusic(0, "");
+        playMusic("");
     }
 }
 
 void playTune(const std::string &music) {
-    if (enableOPL2) {
-        hackTune(music.c_str());
-    } else {
-        playMusic(1, "001|" + music + "|" + music + "|" + music );
-    }
+    buffer[0] = music + ";" + music + ";" + music;
+    hackTune( music.c_str() );
 }
 
-void setupOPL2(int instrument) {
+void setupOPL2() {
     short lpt_base = setup();
     opl2.init(lpt_base);
-    music_instrument = instrument;
     music_setup();
     enableOPL2 = true;
 }

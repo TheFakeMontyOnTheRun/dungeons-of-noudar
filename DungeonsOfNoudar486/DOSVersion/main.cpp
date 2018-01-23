@@ -67,15 +67,15 @@ enum ESoundDriver : uint8_t { kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox };
 ESoundDriver soundDriver = kNone;
 int soundTiming = 0;
 
-void initOPL2(int instrument);
+void initOPL2();
 void playTune(const std::string&);
-void setupOPL2(int instrument);
+void setupOPL2();
 void stopSounds();
 void soundTick();
 void playMusic(int instrument, const std::string &musicTrack);
 
-void initOPL2(int instrument) {
-    setupOPL2(instrument);
+void initOPL2() {
+    setupOPL2();
 }
 
 void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags,
@@ -88,8 +88,8 @@ void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, cons
     return malloc( size );
 }
 
-void renderTick() {
-    renderer->render( 33 );
+void renderTick(long ms) {
+    renderer->render( ms );
     renderer->handleSystemEvents();
 }
 
@@ -144,13 +144,13 @@ void playSoundForAction(Knights::CommandType command ) {
 
 void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int targetHealthDiff, std::shared_ptr<odb::CRenderer> renderer, std::shared_ptr<Knights::CActor> actorAtTarget ) {
     if ( command != '.') {
-        char buffer[40];
+        char buffer[41];
         snprintf(buffer, 39, "%s", game->getLastCommand().c_str());
         renderer->appendToLog( buffer );
     }
 
     if ( targetHealthDiff < 0 ) {
-        char buffer[40];
+        char buffer[41];
         snprintf(buffer, 39, "Player dealt %d of damage", -targetHealthDiff );
         renderer->appendToLog( buffer );
         if (actorAtTarget == nullptr || !actorAtTarget->isAlive()) {
@@ -161,12 +161,12 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
     }
 
     if ( playerHealthDiff < 0 ) {
-        char buffer[40];
+        char buffer[41];
         snprintf(buffer, 39, "Player took %d of damage", -playerHealthDiff);
         renderer->appendToLog( buffer );
         renderer->startDamageHighlight();
     } else if ( playerHealthDiff > 0 ) {
-        char buffer[40];
+        char buffer[41];
         snprintf(buffer, 39, "Player gained %d of faith", playerHealthDiff);
         renderer->appendToLog( buffer );
         renderer->startHealHighlight();
@@ -194,15 +194,9 @@ int main(int argc, char **argv) {
         }
 
         if ( !std::strcmp(argv[1], "opl2lpt")) {
-            instrument = 80;
             soundTiming = 75;
             soundDriver = kOpl2Lpt;
-
-            if (argc >= 3 ) {
-                instrument = atoi(argv[2]);
-            }
-
-            initOPL2(instrument);
+            initOPL2();
         }
     }
 
@@ -221,8 +215,8 @@ int main(int argc, char **argv) {
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
     renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
-    char buffer[40];
-    snprintf(buffer, 40, "chapter%d.txt", game->getLevelNumber() );
+    char buffer[41];
+    snprintf(buffer, 39, "chapter0.txt", game->getLevelNumber() );
     auto introText = fileLoader->loadFileFromPath(buffer);
 
     playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
@@ -239,8 +233,8 @@ int main(int argc, char **argv) {
                 renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
             }
 
-            char buffer[40];
-            snprintf(buffer, 40, "chapter%d.txt", game->getLevelNumber() );
+            char buffer[41];
+            snprintf(buffer, 39, "chapter%d.txt", game->getLevelNumber() );
             auto chapterText = fileLoader->loadFileFromPath(buffer);
 
             playTune("e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
@@ -252,11 +246,9 @@ int main(int argc, char **argv) {
 
     auto noteTime = soundTiming;
 
+    clock_t diff = 0;
     while ( game->isPlaying() ) {
-
-        if (soundDriver != kNone ) {
-            t0 = uclock();
-        }
+        t0 = uclock();
 
         auto playerHealthBefore = game->getMap()->getAvatar()->getHP();
         auto cursorPosition = game->getMap()->getTargetProjection(game->getMap()->getAvatar());
@@ -269,7 +261,7 @@ int main(int argc, char **argv) {
         }
 
         game->tick();
-        renderTick();
+        renderTick(diff);
         Knights::CommandType command = renderer->peekInput();
         game->tick();
 
@@ -285,22 +277,12 @@ int main(int argc, char **argv) {
 
         handleConsoleLines( command, playerHealthDiff, targetHealthDiff, renderer, actorAtTarget );
 
-        if (soundDriver != kNone ) {
-
-            playSoundForAction(command);
-
-            t1 = uclock();
-            auto diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
-            if (diff == 0) {
-                diff = 1;
-            }
-            noteTime -= diff;
-
-            if (noteTime < 0) {
-                noteTime = soundTiming;
-                soundTick();
-            }
+        t1 = uclock();
+        diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
+        if (diff == 0) {
+            diff = 1;
         }
+
 
 
         if ( !game->getMap()->getAvatar()->isAlive()) {

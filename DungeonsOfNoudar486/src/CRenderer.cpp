@@ -48,7 +48,8 @@ namespace odb {
     const static bool kShouldDrawSkybox = false;
     const static bool kShouldDrawBlackMasks = true;
     const static auto kMinZCull = FixP{1};
-
+    const static long kSplatFrameTime = 250;
+    const static long kHighlightTime = 500;
     std::shared_ptr<odb::NativeTexture> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> rope;
@@ -277,7 +278,7 @@ namespace odb {
                 intMap[z][x] = elementView;
                 mActors[z][x] = EActorsSnapshotElement::kNothing;
                 mItems[z][x] = EItemsSnapshotElement::kNothing;
-                mSplats[z][x] = -1;
+//                mSplats[z][x] = -1;
 
                 if (actor != nullptr) {
                     if (actor != current) {
@@ -1250,6 +1251,9 @@ namespace odb {
 
     void CRenderer::render(long ms) {
 
+        mHighlightTime -= ms;
+        mSplatFrameTime -= ms;
+
         if ( mNeedsToRedraw ) {
             const static FixP zero{0};
             const static FixP two{2};
@@ -1306,7 +1310,12 @@ namespace odb {
 
                             actorsSnapshotElement = mActors[z][(Knights::kMapSize - 1) - x ];
                             itemsSnapshotElement = mItems[z][(Knights::kMapSize - 1) - x ];
-                            shouldSplat = mSplats[z][(Knights::kMapSize - 1) - x ]--;
+                            shouldSplat = mSplats[z][(Knights::kMapSize - 1) - x ];
+
+                            if (mSplatFrameTime < 0) {
+                                mSplats[z][(Knights::kMapSize - 1) - x ]--;
+                            }
+
 
                             mCamera.mX = FixP{ 78 - ( 2 * mCameraPosition.x ) };
                             mCamera.mY = FixP{ cameraHeight -1};
@@ -1345,7 +1354,12 @@ namespace odb {
 
                             actorsSnapshotElement = mActors[(Knights::kMapSize - 1) - z][x];
                             itemsSnapshotElement = mItems[(Knights::kMapSize - 1) - z][ x ];
-                            shouldSplat = mSplats[(Knights::kMapSize - 1) - z][ x ]--;
+                            shouldSplat = mSplats[(Knights::kMapSize - 1) - z][ x ];
+
+                            if (mSplatFrameTime < 0) {
+                                mSplats[(Knights::kMapSize - 1) - z][ x ]--;
+                            }
+
 
                             mCamera.mX = FixP{ ( 2 * mCameraPosition.x ) };
                             mCamera.mY = FixP{cameraHeight -1};
@@ -1382,7 +1396,11 @@ namespace odb {
 
                             itemsSnapshotElement = mItems[x][(Knights::kMapSize - 1) - z ];
                             actorsSnapshotElement = mActors[x][(Knights::kMapSize - 1) - z ];
-                            shouldSplat = mSplats[x][(Knights::kMapSize - 1) - z ]--;
+                            shouldSplat = mSplats[x][(Knights::kMapSize - 1) - z ];
+
+                            if (mSplatFrameTime < 0) {
+                                mSplats[x][(Knights::kMapSize - 1) - z ]--;
+                            }
 
                             mCamera.mX = FixP{ ( 2 * mCameraPosition.y ) };
                             mCamera.mY = FixP{cameraHeight-1};
@@ -1419,7 +1437,11 @@ namespace odb {
 
                             actorsSnapshotElement = mActors[x][z ];
                             itemsSnapshotElement = mItems[x][z ];
-                            shouldSplat = mSplats[x][z ]--;
+                            shouldSplat = mSplats[x][z ];
+
+                            if (mSplatFrameTime < 0) {
+                                mSplats[x][z ]--;
+                            }
 
 
                             mCamera.mX = FixP{ - ( 2 * mCameraPosition.y ) };
@@ -1615,6 +1637,10 @@ namespace odb {
                                 splat[ shouldSplat ] );
                         mNeedsToRedraw = true;
                         splatDrawn = true;
+
+                        if ( shouldSplat > 0 && mSplatFrameTime < 0 ) {
+                            mSplatFrameTime = kSplatFrameTime;
+                        }
                     }
 
 
@@ -1659,24 +1685,29 @@ namespace odb {
             auto backgroundColour = black;
 
             if ( mDamageHighlight > 0 && !splatDrawn ) {
-                mDamageHighlight = 0;
+                if (mHighlightTime <= 0 ) {
+                    mDamageHighlight = 0;
+                }
+
                 backgroundColour = red;
                 mNeedsToRedraw = true;
             }
 
             if ( mHealHighlight > 0 && !splatDrawn ) {
-                mHealHighlight = 0;
+                if (mHighlightTime <= 0 ) {
+                    mHealHighlight = 0;
+                }
                 backgroundColour = green;
                 mNeedsToRedraw = true;
             }
 
-            for ( int c = 0; c < 4; ++c ) {
-                drawSprite( 320 - 32, ( c * 32), mBackground );
-                drawSprite( 320 - 64, ( c * 32), mBackground );
+            for ( int c = 0; c < 2; ++c ) {
+                drawSprite( 320 - 32, 16 + 64 + ( c * 32), mBackground );
+                drawSprite( 320 - 64, 16 + 64 + ( c * 32), mBackground );
             }
 
-            fill( 320 - 64, 8, 64, 64 - 8, backgroundColour );
-            fill( 320 - 64 + 8, 64, 32 + 16, 64 - 8, backgroundColour );
+            fill( 320 - 64, 0, 64, 64 + 16, backgroundColour );
+            fill( 320 - 64 + 8, 64 + 16, 32 + 16, 64 - 16, backgroundColour );
 
             if (!mStaticPartsOfHudDrawn) {
                 for ( int c = 0; c < 10; ++c ) {
@@ -1687,7 +1718,7 @@ namespace odb {
 
 
 
-            fill( 0, 160, 320, 40, black );
+//            fill( 0, 160, 320, 40, black );
 
             switch (mCurrentItem) {
                 case EItemsSnapshotElement::kCrossbow:
@@ -1732,11 +1763,11 @@ namespace odb {
             snprintf(buffer, 8, "Dir: %c", directions[static_cast<int>(mCameraDirection)]);
             drawTextAt( 34, 15, buffer );
 
-            drawTextAt( 1, 21, mLogBuffer[0].c_str() );
-            drawTextAt( 1, 22, mLogBuffer[1].c_str() );
-            drawTextAt( 1, 23, mLogBuffer[2].c_str() );
-            drawTextAt( 1, 24, mLogBuffer[3].c_str() );
-            drawTextAt( 1, 25, mLogBuffer[4].c_str() );
+            drawTextAt( 1, 21, mLogBuffer[0] );
+            drawTextAt( 1, 22, mLogBuffer[1] );
+            drawTextAt( 1, 23, mLogBuffer[2] );
+            drawTextAt( 1, 24, mLogBuffer[3] );
+            drawTextAt( 1, 25, mLogBuffer[4] );
 
 #ifdef PROFILEBUILD
             auto t1 = uclock();
@@ -1748,20 +1779,24 @@ namespace odb {
 
     void CRenderer::startHealHighlight() {
         mHealHighlight = 1;
+        mHighlightTime = kHighlightTime;
     }
 
     void CRenderer::startDamageHighlight() {
         mDamageHighlight = 1;
+        mHighlightTime = kHighlightTime;
     }
 
 
 
     void CRenderer::addSplatAt( const Knights::Vec2i& position ) {
         mSplats[position.y][position.x] = 0;
+        mSplatFrameTime = kSplatFrameTime;
     }
 
     void CRenderer::addDeathAt( const Knights::Vec2i& position ) {
         mSplats[position.y][position.x] = 2;
+        mSplatFrameTime = kSplatFrameTime;
     }
 
     void CRenderer::fill( int x, int y, int dx, int dy, uint8_t pixel ) {
@@ -1812,16 +1847,23 @@ namespace odb {
     }
 
     void CRenderer::appendToLog(const char* message) {
-//        mLogBuffer[0] = mLogBuffer[1];
-        mLogBuffer[1] = mLogBuffer[2];
-        mLogBuffer[2] = mLogBuffer[3];
-        mLogBuffer[3] = mLogBuffer[4];
-        mLogBuffer[4] = message;
-        mLogBuffer[4].resize(39, ' ');
+        snprintf(mLogBuffer[0], 39, "%s", &mLogBuffer[1][0] );
+        snprintf(mLogBuffer[1], 39, "%s", &mLogBuffer[2][0] );
+        snprintf(mLogBuffer[2], 39, "%s", &mLogBuffer[3][0] );
+        snprintf(mLogBuffer[3], 39, "%s", &mLogBuffer[4][0] );
+        snprintf(mLogBuffer[4], 39, "%s", message );
     }
 
 
     void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {
+
+        snprintf(mLogBuffer[0], 39, "" );
+        snprintf(mLogBuffer[1], 39, "" );
+        snprintf(mLogBuffer[2], 39, "" );
+        snprintf(mLogBuffer[3], 39, "" );
+        snprintf(mLogBuffer[4], 39, "" );
+
+
         mTextures.clear();
         mTileProperties.clear();
         mStaticPartsOfHudDrawn = false;

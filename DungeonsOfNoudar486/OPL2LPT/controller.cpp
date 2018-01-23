@@ -20,8 +20,6 @@
 #include "timer.h"
 #include "controller.h"
 
-int music_instrument = 0;
-
 char* instruments[] = {
         PIANO1, //0
         PIANO2,
@@ -181,6 +179,7 @@ struct Tune {
     unsigned long nextNoteTime;
     unsigned long releaseTime;
     int index;
+    int instrument;
 };
 
 const char *tuneData[3] = {
@@ -198,7 +197,6 @@ void hackTune(const char *tune) {
 
 
     music_shutdown();
-    music_instrument = 20;
     snprintf(tuneBuffer,255, "%s", tune);
     tuneData[0] = tuneBuffer;
     tuneData[1] = tuneBuffer;
@@ -211,45 +209,11 @@ OPL2 opl2;
 struct Tune music[3];
 
 void music_set(const char* melody1, const char* melody2, const char* melody3) {
-    timer_reset(100);
-
-    if (std::strlen(melody1) == 0 ) {
-        tuneData[0] = "";
-        tuneData[1] = "";
-        tuneData[2] = "";
-
-        for (int i = 0; i < 3; i++) {
-            if (opl2.getKeyOn(music[i].channel)) {
-                opl2.setKeyOn(music[i].channel, false);
-            }
-        }
-
-        return;
-    }
-
+    music_shutdown();
     tuneData[0] = melody1;
     tuneData[1] = melody2;
     tuneData[2] = melody3;
-
-    for (int i = 0; i < 3; i++) {
-        struct Tune channel;
-        channel.data = tuneData[i];
-        channel.channel = i;
-        channel.octave = 4;
-        channel.noteDuration = 50;
-        channel.noteLength = 20;
-        channel.releaseTime = 0;
-        channel.nextNoteTime = timer_get();
-        channel.index = 0;
-        music[i] = channel;
-    }
-
-    opl2.setInstrument(0, instruments[ music_instrument ]);
-    opl2.setBlock(0, 5);
-    opl2.setInstrument(1, instruments[ music_instrument ]);
-    opl2.setBlock(1, 4);
-    opl2.setInstrument(2, instruments[ music_instrument ]);
-    opl2.setBlock(2, 4);
+    music_setup();
 }
 
 void music_setup() {
@@ -266,15 +230,16 @@ void music_setup() {
         channel.releaseTime = 0;
         channel.nextNoteTime = timer_get();
         channel.index = 0;
+        channel.instrument = 0;
         music[i] = channel;
     }
 
     // Setup channels 0, 1 and 2.
-    opl2.setInstrument(0, instruments[ music_instrument ]);
+    opl2.setInstrument(0, instruments[ 0 ]);
     opl2.setBlock(0, 5);
-    opl2.setInstrument(1, instruments[ music_instrument ]);
+    opl2.setInstrument(1, instruments[ 0 ]);
     opl2.setBlock(1, 4);
-    opl2.setInstrument(2, instruments[ music_instrument ]);
+    opl2.setInstrument(2, instruments[ 0 ]);
     opl2.setBlock(2, 4);
 
     timer_setup(100);
@@ -312,7 +277,11 @@ void music_loop() {
 void parseTune(struct Tune *tune) {
     while (tune->data[tune->index] != 0) {
 
-        // Decrease octave if greater than 1.
+        if (tune->data[tune->index] == 'i' ) {
+            tune->index++;
+            tune->instrument = parseNumber(tune);
+        } else
+            // Decrease octave if greater than 1.
         if (tune->data[tune->index] == '<' && tune->octave > 1) {
             tune->octave--;
 
@@ -376,6 +345,7 @@ void parseNote(struct Tune *tune) {
 
     opl2.setKeyOn(tune->channel, false);
     opl2.setFrequency(tune->channel, opl2.getNoteFrequency(tune->channel, tune->octave, noteDefs[note]));
+    opl2.setInstrument(tune->channel, instruments[ tune->instrument ]);
     opl2.setKeyOn(tune->channel, true);
 }
 

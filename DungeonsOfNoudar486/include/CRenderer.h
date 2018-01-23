@@ -69,7 +69,7 @@ namespace odb {
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
-        std::string mLogBuffer[5];
+        char mLogBuffer[5][41];
         Knights::CommandType mLastCommand = '.';
         int16_t mHealth;
         uint16_t mFrame = 0;
@@ -93,6 +93,8 @@ namespace odb {
 
         int mDamageHighlight = 0;
         int mHealHighlight = 0;
+        int mHighlightTime = 0;
+        int mSplatFrameTime = 0;
     public:
 
         void drawMap( Knights::CMap& map, std::shared_ptr<Knights::CActor> current ) override;

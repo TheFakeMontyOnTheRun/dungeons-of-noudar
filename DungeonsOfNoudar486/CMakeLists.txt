@@ -80,6 +80,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/IMapElement.cpp
         ../noudar-core/noudar-core/src/CStorageItem.cpp
         ../noudar-core/noudar-core/include/CStorageItem.h
+        OPL2LPT/MusicSDL.cpp
         ../gles2-renderer/Logger.cpp
         ../gles2-renderer/LoadPNG.cpp
         src/CPackedFileReader.cpp include/CPackedFileReader.h)

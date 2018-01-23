@@ -44,6 +44,41 @@ using sg14::fixed_point;
 #include <emscripten/html5.h>
 #endif
 
+bool kbhit() {
+
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_KEYDOWN) {
+            SDL_PushEvent(&event);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+long timeEllapsed = 0;
+
+long uclock() {
+    timeEllapsed += 33;
+    return timeEllapsed;
+}
+
+int getch() {
+
+    SDL_Event event;
+
+    while (true) {
+        if (SDL_PollEvent(&event) ) {
+            if (event.type == SDL_KEYDOWN) {
+                return event.key.keysym.scancode;
+            }
+        }
+    }
+}
+
+
 namespace odb {
 //    bool drawZBuffer = false;
     SDL_Surface *video;
@@ -81,27 +116,26 @@ namespace odb {
 
     void CRenderer::sleep(long ms) {
 #ifndef __EMSCRIPTEN__
-        SDL_Delay(33);
+//        SDL_Delay(100);
+//        timeEllapsed += 100;
 #endif
     }
 
     void CRenderer::handleSystemEvents() {
         SDL_Event event;
-        const static FixP delta{2};
 
         while (SDL_PollEvent(&event)) {
 
             if (event.type == SDL_QUIT) {
 #ifndef __EMSCRIPTEN__
-                exit(0);
+                mBufferedCommand = Knights::kQuitGameCommand;
 #endif
             }
 
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_ESCAPE:
-                        exit(0);
-                        mCached = false;
+                        mBufferedCommand = Knights::kQuitGameCommand;
                         break;
                     case SDLK_SPACE:
                         mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
@@ -194,7 +228,8 @@ namespace odb {
     }
 
     CRenderer::~CRenderer() {
-
+        SDL_FreeSurface(video);
+        SDL_Quit();
     }
 
     void CRenderer::flip() {
