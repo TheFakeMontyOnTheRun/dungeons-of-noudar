@@ -69,7 +69,7 @@ namespace odb {
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
-        char mLogBuffer[5][41];
+        char mLogBuffer[8][64];
         uint8_t mLineColour[5];
         Knights::CommandType mLastCommand = '.';
         int16_t mHealth;

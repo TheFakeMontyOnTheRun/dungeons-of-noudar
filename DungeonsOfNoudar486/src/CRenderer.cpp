@@ -1810,11 +1810,11 @@ namespace odb {
             drawTextAt( 34, 15, buffer );
 
             fill(0, 160, 320, 40, black );
-            drawTextAt( 1, 21, mLogBuffer[0], mLineColour[0] );
-            drawTextAt( 1, 22, mLogBuffer[1], mLineColour[1] );
-            drawTextAt( 1, 23, mLogBuffer[2], mLineColour[2] );
-            drawTextAt( 1, 24, mLogBuffer[3], mLineColour[3] );
-            drawTextAt( 1, 25, mLogBuffer[4], mLineColour[4] );
+            drawTextAt( 1, 21, &mLogBuffer[0][0], mLineColour[0] );
+            drawTextAt( 1, 22, &mLogBuffer[1][0], mLineColour[1] );
+            drawTextAt( 1, 23, &mLogBuffer[2][0], mLineColour[2] );
+            drawTextAt( 1, 24, &mLogBuffer[3][0], mLineColour[3] );
+            drawTextAt( 1, 25, &mLogBuffer[4][0], mLineColour[4] );
 
             flip();
 
@@ -1902,27 +1902,26 @@ namespace odb {
     }
 
     void CRenderer::appendToLog(const char* message, uint8_t colour = 15) {
+        snprintf(&mLogBuffer[0][0], 39, "%s", &mLogBuffer[1][0] );
+        snprintf(&mLogBuffer[1][0], 39, "%s", &mLogBuffer[2][0] );
+        snprintf(&mLogBuffer[2][0], 39, "%s", &mLogBuffer[3][0] );
+        snprintf(&mLogBuffer[3][0], 39, "%s", &mLogBuffer[4][0] );
+        snprintf(&mLogBuffer[4][0], 39, "%s", message );
         mLineColour[0] = mLineColour[1];
         mLineColour[1] = mLineColour[2];
         mLineColour[2] = mLineColour[3];
         mLineColour[3] = mLineColour[4];
         mLineColour[4] = colour;
-
-        snprintf(mLogBuffer[0], 39, "%s", &mLogBuffer[1][0] );
-        snprintf(mLogBuffer[1], 39, "%s", &mLogBuffer[2][0] );
-        snprintf(mLogBuffer[2], 39, "%s", &mLogBuffer[3][0] );
-        snprintf(mLogBuffer[3], 39, "%s", &mLogBuffer[4][0] );
-        snprintf(mLogBuffer[4], 39, "%s", message );
     }
 
 
     void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {
 
-        snprintf(mLogBuffer[0], 39, "" );
-        snprintf(mLogBuffer[1], 39, "" );
-        snprintf(mLogBuffer[2], 39, "" );
-        snprintf(mLogBuffer[3], 39, "" );
-        snprintf(mLogBuffer[4], 39, "" );
+        snprintf(&mLogBuffer[0][0], 39, "" );
+        snprintf(&mLogBuffer[1][0], 39, "" );
+        snprintf(&mLogBuffer[2][0], 39, "" );
+        snprintf(&mLogBuffer[3][0], 39, "" );
+        snprintf(&mLogBuffer[4][0], 39, "" );
 
 
         mTextures.clear();
