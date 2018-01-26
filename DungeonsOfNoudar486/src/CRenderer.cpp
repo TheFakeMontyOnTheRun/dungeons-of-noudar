@@ -233,12 +233,14 @@ namespace odb {
         int dstX = (x - 1) * 8;
         int dstY = (y - 1) * 8;
         auto dstBuffer = getBufferData();
+        auto fontWidth = mFont->getWidth();
+        auto fontPixelData = mFont->getPixelData();
 
         for ( int c = 0; c < len; ++c ) {
             int ascii = text[c] - ' ';
-            int line = ascii / 32;
-            int col = ascii % 32;
-            auto letter = mFont->getPixelData() + ( col * 8 ) + ( mFont->getWidth() * ( line * 8 ) );
+            int line = ascii >> 5;
+            int col = ascii & 31;
+            auto letter = fontPixelData + ( col * 8 ) + ( fontWidth * ( line * 8 ) );
 
             if ( text[c] == '\n' || dstX >= 312 ) {
                 dstX = 0;
@@ -246,15 +248,19 @@ namespace odb {
                 continue;
             }
 
+            if ( text[c] == ' ' ) {
+                dstX += 8;
+                continue;
+            }
+
             for ( int srcY = 0; srcY < 8; ++srcY ) {
 
-                auto letterSrc = letter + ( mFont->getWidth() * srcY );
+                auto letterSrc = letter + ( fontWidth * srcY );
                 auto letterDst = dstBuffer + dstX + ( 320 * (dstY + srcY ) );
 
                 for (int srcX = 0; srcX < 8; ++srcX ) {
-                    uint8_t texel = getPaletteEntry(*letterSrc);
 
-                    if (texel != mTransparency ) {
+                    if ((*letterSrc) & 0xFF000000) {
                         *letterDst = colour;
                     }
 
