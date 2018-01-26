@@ -23,7 +23,7 @@ static unsigned int timer_counter;
 static unsigned int timer_sum;
 
 void timer_handler() {
-    unsigned short old_sum = timer_sum;
+    auto old_sum = timer_sum;
 
     ++timer_ticks;
 
@@ -71,10 +71,9 @@ void timer_shutdown() {
     _go32_dpmi_set_protected_mode_interrupt_vector(TIMER, &OldISR);
 }
 
-unsigned long timer_get() {
-    unsigned long result = 0;
+auto timer_get() {
     disable();
-    result = timer_ticks;
+    auto result = timer_ticks;
     enable();
     return result;
 }
