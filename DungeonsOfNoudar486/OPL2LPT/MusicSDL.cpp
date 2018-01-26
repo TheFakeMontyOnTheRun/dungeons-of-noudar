@@ -32,3 +32,7 @@ void playTune(const std::string &music) {
 void soundTick() {
 
 }
+
+void muteSound() {
+
+}
