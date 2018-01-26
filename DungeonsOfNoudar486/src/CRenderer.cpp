@@ -1850,6 +1850,11 @@ namespace odb {
     }
 
     void CRenderer::fill( int x, int y, int dx, int dy, uint8_t pixel ) {
+
+        if (pixel == mTransparency ) {
+            return;
+        }
+
         auto destination = getBufferData();
 
         for ( int py = 0; py < dy; ++py ) {
