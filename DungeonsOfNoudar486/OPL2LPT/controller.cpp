@@ -10,7 +10,6 @@
  * Hacked for a OPL2PRN test program by pdewacht@gmail.com.
  */
 #include <cstring>
-#include <iostream>
 #include <algorithm>
 #include <string>
 

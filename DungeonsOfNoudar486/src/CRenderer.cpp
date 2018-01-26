@@ -1,5 +1,5 @@
 #ifdef SDLSW
-#include <iostream>
+
 #endif
 #include <cassert>
 #include <cstdlib>

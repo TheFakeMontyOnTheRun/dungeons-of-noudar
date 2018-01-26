@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <array>
 #include <random>
-#include <iostream>
 #include <time.h>
 #include <unistd.h>
 #include <memory>

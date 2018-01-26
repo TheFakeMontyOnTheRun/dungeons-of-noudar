@@ -11,10 +11,6 @@ using eastl::vector;
 #include "IFileLoaderDelegate.h"
 #include "CPackedFileReader.h"
 
-#ifdef SDLSW
-#include <iostream>
-#endif
-
 odb::CPackedFileReader::CPackedFileReader(std::string dataFilePath) : mPackPath(dataFilePath) {
     mDataPack = fopen(dataFilePath.c_str(), "rb");
     uint16_t entries = 0;
@@ -34,7 +30,7 @@ odb::CPackedFileReader::CPackedFileReader(std::string dataFilePath) : mPackPath(
         std::string name = buffer;
 
 #ifdef SDLSW
-        std::cout << "name " << name << " offset " << offset << std::endl;
+//        std::cout << "name " << name << " offset " << offset << std::endl;
 #endif
         mOffsets[name] = offset;
     }
