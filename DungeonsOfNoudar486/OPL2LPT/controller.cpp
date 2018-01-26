@@ -11,7 +11,6 @@
  */
 #include <cstring>
 #include <algorithm>
-#include <string>
 
 
 #include "OPL2.h"
@@ -170,15 +169,15 @@ const byte noteDefs[21] = {
 unsigned tempo;
 
 struct Tune {
-    const char *data;
-    int channel;
-    int octave;
-    int noteDuration;
-    char noteLength;
-    unsigned long nextNoteTime;
-    unsigned long releaseTime;
-    int index;
-    int instrument;
+    const char *data = "";
+    int channel = 0;
+    int octave = 0;
+    int noteDuration = 0;
+    char noteLength = 0;
+    unsigned long nextNoteTime = 0;
+    unsigned long releaseTime = 0;
+    int index = 0;
+    int instrument = 0;
 };
 
 const char *tuneData[3] = {
@@ -187,32 +186,36 @@ const char *tuneData[3] = {
         ""
 };
 
-
-char tuneBuffer[255];
-void hackTune(const char *tune) {
-
-    std::string data(tune);
-    std::transform(data.begin(), data.end(), data.begin(), ::tolower);
-
-
-    music_shutdown();
-    snprintf(tuneBuffer,255, "%s", tune);
-    tuneData[0] = tuneBuffer;
-    tuneData[1] = tuneBuffer;
-    tuneData[2] = tuneBuffer;
-    music_setup();
-}
-
-
 OPL2 opl2;
 struct Tune music[3];
 
 void music_set(const char* melody1, const char* melody2, const char* melody3) {
-    music_shutdown();
     tuneData[0] = melody1;
     tuneData[1] = melody2;
     tuneData[2] = melody3;
-    music_setup();
+    // Initialize 3 channels of the tune.
+    for (int i = 0; i < 3; i++) {
+        struct Tune channel;
+        channel.data = tuneData[i];
+        channel.channel = i;
+        channel.octave = 4;
+        channel.noteDuration = 50;
+        channel.noteLength = 50;
+        channel.releaseTime = 0;
+        channel.nextNoteTime = timer_get();
+        channel.index = 0;
+        channel.instrument = 0;
+        music[i] = channel;
+    }
+
+    // Setup channels 0, 1 and 2.
+    opl2.setInstrument(0, instruments[ 0 ]);
+    opl2.setBlock(0, 5);
+    opl2.setInstrument(1, instruments[ 0 ]);
+    opl2.setBlock(1, 4);
+    opl2.setInstrument(2, instruments[ 0 ]);
+    opl2.setBlock(2, 4);
+    timer_reset(100);
 }
 
 void music_setup() {

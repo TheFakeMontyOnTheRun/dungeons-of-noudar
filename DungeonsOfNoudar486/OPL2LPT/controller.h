@@ -4,5 +4,4 @@ extern void music_set(const char* melody1, const char* melody2, const char* melo
 extern void music_setup();
 extern void music_loop();
 extern void music_shutdown();
-extern void hackTune(const char* tune);
 #endif
