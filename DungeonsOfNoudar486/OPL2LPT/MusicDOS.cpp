@@ -10,9 +10,12 @@
 #include <unistd.h>
 #include <iterator>
 #include <string>
-#include <vector>
-#include <array>
 #include <memory>
+#include <EASTL/vector.h>
+#include <EASTL/array.h>
+
+using eastl::vector;
+using eastl::array;
 
 #include "OPL2.h"
 #include "controller.h"
