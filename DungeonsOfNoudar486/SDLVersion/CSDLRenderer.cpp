@@ -44,19 +44,6 @@ using sg14::fixed_point;
 #include <emscripten/html5.h>
 #endif
 
-bool kbhit() {
-
-    SDL_Event event;
-
-    while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_KEYDOWN) {
-            SDL_PushEvent(&event);
-            return true;
-        }
-    }
-
-    return false;
-}
 
 long timeEllapsed = 0;
 
@@ -65,21 +52,40 @@ long uclock() {
     return timeEllapsed;
 }
 
-int getch() {
+namespace odb {
 
-    SDL_Event event;
+    int readKeyboard() {
 
-    while (true) {
-        if (SDL_PollEvent(&event) ) {
-            if (event.type == SDL_KEYDOWN) {
-                return event.key.keysym.scancode;
+        SDL_Event event;
+
+        while (true) {
+            if (SDL_PollEvent(&event) ) {
+                if (event.type == SDL_KEYDOWN) {
+                    if ( event.key.keysym.sym == SDLK_RETURN ) {
+                        return 13;
+                    } else {
+                        return 0;
+                    }
+                }
             }
         }
     }
-}
+
+    bool peekKeyboard() {
+
+        SDL_Event event;
+
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_KEYDOWN) {
+                SDL_PushEvent(&event);
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 
-namespace odb {
     SDL_Surface *video;
 
 #ifdef __EMSCRIPTEN__

@@ -190,6 +190,10 @@ namespace odb {
         };
     };
 
+    bool peekKeyboard();
+
+    int readKeyboard();
+
     std::shared_ptr<odb::NativeTexture> makeTexture(const std::string& path, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
 
     TexturePair makeTexturePair( std::shared_ptr<odb::NativeBitmap> bitmap );

@@ -177,4 +177,14 @@ namespace odb {
 
     void CRenderer::clear() {
     }
+
+
+    bool peekKeyboard() {
+        return kbhit();
+    }
+
+    int readKeyboard() {
+        return getch();
+    }
+
 }
