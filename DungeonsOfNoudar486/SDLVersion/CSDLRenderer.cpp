@@ -238,8 +238,11 @@ namespace odb {
                     auto pixel = mPalette[mBuffer[(320 * y) + x]];
 
                     SDL_FillRect(video, &rect,
-                                 SDL_MapRGB(video->format, ((pixel & 0x000000FF)), ((pixel & 0x0000FF00) >> 8),
-                                            ((pixel & 0x00FF0000) >> 16)));
+                                 SDL_MapRGB(video->format,
+                                            (((pixel & 0x000000FF)      )) - 0x38,
+                                            (((pixel & 0x0000FF00) >>  8)) - 0x18,
+                                            (((pixel & 0x00FF0000) >> 16)) - 0x10
+                                 ));
 
                 }
             }
