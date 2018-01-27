@@ -282,6 +282,7 @@ void parseTune(struct Tune *tune) {
         if (tune->data[tune->index] == 'i' ) {
             tune->index++;
             tune->instrument = parseNumber(tune);
+            break;
         } else
             // Decrease octave if greater than 1.
         if (tune->data[tune->index] == '<' && tune->octave > 1) {
