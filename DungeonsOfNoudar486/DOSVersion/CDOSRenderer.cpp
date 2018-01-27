@@ -113,20 +113,11 @@ namespace odb {
                     mBufferedCommand = Knights::kQuitGameCommand;
                     break;
 
-                case 'w':
+                case 'a':
                     mBufferedCommand = Knights::kPickItemCommand;
                     mCached = false;
                     break;
                 case 's':
-                    mBufferedCommand = Knights::kDropItemCommand;
-                    mCached = false;
-                    break;
-                case 'q':
-                    mBufferedCommand = Knights::kCycleLeftInventoryCommand;
-                    mCached = false;
-                    break;
-
-                case 'e':
                     mBufferedCommand = Knights::kCycleRightInventoryCommand;
                     mCached = false;
                     break;

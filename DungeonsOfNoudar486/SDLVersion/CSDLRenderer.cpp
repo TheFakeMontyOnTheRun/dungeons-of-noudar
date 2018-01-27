@@ -148,22 +148,12 @@ namespace odb {
                         mCached = false;
                         break;
 
-                    case SDLK_w:
+                    case SDLK_a:
                         mBufferedCommand = Knights::kPickItemCommand;
                         mCached = false;
                         break;
 
                     case SDLK_s:
-                        mBufferedCommand = Knights::kDropItemCommand;
-                        mCached = false;
-                        break;
-
-                    case SDLK_e:
-                        mBufferedCommand = Knights::kCycleRightInventoryCommand;
-                        mCached = false;
-                        break;
-
-                    case SDLK_q:
                         mBufferedCommand = Knights::kCycleRightInventoryCommand;
                         mCached = false;
                         break;
