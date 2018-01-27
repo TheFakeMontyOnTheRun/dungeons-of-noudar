@@ -199,6 +199,7 @@ int main(int argc, char **argv) {
         if ( !std::strcmp(argv[1], "opl2lpt")) {
             soundDriver = kOpl2Lpt;
             initOPL2();
+            playTune("t200i101o1a");
         }
     }
 
@@ -225,7 +226,7 @@ int main(int argc, char **argv) {
     auto introText = fileLoader->loadFileFromPath(buffer);
 
     if (soundDriver != kNone ) {
-        playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+    //    playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
     }
 
     showText(bg, introText, "Press Enter to start" );
@@ -243,7 +244,7 @@ int main(int argc, char **argv) {
                 bg = loadPNG( "finis_gloriae_mundi.png", fileLoader );
 
                 if (soundDriver != kNone ) {
-                    playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+      //              playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
                 }
 
                 showText(bg, fileLoader->loadFileFromPath("chapter7.txt"), "                    Press enter to exit", renderer->getPaletteEntry(0xFFFFFFFF), 2 );
@@ -259,7 +260,7 @@ int main(int argc, char **argv) {
             auto chapterText = fileLoader->loadFileFromPath(buffer);
 
             if (soundDriver != kNone ) {
-                playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+        //        playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
             }
 
             showText(bg, chapterText, "Press Enter to continue");
@@ -314,7 +315,7 @@ int main(int argc, char **argv) {
             bg = loadPNG( "in_ictu_oculi.png", fileLoader );
 
             if (soundDriver != kNone ) {
-                playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+          //      playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
             }
 
             showText(bg, fileLoader->loadFileFromPath("gameover.txt"), "                    Press enter to exit", renderer->getPaletteEntry(0xFFFFFFFF), 2 );
