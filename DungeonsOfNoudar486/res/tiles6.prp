@@ -33,8 +33,8 @@ X 0 null null bricks cube bricks null 2 0 1 0
 B 0 ceilingbegin floor begin cube null null 2 0 1 0
 > 0 null floor bricks leftnear bricks null 2 0 1 0
 < 0 null floor bricks leftfar bricks null 2 0 1 0
-S 0 null floor ceilingend leftfar null null 0 0 3 0
-Z 0 null floor ceilingend leftnear null null 0 0 3 0
+S 0 null floor brickscandles leftfar null null 0 0 3 0
+Z 0 null floor brickscandles leftnear null null 0 0 3 0
 + 0 null grass null floor null null 0 0 0 0
 t 0 null grass null floor null null 0 0 0 0
 y 0 null grass null floor null null 0 0 0 0
