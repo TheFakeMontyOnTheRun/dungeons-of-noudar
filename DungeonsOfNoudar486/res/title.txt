@@ -7,8 +7,8 @@ Art by Stone Soup project.
 Controls:
 * arrows to move and turn.
 * z and x to strafe left and right.
-* e to cycle thru the inventory.
-* w to pick items.
+* s to cycle thru the inventory.
+* a to pick items.
 * space to use the current item.
 * esc to quit (but why?!).
 
