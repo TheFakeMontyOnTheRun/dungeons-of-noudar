@@ -3,7 +3,7 @@ CXX = clang++
 SDL_LIB = `sdl-config --libs` -lSDL_gfx -lSDL_image -lSDL_mixer
 SDL_INCLUDE =  `sdl-config --cflags `
 
-CXXFLAGS = -std=c++14 -O2 -g $(SDL_INCLUDE) -g -DSDLSW -DVGA -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY
+CXXFLAGS = -std=c++14 -O2 -g $(SDL_INCLUDE) -g -DSDLSW -DVGA -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -Ofast  -fomit-frame-pointer -fno-exceptions -ffast-math -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer -Wno-narrowing -DUSE_ITEMS_INSTANTLY
 
 OBJS = main.o \
         SDLVersion/CSDLRenderer.o \
@@ -47,7 +47,7 @@ OBJS = main.o \
         ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o
 
 LIBS = $(SDL_LIB)
-TARGET = game
+TARGET = x11noudar
 
 $(TARGET):	$(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS)
