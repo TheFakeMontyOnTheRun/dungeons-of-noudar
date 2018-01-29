@@ -116,8 +116,7 @@ int getchWithSoundTicks() {
 
 void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string& mainText, const std::string& bottom, uint8_t bgSolidColour = 0, uint8_t startingLine = 9) {
     renderer->fill(0, 0, 320, 200, bgSolidColour );
-    renderer->drawBitmap( //(320 - bg->getWidth()) / 2
-            0, 0, bg );
+    renderer->drawBitmap(0, 0, bg );
 
     uint8_t mainTextColour = renderer->getPaletteEntry(0xFFFF0000);
     uint8_t bottomTextColour = renderer->getPaletteEntry(0xFF888888);
@@ -222,7 +221,7 @@ int main(int argc, char **argv) {
     renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
     char buffer[41];
-    snprintf(buffer, 39, "chapter0.txt", game->getLevelNumber() );
+    snprintf(buffer, 39, "chapter0.txt" );
     auto introText = fileLoader->loadFileFromPath(buffer);
 
     if (soundDriver != kNone ) {
