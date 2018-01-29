@@ -48,8 +48,8 @@ namespace odb {
     const static bool kShouldDrawSkybox = false;
     const static bool kShouldDrawBlackMasks = true;
     const static auto kMinZCull = FixP{1};
-    const static long kSplatFrameTime = 250;
-    const static long kHighlightTime = 500;
+    const static long kSplatFrameTime = 200;
+    const static long kHighlightTime = 300;
     std::shared_ptr<odb::NativeTexture> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> rope;

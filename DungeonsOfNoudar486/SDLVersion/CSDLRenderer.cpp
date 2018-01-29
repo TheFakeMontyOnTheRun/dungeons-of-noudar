@@ -48,7 +48,7 @@ using sg14::fixed_point;
 long timeEllapsed = 0;
 
 long uclock() {
-    timeEllapsed += 33;
+    timeEllapsed += 10;
     return timeEllapsed;
 }
 
