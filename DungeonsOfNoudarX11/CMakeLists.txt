@@ -40,7 +40,6 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/IGameCommand.h
         ../noudar-core/noudar-core/include/CPlainFileLoader.h
         ../noudar-core/noudar-core/include/CActor.h
-        ../noudar-core/noudar-core/include/CMonsterGenerator.h
         ../noudar-core/noudar-core/include/CMonster.h
         ../noudar-core/noudar-core/include/CMonsterGenerator.h
         ../noudar-core/noudar-core/include/CDoorway.h
