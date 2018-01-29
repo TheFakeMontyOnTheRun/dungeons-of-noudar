@@ -242,7 +242,7 @@ namespace odb {
             int col = ascii & 31;
             auto letter = fontPixelData + ( col * 8 ) + ( fontWidth * ( line * 8 ) );
 
-            if ( text[c] == '\n' || dstX >= 312 ) {
+            if ( text[c] == '\n' || dstX >= 320 ) {
                 dstX = 0;
                 dstY += 8;
                 continue;
