@@ -131,6 +131,14 @@ namespace odb {
                     mCached = false;
                     break;
 
+                case '1':
+                case '2':
+                case '3':
+                    mBufferedCommand = getched;
+                    mCached = false;
+                    break;
+
+
                 case ' ':
                     mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
                     mCached = false;

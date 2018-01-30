@@ -35,6 +35,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/CTurnActorCommand.h
         ../noudar-core/noudar-core/include/commands/CDropItemCommand.h
         ../noudar-core/noudar-core/include/commands/CPickItemCommand.h
+        ../noudar-core/noudar-core/include/commands/CSuggestItemCommand.h
         ../noudar-core/noudar-core/include/commands/IGameCommand.h
         ../noudar-core/noudar-core/include/CPlainFileLoader.h
         ../noudar-core/noudar-core/include/CActor.h
@@ -57,6 +58,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CPickItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CDropItemCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CSuggestItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/IGameCommand.cpp

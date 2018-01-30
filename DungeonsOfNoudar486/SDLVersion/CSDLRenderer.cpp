@@ -195,6 +195,19 @@ namespace odb {
                         mCached = false;
                         break;
 
+                    case SDLK_1:
+                        mBufferedCommand = '1';
+                        mCached = false;
+                        break;
+                    case SDLK_2:
+                        mBufferedCommand = '2';
+                        mCached = false;
+                        break;
+                    case SDLK_3:
+                        mBufferedCommand = '3';
+                        mCached = false;
+                        break;
+
 
                     default:
                         return;
