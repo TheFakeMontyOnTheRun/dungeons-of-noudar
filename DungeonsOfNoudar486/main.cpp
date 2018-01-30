@@ -131,6 +131,7 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
     uint8_t playerTookDamageColour = renderer->getPaletteEntry(0xFF0000FF);
     uint8_t playerGainedFaithColour = renderer->getPaletteEntry(0xFF00FF00);
     uint8_t commandColour = renderer->getPaletteEntry(0xFFFFFFFF);
+    uint8_t effectColour = renderer->getPaletteEntry(0xFF888888);
 
     char* soundToPlay = nullptr;
 
@@ -138,7 +139,15 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
         char buffer[41];
         snprintf(&buffer[0], 39, "%s", game->getLastCommand().c_str());
         renderer->appendToLog( buffer, commandColour );
+
+        auto say = game->getMap()->getAvatar()->getCurrentSay();
+        if (!say.empty()) {
+            snprintf(&buffer[0], 39, "%s", say.c_str());
+            renderer->appendToLog( buffer, effectColour );
+            game->getMap()->getAvatar()->setCurrentSay("");
+        }
     }
+
 
     if (command == Knights::kUseCurrentItemInInventoryCommand) {
         playTune("i114t1o8f");
