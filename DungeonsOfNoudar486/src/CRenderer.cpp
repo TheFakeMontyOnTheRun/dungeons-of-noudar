@@ -1902,6 +1902,11 @@ namespace odb {
     }
 
     void CRenderer::appendToLog(const char* message, uint8_t colour = 15) {
+
+        if ( message == nullptr || strlen(message) == 0 ) { //|| !strcmp( message, &mLogBuffer[4][0] ) ) {
+            return;
+        }
+
         snprintf(&mLogBuffer[0][0], 39, "%s", &mLogBuffer[1][0] );
         snprintf(&mLogBuffer[1][0], 39, "%s", &mLogBuffer[2][0] );
         snprintf(&mLogBuffer[2][0], 39, "%s", &mLogBuffer[3][0] );
