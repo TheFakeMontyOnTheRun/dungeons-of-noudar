@@ -163,7 +163,7 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
 
     if ( targetHealthDiff < 0 ) {
         char buffer[41];
-        snprintf(&buffer[0], 39, "Player dealt %d of damage", std::abs(targetHealthDiff) );
+        snprintf(&buffer[0], 39, "Player dealt %d on %s", targetHealthDiff, actorAtTarget->getName().c_str() );
         renderer->appendToLog( buffer, playerDealtDamageColour );
         if (actorAtTarget == nullptr || !actorAtTarget->isAlive()) {
             renderer->addDeathAt(actorAtTarget->getPosition());
