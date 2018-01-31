@@ -97,17 +97,6 @@ namespace odb {
         return toReturn;
     }
 
-    vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
-        vector<std::shared_ptr<odb::NativeBitmap>> toReturn;
-        const auto buffer = fileLoader->loadFileFromPath( filename );
-        const auto list = splitLists(buffer);
-        for (const auto& filename : list ) {
-            toReturn.push_back(loadPNG(filename, fileLoader));
-        }
-
-        return toReturn;
-    }
-
     odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
         char buffer[64];
         snprintf(buffer, 64, "tiles%d.prp", levelNumber);
@@ -183,19 +172,7 @@ namespace odb {
         CRenderer::mNativeTextures.clear();
 
         for ( const auto& frameList : list ) {
-            vector<std::shared_ptr<odb::NativeBitmap>> textures;
-
-
-            if (frameList.substr(frameList.length() - 4) == ".lst") {
-                const auto frames = loadBitmapList(frameList, fileLoader );
-                for ( const auto frame : frames ) {
-                    textures.push_back(frame);
-                }
-            } else {
-                textures.push_back(loadPNG(frameList, fileLoader));
-            }
-
-            CRenderer::mNativeTextures.push_back( makeTexturePair(textures[0]) );
+            CRenderer::mNativeTextures.push_back( makeTexturePair(loadPNG(frameList, fileLoader)) );
         }
 
         mBackground = makeTexture("tile.png", fileLoader);
