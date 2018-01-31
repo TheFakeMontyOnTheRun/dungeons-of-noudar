@@ -1,11 +1,11 @@
 //
 // Created by monty on 14/01/17.
 //
-
+#include <cctype>
+#include <iterator>
 #include <functional>
 #include <memory>
 #include <string>
-#include <sstream>
 #include <iterator>
 #include <unordered_set>
 #include <map>
@@ -85,29 +85,44 @@ namespace odb {
     CTilePropertyMap CTile3DProperties::parsePropertyList(std::string propertyFile) {
 
         odb::CTilePropertyMap map;
-
-        std::stringstream ss;
-        ss << propertyFile;
-
         vector<std::string> tokens;
-        std::string tmp;
-        while ( ss.good() ) {
-            ss >> tmp;
-            tokens.push_back(tmp);
-        }
-
-        auto fileBegin = std::begin(tokens);
-        auto fileEnd = std::end(tokens);
-        auto pos = fileBegin;
-
         int line = 0;
 
-        while (pos != fileEnd) {
-            line++;
-            CTileId id = pos->c_str()[0];
-            auto props = readPropertiesLine(pos);
-	        map[id] = props;
-            pos = std::next(pos);
+        auto ptr = std::begin(propertyFile);
+        auto end = std::end(propertyFile);
+        auto lineBegin = ptr;
+
+        while ( ptr != end ) {
+            std::string tmp;
+            if ( !std::isspace(*ptr) ) {
+                auto pos2 = ptr;
+
+                while (pos2 != end && !std::isspace(*pos2) ) {
+                    tmp += *pos2;
+                    ++pos2;
+                }
+
+                if ( !tmp.empty()) {
+                    tokens.push_back(tmp);
+                }
+
+                ptr = pos2;
+            }
+
+            if ( ptr != end ) {
+
+                if ( *ptr == '\n' ) {
+                    CTileId id = *lineBegin;
+                    auto tokensBegin = std::begin(tokens);
+                    auto props = readPropertiesLine(tokensBegin);
+                    tokens.clear();
+                    map[id] = props;
+                    lineBegin = ptr + 1;
+                }
+
+                ++ptr;
+
+            }
         }
 
         return map;
