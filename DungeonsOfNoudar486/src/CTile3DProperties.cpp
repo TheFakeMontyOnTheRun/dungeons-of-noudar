@@ -34,32 +34,74 @@ namespace odb {
 
     GeometryType parseGeometryType(std::string token);
 
-    CTile3DProperties readPropertiesLine(vector<std::string>::iterator& pos) {
+    CTile3DProperties readPropertiesLine( std::string::iterator pos0, std::string::iterator pos1 ) {
 
         CTile3DProperties properties;
+        std::string::iterator pos2;
+        //the ID;
+        ++pos0;
 
-        pos = std::next(pos);
-        properties.mNeedsAlphaTest = ((*pos)[0] == '1');
-        pos = std::next(pos);
-        properties.mCeilingTexture = *pos;
-        pos = std::next(pos);
-        properties.mFloorTexture = *pos;
-        pos = std::next(pos);
-        properties.mMainWallTexture = *pos;
-        pos = std::next(pos);
-        properties.mGeometryType = parseGeometryType( *pos );
-        pos = std::next(pos);
-        properties.mCeilingRepeatedWallTexture = *pos;
-        pos = std::next(pos);
-        properties.mFloorRepeatedWallTexture = *pos;
-        pos = std::next(pos);
-        properties.mCeilingRepetitions = std::atoi( pos->c_str() );
-        pos = std::next(pos);
-        properties.mFloorRepetitions = std::atoi( pos->c_str() );
-        pos = std::next(pos);
-        properties.mCeilingHeight = FixP{atof( pos->c_str() )};
-        pos = std::next(pos);
-        properties.mFloorHeight = FixP{atof( pos->c_str() )};
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; };
+        properties.mNeedsAlphaTest = ( *pos0 == '1');
+        ++pos0;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mCeilingTexture = std::string{ pos0, pos2 };
+        pos0 = pos2 + 1;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mFloorTexture = std::string{ pos0, pos2 };
+        pos0 = pos2 + 1;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mMainWallTexture = std::string{ pos0, pos2 };
+        pos0 = pos2 + 1;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mGeometryType = parseGeometryType( std::string( pos0, pos2 ) );
+        pos0 = pos2 + 1;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mCeilingRepeatedWallTexture = std::string{ pos0, pos2 };
+        pos0 = pos2 + 1;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mFloorRepeatedWallTexture  = std::string{ pos0, pos2 };
+        pos0 = pos2 + 1;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        properties.mCeilingRepetitions = *pos0 - '0';
+        pos0++;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mFloorRepetitions = *pos0 - '0';
+        pos0++;
+
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mCeilingHeight = FixP{atof( std::string{ pos0, pos2}.c_str() )};
+        pos0 = pos2 + 1;
+
+        while( std::isspace( *pos0 ) && pos0 != pos1 ) { ++pos0; }
+        pos2 = pos0;
+        while( !std::isspace( *pos2 ) && pos2 != pos1 ) { ++pos2; }
+        properties.mFloorHeight = FixP{atof( std::string{ pos0, pos2}.c_str() )};
 
         return properties;
     }
@@ -92,37 +134,17 @@ namespace odb {
         auto end = std::end(propertyFile);
         auto lineBegin = ptr;
 
-        while ( ptr != end ) {
-            std::string tmp;
-            if ( !std::isspace(*ptr) ) {
-                auto pos2 = ptr;
+        while ( ptr <= end ) {
 
-                while (pos2 != end && !std::isspace(*pos2) ) {
-                    tmp += *pos2;
-                    ++pos2;
-                }
-
-                if ( !tmp.empty()) {
-                    tokens.push_back(tmp);
-                }
-
-                ptr = pos2;
+            if ( ptr == end || *ptr == '\n' ) {
+                CTileId id = *lineBegin;
+                auto props = readPropertiesLine(lineBegin, ptr);
+                tokens.clear();
+                map[id] = props;
+                lineBegin = ptr + 1;
             }
 
-            if ( ptr != end ) {
-
-                if ( *ptr == '\n' ) {
-                    CTileId id = *lineBegin;
-                    auto tokensBegin = std::begin(tokens);
-                    auto props = readPropertiesLine(tokensBegin);
-                    tokens.clear();
-                    map[id] = props;
-                    lineBegin = ptr + 1;
-                }
-
-                ++ptr;
-
-            }
+            ++ptr;
         }
 
         return map;
