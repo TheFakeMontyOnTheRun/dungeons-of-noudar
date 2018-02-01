@@ -61,11 +61,13 @@ namespace odb {
     class CRenderer  : public Knights::IRenderer {
         bool mCached = false;
         bool mHudDrawn = false;
+        bool mStaticPartsOfHudDrawn = false;
+        bool mNeedsToRedraw = true;
+
         array<array<Knights::ElementView , Knights::kMapSize>, Knights::kMapSize> mElementsMap;
         Knights::CommandType mBufferedCommand = '.';
         std::shared_ptr<NativeBitmap > mFont;
         array< uint8_t, 320 * 200 > mBuffer;
-        array< uint32_t , 256 > mPalette;
         EActorsSnapshotElement mActors[40][40];
         EItemsSnapshotElement mItems[ 40 ][ 40 ];
         Knights::EDirection mCameraDirection;
@@ -73,19 +75,22 @@ namespace odb {
         uint8_t mLineColour[5];
         Knights::CommandType mLastCommand = '.';
         int16_t mHealth;
-        uint16_t mFrame = 0;
-        int32_t mUsefulFrames = 0;
-        int32_t mAccMs = 0;
-        int32_t mProcVisTime = 0;
         EItemsSnapshotElement mCurrentItem = EItemsSnapshotElement::kSword;
         std::string mItemName;
         int mItemCapacity;
         int mUsageCost = 0;
         Vec3 mCamera{ FixP{1}, FixP{1}, FixP{1}};
-        bool mStaticPartsOfHudDrawn = false;
-        bool mNeedsToRedraw = true;
+
+#ifdef PROFILEBUILD
+        uint16_t mFrame = 0;
+        int32_t mUsefulFrames = 0;
+        int32_t mAccMs = 0;
+        int32_t mProcVisTime = 0;
+#endif
+
 #ifdef SDLSW
         bool mSlow = false;
+        array< uint32_t , 256 > mPalette;
 #endif
         int mSplats[ 40 ][ 40 ];
 

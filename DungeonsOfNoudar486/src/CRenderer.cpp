@@ -50,6 +50,7 @@ namespace odb {
     const static auto kMinZCull = FixP{1};
     const static long kSplatFrameTime = 200;
     const static long kHighlightTime = 300;
+
     std::shared_ptr<odb::NativeTexture> mBackground;
     std::shared_ptr<odb::NativeTexture> foe;
     std::shared_ptr<odb::NativeTexture> rope;
@@ -65,7 +66,6 @@ namespace odb {
     std::shared_ptr<odb::NativeTexture> token;
     std::shared_ptr<odb::NativeTexture> splat[3];
     std::shared_ptr<NativeTexture > skybox;
-
 
     VisMap visMap;
     IntMap intMap;
@@ -190,14 +190,12 @@ namespace odb {
         splat[2] = makeTexture("splat0.png", fileLoader);
 
         if ( kShouldDrawSkybox) {
-//            skybox = makeTexture("clouds.png", fileLoader );                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          fileLoader);
+            skybox = makeTexture("clouds.png", fileLoader );
         }
 
         for ( auto& distanceLine : distances ) {
             distanceLine.reserve(Knights::kMapSize + Knights::kMapSize);
         }
-
-
 
         return tilesToLoad;
     }
@@ -340,12 +338,12 @@ namespace odb {
                 }
             }
         }
-#ifndef SDLSW
+#ifdef PROFILEBUILD
         auto t0 = uclock();
 #endif
 
         VisibilityStrategy::castVisibility(visMap, intMap, mCameraPosition, mCameraDirection, true, distances);
-#ifndef SDLSW
+#ifdef PROFILEBUILD
         auto t1 = uclock();
         mProcVisTime += (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
 #endif
@@ -1810,8 +1808,6 @@ namespace odb {
         mDamageHighlight = 1;
         mHighlightTime = kHighlightTime;
     }
-
-
 
     void CRenderer::addSplatAt( const Knights::Vec2i& position ) {
         mSplats[position.y][position.x] = 0;
