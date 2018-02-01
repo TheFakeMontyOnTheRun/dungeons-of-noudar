@@ -188,7 +188,12 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
     }
 }
 
+#ifdef __APPLE__
+extern "C" int SDL_main(int argc, char **argv) {
+#else
 int main(int argc, char **argv) {
+#endif
+
     int instrument = -1;
 
     const auto LEVEL_LIMIT = 7;

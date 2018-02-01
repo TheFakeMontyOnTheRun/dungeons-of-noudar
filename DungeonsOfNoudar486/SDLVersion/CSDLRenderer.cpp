@@ -11,8 +11,13 @@
 #include <map>
 #include <unordered_map>
 #include <chrono>
+
+#ifdef __APPLE__
+#include <SDL.h>
+#else
 #include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+#endif
+
 
 #include <sg14/fixed_point>
 #include <EASTL/vector.h>
