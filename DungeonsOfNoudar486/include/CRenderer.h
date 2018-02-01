@@ -105,7 +105,7 @@ namespace odb {
 
      public:
         const static uint8_t mTransparency;
-        static vector<TexturePair> mNativeTextures;
+        vector<TexturePair> mNativeTextures;
 
         void addSplatAt( const Knights::Vec2i& position );
 
@@ -145,7 +145,7 @@ namespace odb {
 
         void drawBitmap( int x, int y, std::shared_ptr<odb::NativeBitmap> tile );
 
-        void loadTextures( vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap& tileProperties );
+        void loadTextures( vector<std::shared_ptr<odb::NativeBitmap>> textureList, CTilePropertyMap& tileProperties );
 
         void render(long ms);
 
@@ -175,8 +175,6 @@ namespace odb {
 
         static uint8_t getPaletteEntry(uint32_t origin);
 
-        vector<vector<std::shared_ptr<odb::NativeBitmap>>> mTextures;
-
         vector<std::pair<Vec3, Vec2>> mVertices {
                 {Vec3{0,0,0},Vec2{0,0}},
                 {Vec3{0,0,0},Vec2{0,0}},
@@ -198,7 +196,7 @@ namespace odb {
 
     TexturePair makeTexturePair( std::shared_ptr<odb::NativeBitmap> bitmap );
 
-    vector<vector<std::shared_ptr<odb::NativeBitmap>>>
+    vector<std::shared_ptr<odb::NativeBitmap>>
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
     odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
 }

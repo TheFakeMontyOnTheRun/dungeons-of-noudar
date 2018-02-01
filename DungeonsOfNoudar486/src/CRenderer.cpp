@@ -70,7 +70,6 @@ namespace odb {
     VisMap visMap;
     IntMap intMap;
     DistanceDistribution distances;
-    vector<TexturePair> CRenderer::mNativeTextures;
     const uint8_t CRenderer::mTransparency = getPaletteEntry(0xFFFF00FF);
 
 
@@ -160,19 +159,17 @@ namespace odb {
         return std::make_pair(nativeTexture, rotatedTexture );
     }
 
-    vector<vector<std::shared_ptr<odb::NativeBitmap>>>
+    vector<std::shared_ptr<odb::NativeBitmap>>
     loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
         char tilesFilename[64];
         snprintf(tilesFilename, 64, "tiles%d.lst", levelNumber);
         const auto data = fileLoader->loadFileFromPath( tilesFilename );
         const auto list = splitLists(data);
 
-        vector<vector<std::shared_ptr<odb::NativeBitmap>>> tilesToLoad;
-
-        CRenderer::mNativeTextures.clear();
+        vector<std::shared_ptr<odb::NativeBitmap>> tilesToLoad;
 
         for ( const auto& frameList : list ) {
-            CRenderer::mNativeTextures.push_back( makeTexturePair(loadPNG(frameList, fileLoader)) );
+            tilesToLoad.push_back( loadPNG(frameList, fileLoader) );
         }
 
         mBackground = makeTexture("tile.png", fileLoader);
@@ -1897,7 +1894,12 @@ namespace odb {
     }
 
 
-    void CRenderer::loadTextures(vector<vector<std::shared_ptr<odb::NativeBitmap>>> textureList, CTilePropertyMap &tile3DProperties) {
+    void CRenderer::loadTextures(vector<std::shared_ptr<odb::NativeBitmap>> textureList, CTilePropertyMap &tile3DProperties) {
+        mNativeTextures.clear();
+
+        for ( const auto& bitmap : textureList ) {
+            mNativeTextures.push_back(makeTexturePair(bitmap));
+        }
 
         snprintf(&mLogBuffer[0][0], 39, "" );
         snprintf(&mLogBuffer[1][0], 39, "" );
@@ -1906,10 +1908,8 @@ namespace odb {
         snprintf(&mLogBuffer[4][0], 39, "" );
 
 
-        mTextures.clear();
         mTileProperties.clear();
         mStaticPartsOfHudDrawn = false;
-        mTextures = textureList;
         mTileProperties = tile3DProperties;
 
         std::unordered_map<std::string, TextureIndex > textureRegistry;
