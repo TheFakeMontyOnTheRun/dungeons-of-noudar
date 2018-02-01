@@ -38,8 +38,25 @@ odb::CPackedFileReader::CPackedFileReader(std::string dataFilePath) : mPackPath(
     fclose(mDataPack);
 }
 
-vector<char> odb::CPackedFileReader::loadBinaryFileFromPath(const std::string &path) {
-    vector<char> toReturn;
+size_t odb::CPackedFileReader::sizeOfFile(const std::string& path) {
+    mDataPack = fopen(mPackPath.c_str(), "rb");
+    uint32_t offset = mOffsets[ path ];
+    if ( offset == 0 ) {
+        printf("failed to load %s", path.c_str());
+        exit(-1);
+    }
+
+    auto result = fseek( mDataPack, offset, SEEK_SET );
+
+    uint32_t size = 0;
+    fread(&size, 4, 1, mDataPack );
+    fclose(mDataPack);
+
+    return size;
+}
+
+uint8_t* odb::CPackedFileReader::loadBinaryFileFromPath(const std::string &path) {
+    uint8_t* toReturn;
     mDataPack = fopen(mPackPath.c_str(), "rb");
     uint32_t offset = mOffsets[ path ];
     if ( offset == 0 ) {
@@ -52,10 +69,12 @@ vector<char> odb::CPackedFileReader::loadBinaryFileFromPath(const std::string &p
     uint32_t size = 0;
     char data;
     fread(&size, 4, 1, mDataPack );
+    toReturn = new uint8_t[size];
 
+    auto ptr = toReturn;
     for ( int c = 0; c < size; ++c ) {
         fread(&data, 1, 1, mDataPack );
-        toReturn.push_back(data);
+        (*ptr++)=(data);
     }
     fclose(mDataPack);
 

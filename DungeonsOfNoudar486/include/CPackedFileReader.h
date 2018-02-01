@@ -12,8 +12,9 @@ namespace odb {
         std::unordered_map<std::string, size_t > mOffsets;
     public:
         CPackedFileReader() = delete;
+        size_t sizeOfFile(const std::string& path) override;
         explicit CPackedFileReader( std::string dataFilePath );
-        vector<char> loadBinaryFileFromPath( const std::string& path ) override;
+        uint8_t* loadBinaryFileFromPath( const std::string& path ) override;
         std::string loadFileFromPath( const std::string& path ) override ;
         std::string getFilePathPrefix() override;
 
