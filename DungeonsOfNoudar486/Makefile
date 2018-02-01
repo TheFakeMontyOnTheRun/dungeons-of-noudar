@@ -31,7 +31,6 @@ OBJS = main.o \
         ../noudar-core/noudar-core/src/CGame.o \
         ../noudar-core/noudar-core/src/CItem.o \
         ../noudar-core/noudar-core/src/CStorageItem.o \
-        ../noudar-core/noudar-core/src/CPlainFileLoader.o \
         ../noudar-core/noudar-core/src/CGameDelegate.o \
         ../noudar-core/noudar-core/src/commands/IGameCommand.o \
         ../noudar-core/noudar-core/src/commands/CMoveActorCommand.o \

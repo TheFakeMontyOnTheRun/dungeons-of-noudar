@@ -38,7 +38,6 @@ using sg14::fixed_point;
 #include "IRenderer.h"
 #include "IFileLoaderDelegate.h"
 #include "CGame.h"
-#include "CPlainFileLoader.h"
 #include "Vec2i.h"
 #include "IMapElement.h"
 #include "CTeam.h"

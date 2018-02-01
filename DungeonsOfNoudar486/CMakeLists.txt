@@ -37,7 +37,6 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/include/commands/CPickItemCommand.h
         ../noudar-core/noudar-core/include/commands/CSuggestItemCommand.h
         ../noudar-core/noudar-core/include/commands/IGameCommand.h
-        ../noudar-core/noudar-core/include/CPlainFileLoader.h
         ../noudar-core/noudar-core/include/CActor.h
         ../noudar-core/noudar-core/include/CMonsterGenerator.h
         ../noudar-core/noudar-core/include/CMonster.h
@@ -62,7 +61,6 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/IGameCommand.cpp
-        ../noudar-core/noudar-core/src/CPlainFileLoader.cpp
         ../noudar-core/noudar-core/src/Vec2i.cpp
         ../noudar-core/noudar-core/src/Common.cpp
         ../noudar-core/noudar-core/src/CActor.cpp
