@@ -94,8 +94,8 @@ int getchWithSoundTicks() {
         while (true) {
             soundTick();
 
-            if (odb::peekKeyboard()) {
-                keycode = odb::readKeyboard();
+            if (odb::peekKeyboard(renderer)) {
+                keycode = odb::readKeyboard(renderer);
 
                 if (keycode == 13) {
                     muteSound();
@@ -105,7 +105,7 @@ int getchWithSoundTicks() {
         }
     } else {
         do {
-            keycode = odb::readKeyboard();
+            keycode = odb::readKeyboard(renderer);
         } while (keycode != 13);
     }
 

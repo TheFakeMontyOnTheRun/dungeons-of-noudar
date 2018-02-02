@@ -193,9 +193,9 @@ namespace odb {
         };
     };
 
-    bool peekKeyboard();
+    bool peekKeyboard(std::shared_ptr<CRenderer> renderer);
 
-    int readKeyboard();
+    int readKeyboard(std::shared_ptr<CRenderer> renderer);
 
     std::shared_ptr<odb::NativeTexture> makeTexture(const std::string& path, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
 

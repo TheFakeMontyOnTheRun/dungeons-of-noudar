@@ -178,11 +178,11 @@ namespace odb {
     }
 
 
-    bool peekKeyboard() {
+  bool peekKeyboard(std::shared_ptr<CRenderer> unused) {
         return kbhit();
     }
 
-    int readKeyboard() {
+  int readKeyboard(std::shared_ptr<CRenderer> unused) {
         return getch();
     }
 

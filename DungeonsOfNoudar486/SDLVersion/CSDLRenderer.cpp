@@ -59,11 +59,14 @@ long uclock() {
 
 namespace odb {
 
-    int readKeyboard() {
+  int readKeyboard(std::shared_ptr<CRenderer> renderer) {
 
         SDL_Event event;
 
         while (true) {
+#ifdef __APPLE__
+	  renderer->flip();
+#endif
             if (SDL_PollEvent(&event) ) {
                 if (event.type == SDL_KEYDOWN) {
                     if ( event.key.keysym.sym == SDLK_RETURN ) {
@@ -76,11 +79,14 @@ namespace odb {
         }
     }
 
-    bool peekKeyboard() {
+  bool peekKeyboard(std::shared_ptr<CRenderer> renderer) {
 
         SDL_Event event;
 
         while (SDL_PollEvent(&event)) {
+#ifdef __APPLE__
+	  renderer->flip();
+#endif
             if (event.type == SDL_KEYDOWN) {
                 SDL_PushEvent(&event);
                 return true;
