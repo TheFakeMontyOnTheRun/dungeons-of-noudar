@@ -119,7 +119,7 @@ namespace odb {
         Knights::CommandType peekInput();
         void appendToLog(const char* message, uint8_t colour );
         CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
-        ~CRenderer();
+        virtual ~CRenderer() override;
         uint8_t * getBufferData();
 
         void fillSidebar();
