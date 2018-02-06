@@ -240,7 +240,6 @@ namespace odb {
 
 
     CRenderer::~CRenderer() {
-        SDL_FreeSurface(video);
         SDL_Quit();
 
         mNativeTextures.clear();
