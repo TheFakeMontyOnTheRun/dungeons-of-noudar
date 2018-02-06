@@ -7,10 +7,14 @@
 
 namespace odb {
 
+using FixP16 = fixed_point<int16_t, -5>;
+using FixP32 = fixed_point<int32_t, -16>;
+using TextureFixP = fixed_point<uint16_t, -11>;
+
 #ifdef LOWRES
-    using FixP = fixed_point<int16_t, -3>;
+    using FixP = FixP16;
 #else
-    using FixP = fixed_point<int32_t, -16>;
+    using FixP = FixP32;
 #endif
 
 

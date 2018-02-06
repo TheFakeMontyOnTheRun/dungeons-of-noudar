@@ -78,8 +78,8 @@ namespace odb {
         vector<std::string> toReturn;
         auto buffer = std::string(data);
         buffer.push_back('\n');
-        int lastPoint = 0;
-        int since = 0;
+        auto lastPoint = 0;
+        auto since = 0;
         const auto bufferBegin = std::begin( buffer );
         for (const auto& c : buffer ) {
             ++since;
@@ -96,7 +96,7 @@ namespace odb {
         return toReturn;
     }
 
-    odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+    odb::CTilePropertyMap loadTileProperties( uint8_t levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
         char buffer[64];
         snprintf(buffer, 64, "tiles%d.prp", levelNumber);
 
@@ -127,10 +127,10 @@ namespace odb {
         auto texture = std::make_shared<odb::NativeTexture>();
 
         const auto width = bitmap->getWidth();
-        const int ratio = width / NATIVE_TEXTURE_SIZE;
+        const auto ratio = width / NATIVE_TEXTURE_SIZE;
 
-        for (int y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
-            for (int x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
+        for (auto y = 0; y < NATIVE_TEXTURE_SIZE; ++y) {
+            for (auto x = 0; x < NATIVE_TEXTURE_SIZE; ++x) {
                 const uint32_t pixel = bitmap->getPixelData()[(width * (y * ratio)) + (x * ratio)];
                 const auto converted = CRenderer::getPaletteEntry(pixel);
                 texture->data()[(NATIVE_TEXTURE_SIZE * y) + x] = converted;
@@ -145,10 +145,10 @@ namespace odb {
         auto rotatedTexture = std::make_shared<NativeTexture>();
 
         const auto width = bitmap->getWidth();
-        const int ratio = width / NATIVE_TEXTURE_SIZE;
+        const auto ratio = width / NATIVE_TEXTURE_SIZE;
 
-        for ( int y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
-            for ( int x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
+        for ( auto y = 0; y < NATIVE_TEXTURE_SIZE; ++y ) {
+            for ( auto x = 0; x < NATIVE_TEXTURE_SIZE; ++x ) {
                 const uint32_t pixel = bitmap->getPixelData()[ ( width * (y * ratio ) ) + (x * ratio ) ];
                 const auto converted = CRenderer::getPaletteEntry( pixel );
                 nativeTexture->data()[ ( NATIVE_TEXTURE_SIZE * y ) + x ] = converted;
@@ -160,7 +160,7 @@ namespace odb {
     }
 
     vector<std::shared_ptr<odb::NativeBitmap>>
-    loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
+    loadTexturesForLevel(uint8_t levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
         char tilesFilename[64];
         snprintf(tilesFilename, 64, "tiles%d.lst", levelNumber);
         const auto data = fileLoader->loadFileFromPath( tilesFilename );
@@ -200,18 +200,18 @@ namespace odb {
         return tilesToLoad;
     }
 
-    void CRenderer::drawTextAt( int x, int y, const char* text, uint8_t colour = 15 ) {
-        int len = strlen(text);
-        int dstX = (x - 1) * 8;
-        int dstY = (y - 1) * 8;
+    void CRenderer::drawTextAt( uint16_t x, uint16_t y, const char* text, uint8_t colour = 15 ) {
+        auto len = strlen(text);
+        auto dstX = (x - 1) * 8;
+        auto dstY = (y - 1) * 8;
         auto dstBuffer = getBufferData();
         auto fontWidth = mFont->getWidth();
         auto fontPixelData = mFont->getPixelData();
 
-        for ( int c = 0; c < len; ++c ) {
-            int ascii = text[c] - ' ';
-            int line = ascii >> 5;
-            int col = ascii & 31;
+        for ( auto c = 0; c < len; ++c ) {
+            auto ascii = text[c] - ' ';
+            auto line = ascii >> 5;
+            auto col = ascii & 31;
             auto letter = fontPixelData + ( col * 8 ) + ( fontWidth * ( line * 8 ) );
 
             if ( text[c] == '\n' || dstX >= 320 ) {
@@ -225,12 +225,12 @@ namespace odb {
                 continue;
             }
 
-            for ( int srcY = 0; srcY < 8; ++srcY ) {
+            for ( auto srcY = 0; srcY < 8; ++srcY ) {
 
                 auto letterSrc = letter + ( fontWidth * srcY );
                 auto letterDst = dstBuffer + dstX + ( 320 * (dstY + srcY ) );
 
-                for (int srcX = 0; srcX < 8; ++srcX ) {
+                for (auto srcX = 0; srcX < 8; ++srcX ) {
 
                     if ((*letterSrc) & 0xFF000000) {
                         *letterDst = colour;
@@ -359,7 +359,7 @@ namespace odb {
         return toReturn;
     }
 
-    void CRenderer::projectAllVertices( int count ) {
+    void CRenderer::projectAllVertices( uint8_t count ) {
         const static FixP halfWidth{HALF_XRES};
         const static FixP halfHeight{HALF_YRES};
         const static FixP two{2};
@@ -814,7 +814,7 @@ namespace odb {
         const FixP lowerDyDx = lowerDy / dX;
 
         uint8_t pixel = 0;
-        FixP u{0};
+        TextureFixP u{0};
 
         //0xFF here acts as a dirty value, indicating there is no last value. But even if we had
         //textures this big, it would be only at the end of the run.
@@ -827,7 +827,7 @@ namespace odb {
         const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         const FixP textureSize{ textureWidth };
 
-        const FixP du = textureSize / (dX);
+        const TextureFixP du = textureSize / (dX);
         auto ix = x;
         uint8_t * bufferData = getBufferData();
 
@@ -840,8 +840,8 @@ namespace odb {
                     continue;
                 }
 
-                const FixP dv = textureSize / diffY;
-                FixP v{0};
+                const TextureFixP dv = textureSize / diffY;
+                TextureFixP v{0};
                 auto iu = static_cast<uint8_t >(u);
                 auto iY0 = static_cast<int16_t >(y0);
                 auto iY1 = static_cast<int16_t >(y1);
@@ -982,7 +982,7 @@ namespace odb {
 
         uint8_t pixel = 0 ;
 
-        FixP v{0};
+        TextureFixP v{0};
 
         //0xFF here acts as a dirty value, indicating there is no last value. But even if we had
         //textures this big, it would be only at the end of the run.
@@ -995,7 +995,7 @@ namespace odb {
         const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         const FixP textureSize{ textureWidth };
 
-        const FixP dv = textureSize / (dY);
+        const TextureFixP dv = textureSize / (dY);
 
         const auto diffX = ( x1 - x0 );
 
@@ -1007,13 +1007,13 @@ namespace odb {
             return;
         }
 
-        const FixP du = textureSize / diffX;
+        const TextureFixP du = textureSize / diffX;
 
         uint8_t * bufferData = getBufferData();
 
         for (; iy < limit; ++iy ) {
             if (iy < YRES && iy >= 0) {
-                FixP u{0};
+                TextureFixP u{0};
                 const auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + ((iv & (textureWidth - 1)) * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
@@ -1123,7 +1123,7 @@ namespace odb {
 
         uint8_t pixel = 0 ;
 
-        FixP v{0};
+        TextureFixP v{0};
 
         //0xFF here acts as a dirty value, indicating there is no last value. But even if we had
         //textures this big, it would be only at the end of the run.
@@ -1137,7 +1137,7 @@ namespace odb {
         const int8_t textureWidth = NATIVE_TEXTURE_SIZE;
         const FixP textureSize{ textureWidth };
 
-        const FixP dv = textureSize / (dY);
+        const TextureFixP dv = textureSize / (dY);
 
         for (; iy < limit; ++iy ) {
 
@@ -1152,8 +1152,8 @@ namespace odb {
                 auto iX0 = static_cast<int16_t >(x0);
                 auto iX1 = static_cast<int16_t >(x1);
 
-                const FixP du = textureSize / diffX;
-                FixP u{0};
+                const TextureFixP du = textureSize / diffX;
+                TextureFixP u{0};
                 const auto iv = static_cast<uint8_t >(v);
                 auto sourceLineStart = data + (iv * textureWidth);
                 auto destinationLine = bufferData + (320 * iy) + iX0;
@@ -1214,7 +1214,7 @@ namespace odb {
                 _y1 = y0;
             }
 
-            for ( int y = _y0; y <= _y1; ++y ) {
+            for ( auto y = _y0; y <= _y1; ++y ) {
                 putRaw( x0, y, 0xFFFFFFFF);
             }
             return;
@@ -1229,7 +1229,7 @@ namespace odb {
                 _x1 = x0;
             }
 
-            for ( int x = _x0; x <= _x1; ++x ) {
+            for ( auto x = _x0; x <= _x1; ++x ) {
                 putRaw( x, y0, 0xFFFFFFFF);
             }
             return;
@@ -1250,7 +1250,7 @@ namespace odb {
         FixP fLimitY = FixP{ y1 };
         FixP fDeltatY = FixP{ y1 - y0 } / FixP{ x1 - x0 };
 
-        for ( int x = x0; x <= x1; ++x ) {
+        for ( auto x = x0; x <= x1; ++x ) {
             putRaw( x, static_cast<int16_t >(fy), 0xFFFFFFFF);
             fy += fDeltatY;
         }
@@ -1306,14 +1306,14 @@ namespace odb {
             Knights::ElementView element;
             Vec3 position;
             bool splatDrawn = false;
-            int shouldSplat = -1;
+            auto shouldSplat = -1;
 
             const auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
-            for ( int distance = 79; distance >= 0; --distance ) {
+            for ( auto distance = 79; distance >= 0; --distance ) {
                 for ( const auto& visPos : distances[ distance ] ) {
 
-                    int x = 0;
-                    int z = 0;
+                    auto x = 0;
+                    auto z = 0;
 
                     facesMask[ 0 ] = true;
                     facesMask[ 1 ] = true;
@@ -1720,7 +1720,7 @@ namespace odb {
                 mNeedsToRedraw = true;
             }
 
-            for ( int c = 0; c < 2; ++c ) {
+            for ( auto c = 0; c < 2; ++c ) {
                 drawSprite( 320 - 32, 16 + 64 + ( c * 32), mBackground );
                 drawSprite( 320 - 64, 16 + 64 + ( c * 32), mBackground );
             }
@@ -1729,7 +1729,7 @@ namespace odb {
             fill( 320 - 64 + 8, 64 + 16, 32 + 16, 64 - 16, backgroundColour );
 
             if (!mStaticPartsOfHudDrawn) {
-                for ( int c = 0; c < 10; ++c ) {
+                for ( auto c = 0; c < 10; ++c ) {
                     drawSprite( c * 32, 128, mBackground );
                 }
                 mStaticPartsOfHudDrawn = true;
@@ -1819,7 +1819,7 @@ namespace odb {
         mSplatFrameTime = kSplatFrameTime;
     }
 
-    void CRenderer::fill( int x, int y, int dx, int dy, uint8_t pixel ) {
+    void CRenderer::fill( uint16_t x, uint16_t y, uint16_t dx, uint16_t dy, uint8_t pixel ) {
 
         if (pixel == mTransparency ) {
             return;
@@ -1827,21 +1827,21 @@ namespace odb {
 
         auto destination = getBufferData();
 
-        for ( int py = 0; py < dy; ++py ) {
+        for ( auto py = 0; py < dy; ++py ) {
             auto destinationLineStart = destination + ( 320 * (y + py) ) + x;
             std::fill( destinationLineStart, destinationLineStart + dx, pixel );
         }
     }
 
-    void CRenderer::drawSprite( int dx, int dy, std::shared_ptr<odb::NativeTexture> tile ) {
+    void CRenderer::drawSprite( uint16_t dx, uint16_t dy, std::shared_ptr<odb::NativeTexture> tile ) {
         auto destination = getBufferData();
         auto sourceLine = &((*tile)[0]);
 
-        for ( int y = 0; y < 32; ++y ) {
+        for ( auto y = 0; y < 32; ++y ) {
             auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
             auto sourceLineStart = sourceLine + ( 32 * y );
 
-            for ( int x = 0; x < 32; ++x ) {
+            for ( auto x = 0; x < 32; ++x ) {
                 auto pixel = *sourceLineStart;
 
                 if (pixel != CRenderer::mTransparency ) {
@@ -1855,15 +1855,15 @@ namespace odb {
         }
     }
 
-    void CRenderer::drawBitmap( int dx, int dy, std::shared_ptr<odb::NativeBitmap> tile ) {
+    void CRenderer::drawBitmap( uint16_t dx, uint16_t dy, std::shared_ptr<odb::NativeBitmap> tile ) {
         auto destination = getBufferData();
         auto sourceLine = tile->getPixelData();
         auto height = tile->getHeight();
         auto width = tile->getWidth();
-        for ( int y = 0; y < height; ++y ) {
+        for ( auto y = 0; y < height; ++y ) {
             auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
             auto sourceLineStart = sourceLine + ( width * y );
-            for ( int x = 0; x < width; ++x ) {
+            for ( auto x = 0; x < width; ++x ) {
                 *destinationLineStart = getPaletteEntry(*sourceLineStart);
                 ++sourceLineStart;
                 ++destinationLineStart;

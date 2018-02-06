@@ -132,7 +132,7 @@ namespace odb {
 
         void drawCubeAt(const Vec3 &center, TexturePair texture );
 
-        void drawTextAt( int x, int y, const char* text, uint8_t colour );
+        void drawTextAt( uint16_t x, uint16_t y, const char* text, uint8_t colour );
 
         void drawFloorAt(const Vec3 &center, TexturePair texture );
 
@@ -146,9 +146,9 @@ namespace odb {
 
         void drawBillboardAt(const Vec3 &center, std::shared_ptr<odb::NativeTexture> texture );
 
-        void drawSprite( int x, int y, std::shared_ptr<odb::NativeTexture > tile );
+        void drawSprite( uint16_t x, uint16_t y, std::shared_ptr<odb::NativeTexture > tile );
 
-        void drawBitmap( int x, int y, std::shared_ptr<odb::NativeBitmap> tile );
+        void drawBitmap( uint16_t x, uint16_t y, std::shared_ptr<odb::NativeBitmap> tile );
 
         void loadTextures( vector<std::shared_ptr<odb::NativeBitmap>> textureList, CTilePropertyMap& tileProperties );
 
@@ -160,7 +160,7 @@ namespace odb {
 
         void putRaw(int16_t x, int16_t y, uint32_t pixel);
 
-        void fill( int x, int y, int dx, int dy, uint8_t pixel );
+        void fill( uint16_t x, uint16_t y, uint16_t dx, uint16_t dy, uint8_t pixel );
 
         void drawWall(FixP x0, FixP x1, FixP x0y0, FixP x0y1, FixP x1y0, FixP x1y1, std::shared_ptr<odb::NativeTexture> texture, FixP textureScaleY );
 
@@ -176,7 +176,7 @@ namespace odb {
 
         void drawLine(const Vec2 &p0, const Vec2 &p1);
 
-        void projectAllVertices(int count);
+        void projectAllVertices(uint8_t count);
 
         static uint8_t getPaletteEntry(uint32_t origin);
 
@@ -202,7 +202,7 @@ namespace odb {
     TexturePair makeTexturePair( std::shared_ptr<odb::NativeBitmap> bitmap );
 
     vector<std::shared_ptr<odb::NativeBitmap>>
-    loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
-    odb::CTilePropertyMap loadTileProperties( int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
+    loadTexturesForLevel(uint8_t levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
+    odb::CTilePropertyMap loadTileProperties( uint8_t levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
 }
 #endif
