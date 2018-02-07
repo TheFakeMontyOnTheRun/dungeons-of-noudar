@@ -5,7 +5,9 @@
 #ifdef __DJGPP__
 #else
 const long UCLOCKS_PER_SEC = 1000;
+
 long uclock();
+
 #endif
 
 
@@ -56,20 +58,28 @@ using sg14::fixed_point;
 #include "CPackedFileReader.h"
 #include "LoadPNG.h"
 
-enum ESoundDriver : uint8_t { kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox };
+enum ESoundDriver : uint8_t {
+    kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox
+};
 
 ESoundDriver soundDriver = kNone;
 
 void initOPL2();
-void playTune(const std::string&);
+
+void playTune(const std::string &);
+
 void setupOPL2();
+
 void stopSounds();
+
 void soundTick();
+
 void muteSound();
+
 void playMusic(const std::string &musicTrack);
 
 namespace odb {
-	std::shared_ptr<CRenderer> renderer = nullptr;
+    std::shared_ptr<CRenderer> renderer = nullptr;
 }
 
 
@@ -77,18 +87,18 @@ void initOPL2() {
     setupOPL2();
 }
 
-void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags,
-                     const char* file, int line) {
-    return new uint8_t[ size ];
+void *operator new[](size_t size, const char *pName, int flags, unsigned debugFlags,
+                     const char *file, int line) {
+    return new uint8_t[size];
 }
 
-void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char* pName,
-                     int flags, unsigned debugFlags, const char* file, int line) {
-    return new uint8_t[ size ];;
+void *operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char *pName,
+                     int flags, unsigned debugFlags, const char *file, int line) {
+    return new uint8_t[size];;
 }
 
 void renderTick(long ms) {
-    odb::renderer->render( ms );
+    odb::renderer->render(ms);
     odb::renderer->handleSystemEvents();
 }
 
@@ -97,7 +107,7 @@ std::shared_ptr<Knights::CGame> game;
 int getchWithSoundTicks() {
     int keycode = 0;
 
-    if (soundDriver != kNone ) {
+    if (soundDriver != kNone) {
         while (true) {
             soundTick();
 
@@ -120,18 +130,20 @@ int getchWithSoundTicks() {
 }
 
 
-void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string& mainText, const std::string& bottom, uint8_t bgSolidColour = 0, uint8_t startingLine = 9) {
-    odb::renderer->fill(0, 0, 320, 200, bgSolidColour );
-    odb::renderer->drawBitmap(0, 0, bg );
+void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string &mainText, const std::string &bottom,
+              uint8_t bgSolidColour = 0, uint8_t startingLine = 9) {
+    odb::renderer->fill(0, 0, 320, 200, bgSolidColour);
+    odb::renderer->drawBitmap(0, 0, bg);
 
     uint8_t mainTextColour = odb::renderer->getPaletteEntry(0xFFFF0000);
     uint8_t bottomTextColour = odb::renderer->getPaletteEntry(0xFF888888);
     odb::renderer->drawTextAt(1, startingLine, mainText.c_str(), mainTextColour);
-    odb::renderer->drawTextAt(1,25, bottom.c_str(), bottomTextColour);
+    odb::renderer->drawTextAt(1, 25, bottom.c_str(), bottomTextColour);
     odb::renderer->flip();
 }
 
-void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int targetHealthDiff, std::shared_ptr<odb::CRenderer> renderer, std::shared_ptr<Knights::CActor> actorAtTarget ) {
+void handleConsoleLines(Knights::CommandType command, int playerHealthDiff, int targetHealthDiff,
+                        std::shared_ptr<odb::CRenderer> renderer, std::shared_ptr<Knights::CActor> actorAtTarget) {
 
     uint8_t playerDealtDamageColour = renderer->getPaletteEntry(0xFFFF0000);
     uint8_t playerTookDamageColour = renderer->getPaletteEntry(0xFF0000FF);
@@ -139,17 +151,17 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
     uint8_t commandColour = renderer->getPaletteEntry(0xFFFFFFFF);
     uint8_t effectColour = renderer->getPaletteEntry(0xFF888888);
 
-    char* soundToPlay = nullptr;
+    char *soundToPlay = nullptr;
 
-    if ( command != '.') {
+    if (command != '.') {
         char buffer[41];
         snprintf(&buffer[0], 39, "%s", game->getLastCommand().c_str());
-        renderer->appendToLog( buffer, commandColour );
+        renderer->appendToLog(buffer, commandColour);
 
         auto say = game->getMap()->getAvatar()->getCurrentSay();
         if (!say.empty()) {
             snprintf(&buffer[0], 39, "%s", say.c_str());
-            renderer->appendToLog( buffer, effectColour );
+            renderer->appendToLog(buffer, effectColour);
             game->getMap()->getAvatar()->setCurrentSay("");
         }
     }
@@ -167,10 +179,10 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
         playTune("t200i9o1fa");
     }
 
-    if ( targetHealthDiff < 0 ) {
+    if (targetHealthDiff < 0) {
         char buffer[41];
-        snprintf(&buffer[0], 39, "Player dealt %d on %s", targetHealthDiff, actorAtTarget->getName().c_str() );
-        renderer->appendToLog( buffer, playerDealtDamageColour );
+        snprintf(&buffer[0], 39, "Player dealt %d on %s", targetHealthDiff, actorAtTarget->getName().c_str());
+        renderer->appendToLog(buffer, playerDealtDamageColour);
         if (actorAtTarget == nullptr || !actorAtTarget->isAlive()) {
             renderer->addDeathAt(actorAtTarget->getPosition());
             playTune("t200i101o8ao4ao2ao1a");
@@ -180,16 +192,16 @@ void handleConsoleLines( Knights::CommandType command, int playerHealthDiff, int
         }
     }
 
-    if ( playerHealthDiff < 0 ) {
+    if (playerHealthDiff < 0) {
         char buffer[41];
         snprintf(&buffer[0], 39, "Player took %d of damage", std::abs(playerHealthDiff));
-        renderer->appendToLog( buffer, playerTookDamageColour );
+        renderer->appendToLog(buffer, playerTookDamageColour);
         renderer->startDamageHighlight();
         playTune("t200i53o3fo1f");
-    } else if ( playerHealthDiff > 0 ) {
+    } else if (playerHealthDiff > 0) {
         char buffer[41];
         snprintf(&buffer[0], 39, "Player gained %d of faith", std::abs(playerHealthDiff));
-        renderer->appendToLog( buffer, playerGainedFaithColour );
+        renderer->appendToLog(buffer, playerGainedFaithColour);
         renderer->startHealHighlight();
         playTune("t200i52o4defg");
     }
@@ -200,55 +212,21 @@ extern "C" int SDL_main(int argc, char **argv) {
 #else
 
 #if defined(WINVER)
-HINSTANCE hInst;
 
 namespace odb {
-	LRESULT CALLBACK WindProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+    LRESULT CALLBACK WindProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow)
 {
-
-    WNDCLASSEX  WndCls;
-    static char szAppName[] = "DungeonsOfNoudar95";
-    MSG         Msg;
-
-	hInst       = hInstance;
-    WndCls.cbSize        = sizeof(WndCls);
-    WndCls.style         = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;
-    WndCls.lpfnWndProc   = odb::WindProcedure;
-    WndCls.cbClsExtra    = 0;
-    WndCls.cbWndExtra    = 0;
-    WndCls.hInstance     = hInst;
-    WndCls.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
-    WndCls.hCursor       = LoadCursor(NULL, IDC_ARROW);
-    WndCls.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
-    WndCls.lpszMenuName  = NULL;
-    WndCls.lpszClassName = szAppName;
-    WndCls.hIconSm       = LoadIcon(hInstance, IDI_APPLICATION);
-    RegisterClassEx(&WndCls);
-
-    CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
-                          szAppName,
-                          "Dungeons of Noudar 95",
-                          WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-                          CW_USEDEFAULT,
-                          CW_USEDEFAULT,
-                          330,
-                          230,
-                          NULL,
-                          NULL,
-                          hInstance,
-                          NULL);
-
-
 #else
+
 int main(int argc, char **argv) {
     puts("Dungeons of Noudar 3D startup. Gonna load some stuff...");
 
-    if ( argc >= 2 ) {
-        if ( !std::strcmp(argv[1], "opl2lpt")) {
+    if (argc >= 2) {
+        if (!std::strcmp(argv[1], "opl2lpt")) {
             soundDriver = kOpl2Lpt;
             initOPL2();
             playTune("t200i101o1a");
@@ -268,7 +246,7 @@ int main(int argc, char **argv) {
     int healthAtTargetAfter = 0;
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
-    auto bg = loadPNG( "intro.png", fileLoader );
+    auto bg = loadPNG("intro.png", fileLoader);
 
 
     odb::renderer = std::make_shared<odb::CRenderer>(fileLoader);
@@ -283,69 +261,71 @@ int main(int argc, char **argv) {
     auto onLevelWillLoad = [&]() {
         showText(bg, "", "Loading...");
     };
-    delegate->setOnLevelWillLoadCallback(onLevelWillLoad );
+    delegate->setOnLevelWillLoadCallback(onLevelWillLoad);
 
-    game = std::make_shared<Knights::CGame>( fileLoader, odb::renderer, delegate );
+    game = std::make_shared<Knights::CGame>(fileLoader, odb::renderer, delegate);
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
-    odb::renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
+    odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
 
     char buffer[41];
-    snprintf(buffer, 39, "chapter0.txt" );
+    snprintf(buffer, 39, "chapter0.txt");
     auto introText = fileLoader->loadFileFromPath(buffer);
 
-    if (soundDriver != kNone ) {
-    //    playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+    if (soundDriver != kNone) {
+        //    playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
     }
 
-    showText(bg, introText, "Press Enter to start" );
+    showText(bg, introText, "Press Enter to start");
     getchWithSoundTicks();
 
     auto onLevelLoaded = [&]() {
 
-        if (game != nullptr ) {
-            if ( game->getLevelNumber() >= LEVEL_LIMIT ) {
-                game->setIsPlaying( false );
+        if (game != nullptr) {
+            if (game->getLevelNumber() >= LEVEL_LIMIT) {
+                game->setIsPlaying(false);
 
 
                 game->setIsPlaying(false);
 
-                bg = loadPNG( "finis_gloriae_mundi.png", fileLoader );
+                bg = loadPNG("finis_gloriae_mundi.png", fileLoader);
 
-                if (soundDriver != kNone ) {
-      //              playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+                if (soundDriver != kNone) {
+                    //              playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
                 }
 
-                showText(bg, fileLoader->loadFileFromPath("chapter7.txt"), "                    Press enter to exit", odb::renderer->getPaletteEntry(0xFFFFFFFF), 2 );
+                showText(bg, fileLoader->loadFileFromPath("chapter7.txt"), "                    Press enter to exit",
+                         odb::renderer->getPaletteEntry(0xFFFFFFFF), 2);
                 getchWithSoundTicks();
                 return;
             } else {
                 auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
-                odb::renderer->loadTextures( odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
+                odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader),
+                                            tileProperties);
             }
 
             char buffer[41];
-            snprintf(buffer, 39, "chapter%d.txt", game->getLevelNumber() );
+            snprintf(buffer, 39, "chapter%d.txt", game->getLevelNumber());
             auto chapterText = fileLoader->loadFileFromPath(buffer);
 
-            if (soundDriver != kNone ) {
-        //        playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+            if (soundDriver != kNone) {
+                //        playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
             }
 
             showText(bg, chapterText, "Press Enter to continue");
             getchWithSoundTicks();
         }
     };
-    delegate->setOnLevelLoadedCallback(onLevelLoaded );
+    delegate->setOnLevelLoadedCallback(onLevelLoaded);
 
     clock_t diff = 0;
-    while ( game->isPlaying() ) {
+    while (game->isPlaying()) {
         t0 = uclock();
 
         auto playerHealthBefore = game->getMap()->getAvatar()->getHP();
         auto cursorPosition = game->getMap()->getTargetProjection(game->getMap()->getAvatar());
         auto actorAtTarget = game->getMap()->getActorAt(cursorPosition);
 
-        if ( actorAtTarget != nullptr ) {
+        if (actorAtTarget != nullptr) {
             healthAtTargetBefore = actorAtTarget->getHP();
         } else {
             healthAtTargetBefore = 0;
@@ -357,7 +337,7 @@ int main(int argc, char **argv) {
         game->tick();
         soundTick();
 
-        if ( actorAtTarget != nullptr ) {
+        if (actorAtTarget != nullptr) {
             healthAtTargetAfter = actorAtTarget->getHP();
         } else {
             healthAtTargetAfter = 0;
@@ -367,7 +347,7 @@ int main(int argc, char **argv) {
         auto playerHealthAfter = game->getMap()->getAvatar()->getHP();
         auto playerHealthDiff = playerHealthAfter - playerHealthBefore;
 
-        handleConsoleLines( command, playerHealthDiff, targetHealthDiff, odb::renderer, actorAtTarget );
+        handleConsoleLines(command, playerHealthDiff, targetHealthDiff, odb::renderer, actorAtTarget);
 
         t1 = uclock();
         diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
@@ -375,22 +355,23 @@ int main(int argc, char **argv) {
             diff = 1;
         }
 
-        if ( !game->getMap()->getAvatar()->isAlive()) {
+        if (!game->getMap()->getAvatar()->isAlive()) {
             game->setIsPlaying(false);
 
-            bg = loadPNG( "in_ictu_oculi.png", fileLoader );
+            bg = loadPNG("in_ictu_oculi.png", fileLoader);
 
-            if (soundDriver != kNone ) {
-          //      playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
+            if (soundDriver != kNone) {
+                //      playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
             }
 
-            showText(bg, fileLoader->loadFileFromPath("gameover.txt"), "                    Press enter to exit", odb::renderer->getPaletteEntry(0xFFFFFFFF), 2 );
+            showText(bg, fileLoader->loadFileFromPath("gameover.txt"), "                    Press enter to exit",
+                     odb::renderer->getPaletteEntry(0xFFFFFFFF), 2);
             getchWithSoundTicks();
         }
 
     }
 
-    if (soundDriver != kNone ) {
+    if (soundDriver != kNone) {
         stopSounds();
     }
 
