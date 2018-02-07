@@ -59,13 +59,13 @@ namespace odb {
     using TexturePair = std::pair<std::shared_ptr<NativeTexture >, std::shared_ptr<NativeTexture >>;
 
     class CRenderer  : public Knights::IRenderer {
+public:
         bool mCached = false;
         bool mHudDrawn = false;
         bool mStaticPartsOfHudDrawn = false;
         bool mNeedsToRedraw = true;
 
         array<array<Knights::ElementView , Knights::kMapSize>, Knights::kMapSize> mElementsMap;
-        Knights::CommandType mBufferedCommand = '.';
         std::shared_ptr<NativeBitmap > mFont;
         array< uint8_t, 320 * 200 > mBuffer;
         EActorsSnapshotElement mActors[40][40];
@@ -90,8 +90,9 @@ namespace odb {
 
 #ifdef SDLSW
         bool mSlow = false;
-        array< uint32_t , 256 > mPalette;
+      
 #endif
+	  
         int mSplats[ 40 ][ 40 ];
 
         CTilePropertyMap mTileProperties;
@@ -109,6 +110,9 @@ namespace odb {
     private:
 
      public:
+	array< uint32_t , 256 > mPalette;
+        Knights::CommandType mBufferedCommand = '.';
+
         const static uint8_t mTransparency;
         vector<TexturePair> mNativeTextures;
 
@@ -204,5 +208,7 @@ namespace odb {
     vector<std::shared_ptr<odb::NativeBitmap>>
     loadTexturesForLevel(uint8_t levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
     odb::CTilePropertyMap loadTileProperties( uint8_t levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader );
+
+    extern std::shared_ptr<CRenderer> renderer;
 }
 #endif
