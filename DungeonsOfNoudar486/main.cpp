@@ -220,6 +220,41 @@ namespace odb {
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow)
 {
+
+        HINSTANCE hInst;
+
+        WNDCLASSEX WndCls;
+        static char szAppName[] = "DungeonsOfNoudar95";
+        MSG Msg;
+
+        hInst = hInstance;
+        WndCls.cbSize = sizeof(WndCls);
+        WndCls.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;
+        WndCls.lpfnWndProc = odb::WindProcedure;
+        WndCls.cbClsExtra = 0;
+        WndCls.cbWndExtra = 0;
+        WndCls.hInstance = hInst;
+        WndCls.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+        WndCls.hCursor = LoadCursor(NULL, IDC_ARROW);
+        WndCls.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
+        WndCls.lpszMenuName = NULL;
+        WndCls.lpszClassName = szAppName;
+        WndCls.hIconSm = LoadIcon(hInstance, IDI_APPLICATION);
+        RegisterClassEx(&WndCls);
+
+        CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
+                       szAppName,
+                       "Dungeons of Noudar 95",
+                       WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+                       CW_USEDEFAULT,
+                       CW_USEDEFAULT,
+                       330,
+                       230,
+                       NULL,
+                       NULL,
+                       hInstance,
+                       NULL);
+
 #else
 
 int main(int argc, char **argv) {
