@@ -41,10 +41,10 @@ using sg14::fixed_point;
 #include <windows.h>
 
 MSG Msg;
-HWND myHWnd = nullptr;
 bool needsRedraw = true;
-uint32_t bitmap[320 * 200];
-
+COLORREF paletteRef[256];
+bool havePalette = false;
+COLORREF transparencyRef;
 long timeEllapsed = 0;
 
 long uclock() {
@@ -74,6 +74,7 @@ namespace odb {
 
     CRenderer::CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
 
+
         for (int r = 0; r < 256; r += 16) {
             for (int g = 0; g < 256; g += 8) {
                 for (int b = 0; b < 256; b += 8) {
@@ -83,7 +84,6 @@ namespace odb {
                 }
             }
         }
-
         mFont = loadPNG("font.png", fileLoader);
     }
 
@@ -101,24 +101,6 @@ namespace odb {
                            nullptr, false);
             needsRedraw = false;
         }
-
-	HBITMAP gameBitmap = CreateBitmap(320, 200, 1, 32, &bitmap[0]);
-
-        if (renderer != nullptr) {
-		auto bufferPtr = renderer->getBufferData();
-
-                for (int c = 0;c < 200; ++c) {
-                	for (int d = 0;d < 320; ++d) {
-                        	auto texel = renderer->mPalette[bufferPtr[(320 * c) + d]];
-                                uint32_t fragment = 0;
-                                fragment += (((texel & 0xFF) - 0x38) << 16);
-                                fragment += ((((texel & 0xFF00) >> 8) - 0x18) << 8);
-                                fragment += ((texel & 0xFF0000) >> 16) - 0x10;
-
-                                bitmap[(320 * c) + d] = fragment;
-			}
-		}
-	}
 
         HDC hDC, MemDCGame;
         PAINTSTRUCT Ps;
@@ -253,22 +235,73 @@ namespace odb {
             case
                 WM_DESTROY:
                 PostQuitMessage(WM_QUIT);
+                renderer
+                ->
+                mBufferedCommand = Knights::kQuitGameCommand;
+
                 break;
             case
                 WM_PAINT:
 
-
-
-
                 hDC = BeginPaint(hWnd, &Ps);
-                MemDCGame = CreateCompatibleDC(hDC);
-                SelectObject(MemDCGame, gameBitmap
-                );
-                BitBlt(hDC,
-                       0, 0, 320, 200, MemDCGame, 0, 0, SRCCOPY);
-                DeleteDC(MemDCGame);
-                EndPaint(hWnd, &Ps
-                );
+
+
+                if (renderer != nullptr) {
+                    uint8_t* bufferPtr = renderer->getBufferData();
+                    auto palettePtr = &renderer->mPalette[0];
+
+                    if ( !havePalette ) {
+                        havePalette = true;
+                        auto pixel = CRenderer::mTransparency;
+                        auto r = (((pixel & 0x000000FF)      )) - 0x38;
+                        auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
+                        auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
+                        transparencyRef = RGB(r, g, b);
+
+                        int c = 0;
+                        for ( const auto& pixel : renderer->mPalette ) {
+                            auto r = (((pixel & 0x000000FF)      )) - 0x38;
+                            auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
+                            auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
+
+                            paletteRef[c++] = transparencyRef;
+                        }
+                    }
+
+                    RECT rect;
+                    HBRUSH brush;
+                    for (int c = 0;c < 200; ++c) {
+                        uint8_t* line = &bufferPtr[ 320 * c ];
+                        for (int d = 0;d < 320; ++d) {
+                            uint8_t index = *line;
+                            COLORREF ref = paletteRef[index];
+
+                            if ( ref == transparencyRef ) {
+                                auto pixel = palettePtr[index];
+                                auto r = (((pixel & 0x000000FF)      )) - 0x38;
+                                auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
+                                auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
+                                ref = RGB(r, g, b);
+                                paletteRef[index] = ref;
+                            }
+
+                            SetPixel( hDC, d, c, ref);
+                            ++line;
+                        }
+                    }
+                    brush = CreateSolidBrush(RGB(0, 0, 0 ));
+
+                    rect.left = 0;
+                    rect.top = 200;
+                    rect.right = 320;
+                    rect.bottom = 240;
+
+                    FillRect(Ps.hdc, &rect, brush);
+
+                    DeleteObject(brush);
+                }
+
+                EndPaint(hWnd, &Ps);
 
                 break;
             default:
@@ -276,7 +309,6 @@ namespace odb {
                         DefWindowProc(hWnd, Msg, wParam, lParam);
         }
 
-	DeleteObject(gameBitmap);
         return 0;
     }
 

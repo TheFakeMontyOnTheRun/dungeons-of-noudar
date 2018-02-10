@@ -1,9 +1,17 @@
 CXX = i686-w64-mingw32-g++
 LD = i686-w64-mingw32-ld
 
-CXXFLAGS = -g -DVGA -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math  -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY -fPIC  -m32 -Wl,--enable-auto-image-base -Wl,--add-stdcall-alias -Wl,--enable-auto-import -lgdi32 -luser32 -lkernel32 -mwindows -march=i486 -mtune=i486 -D _WIN32_IE=0x0400 -D WINVER=0x400 -Wl,--subsystem,windows 
+CXXFLAGS = -g -DVGA -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops \
+-fomit-frame-pointer -fno-exceptions -ffast-math  -I../fixed_point/include -IDOS-version -Iinclude -I../stb \
+-I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common \
+-I../noudar-rendering -I../gles2-renderer -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY -fPIC  \
+-m32 -Wl,--enable-auto-image-base -Wl,--add-stdcall-alias -Wl,--enable-auto-import -lgdi32 -luser32 -lkernel32 -mwindows \
+-march=i486 -mtune=i486 -D _WIN32_IE=0x0400 -D WINVER=0x400 -Wl,--subsystem,windows
 
-LDFLAGS = -fPIC  -m32 -static-libstdc++ -static-libgcc -Wl,--enable-auto-image-base -Wl,--add-stdcall-alias -Wl,--enable-auto-import -lgdi32 -luser32 -lkernel32 -mwindows -march=i486 -mtune=i486 -D _WIN32_IE=0x0400 -D WINVER=0x400 -Wl,--subsystem,windows -static-libstdc++ -static-libgcc -static -m32  -lgdi32 -luser32 -lkernel32 -lcomctl32
+LDFLAGS = -fPIC  -m32 -static-libstdc++ -static-libgcc -Wl,--enable-auto-image-base -Wl,--add-stdcall-alias \
+        -Wl,--enable-auto-import -lgdi32 -luser32 -lkernel32 -mwindows -march=i486 -mtune=i486 -D _WIN32_IE=0x0400 \
+        -D WINVER=0x400 -Wl,--subsystem,windows -static-libstdc++ -static-libgcc -static -m32  -lgdi32 -luser32 -lkernel32 \
+        -lcomctl32
 
 OBJS = src/CRenderer.o \
      src/RasterizerCommon.o \
@@ -50,7 +58,7 @@ TARGET = win32noudar.exe
 
 $(TARGET):	$(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS) $(LDFLAGS)
-	#i686-w64-mingw32-strip $(TARGET)
+	i686-w64-mingw32-strip $(TARGET)
 
 all:   $(TARGET)
 
