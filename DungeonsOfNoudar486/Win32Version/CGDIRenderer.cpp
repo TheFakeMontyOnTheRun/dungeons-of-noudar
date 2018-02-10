@@ -45,11 +45,9 @@ bool needsRedraw = true;
 COLORREF paletteRef[256];
 bool havePalette = false;
 COLORREF transparencyRef;
-long timeEllapsed = 0;
 
 long uclock() {
-    timeEllapsed += 10;
-    return timeEllapsed;
+    return GetTickCount();
 }
 
 namespace odb {
