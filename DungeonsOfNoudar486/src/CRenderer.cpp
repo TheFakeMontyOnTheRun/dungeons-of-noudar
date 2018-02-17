@@ -1307,8 +1307,35 @@ namespace odb {
             Vec3 position;
             bool splatDrawn = false;
             auto shouldSplat = -1;
-
             const auto cameraHeight = - multiply( two, mTileProperties[ mElementsMap[ mCameraPosition.y ][mCameraPosition.x ] ].mFloorHeight );
+
+            switch (mCameraDirection) {
+                case Knights::EDirection::kNorth:
+                    mCamera.mX = FixP{ 78 - ( 2 * mCameraPosition.x ) };
+                    mCamera.mY = FixP{ cameraHeight -1};
+                    mCamera.mZ = FixP{ ( 2 * mCameraPosition.y ) - 79};
+                    break;
+
+                case Knights::EDirection::kSouth:
+                    mCamera.mX = FixP{ ( 2 * mCameraPosition.x ) };
+                    mCamera.mY = FixP{cameraHeight -1};
+                    mCamera.mZ = FixP{ ( 2 * ((Knights::kMapSize - 1) - mCameraPosition.y) ) - 79};
+                    break;
+
+                case Knights::EDirection::kWest:
+                    mCamera.mX = FixP{ ( 2 * mCameraPosition.y ) };
+                    mCamera.mY = FixP{cameraHeight-1};
+                    mCamera.mZ =FixP{ ( 2 * mCameraPosition.x ) - 1 };
+                    break;
+
+                case Knights::EDirection::kEast:
+                    mCamera.mX = FixP{ - ( 2 * mCameraPosition.y ) };
+                    mCamera.mY = FixP{cameraHeight-1};
+                    mCamera.mZ = FixP{ 79 - ( 2 * mCameraPosition.x ) };
+                    break;
+
+            }
+
             for ( auto distance = 79; distance >= 0; --distance ) {
                 for ( const auto& visPos : distances[ distance ] ) {
 
@@ -1334,13 +1361,6 @@ namespace odb {
                             if (mSplatFrameTime < 0) {
                                 mSplats[z][(Knights::kMapSize - 1) - x ]--;
                             }
-
-
-                            mCamera.mX = FixP{ 78 - ( 2 * mCameraPosition.x ) };
-                            mCamera.mY = FixP{ cameraHeight -1};
-                            mCamera.mZ = FixP{ ( 2 * mCameraPosition.y ) - 79};
-
-
 
                             position.mX = mCamera.mX + FixP{- 2 * x};
                             position.mY = mCamera.mY;
@@ -1379,11 +1399,6 @@ namespace odb {
                                 mSplats[(Knights::kMapSize - 1) - z][ x ]--;
                             }
 
-
-                            mCamera.mX = FixP{ ( 2 * mCameraPosition.x ) };
-                            mCamera.mY = FixP{cameraHeight -1};
-                            mCamera.mZ = FixP{ ( 2 * ((Knights::kMapSize - 1) - mCameraPosition.y) ) - 79};
-
                             position.mX = mCamera.mX + FixP{- 2 * x};
                             position.mY = mCamera.mY;
                             position.mZ = mCamera.mZ + FixP{ 80 - ( 2 * z)};
@@ -1421,10 +1436,6 @@ namespace odb {
                                 mSplats[x][(Knights::kMapSize - 1) - z ]--;
                             }
 
-                            mCamera.mX = FixP{ ( 2 * mCameraPosition.y ) };
-                            mCamera.mY = FixP{cameraHeight-1};
-                            mCamera.mZ =FixP{ ( 2 * mCameraPosition.x ) - 1 };
-
                             position.mX = mCamera.mX + FixP{- 2 * x};
                             position.mY = mCamera.mY;
                             position.mZ = mCamera.mZ + FixP{ ( 2 * z) - 76};
@@ -1461,11 +1472,6 @@ namespace odb {
                             if (mSplatFrameTime < 0) {
                                 mSplats[x][z ]--;
                             }
-
-
-                            mCamera.mX = FixP{ - ( 2 * mCameraPosition.y ) };
-                            mCamera.mY = FixP{cameraHeight-1};
-                            mCamera.mZ = FixP{ 79 - ( 2 * mCameraPosition.x ) };
 
                             position.mX = mCamera.mX + FixP{- 2 * ( - x)};
                             position.mY = mCamera.mY;
