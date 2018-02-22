@@ -183,29 +183,121 @@ void retro_reset(void)
     y_coord = 0;
 }
 
+bool up = false;
+bool down = false;
+bool left = false;
+bool right = false;
+
+bool strafeLeft = false;
+bool strafeRight = false;
+
+bool use = false;
+bool pick = false;
+bool cycle = false;
+
+
 static void update_input(void)
 {
     input_poll_cb();
-    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))
+    if (!input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))
     {
-        odb::renderer->mBufferedCommand = Knights::kMovePlayerForwardCommand;
+        if ( up ) {
+            odb::renderer->mBufferedCommand = Knights::kMovePlayerForwardCommand;
+        }
+
+        up = false;
+    } else {
+        up = true;
     }
 
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN))
     {
-        odb::renderer->mBufferedCommand = Knights::kMovePlayerBackwardCommand;
+        if (down) {
+            odb::renderer->mBufferedCommand = Knights::kMovePlayerBackwardCommand;
+        }
+        down = false;
+    } else {
+        down = true;
     }
+
 
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT))
     {
-        odb::renderer->mBufferedCommand = Knights::kTurnPlayerLeftCommand;
+        if ( left ) {
+            odb::renderer->mBufferedCommand = Knights::kTurnPlayerLeftCommand;
+        }
+        left = false;
+    } else {
+        left = true;
     }
 
 
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT))
     {
-        odb::renderer->mBufferedCommand = Knights::kTurnPlayerRightCommand;
+        if ( right ) {
+            odb::renderer->mBufferedCommand = Knights::kTurnPlayerRightCommand;
+        }
+        right = false;
+    } else {
+        right = true;
     }
+
+
+    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L))
+    {
+        if ( strafeLeft ) {
+            odb::renderer->mBufferedCommand = Knights::kStrafeLeftCommand;
+        }
+        strafeLeft = false;
+    } else {
+        strafeLeft = true;
+    }
+
+
+    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R))
+    {
+        if (strafeRight ) {
+            odb::renderer->mBufferedCommand = Knights::kStrafeRightCommand;
+        }
+        strafeRight = false;
+    } else {
+        strafeRight = true;
+    }
+
+
+    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A))
+    {
+        if (use) {
+            odb::renderer->mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
+        }
+        use = false;
+    } else {
+        use = true;
+    }
+
+
+    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B))
+    {
+        if (pick) {
+            odb::renderer->mBufferedCommand = Knights::kPickItemCommand;
+        }
+        pick = false;
+    } else {
+        pick = true;
+    }
+
+
+    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X))
+    {
+        if (cycle){
+            odb::renderer->mBufferedCommand = Knights::kCycleRightInventoryCommand;
+        }
+        cycle = false;
+    } else {
+        cycle = true;
+    }
+
+
 
 }
 
