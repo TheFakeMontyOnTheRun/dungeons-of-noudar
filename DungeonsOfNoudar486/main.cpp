@@ -58,11 +58,11 @@ using sg14::fixed_point;
 #include "CPackedFileReader.h"
 #include "LoadPNG.h"
 
-enum ESoundDriver : uint8_t {
+enum class ESoundDriver {
     kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox
 };
 
-ESoundDriver soundDriver = kNone;
+ESoundDriver soundDriver = ESoundDriver::kNone;
 
 void initOPL2();
 
@@ -107,7 +107,7 @@ std::shared_ptr<Knights::CGame> game;
 int getchWithSoundTicks() {
     int keycode = 0;
 
-    if (soundDriver != kNone) {
+    if (soundDriver != ESoundDriver::kNone) {
         while (true) {
             soundTick();
 
@@ -262,7 +262,7 @@ int main(int argc, char **argv) {
 
     if (argc >= 2) {
         if (!std::strcmp(argv[1], "opl2lpt")) {
-            soundDriver = kOpl2Lpt;
+            soundDriver = ESoundDriver::kOpl2Lpt;
             initOPL2();
             playTune("t200i101o1a");
         }
@@ -306,7 +306,7 @@ int main(int argc, char **argv) {
     snprintf(buffer, 39, "chapter0.txt");
     auto introText = fileLoader->loadFileFromPath(buffer);
 
-    if (soundDriver != kNone) {
+    if (soundDriver != ESoundDriver::kNone) {
         //    playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
     }
 
@@ -324,7 +324,7 @@ int main(int argc, char **argv) {
 
                 bg = loadPNG("finis_gloriae_mundi.png", fileLoader);
 
-                if (soundDriver != kNone) {
+                if (soundDriver != ESoundDriver::kNone) {
                     //              playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
                 }
 
@@ -342,7 +342,7 @@ int main(int argc, char **argv) {
             snprintf(buffer, 39, "chapter%d.txt", game->getLevelNumber());
             auto chapterText = fileLoader->loadFileFromPath(buffer);
 
-            if (soundDriver != kNone) {
+            if (soundDriver != ESoundDriver::kNone) {
                 //        playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
             }
 
@@ -395,7 +395,7 @@ int main(int argc, char **argv) {
 
             bg = loadPNG("in_ictu_oculi.png", fileLoader);
 
-            if (soundDriver != kNone) {
+            if (soundDriver != ESoundDriver::kNone) {
                 //      playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
             }
 
@@ -406,7 +406,7 @@ int main(int argc, char **argv) {
 
     }
 
-    if (soundDriver != kNone) {
+    if (soundDriver != ESoundDriver::kNone) {
         stopSounds();
     }
 
