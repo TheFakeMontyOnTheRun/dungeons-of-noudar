@@ -158,22 +158,42 @@ void *operator new[](size_t size, size_t alignment, size_t alignmentOffset, cons
     return new uint8_t[size];;
 }
 
+void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string &mainText, const std::string &bottom,
+              uint8_t bgSolidColour, uint8_t startingLine) {
+
+
+    odb::renderer->fill(0, 0, 320, 200, bgSolidColour);
+    odb::renderer->drawBitmap(0, 0, bg);
+
+    uint8_t mainTextColour = odb::renderer->getPaletteEntry(0xFFFF0000);
+    uint8_t bottomTextColour = odb::renderer->getPaletteEntry(0xFF888888);
+    odb::renderer->drawTextAt(1, startingLine, mainText.c_str(), mainTextColour);
+    odb::renderer->drawTextAt(1, 25, bottom.c_str(), bottomTextColour);
+    odb::renderer->flip();
+}
+
 void renderTick(long ms) {
     switch (screenState ) {
         case EScreenState::kIntro:
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             break;
         case EScreenState::kLoading:
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             break;
         case EScreenState::kChapter:
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             break;
         case EScreenState::kGame:
             odb::renderer->render(ms);
             break;
         case EScreenState::kVictory:
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             break;
         case EScreenState::kGameOver:
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             break;
         case EScreenState::kExit:
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             break;
     }
 
@@ -210,19 +230,7 @@ int getchWithSoundTicks() {
 }
 
 
-void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string &mainText, const std::string &bottom,
-              uint8_t bgSolidColour, uint8_t startingLine) {
 
-
-    odb::renderer->fill(0, 0, 320, 200, bgSolidColour);
-    odb::renderer->drawBitmap(0, 0, bg);
-
-    uint8_t mainTextColour = odb::renderer->getPaletteEntry(0xFFFF0000);
-    uint8_t bottomTextColour = odb::renderer->getPaletteEntry(0xFF888888);
-    odb::renderer->drawTextAt(1, startingLine, mainText.c_str(), mainTextColour);
-    odb::renderer->drawTextAt(1, 25, bottom.c_str(), bottomTextColour);
-    odb::renderer->flip();
-}
 
 void handleConsoleLines(Knights::CommandType command, int playerHealthDiff, int targetHealthDiff,
                         std::shared_ptr<odb::CRenderer> renderer, std::shared_ptr<Knights::CActor> actorAtTarget) {
@@ -367,16 +375,16 @@ int main(int argc, char **argv) {
 
 
     setScreenState(EScreenState::kIntro, game, fileLoader);
-    showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+    renderTick(50);
     getchWithSoundTicks();
 
 
     setScreenState(EScreenState::kChapter, game, fileLoader);
-    showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+    renderTick(50);
     getchWithSoundTicks();
 
     setScreenState(EScreenState::kLoading, game, fileLoader);
-    showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+    renderTick(50);
 
 //////
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
@@ -388,7 +396,7 @@ int main(int argc, char **argv) {
     auto onLevelWillLoad = [&]() {
 
         setScreenState(EScreenState::kLoading, game, fileLoader);
-        showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+        renderTick(50);
     };
 
     delegate->setOnLevelWillLoadCallback(onLevelWillLoad);
@@ -401,7 +409,7 @@ int main(int argc, char **argv) {
                 game->setIsPlaying(false);
 
                 setScreenState(EScreenState::kVictory, game, fileLoader);
-                showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+                renderTick(50);
                 getchWithSoundTicks();
                 return;
             } else {
@@ -411,7 +419,7 @@ int main(int argc, char **argv) {
             }
 
             setScreenState(EScreenState::kChapter, game, fileLoader);
-            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+            renderTick(50);
             getchWithSoundTicks();
 
             setScreenState(EScreenState::kGame, game, fileLoader );
@@ -468,7 +476,7 @@ int main(int argc, char **argv) {
             game->setIsPlaying(false);
 
             setScreenState(EScreenState::kGameOver, game, fileLoader);
-            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+            renderTick(50);
             getchWithSoundTicks();
         }
 
