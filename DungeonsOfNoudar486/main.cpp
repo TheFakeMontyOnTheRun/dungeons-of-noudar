@@ -230,7 +230,13 @@ int getchWithSoundTicks() {
 }
 
 
+void playerIsDead(std::shared_ptr<odb::CPackedFileReader> fileLoader) {
+    game->setIsPlaying(false);
 
+    setScreenState(EScreenState::kGameOver, game, fileLoader);
+    renderTick(50);
+    getchWithSoundTicks();
+}
 
 void handleConsoleLines(Knights::CommandType command, int playerHealthDiff, int targetHealthDiff,
                         std::shared_ptr<odb::CRenderer> renderer, std::shared_ptr<Knights::CActor> actorAtTarget) {
@@ -473,11 +479,7 @@ int main(int argc, char **argv) {
         }
 
         if (!game->getMap()->getAvatar()->isAlive()) {
-            game->setIsPlaying(false);
-
-            setScreenState(EScreenState::kGameOver, game, fileLoader);
-            renderTick(50);
-            getchWithSoundTicks();
+            playerIsDead(fileLoader);
         }
 
     }
