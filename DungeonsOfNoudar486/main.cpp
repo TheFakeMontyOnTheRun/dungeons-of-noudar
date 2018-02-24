@@ -62,7 +62,68 @@ enum class ESoundDriver {
     kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox
 };
 
+enum class EScreenState {
+    kIntro, kLoading, kChapter, kGame, kGameOver, kVictory, kExit
+};
+
 ESoundDriver soundDriver = ESoundDriver::kNone;
+EScreenState screenState = EScreenState::kIntro;
+
+std::shared_ptr<odb::NativeBitmap> stateBG;
+std::string stateText = "";
+std::string stateTransitionText = "";
+uint8_t bgColour;
+uint8_t textStartingLine;
+
+void setScreenState( EScreenState newState, std::shared_ptr<Knights::CGame> game, std::shared_ptr<odb::CPackedFileReader> fileLoader ) {
+
+
+    switch( newState ) {
+        case EScreenState::kIntro:
+            stateBG = loadPNG("logo.png", fileLoader);
+            stateText = fileLoader->loadFileFromPath("title.txt");
+            stateTransitionText = "Press Enter to continue";
+            bgColour = 0;
+            textStartingLine = 9;
+            break;
+        case EScreenState::kLoading:
+            stateBG = loadPNG("intro.png", fileLoader);
+            stateText = "";
+            stateTransitionText = "Loading...";
+            bgColour = 0;
+            textStartingLine = 9;
+            break;
+        case EScreenState::kChapter:
+            char buffer[41];
+            snprintf(buffer, 39, "chapter%d.txt", game->getLevelNumber());
+            stateBG = loadPNG("intro.png", fileLoader);
+            stateText = fileLoader->loadFileFromPath(buffer);;
+            stateTransitionText = "Press Enter to continue";
+            bgColour = 0;
+            textStartingLine = 9;
+            break;
+        case EScreenState::kGame:
+            break;
+        case EScreenState::kVictory:
+            stateBG = loadPNG("finis_gloriae_mundi.png", fileLoader);
+            stateText = fileLoader->loadFileFromPath("chapter7.txt");
+            stateTransitionText = "                    Press enter to exit";
+            bgColour = odb::renderer->getPaletteEntry(0xFFFFFFFF);
+            textStartingLine = 2;
+            break;
+        case EScreenState::kGameOver:
+            stateBG = loadPNG("in_ictu_oculi.png", fileLoader);
+            stateText = fileLoader->loadFileFromPath("gameover.txt");
+            stateTransitionText = "                    Press enter to exit";
+            bgColour = odb::renderer->getPaletteEntry(0xFFFFFFFF);
+            textStartingLine = 2;
+            break;
+        case EScreenState::kExit:
+            break;
+    }
+
+    screenState = newState;
+}
 
 void initOPL2();
 
@@ -98,7 +159,26 @@ void *operator new[](size_t size, size_t alignment, size_t alignmentOffset, cons
 }
 
 void renderTick(long ms) {
-    odb::renderer->render(ms);
+    switch (screenState ) {
+        case EScreenState::kIntro:
+            break;
+        case EScreenState::kLoading:
+            break;
+        case EScreenState::kChapter:
+            break;
+        case EScreenState::kGame:
+            odb::renderer->render(ms);
+            break;
+        case EScreenState::kVictory:
+            break;
+        case EScreenState::kGameOver:
+            break;
+        case EScreenState::kExit:
+            break;
+    }
+
+
+
     odb::renderer->handleSystemEvents();
 }
 
@@ -131,7 +211,9 @@ int getchWithSoundTicks() {
 
 
 void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string &mainText, const std::string &bottom,
-              uint8_t bgSolidColour = 0, uint8_t startingLine = 9) {
+              uint8_t bgSolidColour, uint8_t startingLine) {
+
+
     odb::renderer->fill(0, 0, 320, 200, bgSolidColour);
     odb::renderer->drawBitmap(0, 0, bg);
 
@@ -277,59 +359,49 @@ int main(int argc, char **argv) {
     const auto LEVEL_LIMIT = 7;
     clock_t t0;
     clock_t t1;
-    int healthAtTargetBefore = 0;
-    int healthAtTargetAfter = 0;
+
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
-    auto bg = loadPNG("intro.png", fileLoader);
-
-
     odb::renderer = std::make_shared<odb::CRenderer>(fileLoader);
+    game = std::make_shared<Knights::CGame>(fileLoader, odb::renderer, delegate);
 
-    auto titleText = fileLoader->loadFileFromPath("title.txt");
-    {
-        auto logo = loadPNG("logo.png", fileLoader);
-        showText(logo, titleText, "Press Enter to continue");
-    }
+
+    setScreenState(EScreenState::kIntro, game, fileLoader);
+    showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
     getchWithSoundTicks();
 
-    auto onLevelWillLoad = [&]() {
-        showText(bg, "", "Loading...");
-    };
-    delegate->setOnLevelWillLoadCallback(onLevelWillLoad);
 
-    game = std::make_shared<Knights::CGame>(fileLoader, odb::renderer, delegate);
+    setScreenState(EScreenState::kChapter, game, fileLoader);
+    showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+    getchWithSoundTicks();
+
+    setScreenState(EScreenState::kLoading, game, fileLoader);
+    showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+
+//////
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
     odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
+////
 
-    char buffer[41];
-    snprintf(buffer, 39, "chapter0.txt");
-    auto introText = fileLoader->loadFileFromPath(buffer);
 
-    if (soundDriver != ESoundDriver::kNone) {
-        //    playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-    }
 
-    showText(bg, introText, "Press Enter to start");
-    getchWithSoundTicks();
+    auto onLevelWillLoad = [&]() {
 
+        setScreenState(EScreenState::kLoading, game, fileLoader);
+        showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
+    };
+
+    delegate->setOnLevelWillLoadCallback(onLevelWillLoad);
+
+///
     auto onLevelLoaded = [&]() {
 
         if (game != nullptr) {
             if (game->getLevelNumber() >= LEVEL_LIMIT) {
                 game->setIsPlaying(false);
 
-
-                game->setIsPlaying(false);
-
-                bg = loadPNG("finis_gloriae_mundi.png", fileLoader);
-
-                if (soundDriver != ESoundDriver::kNone) {
-                    //              playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-                }
-
-                showText(bg, fileLoader->loadFileFromPath("chapter7.txt"), "                    Press enter to exit",
-                         odb::renderer->getPaletteEntry(0xFFFFFFFF), 2);
+                setScreenState(EScreenState::kVictory, game, fileLoader);
+                showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
                 getchWithSoundTicks();
                 return;
             } else {
@@ -338,21 +410,23 @@ int main(int argc, char **argv) {
                                             tileProperties);
             }
 
-            char buffer[41];
-            snprintf(buffer, 39, "chapter%d.txt", game->getLevelNumber());
-            auto chapterText = fileLoader->loadFileFromPath(buffer);
-
-            if (soundDriver != ESoundDriver::kNone) {
-                //        playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-            }
-
-            showText(bg, chapterText, "Press Enter to continue");
+            setScreenState(EScreenState::kChapter, game, fileLoader);
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             getchWithSoundTicks();
+
+            setScreenState(EScreenState::kGame, game, fileLoader );
         }
     };
     delegate->setOnLevelLoadedCallback(onLevelLoaded);
 
+/////
+    int healthAtTargetBefore = 0;
+    int healthAtTargetAfter = 0;
     clock_t diff = 0;
+/////
+
+    setScreenState(EScreenState::kGame, game, fileLoader );
+
     while (game->isPlaying()) {
         t0 = uclock();
 
@@ -393,14 +467,8 @@ int main(int argc, char **argv) {
         if (!game->getMap()->getAvatar()->isAlive()) {
             game->setIsPlaying(false);
 
-            bg = loadPNG("in_ictu_oculi.png", fileLoader);
-
-            if (soundDriver != ESoundDriver::kNone) {
-                //      playTune("t120e8e8f8g8g8f8e8d8c8c8d8e8e8d12d4e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4d8d8e8c8d8e12f12e8c8d8e12f12e8d8c8d8p8e8e8f8g8g8f8e8d8c8c8d8e8d8c12c4");
-            }
-
-            showText(bg, fileLoader->loadFileFromPath("gameover.txt"), "                    Press enter to exit",
-                     odb::renderer->getPaletteEntry(0xFFFFFFFF), 2);
+            setScreenState(EScreenState::kGameOver, game, fileLoader);
+            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             getchWithSoundTicks();
         }
 
