@@ -77,7 +77,6 @@ uint8_t textStartingLine;
 
 void setScreenState( EScreenState newState, std::shared_ptr<Knights::CGame> game, std::shared_ptr<odb::CPackedFileReader> fileLoader ) {
 
-
     switch( newState ) {
         case EScreenState::kIntro:
             stateBG = loadPNG("logo.png", fileLoader);
@@ -123,6 +122,30 @@ void setScreenState( EScreenState newState, std::shared_ptr<Knights::CGame> game
     }
 
     screenState = newState;
+}
+
+void onContinuePressed( std::shared_ptr<Knights::CGame> game, std::shared_ptr<odb::CPackedFileReader> fileLoader ) {
+    switch( screenState ) {
+        case EScreenState::kIntro:
+            setScreenState( EScreenState::kChapter, game, fileLoader );
+            break;
+        case EScreenState::kLoading:
+            setScreenState( EScreenState::kGame, game, fileLoader );
+            break;
+        case EScreenState::kChapter:
+            setScreenState( EScreenState::kLoading, game, fileLoader );
+            break;
+        case EScreenState::kGame:
+            break;
+        case EScreenState::kVictory:
+            setScreenState( EScreenState::kExit, game, fileLoader );
+            break;
+        case EScreenState::kGameOver:
+            setScreenState( EScreenState::kExit, game, fileLoader );
+            break;
+        case EScreenState::kExit:
+            break;
+    }
 }
 
 void initOPL2();
@@ -368,11 +391,7 @@ int main(int argc, char **argv) {
 
 #endif
 
-    int instrument = -1;
-
     const auto LEVEL_LIMIT = 7;
-    clock_t t0;
-    clock_t t1;
 
     auto delegate = std::make_shared<Knights::CGameDelegate>();
     auto fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
@@ -383,32 +402,19 @@ int main(int argc, char **argv) {
     setScreenState(EScreenState::kIntro, game, fileLoader);
     renderTick(50);
     getchWithSoundTicks();
+    onContinuePressed(game, fileLoader);
 
-
-    setScreenState(EScreenState::kChapter, game, fileLoader);
     renderTick(50);
     getchWithSoundTicks();
 
-    setScreenState(EScreenState::kLoading, game, fileLoader);
+    onContinuePressed(game, fileLoader);
     renderTick(50);
 
-//////
     auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
     odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
-////
-
 
 
     auto onLevelWillLoad = [&]() {
-
-        setScreenState(EScreenState::kLoading, game, fileLoader);
-        renderTick(50);
-    };
-
-    delegate->setOnLevelWillLoadCallback(onLevelWillLoad);
-
-///
-    auto onLevelLoaded = [&]() {
 
         if (game != nullptr) {
             if (game->getLevelNumber() >= LEVEL_LIMIT) {
@@ -418,18 +424,27 @@ int main(int argc, char **argv) {
                 renderTick(50);
                 getchWithSoundTicks();
                 return;
-            } else {
-                auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
-                odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader),
-                                            tileProperties);
             }
 
             setScreenState(EScreenState::kChapter, game, fileLoader);
             renderTick(50);
             getchWithSoundTicks();
-
-            setScreenState(EScreenState::kGame, game, fileLoader );
+            onContinuePressed(game, fileLoader);
+            renderTick(50);
         }
+    };
+
+    delegate->setOnLevelWillLoadCallback(onLevelWillLoad);
+
+    auto onLevelLoaded = [&]() {
+
+        if (game->getLevelNumber() < LEVEL_LIMIT) {
+            auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
+            odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader),
+                                        tileProperties);
+        }
+
+        setScreenState(EScreenState::kGame, game, fileLoader);
     };
     delegate->setOnLevelLoadedCallback(onLevelLoaded);
 
@@ -437,7 +452,8 @@ int main(int argc, char **argv) {
     int healthAtTargetBefore = 0;
     int healthAtTargetAfter = 0;
     clock_t diff = 0;
-/////
+    clock_t t0;
+    clock_t t1;
 
     setScreenState(EScreenState::kGame, game, fileLoader );
 
@@ -481,7 +497,6 @@ int main(int argc, char **argv) {
         if (!game->getMap()->getAvatar()->isAlive()) {
             playerIsDead(fileLoader);
         }
-
     }
 
     if (soundDriver != ESoundDriver::kNone) {
