@@ -118,6 +118,7 @@ void setScreenState( EScreenState newState, std::shared_ptr<Knights::CGame> game
             textStartingLine = 2;
             break;
         case EScreenState::kExit:
+            game->setIsPlaying(false);
             break;
     }
 
@@ -130,10 +131,10 @@ void onContinuePressed( std::shared_ptr<Knights::CGame> game, std::shared_ptr<od
             game->playLevel(0);
             break;
         case EScreenState::kLoading:
-            setScreenState( EScreenState::kGame, game, fileLoader );
+            setScreenState( EScreenState::kChapter, game, fileLoader );
             break;
         case EScreenState::kChapter:
-            setScreenState( EScreenState::kLoading, game, fileLoader );
+            setScreenState( EScreenState::kGame, game, fileLoader );
             break;
         case EScreenState::kGame:
             break;
@@ -210,38 +211,9 @@ void renderTick(long ms) {
 
 std::shared_ptr<Knights::CGame> game;
 
-int getchWithSoundTicks() {
-    int keycode = 0;
-
-    if (soundDriver != ESoundDriver::kNone) {
-        while (true) {
-            soundTick();
-
-            if (odb::peekKeyboard(odb::renderer)) {
-                keycode = odb::readKeyboard(odb::renderer);
-
-                if (keycode == 13) {
-                    muteSound();
-                    return keycode;
-                }
-            }
-        }
-    } else {
-        do {
-            keycode = odb::readKeyboard(odb::renderer);
-        } while (keycode != 13);
-    }
-
-    return keycode;
-}
-
-
 void playerIsDead(std::shared_ptr<odb::CPackedFileReader> fileLoader) {
-    game->setIsPlaying(false);
-
     setScreenState(EScreenState::kGameOver, game, fileLoader);
     renderTick(50);
-    getchWithSoundTicks();
 }
 
 void handleConsoleLines(Knights::CommandType command, int playerHealthDiff, int targetHealthDiff,
@@ -392,16 +364,13 @@ int main(int argc, char **argv) {
 
                 setScreenState(EScreenState::kVictory, game, fileLoader);
                 renderTick(50);
-                getchWithSoundTicks();
                 return;
             }
-
-            setScreenState(EScreenState::kChapter, game, fileLoader);
-            renderTick(50);
-            getchWithSoundTicks();
-            onContinuePressed(game, fileLoader);
-            renderTick(50);
         }
+
+        setScreenState(EScreenState::kLoading, game, fileLoader);
+        renderTick(50);
+
     };
 
     delegate->setOnLevelWillLoadCallback(onLevelWillLoad);
@@ -414,11 +383,11 @@ int main(int argc, char **argv) {
                                         tileProperties);
         }
 
-        setScreenState(EScreenState::kGame, game, fileLoader);
+        setScreenState(EScreenState::kChapter, game, fileLoader);
         renderTick(50);
     };
     delegate->setOnLevelLoadedCallback(onLevelLoaded);
-    
+
     int healthAtTargetBefore = 0;
     int healthAtTargetAfter = 0;
     clock_t diff = 0;
@@ -467,6 +436,8 @@ int main(int argc, char **argv) {
         }
 
         if ( command == 13 ) {
+
+            odb::renderer->mBufferedCommand = '.';
             onContinuePressed(game, fileLoader);
             renderTick(50);
         }
