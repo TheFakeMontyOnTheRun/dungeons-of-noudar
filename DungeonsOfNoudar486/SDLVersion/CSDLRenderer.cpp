@@ -151,6 +151,10 @@ namespace odb {
 
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
+                    case SDLK_RETURN:
+                        mBufferedCommand = 13;
+                        break;
+
                     case SDLK_ESCAPE:
                         mBufferedCommand = Knights::kQuitGameCommand;
                         break;

@@ -127,7 +127,7 @@ void setScreenState( EScreenState newState, std::shared_ptr<Knights::CGame> game
 void onContinuePressed( std::shared_ptr<Knights::CGame> game, std::shared_ptr<odb::CPackedFileReader> fileLoader ) {
     switch( screenState ) {
         case EScreenState::kIntro:
-            setScreenState( EScreenState::kChapter, game, fileLoader );
+            game->playLevel(0);
             break;
         case EScreenState::kLoading:
             setScreenState( EScreenState::kGame, game, fileLoader );
@@ -197,30 +197,13 @@ void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string &mainText
 
 void renderTick(long ms) {
     switch (screenState ) {
-        case EScreenState::kIntro:
-            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
-            break;
-        case EScreenState::kLoading:
-            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
-            break;
-        case EScreenState::kChapter:
-            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
-            break;
         case EScreenState::kGame:
             odb::renderer->render(ms);
             break;
-        case EScreenState::kVictory:
-            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
-            break;
-        case EScreenState::kGameOver:
-            showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
-            break;
-        case EScreenState::kExit:
+        default:
             showText(stateBG, stateText, stateTransitionText, bgColour, textStartingLine );
             break;
     }
-
-
 
     odb::renderer->handleSystemEvents();
 }
@@ -400,19 +383,6 @@ int main(int argc, char **argv) {
 
 
     setScreenState(EScreenState::kIntro, game, fileLoader);
-    renderTick(50);
-    getchWithSoundTicks();
-    onContinuePressed(game, fileLoader);
-
-    renderTick(50);
-    getchWithSoundTicks();
-
-    onContinuePressed(game, fileLoader);
-    renderTick(50);
-
-    auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
-    odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
-
 
     auto onLevelWillLoad = [&]() {
 
@@ -445,17 +415,15 @@ int main(int argc, char **argv) {
         }
 
         setScreenState(EScreenState::kGame, game, fileLoader);
+        renderTick(50);
     };
     delegate->setOnLevelLoadedCallback(onLevelLoaded);
-
-/////
+    
     int healthAtTargetBefore = 0;
     int healthAtTargetAfter = 0;
     clock_t diff = 0;
     clock_t t0;
     clock_t t1;
-
-    setScreenState(EScreenState::kGame, game, fileLoader );
 
     while (game->isPlaying()) {
         t0 = uclock();
@@ -496,6 +464,11 @@ int main(int argc, char **argv) {
 
         if (!game->getMap()->getAvatar()->isAlive()) {
             playerIsDead(fileLoader);
+        }
+
+        if ( command == 13 ) {
+            onContinuePressed(game, fileLoader);
+            renderTick(50);
         }
     }
 
