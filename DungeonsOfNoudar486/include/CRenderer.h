@@ -120,7 +120,7 @@ public:
 
         void addDeathAt( const Knights::Vec2i& position );
 
-        Knights::CommandType peekInput();
+        Knights::CommandType peekInput() override;
         void appendToLog(const char* message, uint8_t colour );
         CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader);
         virtual ~CRenderer() override;

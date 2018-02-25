@@ -7,6 +7,7 @@ CC = emcc
 #LDFLAGS = -O3 --preload-file emdata --use-preload-plugins  -s USE_ZLIB=1 -s USE_LIBPNG=1 -s -s DEMANGLE_SUPPORT=1 -s ALLOW_MEMORY_GROWTH=1 ASSERTIONS=2
 
 OBJS = main.o \
+        events.o \
         SDLVersion/CSDLRenderer.o \
 	    OPL2LPT/MusicSDL.o \
         src/CRenderer.o \

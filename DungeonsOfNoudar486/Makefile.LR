@@ -38,6 +38,7 @@ OBJS = src/CRenderer.o \
     ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.o \
     ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.o \
     ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \
+    events.o \
     LibRetroCoreVersion/lr_main.o \
     LibRetroCoreVersion/CLRCoreRenderer.o \
 

@@ -47,6 +47,7 @@ OBJS = src/CRenderer.o \
     ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.o \
     ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \
     main.o \
+    events.o \
     DOSVersion/CDOSRenderer.o \
 
 TARGET = noudar.exe
