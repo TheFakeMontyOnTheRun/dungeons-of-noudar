@@ -51,7 +51,7 @@
 	class OPL2 {
 		public:
 			OPL2();
-			void init(short lpt_base);
+			void init(short lpt_base, bool isRealAdlib);
 			void reset();
 			void write(byte, byte);
 
@@ -114,5 +114,7 @@
                         short lpt_base;
 			byte oplRegisters[256];
 			byte getRegisterOffset(byte, bool);
+
+		bool mIsRealAdlib = false;
 	};
 #endif

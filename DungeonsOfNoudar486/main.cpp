@@ -12,11 +12,11 @@
 #endif
 
 enum class ESoundDriver {
-    kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox
+    kNone, kPcSpeaker, kOpl2Lpt, kAdlib, kTandy, kCovox
 };
 
 ESoundDriver soundDriver = ESoundDriver::kNone;
-void initOPL2();
+void initOPL2(int port);
 void playTune(const std::string &);
 
 ///game interface
@@ -83,7 +83,11 @@ int main(int argc, char **argv) {
     if (argc >= 2) {
         if (!std::strcmp(argv[1], "opl2lpt")) {
             soundDriver = ESoundDriver::kOpl2Lpt;
-            initOPL2();
+            initOPL2(-1);
+            playTune("t200i101o1a");
+        } else if (!std::strcmp(argv[1], "adlib")) {
+            soundDriver = ESoundDriver::kAdlib;
+            initOPL2(0x0388);
             playTune("t200i101o1a");
         }
     }

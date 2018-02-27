@@ -64,14 +64,15 @@ const byte OPL2::instrumentBaseRegs[11] = {
 
 
 OPL2::OPL2() {
-	lpt_base = 0;
+    lpt_base = 0;
 }
 
 
 /**
  * Initialize the YM3812.
  */
-void OPL2::init(short lpt_base) {
+void OPL2::init(short lpt_base, bool realAdlib) {
+    mIsRealAdlib = realAdlib;
 	this->lpt_base = lpt_base;
 	reset();
 }
@@ -81,25 +82,42 @@ void OPL2::init(short lpt_base) {
  * Send the given byte of data to the given register of the OPL2 chip.
  */
 void OPL2::write(byte reg, byte data) {
+
 	if (!lpt_base) {
 		return;
 	}
+
 	int lpt_data = lpt_base;
 	int lpt_ctrl = lpt_base + 2;
-	outp(lpt_data, reg);
-	outp(lpt_ctrl, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT);
-	outp(lpt_ctrl, PP_NOT_SELECT | PP_NOT_STROBE);
-	outp(lpt_ctrl, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT);
-	for (int i = 0; i < 6; i++) {
-        volatile int x = inp(lpt_ctrl);
-	}
-	outp(lpt_data, data);
-	outp(lpt_ctrl, PP_NOT_SELECT | PP_INIT);
-	outp(lpt_ctrl, PP_NOT_SELECT);
-	outp(lpt_ctrl, PP_NOT_SELECT | PP_INIT);
-	for (int i = 0; i < 35; i++) {
-        volatile int x = inp(lpt_ctrl);
-	}
+
+    if ( mIsRealAdlib ) {
+        outp(lpt_data, reg);
+
+        for (int i = 0; i < 6; i++) {
+            volatile int x = inp(lpt_data);
+        }
+
+        outp(lpt_data + 1, data);
+
+        for (int i = 0; i < 35; i++) {
+            volatile int x = inp(lpt_data);
+        }
+    } else {
+        outp(lpt_data, reg);
+        outp(lpt_ctrl, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT);
+        outp(lpt_ctrl, PP_NOT_SELECT | PP_NOT_STROBE);
+        outp(lpt_ctrl, PP_NOT_SELECT | PP_NOT_STROBE | PP_INIT);
+        for (int i = 0; i < 6; i++) {
+            volatile int x = inp(lpt_ctrl);
+        }
+        outp(lpt_data, data);
+        outp(lpt_ctrl, PP_NOT_SELECT | PP_INIT);
+        outp(lpt_ctrl, PP_NOT_SELECT);
+        outp(lpt_ctrl, PP_NOT_SELECT | PP_INIT);
+        for (int i = 0; i < 35; i++) {
+            volatile int x = inp(lpt_ctrl);
+        }
+    }
 }
 
 
@@ -120,6 +138,10 @@ void OPL2::reset() {
 		oplRegisters[i] = 0x00;
 		write(i, 0x00);
 	}
+
+    if (mIsRealAdlib) {
+        write(0xbd, 0);
+    }
 }
 
 

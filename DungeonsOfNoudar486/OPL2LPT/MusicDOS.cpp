@@ -100,9 +100,13 @@ void playTune(const std::string &music) {
     playMusic( music + ";" + music + ";" + music );
 }
 
-void setupOPL2() {
-    short lpt_base = setup();
-    opl2.init(lpt_base);
+void setupOPL2(int port) {
+    if ( port == -1 ) {
+        short lpt_base = setup();
+        opl2.init(lpt_base, false);
+    } else {
+        opl2.init(0x0388, true);
+    }
     music_setup();
     enableOPL2 = true;
 }

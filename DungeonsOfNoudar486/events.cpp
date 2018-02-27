@@ -65,7 +65,7 @@ enum class EScreenState {
 };
 
 enum class ESoundDriver {
-    kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox
+    kNone, kPcSpeaker, kOpl2Lpt, kAdlib, kTandy, kCovox
 };
 
 EScreenState screenState = EScreenState::kIntro;
@@ -156,11 +156,11 @@ void onContinuePressed( std::shared_ptr<Knights::CGame> game) {
     }
 }
 
-void initOPL2();
+void initOPL2(int port);
 
 void playTune(const std::string &);
 
-void setupOPL2();
+void setupOPL2(int port);
 
 void stopSounds();
 
@@ -175,8 +175,8 @@ namespace odb {
 }
 
 
-void initOPL2() {
-    setupOPL2();
+void initOPL2(int port = -1) {
+    setupOPL2(port);
 }
 
 void *operator new[](size_t size, const char *pName, int flags, unsigned debugFlags,
