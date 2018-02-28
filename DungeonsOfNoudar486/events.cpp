@@ -296,7 +296,6 @@ void loopTick(long diff) {
         healthAtTargetBefore = 0;
     }
 
-    game->tick();
 #ifdef __EMSCRIPTEN__
     diff = 50;
 #endif
@@ -392,7 +391,7 @@ void pushCommand(char cmd ) {
 
     odb::renderer->mBufferedCommand = cmd;
     odb::renderer->mCached = false;
-    odb::renderer->mNeedsToRedraw = true;
+    loopTick(1);
 }
 
 uint8_t *getFramebuffer() {

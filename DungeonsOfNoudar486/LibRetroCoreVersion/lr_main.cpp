@@ -369,7 +369,7 @@ void retro_run(void)
 
     update_input();
     odb::renderer->mNeedsToRedraw = true;
-    loopTick(25);
+    loopTick(12);
 
     render_checkered();
     audio_callback();
