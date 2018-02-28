@@ -53,7 +53,7 @@ using sg14::fixed_point;
 long timeEllapsed = 0;
 
 long uclock() {
-    timeEllapsed += 10;
+    timeEllapsed += 4 * (1000/60);
     return timeEllapsed;
 }
 
@@ -132,10 +132,6 @@ namespace odb {
     }
 
     void CRenderer::sleep(long ms) {
-#ifndef __EMSCRIPTEN__
-//        SDL_Delay(100);
-//        timeEllapsed += 100;
-#endif
     }
 
     void CRenderer::handleSystemEvents() {
@@ -271,6 +267,9 @@ namespace odb {
             }
 
         SDL_Flip(video);
+#ifndef __EMSCRIPTEN__
+        SDL_Delay(1000/60);
+#endif
     }
 
     void CRenderer::clear() {

@@ -37,6 +37,10 @@ using namespace std::chrono;
 #include "CMap.h"
 #include "IRenderer.h"
 #include "RasterizerCommon.h"
+
+#include "IFileLoaderDelegate.h"
+#include "CGame.h"
+
 #include "CRenderer.h"
 #include "LoadPNG.h"
 #include "VisibilityStrategy.h"
@@ -1270,10 +1274,10 @@ namespace odb {
 
     void CRenderer::render(long ms) {
 
-        mHighlightTime -= ms;
-        mSplatFrameTime -= ms;
-
         if ( mNeedsToRedraw ) {
+            mHighlightTime -= ms;
+            mSplatFrameTime -= ms;
+
             const static FixP zero{0};
             const static FixP two{2};
             const static FixP eight{6};

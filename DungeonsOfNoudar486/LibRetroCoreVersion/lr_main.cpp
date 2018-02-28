@@ -1,3 +1,4 @@
+//general stuff below
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -44,21 +45,35 @@ using sg14::fixed_point;
 #include "CPackedFileReader.h"
 #include "LoadPNG.h"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/html5.h>
+#include <emscripten/emscripten.h>
+#endif
+
 #include "libretro.h"
 
-void *operator new[](size_t size, const char *pName, int flags, unsigned debugFlags,
-                     const char *file, int line) {
-    return new uint8_t[size];
-}
+enum class ESoundDriver {
+    kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox
+};
 
-void *operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char *pName,
-                     int flags, unsigned debugFlags, const char *file, int line) {
-    return new uint8_t[size];;
-}
+ESoundDriver soundDriver = ESoundDriver::kNone;
+void initOPL2(int port);
+void playTune(const std::string &);
 
-std::shared_ptr<odb::CPackedFileReader> fileLoader = nullptr;
-std::shared_ptr<odb::CRenderer> odb::renderer = nullptr;
-std::shared_ptr<Knights::CGame> game = nullptr;
+///game interface
+void init();
+void loopTick(long ms);
+void shutdown();
+bool isPlaying();
+void pushCommand(char cmd );
+uint8_t *getFramebuffer();
+uint32_t *getPalette();
+void renderTick(long ms);
+///
+
+long uclock() {
+    return 0;
+}
 
 static uint32_t *frame_buf;
 static struct retro_log_callback logging;
@@ -76,15 +91,13 @@ static void fallback_log(enum retro_log_level level, const char *fmt, ...)
 void retro_init(void)
 {
     log_cb(RETRO_LOG_INFO, "retro_init.\n");
-    frame_buf = calloc(320 * 240, sizeof(uint32_t));
-
-    fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
-    odb::renderer = std::make_shared<odb::CRenderer>(fileLoader);
-    game = std::make_shared<Knights::CGame>(fileLoader, odb::renderer, std::make_shared<Knights::CGameDelegate>());
+    frame_buf = calloc(320 * 200, sizeof(uint32_t));
+    init();
 }
 
 void retro_deinit(void)
 {
+    shutdown();
     free(frame_buf);
     frame_buf = NULL;
 }
@@ -104,7 +117,7 @@ void retro_get_system_info(struct retro_system_info *info)
     memset(info, 0, sizeof(*info));
     info->library_name     = "Dungeons of Noudar 3D";
     info->library_version  = "v1";
-    info->need_fullpath    = false;
+    info->need_fullpath    = true;
     info->valid_extensions = NULL; // Anything is fine, we don't care.
 }
 
@@ -121,7 +134,7 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
     float sampling_rate = 30000.0f;
 
     info->timing = (struct retro_system_timing) {
-            .fps = 60.0,
+            .fps = 20.0,
             .sample_rate = sampling_rate,
     };
 
@@ -194,6 +207,7 @@ bool strafeRight = false;
 bool use = false;
 bool pick = false;
 bool cycle = false;
+bool start = false;
 
 
 static void update_input(void)
@@ -202,7 +216,7 @@ static void update_input(void)
     if (!input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_UP))
     {
         if ( up ) {
-            odb::renderer->mBufferedCommand = Knights::kMovePlayerForwardCommand;
+            pushCommand( Knights::kMovePlayerForwardCommand );
         }
 
         up = false;
@@ -213,7 +227,7 @@ static void update_input(void)
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_DOWN))
     {
         if (down) {
-            odb::renderer->mBufferedCommand = Knights::kMovePlayerBackwardCommand;
+            pushCommand( Knights::kMovePlayerBackwardCommand );
         }
         down = false;
     } else {
@@ -224,7 +238,7 @@ static void update_input(void)
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_LEFT))
     {
         if ( left ) {
-            odb::renderer->mBufferedCommand = Knights::kTurnPlayerLeftCommand;
+            pushCommand( Knights::kTurnPlayerLeftCommand );
         }
         left = false;
     } else {
@@ -235,7 +249,7 @@ static void update_input(void)
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_RIGHT))
     {
         if ( right ) {
-            odb::renderer->mBufferedCommand = Knights::kTurnPlayerRightCommand;
+            pushCommand( Knights::kTurnPlayerRightCommand );
         }
         right = false;
     } else {
@@ -246,7 +260,7 @@ static void update_input(void)
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_L))
     {
         if ( strafeLeft ) {
-            odb::renderer->mBufferedCommand = Knights::kStrafeLeftCommand;
+            pushCommand( Knights::kStrafeLeftCommand );
         }
         strafeLeft = false;
     } else {
@@ -257,7 +271,7 @@ static void update_input(void)
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_R))
     {
         if (strafeRight ) {
-            odb::renderer->mBufferedCommand = Knights::kStrafeRightCommand;
+            pushCommand( Knights::kStrafeRightCommand );
         }
         strafeRight = false;
     } else {
@@ -268,7 +282,7 @@ static void update_input(void)
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_A))
     {
         if (use) {
-            odb::renderer->mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
+            pushCommand( Knights::kUseCurrentItemInInventoryCommand );
         }
         use = false;
     } else {
@@ -279,26 +293,32 @@ static void update_input(void)
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_B))
     {
         if (pick) {
-            odb::renderer->mBufferedCommand = Knights::kPickItemCommand;
+            pushCommand( Knights::kPickItemCommand );
         }
         pick = false;
     } else {
         pick = true;
     }
 
+    if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_START))
+    {
+        if (start){
+            pushCommand( Knights::kStartCommand );
+        }
+        start = false;
+    } else {
+        start = true;
+    }
 
     if (input_state_cb(0, RETRO_DEVICE_JOYPAD, 0, RETRO_DEVICE_ID_JOYPAD_X))
     {
         if (cycle){
-            odb::renderer->mBufferedCommand = Knights::kCycleRightInventoryCommand;
+            pushCommand( Knights::kCycleRightInventoryCommand );
         }
         cycle = false;
     } else {
         cycle = true;
     }
-
-
-
 }
 
 static void render_checkered(void)
@@ -306,9 +326,8 @@ static void render_checkered(void)
     uint32_t *buf    = frame_buf;
     log_cb(RETRO_LOG_INFO, "render_checkered.\n");
 
-    odb::renderer->render(1);
-
-    auto imgBuffer = odb::renderer->getBufferData();
+    auto imgBuffer = getFramebuffer();
+    auto palette = getPalette();
 
     unsigned stride  = 320;
     uint32_t *line   = buf;
@@ -318,7 +337,7 @@ static void render_checkered(void)
         for (unsigned x = 0; x < 320; x++)
         {
 
-            auto pixel = odb::renderer->mPalette[ *srcLine ];
+            auto pixel = palette[ *srcLine ];
             auto finalPixel = 0;
             finalPixel += (((pixel & 0xFF0000) >> 16) - 0x10 ) << 0;
             finalPixel += (((pixel & 0x00FF00) >> 8 ) - 0x18 ) << 8;
@@ -344,17 +363,14 @@ static void audio_callback(void)
 
 void retro_run(void)
 {
-    log_cb(RETRO_LOG_INFO, "retro_run.\n");
-
-
     bool updated = false;
     if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE_UPDATE, &updated) && updated)
         check_variables();
 
-
     update_input();
-    odb::renderer->handleSystemEvents();
-    game->tick();
+    odb::renderer->mNeedsToRedraw = true;
+    loopTick(25);
+
     render_checkered();
     audio_callback();
 
@@ -362,10 +378,6 @@ void retro_run(void)
 
 bool retro_load_game(const struct retro_game_info *info)
 {
-    log_cb(RETRO_LOG_INFO, "retro_load_game.\n");
-    auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
-    odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader), tileProperties);
-
 
     enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
     if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))

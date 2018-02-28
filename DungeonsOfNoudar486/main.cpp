@@ -2,9 +2,26 @@
 #include <windows.h>
 #endif
 
+#ifdef __DJGPP__
+#else
+const long UCLOCKS_PER_SEC = 1000;
+
+long uclock();
+
+#endif
 
 #include <string>
 #include <cstring>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <functional>
+#include <unordered_map>
+#include <memory>
+#include <utility>
+#include <map>
+#include <algorithm>
+#include <chrono>
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten/html5.h>
@@ -21,7 +38,7 @@ void playTune(const std::string &);
 
 ///game interface
 void init();
-void loopTick();
+void loopTick(long ms);
 void shutdown();
 bool  isPlaying();
 ///
@@ -101,8 +118,23 @@ int main(int argc, char **argv) {
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(loopTick, 20, 1);
 #else
+    clock_t diff = 0;
+
     while (isPlaying()) {
-        loopTick();
+        clock_t t0 = 0;
+        clock_t t1 = 0;
+
+        t0 = uclock();
+
+        loopTick(diff);
+
+        t1 = uclock();
+
+        diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
+
+        if (diff == 0) {
+            diff = 1;
+        }
     }
 #endif
 

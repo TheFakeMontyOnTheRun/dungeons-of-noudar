@@ -1,11 +1,4 @@
 
-#ifdef __DJGPP__
-#else
-const long UCLOCKS_PER_SEC = 1000;
-
-long uclock();
-
-#endif
 
 //general stuff below
 #include <cstdlib>
@@ -71,12 +64,11 @@ enum class ESoundDriver {
 EScreenState screenState = EScreenState::kIntro;
 extern ESoundDriver soundDriver;
 
-std::shared_ptr<odb::NativeBitmap> stateBG;
+std::shared_ptr<odb::NativeBitmap> stateBG = nullptr;
 std::string stateText = "";
 std::string stateTransitionText = "";
 uint8_t bgColour;
 uint8_t textStartingLine;
-clock_t diff = 0;
 std::shared_ptr<odb::CPackedFileReader> fileLoader = nullptr;
 
 void setScreenState( EScreenState newState, std::shared_ptr<Knights::CGame> game ) {
@@ -206,6 +198,7 @@ void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string &mainText
 }
 
 void renderTick(long ms) {
+
     switch (screenState ) {
         case EScreenState::kGame:
             odb::renderer->render(ms);
@@ -288,14 +281,10 @@ void handleConsoleLines(Knights::CommandType command, int playerHealthDiff, int 
     }
 }
 
-void loopTick() {
+void loopTick(long diff) {
 
     int healthAtTargetBefore = 0;
     int healthAtTargetAfter = 0;
-    clock_t t0 = 0;
-    clock_t t1 = 0;
-
-    t0 = uclock();
 
     auto playerHealthBefore = game->getMap()->getAvatar()->getHP();
     auto cursorPosition = game->getMap()->getTargetProjection(game->getMap()->getAvatar());
@@ -336,11 +325,7 @@ void loopTick() {
 
     handleConsoleLines(command, playerHealthDiff, targetHealthDiff, odb::renderer, actorAtTarget);
 
-    t1 = uclock();
-    diff = (1000 * (t1 - t0)) / UCLOCKS_PER_SEC;
-    if (diff == 0) {
-        diff = 1;
-    }
+
 
     if (!game->getMap()->getAvatar()->isAlive()) {
         playerIsDead();
@@ -394,4 +379,26 @@ void shutdown() {
 
 bool isPlaying() {
     return game->isPlaying();
+}
+
+void pushCommand(char cmd ) {
+
+    if ( cmd == Knights::kStartCommand ) {
+
+        odb::renderer->mBufferedCommand = Knights::kNullCommand;
+        onContinuePressed(game);
+        return;
+    }
+
+    odb::renderer->mBufferedCommand = cmd;
+    odb::renderer->mCached = false;
+    odb::renderer->mNeedsToRedraw = true;
+}
+
+uint8_t *getFramebuffer() {
+    return odb::renderer->getBufferData();
+}
+
+uint32_t *getPalette() {
+    return odb::renderer->mPalette.data();
 }
