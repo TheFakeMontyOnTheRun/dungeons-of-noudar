@@ -235,7 +235,7 @@ void handleConsoleLines(Knights::CommandType command, int playerHealthDiff, int 
 
     char *soundToPlay = nullptr;
 
-    if (command != '.') {
+    if (command != Knights::kNullCommand) {
         char buffer[41];
         snprintf(&buffer[0], 39, "%s", game->getLastCommand().c_str());
         renderer->appendToLog(buffer, commandColour);
@@ -313,6 +313,14 @@ void loopTick() {
 #endif
     renderTick(diff);
     Knights::CommandType command = odb::renderer->peekInput();
+
+    if ( command == Knights::kStartCommand ) {
+
+        odb::renderer->mBufferedCommand = Knights::kNullCommand;
+        onContinuePressed(game);
+        return;
+    }
+
     game->tick();
     soundTick();
 
@@ -336,12 +344,6 @@ void loopTick() {
 
     if (!game->getMap()->getAvatar()->isAlive()) {
         playerIsDead();
-    }
-
-    if ( command == 13 ) {
-
-        odb::renderer->mBufferedCommand = '.';
-        onContinuePressed(game);
     }
 }
 

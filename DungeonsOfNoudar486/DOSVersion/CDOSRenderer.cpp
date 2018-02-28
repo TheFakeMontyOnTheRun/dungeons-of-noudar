@@ -110,7 +110,7 @@ namespace odb {
             auto getched = getch();
             switch(getched) {
                 case 13:
-                    mBufferedCommand = 13;
+                    mBufferedCommand = Knights::kStartCommand;
                     break;
 
                 case 27:

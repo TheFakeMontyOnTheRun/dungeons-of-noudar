@@ -58,7 +58,7 @@ namespace odb {
             needsRedraw = true;
             renderer->handleSystemEvents();
         }
-        renderer->mBufferedCommand = '.';
+        renderer->mBufferedCommand = Knights::kNullCommand;
 
         return 13;
     }

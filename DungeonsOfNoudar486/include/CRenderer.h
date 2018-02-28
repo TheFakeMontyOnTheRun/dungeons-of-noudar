@@ -73,7 +73,7 @@ public:
         Knights::EDirection mCameraDirection;
         char mLogBuffer[8][64];
         uint8_t mLineColour[5];
-        Knights::CommandType mLastCommand = '.';
+        Knights::CommandType mLastCommand = Knights::kNullCommand;
         int16_t mHealth;
         EItemsSnapshotElement mCurrentItem = EItemsSnapshotElement::kSword;
         std::string mItemName;
@@ -111,7 +111,7 @@ public:
 
      public:
 	array< uint32_t , 256 > mPalette;
-        Knights::CommandType mBufferedCommand = '.';
+        Knights::CommandType mBufferedCommand = Knights::kNullCommand;
 
         const static uint8_t mTransparency;
         vector<TexturePair> mNativeTextures;

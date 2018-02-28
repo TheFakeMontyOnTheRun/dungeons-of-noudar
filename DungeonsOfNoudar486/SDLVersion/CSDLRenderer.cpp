@@ -70,7 +70,7 @@ namespace odb {
             if (SDL_PollEvent(&event) ) {
                 if (event.type == SDL_KEYDOWN) {
                     if ( event.key.keysym.sym == SDLK_RETURN ) {
-                        return 13;
+                        return Knights::kStartCommand;
                     } else {
                         return 0;
                     }
@@ -152,7 +152,7 @@ namespace odb {
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
                     case SDLK_RETURN:
-                        mBufferedCommand = 13;
+                        mBufferedCommand = Knights::kStartCommand;
                         break;
 
                     case SDLK_ESCAPE:

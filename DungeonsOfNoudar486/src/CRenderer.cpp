@@ -355,7 +355,7 @@ namespace odb {
 
     Knights::CommandType CRenderer::getInput() {
         const auto toReturn = mBufferedCommand;
-        mBufferedCommand = '.';
+        mBufferedCommand = Knights::kNullCommand;
         return toReturn;
     }
 
