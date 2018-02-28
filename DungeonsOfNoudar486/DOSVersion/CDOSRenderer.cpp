@@ -109,6 +109,10 @@ namespace odb {
         if (kbhit()) {
             auto getched = getch();
             switch(getched) {
+                case 13:
+                    mBufferedCommand = Knights::kStartCommand;
+                    break;
+
                 case 27:
                     mBufferedCommand = Knights::kQuitGameCommand;
                     break;

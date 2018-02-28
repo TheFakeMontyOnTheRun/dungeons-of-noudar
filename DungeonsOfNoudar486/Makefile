@@ -6,6 +6,7 @@ SDL_INCLUDE =  `sdl-config --cflags `
 CXXFLAGS = -std=c++14 -O2 -g $(SDL_INCLUDE) -g -DSDLSW -DVGA -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -Ofast  -fomit-frame-pointer -fno-exceptions -ffast-math -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer -Wno-narrowing -DUSE_ITEMS_INSTANTLY
 
 OBJS = main.o \
+        events.o \
         SDLVersion/CSDLRenderer.o \
 	    OPL2LPT/MusicSDL.o \
         src/CRenderer.o \

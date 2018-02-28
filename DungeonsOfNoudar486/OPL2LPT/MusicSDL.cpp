@@ -19,7 +19,7 @@ using std::vector;
 void playMusic(const std::string &music) {
 }
 
-void setupOPL2() {
+void setupOPL2(int port) {
 }
 
 void stopSounds() {

@@ -41,64 +41,36 @@ using sg14::fixed_point;
 #include <windows.h>
 
 MSG Msg;
-HWND myHWnd = nullptr;
-bool needsRedraw = false;
-uint32_t bitmap[320 * 200];
-
-long timeEllapsed = 0;
+bool needsRedraw = true;
+COLORREF paletteRef[256];
+bool havePalette = false;
+COLORREF transparencyRef;
 
 long uclock() {
-    timeEllapsed += 10;
-    return timeEllapsed;
+    return GetTickCount();
 }
 
 namespace odb {
 
     int readKeyboard(std::shared_ptr<CRenderer> renderer) {
+        needsRedraw = true;
+        while (renderer->mBufferedCommand != 13) {
+            needsRedraw = true;
+            renderer->handleSystemEvents();
+        }
+        renderer->mBufferedCommand = Knights::kNullCommand;
 
         return 13;
     }
 
     bool peekKeyboard(std::shared_ptr<CRenderer> renderer) {
-        return true;
+        needsRedraw = true;
+	renderer->handleSystemEvents();
+        return renderer->mBufferedCommand == 13;
     }
 
 
     CRenderer::CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
-
-        HINSTANCE hInst;
-
-        WNDCLASSEX WndCls;
-        static char szAppName[] = "DungeonsOfNoudar95";
-        MSG Msg;
-
-        hInst = hInstance;
-        WndCls.cbSize = sizeof(WndCls);
-        WndCls.style = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;
-        WndCls.lpfnWndProc = odb::WindProcedure;
-        WndCls.cbClsExtra = 0;
-        WndCls.cbWndExtra = 0;
-        WndCls.hInstance = hInst;
-        WndCls.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-        WndCls.hCursor = LoadCursor(NULL, IDC_ARROW);
-        WndCls.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
-        WndCls.lpszMenuName = NULL;
-        WndCls.lpszClassName = szAppName;
-        WndCls.hIconSm = LoadIcon(hInstance, IDI_APPLICATION);
-        RegisterClassEx(&WndCls);
-
-        CreateWindowEx(WS_EX_OVERLAPPEDWINDOW,
-                       szAppName,
-                       "Dungeons of Noudar 95",
-                       WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-                       CW_USEDEFAULT,
-                       CW_USEDEFAULT,
-                       330,
-                       230,
-                       NULL,
-                       NULL,
-                       hInstance,
-                       NULL);
 
 
         for (int r = 0; r < 256; r += 16) {
@@ -110,230 +82,263 @@ namespace odb {
                 }
             }
         }
-
         mFont = loadPNG("font.png", fileLoader);
     }
 
 
     LRESULT CALLBACK
     WindProcedure(HWND
-    hWnd,
-    UINT Msg, WPARAM
-    wParam,
-    LPARAM lParam
+                  hWnd,
+                  UINT Msg, WPARAM
+                  wParam,
+                  LPARAM lParam
     ) {
 
-    if (needsRedraw) {
-    InvalidateRect( hWnd,
-    nullptr, false );
-    needsRedraw = false;
-}
+        if (needsRedraw) {
+            InvalidateRect(hWnd,
+                           nullptr, false);
+            needsRedraw = false;
+        }
 
-HDC hDC, MemDCExercising;
-PAINTSTRUCT Ps;
-HBITMAP bmpExercising;
+        HDC hDC, MemDCGame;
+        PAINTSTRUCT Ps;
 
-bmpExercising = CreateBitmap(320, 200, 1, 32, &bitmap[0]);
+        switch (Msg) {
 
-if ( renderer != nullptr ) {
-auto bufferPtr = renderer->getBufferData();
+            case
+                WM_CHAR:
+                switch (wParam) {
 
-for (
-int c = 0;
-c < 200; ++c ) {
-for (
-int d = 0;
-d < 320; ++d ) {
-auto texel = renderer->mPalette[bufferPtr[(320 * c) + d]];
-uint32_t fragment = 0;
-fragment += (((texel & 0xFF) - 0x38) << 16 );
-fragment += ((((texel & 0xFF00) >> 8) - 0x18) << 8 );
-fragment += ((texel & 0xFF0000 ) >> 16) - 0x10;
+                    case 'a':
+                        renderer->
+                                mBufferedCommand = Knights::kPickItemCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
-bitmap[ ( 320 * c ) + d ] =
-fragment;
-}
-}
-}
+                    case 's':
+                        renderer->
+                                mBufferedCommand = Knights::kCycleRightInventoryCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
-switch(Msg)
-{
+                    case 'z':
+                        renderer->
+                                mBufferedCommand = Knights::kStrafeLeftCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
-case
-WM_CHAR:
-switch (wParam)
-{
-
-case 'a':
-renderer->
-mBufferedCommand = Knights::kPickItemCommand;
-renderer->
-mCached = false;
-break;
-
-case 's':
-renderer->
-mBufferedCommand = Knights::kCycleRightInventoryCommand;
-renderer->
-mCached = false;
-break;
-
-case 'z':
-renderer->
-mBufferedCommand = Knights::kStrafeLeftCommand;
-renderer->
-mCached = false;
-break;
-
-case 'x':
-renderer->
-mBufferedCommand = Knights::kStrafeRightCommand;
-renderer->
-mCached = false;
-break;
+                    case 'x':
+                        renderer->
+                                mBufferedCommand = Knights::kStrafeRightCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
 
-case '1':
-renderer->
-mBufferedCommand = '1';
-renderer->
-mCached = false;
-break;
+                    case '1':
+                        renderer->
+                                mBufferedCommand = '1';
+                        renderer->
+                                mCached = false;
+                        break;
 
-case '2':
-renderer->
-mBufferedCommand = '2';
-renderer->
-mCached = false;
-break;
+                    case '2':
+                        renderer->
+                                mBufferedCommand = '2';
+                        renderer->
+                                mCached = false;
+                        break;
 
-case '3':
-renderer->
-mBufferedCommand = '3';
-renderer->
-mCached = false;
-break;
-}
-needsRedraw = true;
-break;
-case
-WM_KEYDOWN:
+                    case '3':
+                        renderer->
+                                mBufferedCommand = '3';
+                        renderer->
+                                mCached = false;
+                        break;
+                }
+                needsRedraw = true;
+                break;
+            case
+                WM_KEYDOWN:
 
-switch (wParam)
-{
+                switch (wParam) {
 
-case
-VK_ESCAPE:
-        renderer
-->
-mBufferedCommand = Knights::kQuitGameCommand;
-break;
-case
-VK_SPACE:
-        renderer
-->
-mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
-renderer->
-mCached = false;
-break;
-
+                    case
+                        VK_ESCAPE:
+                        renderer
+                                ->
+                                        mBufferedCommand = Knights::kQuitGameCommand;
+                        break;
+                    case
+                        VK_SPACE:
+                        renderer
+                                ->
+                                        mBufferedCommand = Knights::kUseCurrentItemInInventoryCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
 
-case
-VK_LEFT:
-        renderer
-->
-mBufferedCommand = Knights::kTurnPlayerLeftCommand;
-renderer->
-mCached = false;
-break;
+                    case
+                        VK_LEFT:
+                        renderer
+                                ->
+                                        mBufferedCommand = Knights::kTurnPlayerLeftCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
-case
-VK_RIGHT:
-        renderer
-->
-mBufferedCommand = Knights::kTurnPlayerRightCommand;
-renderer->
-mCached = false;
-break;
+                    case
+                        VK_RIGHT:
+                        renderer
+                                ->
+                                        mBufferedCommand = Knights::kTurnPlayerRightCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
-case
-VK_UP:
-        renderer
-->
-mBufferedCommand = Knights::kMovePlayerForwardCommand;
-renderer->
-mCached = false;
-break;
+                    case
+                        VK_UP:
+                        renderer
+                                ->
+                                        mBufferedCommand = Knights::kMovePlayerForwardCommand;
+                        renderer->
+                                mCached = false;
+                        break;
 
-case
-VK_DOWN:
-        renderer
-->
-mBufferedCommand = Knights::kMovePlayerBackwardCommand;
-renderer->
-mCached = false;
+                    case
+                        VK_RETURN:
+                        renderer
+                                ->
+                                        mBufferedCommand = 13;
+                        break;
 
-break;
-}
-needsRedraw = true;
-break;
 
-case
-WM_DESTROY:
-        PostQuitMessage(WM_QUIT);
-break;
-case
-WM_PAINT:
-        hDC = BeginPaint(hWnd, &Ps);
-MemDCExercising = CreateCompatibleDC(hDC);
-SelectObject(MemDCExercising, bmpExercising
-);
-BitBlt(hDC,
-0, 0, 320, 200, MemDCExercising, 0, 0, SRCCOPY);
-DeleteDC(MemDCExercising);
-EndPaint(hWnd, &Ps
-);
-break;
-default:
-return
-DefWindowProc(hWnd, Msg, wParam, lParam
-);
-}
+                    case
+                        VK_DOWN:
+                        renderer
+                                ->
+                                        mBufferedCommand = Knights::kMovePlayerBackwardCommand;
+                        renderer->
+                                mCached = false;
 
-DeleteObject(bmpExercising);
-return 0;
-}
+                        break;
+                }
+                needsRedraw = true;
+                break;
 
-void CRenderer::sleep(long ms) {
-}
+            case
+                WM_DESTROY:
+                PostQuitMessage(WM_QUIT);
+                renderer
+                ->
+                mBufferedCommand = Knights::kQuitGameCommand;
 
-void CRenderer::handleSystemEvents() {
-    if (GetMessage(&Msg, NULL, 0, 0)) {
-        TranslateMessage(&Msg);
-        DispatchMessage(&Msg);
+                break;
+            case
+                WM_PAINT:
+
+                hDC = BeginPaint(hWnd, &Ps);
+
+
+                if (renderer != nullptr) {
+                    uint8_t* bufferPtr = renderer->getBufferData();
+                    auto palettePtr = &renderer->mPalette[0];
+
+                    if ( !havePalette ) {
+                        havePalette = true;
+                        auto pixel = CRenderer::mTransparency;
+                        auto r = (((pixel & 0x000000FF)      )) - 0x38;
+                        auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
+                        auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
+                        transparencyRef = RGB(r, g, b);
+
+                        int c = 0;
+                        for ( const auto& pixel : renderer->mPalette ) {
+                            auto r = (((pixel & 0x000000FF)      )) - 0x38;
+                            auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
+                            auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
+
+                            paletteRef[c++] = transparencyRef;
+                        }
+                    }
+
+                    RECT rect;
+                    HBRUSH brush;
+                    for (int c = 0;c < 200; ++c) {
+                        uint8_t* line = &bufferPtr[ 320 * c ];
+                        for (int d = 0;d < 320; ++d) {
+                            uint8_t index = *line;
+                            COLORREF ref = paletteRef[index];
+
+                            if ( ref == transparencyRef ) {
+                                auto pixel = palettePtr[index];
+                                auto r = (((pixel & 0x000000FF)      )) - 0x38;
+                                auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
+                                auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
+                                ref = RGB(r, g, b);
+                                paletteRef[index] = ref;
+                            }
+
+                            SetPixel( hDC, d, c, ref);
+                            ++line;
+                        }
+                    }
+                    brush = CreateSolidBrush(RGB(0, 0, 0 ));
+
+                    rect.left = 0;
+                    rect.top = 200;
+                    rect.right = 320;
+                    rect.bottom = 240;
+
+                    FillRect(Ps.hdc, &rect, brush);
+
+                    DeleteObject(brush);
+                }
+
+                EndPaint(hWnd, &Ps);
+
+                break;
+            default:
+                return
+                        DefWindowProc(hWnd, Msg, wParam, lParam);
+        }
+
+        return 0;
     }
-}
 
-void CRenderer::putRaw(int16_t x, int16_t y, uint32_t pixel) {
-
-
-    if (x < 0 || x >= 256 || y < 0 || y >= 128) {
-        return;
+    void CRenderer::sleep(long ms) {
     }
 
-    mBuffer[(320 * y) + x] = pixel;
-}
+    void CRenderer::handleSystemEvents() {
+        if (GetMessage(&Msg, NULL, 0, 0)) {
+            TranslateMessage(&Msg);
+            DispatchMessage(&Msg);
+        }
+    }
 
-CRenderer::~CRenderer() {
-    mNativeTextures.clear();
-}
+    void CRenderer::putRaw(int16_t x, int16_t y, uint32_t pixel) {
 
-void CRenderer::flip() {
-    needsRedraw = true;
-}
 
-void CRenderer::clear() {
-}
+        if (x < 0 || x >= 256 || y < 0 || y >= 128) {
+            return;
+        }
+
+        mBuffer[(320 * y) + x] = pixel;
+    }
+
+    CRenderer::~CRenderer() {
+        mNativeTextures.clear();
+    }
+
+    void CRenderer::flip() {
+        needsRedraw = true;
+    }
+
+    void CRenderer::clear() {
+    }
 
 }

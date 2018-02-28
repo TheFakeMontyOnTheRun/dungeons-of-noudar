@@ -26,6 +26,7 @@ set(SOURCE_FILES
         include/CRenderer.h
         include/RaycastCommon.h
         main.cpp
+        events.cpp
         ../noudar-core/noudar-core/include/commands/CMoveActorCommand.h
         ../noudar-core/noudar-core/include/commands/CEndTurnCommand.h
         ../noudar-core/noudar-core/include/commands/CLoadNewLevelCommand.h

@@ -53,7 +53,7 @@ using sg14::fixed_point;
 long timeEllapsed = 0;
 
 long uclock() {
-    timeEllapsed += 10;
+    timeEllapsed += 4 * (1000/60);
     return timeEllapsed;
 }
 
@@ -70,7 +70,7 @@ namespace odb {
             if (SDL_PollEvent(&event) ) {
                 if (event.type == SDL_KEYDOWN) {
                     if ( event.key.keysym.sym == SDLK_RETURN ) {
-                        return 13;
+                        return Knights::kStartCommand;
                     } else {
                         return 0;
                     }
@@ -132,10 +132,6 @@ namespace odb {
     }
 
     void CRenderer::sleep(long ms) {
-#ifndef __EMSCRIPTEN__
-//        SDL_Delay(100);
-//        timeEllapsed += 100;
-#endif
     }
 
     void CRenderer::handleSystemEvents() {
@@ -151,6 +147,10 @@ namespace odb {
 
             if (event.type == SDL_KEYDOWN) {
                 switch (event.key.keysym.sym) {
+                    case SDLK_RETURN:
+                        mBufferedCommand = Knights::kStartCommand;
+                        break;
+
                     case SDLK_ESCAPE:
                         mBufferedCommand = Knights::kQuitGameCommand;
                         break;
@@ -267,6 +267,9 @@ namespace odb {
             }
 
         SDL_Flip(video);
+#ifndef __EMSCRIPTEN__
+        SDL_Delay(1000/60);
+#endif
     }
 
     void CRenderer::clear() {
