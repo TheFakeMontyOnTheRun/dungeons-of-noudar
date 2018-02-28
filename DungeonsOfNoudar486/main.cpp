@@ -42,7 +42,11 @@ void loopTick(long ms);
 void shutdown();
 bool  isPlaying();
 ///
-
+#ifdef __EMSCRIPTEN__
+void emscriptenLoopTick() {
+    loopTick(50);
+}
+#endif
 
 #ifdef __APPLE__
 extern "C" int SDL_main(int argc, char **argv) {
@@ -53,6 +57,8 @@ extern "C" int SDL_main(int argc, char **argv) {
 namespace odb {
     LRESULT CALLBACK WindProcedure(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 }
+
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
                    LPSTR lpCmdLine, int nCmdShow)
@@ -116,7 +122,7 @@ int main(int argc, char **argv) {
     init();
 
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(loopTick, 20, 1);
+    emscripten_set_main_loop(emscriptenLoopTick, 20, 1);
 #else
     clock_t diff = 0;
 

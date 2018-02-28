@@ -47,12 +47,6 @@ using sg14::fixed_point;
 #include "CPackedFileReader.h"
 #include "LoadPNG.h"
 
-#ifdef __EMSCRIPTEN__
-#include <emscripten/html5.h>
-#include <emscripten/emscripten.h>
-#endif
-
-
 enum class EScreenState {
     kIntro, kLoading, kChapter, kGame, kGameOver, kVictory, kExit
 };
