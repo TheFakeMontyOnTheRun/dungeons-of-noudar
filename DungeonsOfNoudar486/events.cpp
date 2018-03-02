@@ -1,5 +1,3 @@
-
-
 //general stuff below
 #include <cstdlib>
 #include <cstdio>
@@ -137,6 +135,8 @@ void onContinuePressed( std::shared_ptr<Knights::CGame> game) {
         case EScreenState::kExit:
 #ifdef __EMSCRIPTEN__
             setScreenState( EScreenState::kIntro, game);
+#else
+            game->setIsPlaying(false);
 #endif
             break;
     }
@@ -334,15 +334,6 @@ void init() {
     game = std::make_shared<Knights::CGame>(fileLoader, odb::renderer, delegate);
 
     auto onLevelWillLoad = [&]() {
-
-        if (game != nullptr) {
-            if (game->getLevelNumber() >= LEVEL_LIMIT) {
-                game->setIsPlaying(false);
-                setScreenState(EScreenState::kVictory, game);
-                return;
-            }
-        }
-
         setScreenState(EScreenState::kLoading, game);
         renderTick(50);
     };
@@ -351,13 +342,15 @@ void init() {
 
     auto onLevelLoaded = [&]() {
 
-        if (game->getLevelNumber() < LEVEL_LIMIT) {
+
+        if (game->getLevelNumber() >= LEVEL_LIMIT) {
+                setScreenState(EScreenState::kVictory, game);
+        } else  {
             auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);
             odb::renderer->loadTextures(odb::loadTexturesForLevel(game->getLevelNumber(), fileLoader),
                                         tileProperties);
+            setScreenState(EScreenState::kChapter, game);
         }
-
-        setScreenState(EScreenState::kChapter, game);
     };
     delegate->setOnLevelLoadedCallback(onLevelLoaded);
 
