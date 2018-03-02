@@ -6,7 +6,7 @@ CXXFLAGS = -g -DVGA -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -c -O6 -
 -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common \
 -I../noudar-rendering -I../gles2-renderer -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY -fPIC  \
 -m32 -Wl,--enable-auto-image-base -Wl,--add-stdcall-alias -Wl,--enable-auto-import -lgdi32 -luser32 -lkernel32 -mwindows \
--march=i486 -mtune=i486 -D _WIN32_IE=0x0400 -D WINVER=0x400 -Wl,--subsystem,windows
+-march=i486 -mtune=i486 -D _WIN32_IE=0x0400 -DDONT_LOAD_LEVEL_UPON_START -D WINVER=0x400 -Wl,--subsystem,windows
 
 LDFLAGS = -fPIC  -m32 -static-libstdc++ -static-libgcc -Wl,--enable-auto-image-base -Wl,--add-stdcall-alias \
         -Wl,--enable-auto-import -lgdi32 -luser32 -lkernel32 -mwindows -march=i486 -mtune=i486 -D _WIN32_IE=0x0400 \

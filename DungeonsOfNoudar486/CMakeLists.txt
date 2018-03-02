@@ -3,7 +3,7 @@ project(DungeonsOfNoudar486)
 
 find_package(SDL REQUIRED)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_ITEMS_INSTANTLY -DVGA -DSDLSW")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDONT_LOAD_LEVEL_UPON_START -DUSE_ITEMS_INSTANTLY -DVGA -DSDLSW")
 set(CMAKE_CXX_STANDARD 14)
 include_directories(include)
 include_directories(../stb)
