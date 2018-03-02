@@ -12,7 +12,6 @@
 #include <cstring>
 #include <algorithm>
 
-
 #include "OPL2.h"
 #include "midi_instruments.h"
 #include "timer.h"
@@ -215,7 +214,6 @@ void music_set(const char* melody1, const char* melody2, const char* melody3) {
     opl2.setBlock(1, 4);
     opl2.setInstrument(2, instruments[ 0 ]);
     opl2.setBlock(2, 4);
-    timer_reset(100);
 }
 
 void music_setup() {
@@ -257,12 +255,14 @@ void music_shutdown() {
 }
 
 void music_loop() {
+    auto timer = timer_get();
+
     bool busy = false;
     for (int i = 0; i < 3; i++) {
         if (timer_get() >= music[i].releaseTime && opl2.getKeyOn(music[i].channel)) {
             opl2.setKeyOn(music[i].channel, false);
         }
-        if (timer_get() >= music[i].nextNoteTime && music[i].data[music[i].index] != 0) {
+        if (timer >= music[i].nextNoteTime && music[i].data[music[i].index] != 0) {
             parseTune(&music[i]);
         }
         if (music[i].data[music[i].index] != 0 || timer_get() < music[i].nextNoteTime) {
