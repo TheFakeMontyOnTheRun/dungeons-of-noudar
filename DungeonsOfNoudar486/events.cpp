@@ -277,19 +277,6 @@ void handleConsoleLines(Knights::CommandType command, int playerHealthDiff, int 
 
 void loopTick(long diff) {
 
-    int healthAtTargetBefore = 0;
-    int healthAtTargetAfter = 0;
-
-    auto playerHealthBefore = game->getMap()->getAvatar()->getHP();
-    auto cursorPosition = game->getMap()->getTargetProjection(game->getMap()->getAvatar());
-    auto actorAtTarget = game->getMap()->getActorAt(cursorPosition);
-
-    if (actorAtTarget != nullptr) {
-        healthAtTargetBefore = actorAtTarget->getHP();
-    } else {
-        healthAtTargetBefore = 0;
-    }
-
 #ifdef __EMSCRIPTEN__
     diff = 50;
 #endif
@@ -301,6 +288,23 @@ void loopTick(long diff) {
         odb::renderer->mBufferedCommand = Knights::kNullCommand;
         onContinuePressed(game);
         return;
+    }
+
+    if ( game->getLevelNumber() < 0 ) {
+        return;
+    }
+
+    int healthAtTargetBefore = 0;
+    int healthAtTargetAfter = 0;
+
+    auto playerHealthBefore = game->getMap()->getAvatar()->getHP();
+    auto cursorPosition = game->getMap()->getTargetProjection(game->getMap()->getAvatar());
+    auto actorAtTarget = game->getMap()->getActorAt(cursorPosition);
+
+    if (actorAtTarget != nullptr) {
+        healthAtTargetBefore = actorAtTarget->getHP();
+    } else {
+        healthAtTargetBefore = 0;
     }
 
     game->tick();
