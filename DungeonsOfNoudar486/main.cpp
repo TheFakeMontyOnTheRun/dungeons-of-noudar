@@ -112,6 +112,8 @@ int main(int argc, char **argv) {
             soundDriver = ESoundDriver::kAdlib;
             initOPL2(0x0388);
             playTune("t200i101o1a");
+        } else if (!std::strcmp(argv[1], "pcspeaker")) {
+            soundDriver = ESoundDriver::kPcSpeaker;
         }
     }
 
