@@ -535,6 +535,58 @@ namespace odb {
         }
     }
 
+    void CRenderer::fill( uint16_t x, uint16_t y, uint16_t dx, uint16_t dy, uint8_t pixel ) {
+
+        if (pixel == mTransparency ) {
+            return;
+        }
+
+        auto destination = getBufferData();
+
+        for ( auto py = 0; py < dy; ++py ) {
+            auto destinationLineStart = destination + ( 320 * (y + py) ) + x;
+            std::fill( destinationLineStart, destinationLineStart + dx, pixel );
+        }
+    }
+
+    void CRenderer::drawSprite( uint16_t dx, uint16_t dy, std::shared_ptr<odb::NativeTexture> tile ) {
+        auto destination = getBufferData();
+        auto sourceLine = &((*tile)[0]);
+
+        for ( auto y = 0; y < 32; ++y ) {
+            auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
+            auto sourceLineStart = sourceLine + ( 32 * y );
+
+            for ( auto x = 0; x < 32; ++x ) {
+                auto pixel = *sourceLineStart;
+
+                if (pixel != CRenderer::mTransparency ) {
+                    *destinationLineStart = pixel;
+                }
+
+                ++destinationLineStart;
+                ++sourceLineStart;
+            }
+
+        }
+    }
+
+    void CRenderer::drawBitmap( uint16_t dx, uint16_t dy, std::shared_ptr<odb::NativeBitmap> tile ) {
+        auto destination = getBufferData();
+        auto sourceLine = tile->getPixelData();
+        auto height = tile->getHeight();
+        auto width = tile->getWidth();
+        for ( auto y = 0; y < height; ++y ) {
+            auto destinationLineStart = destination + ( 320 * (dy + y ) ) + dx;
+            auto sourceLineStart = sourceLine + ( width * y );
+            for ( auto x = 0; x < width; ++x ) {
+                *destinationLineStart = getPaletteEntry(*sourceLineStart);
+                ++sourceLineStart;
+                ++destinationLineStart;
+            }
+        }
+    }
+
     void CRenderer::drawTextAt( uint16_t x, uint16_t y, const char* text, uint8_t colour ) {
         auto len = strlen(text);
         auto dstX = (x - 1) * 8;

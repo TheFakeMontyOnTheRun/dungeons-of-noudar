@@ -15,6 +15,7 @@ LDFLAGS = -fPIC  -m32 -static-libstdc++ -static-libgcc -Wl,--enable-auto-image-b
 
 OBJS = src/CRenderer.o \
     src/CRenderer_Rasterization.o \
+    src/CRenderer_Tesselation.o \
      src/RasterizerCommon.o \
      src/NativeBitmap.o \
      src/CTile3DProperties.o \

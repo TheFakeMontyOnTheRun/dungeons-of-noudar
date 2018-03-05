@@ -2,6 +2,7 @@ CXXFLAGS = -g -DVGA -DEA_PLATFORM_LINUX -DDONT_LOAD_LEVEL_UPON_START -fPIC -Iinc
 
 OBJS = src/CRenderer.o \
     src/CRenderer_Rasterization.o \
+    src/CRenderer_Tesselation.o \
      src/RasterizerCommon.o \
      src/NativeBitmap.o \
      src/CTile3DProperties.o \

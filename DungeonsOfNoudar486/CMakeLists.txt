@@ -19,6 +19,7 @@ set(SOURCE_FILES
         SDLVersion/CSDLRenderer.cpp
         src/CRenderer.cpp
         src/CRenderer_Rasterization.cpp
+        src/CRenderer_Tesselation.cpp
         src/NativeBitmap.cpp
         src/RasterizerCommon.cpp
         src/CTile3DProperties.cpp
