@@ -136,7 +136,7 @@ public:
 
         void drawCubeAt(const Vec3 &center, TexturePair texture );
 
-        void drawTextAt( uint16_t x, uint16_t y, const char* text, uint8_t colour );
+        void drawTextAt( uint16_t x, uint16_t y, const char* text, uint8_t colour = 15 );
 
         void drawFloorAt(const Vec3 &center, TexturePair texture );
 

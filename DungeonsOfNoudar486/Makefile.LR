@@ -1,6 +1,7 @@
 CXXFLAGS = -g -DVGA -DEA_PLATFORM_LINUX -DDONT_LOAD_LEVEL_UPON_START -fPIC -Iinclude -c -Istb -fpermissive -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -I../fixed_point/include -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY
 
 OBJS = src/CRenderer.o \
+    src/CRenderer_Rasterization.o \
      src/RasterizerCommon.o \
      src/NativeBitmap.o \
      src/CTile3DProperties.o \

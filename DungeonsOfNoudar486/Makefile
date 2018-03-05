@@ -7,6 +7,7 @@ CXXFLAGS = -std=c++14 -O2 -g $(SDL_INCLUDE) -g -DDONT_LOAD_LEVEL_UPON_START -DSD
 
 OBJS = main.o \
         events.o \
+        src/CRenderer_Rasterization.o \
         SDLVersion/CSDLRenderer.o \
 	    OPL2LPT/MusicSDL.o \
         src/CRenderer.o \
