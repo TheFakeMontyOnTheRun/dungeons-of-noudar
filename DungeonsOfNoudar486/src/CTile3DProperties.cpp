@@ -24,6 +24,7 @@ using eastl::array;
 #include "CItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
+#include "MapWithCharKey.h"
 #include "CMap.h"
 #include "NativeBitmap.h"
 #include "Logger.h"

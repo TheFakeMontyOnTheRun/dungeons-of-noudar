@@ -36,6 +36,7 @@ using sg14::fixed_point;
 #include "CItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
+#include "MapWithCharKey.h"
 #include "CMap.h"
 #include "IRenderer.h"
 #include "IFileLoaderDelegate.h"

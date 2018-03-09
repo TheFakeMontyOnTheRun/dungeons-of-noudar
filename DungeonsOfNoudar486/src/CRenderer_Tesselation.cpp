@@ -31,6 +31,7 @@ using namespace std::chrono;
 #include "CStorageItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
+#include "MapWithCharKey.h"
 #include "CMap.h"
 #include "IRenderer.h"
 #include "RasterizerCommon.h"
