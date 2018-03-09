@@ -45,11 +45,8 @@ using namespace std::chrono;
 
 namespace odb {
 
-    const static bool kShouldDrawOutline = false;
-    const static bool kShouldDrawTextures = true;
     const static bool kShouldDrawSkybox = false;
     const static bool kShouldDrawBlackMasks = true;
-    const static auto kMinZCull = FixP{1};
     const static long kSplatFrameTime = 200;
     const static long kHighlightTime = 300;
 
