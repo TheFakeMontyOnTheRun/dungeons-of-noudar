@@ -68,6 +68,14 @@ data:	packager
 	rm -f ./data.pfs
 	ls res/*.*  | xargs ./packer
 
+audio:	packager
+	rm -f ./audio.pfs
+	rm -f ./data.pfs
+	ls audio/*  | xargs ./packer
+	mv ./data.pfs ./audio.pfs
+
+
+
 demodata:	packager
 	rm -f ./data.pfs
 	ls resDemo/*.*  | xargs ./packer
