@@ -308,7 +308,10 @@ void loopTick(long diff) {
     }
 
     game->tick();
-    soundTick();
+
+    if (soundDriver != ESoundDriver::kNone) {
+        soundTick();
+    }
 
     if (actorAtTarget != nullptr) {
         healthAtTargetAfter = actorAtTarget->getHP();
