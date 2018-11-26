@@ -1,92 +1,30 @@
-apply plugin: 'com.android.model.application'
+apply plugin: 'com.android.application'
 
-model {
-	android {
-		compileSdkVersion = 22
-		buildToolsVersion = "23.0.2"
-
-		defaultConfig.with {
-			applicationId = "br.odb.noudar"
-			minSdkVersion.apiLevel = 22
-			targetSdkVersion.apiLevel = 22
-//			testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-		}
-
-		sources {
-			main {
-				jni {
-					source {
-						srcDir "../../noudar-core/noudar-core/src"
-						srcDir "../../gles2-renderer"
-						srcDir "../../noudar-rendering"
-						srcDir "../../nanovg/src"
-						srcDir "../../AndroidSoundSystem"
-
-						exclude "**/*WavefrontOBJReader.cpp"
-						exclude "**/*WavefrontMaterialReader.cpp"
-					}
-				}
+android {
+	compileSdkVersion 28
+	defaultConfig {
+		applicationId 'br.odb.noudar'
+		minSdkVersion 14
+		targetSdkVersion 28
+		externalNativeBuild {
+			cmake {
+				// Available arguments are inside ${SDK}/cmake/.../android.toolchain.cmake file
+				arguments '-DANDROID_STL=c++_static'
 			}
 		}
 	}
 
-	android.ndk {
-		moduleName = "NdkGlue"
-		toolchain = "clang"
-		cppFlags.addAll(["-std=gnu++14", "-g", "-fno-inline", "-DUSE_ITEMS_INSTANTLY"])
-		ldLibs.addAll(["log", "GLESv2", "android", "jnigraphics", "OpenSLES"])
-		CFlags.add('-std=c99')
-		stl = "c++_static"
-		platformVersion 22
-
-		cppFlags.add("-I${file("../../nanovg/src")}".toString())
-		cppFlags.add("-I${file("../common_includes")}".toString())
-		cppFlags.add("-I${file("../../AndroidSoundSystem")}".toString())
-		cppFlags.add("-I${file("../../glm")}".toString())
-		cppFlags.add("-I${file("../../noudar-core/noudar-core/include")}".toString())
-		cppFlags.add("-I${file("../../noudar-core/EASTL/include")}".toString())
-		cppFlags.add("-I${file("../../noudar-core/EASTL/test/packages/EABase/include/Common")}".toString())
-		cppFlags.add("-I${file("../../noudar-rendering")}".toString())
-		cppFlags.add("-I${file("../../gles2-renderer")}".toString())
-	}
-
-	android.buildTypes {
+	buildTypes {
 		release {
 			minifyEnabled = false
-			proguardFiles.add(file('proguard-rules.txt'))
+			proguardFiles getDefaultProguardFile('proguard-android.txt'),
+					'proguard-rules.pro'
 		}
 	}
-
-	android.productFlavors {
-		create("arm7") {
-			ndk.abiFilters.add("armeabi-v7a")
+	externalNativeBuild {
+		cmake {
+			path 'src/main/cpp/CMakeLists.txt'
 		}
-		create("arm8") {
-			ndk.abiFilters.add("arm64-v8a")
-		}
-		create("x86-32") {
-			ndk.abiFilters.add("x86")
-		}
-
-		// for detailed abiFilter descriptions, refer to "Supported ABIs" @
-		// https://developer.android.com/ndk/guides/abis.html#sa
-
-		// build one including all cpu architectures
-		create("all")
 	}
 }
 
-//dependencies {
-//
-//	compile fileTree(include: ['*.jar'], dir: 'libs')
-//
-//	compile project(':base')
-//	compile project(':common')
-//	compile project(':audio')
-//
-//	compile 'com.google.protobuf.nano:protobuf-javanano:3.0.0-alpha-7'
-//
-//	androidTestCompile 'com.android.support:support-annotations:23.1.1'
-//	androidTestCompile 'com.android.support.test:runner:0.4.1'
-//	androidTestCompile 'com.android.support.test:rules:0.4.1'
-//}
