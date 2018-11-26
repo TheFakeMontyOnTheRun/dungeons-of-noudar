@@ -70,6 +70,9 @@ namespace odb {
 	Knights::Vec2i previousPosition = {0,0};
 	VisMap previous;
 
+  NoudarGLES2Bridge::NoudarGLES2Bridge() {
+  }
+
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
         odb::NoudarDungeonSnapshot snapshot;
@@ -213,6 +216,10 @@ namespace odb {
         previousPosition = {0, 0};
         previousDirection = Knights::EDirection::kNorth;
         previous = odb::VisMap();
+    }
+
+    char NoudarGLES2Bridge::peekInput() {
+      return mNextCmd;
     }
 
     char NoudarGLES2Bridge::getInput() {

@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <GLES2/gl2.h>
 #include <memory>
-
+#include <functional>
 #include <iostream>
 #include <sstream>
 #include <unordered_set>

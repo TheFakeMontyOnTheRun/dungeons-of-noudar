@@ -74,6 +74,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CTurnActorCommand.cpp
         ../noudar-core/noudar-core/src/commands/CQuitCommand.cpp
         ../noudar-core/noudar-core/src/commands/CNullCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CSuggestItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
         ../noudar-core/noudar-core/src/commands/CPickItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CDropItemCommand.cpp

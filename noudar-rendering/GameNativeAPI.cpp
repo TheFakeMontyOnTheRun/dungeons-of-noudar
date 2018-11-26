@@ -150,12 +150,7 @@ loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelega
         vector<std::shared_ptr<odb::NativeBitmap>> textures;
 
 
-		if (buffer.substr(buffer.length() - 4) == ".lst") {
-			auto frames = loadBitmapList(buffer, fileLoader );
-			for ( const auto frame : frames ) {
-				textures.push_back(frame);
-			}
-		} else {
+		if (!buffer.empty()) {
 			textures.push_back(loadPNG(buffer, fileLoader));
 		}
 

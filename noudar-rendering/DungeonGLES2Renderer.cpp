@@ -21,7 +21,7 @@
 #endif
 #include <unordered_map>
 #include <memory>
-
+#include <functional>
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
@@ -344,14 +344,8 @@ namespace odb {
 		mTextureRegistry["bricks"] = ETextures::Bricks;
 		mTextureRegistry["arch"] = ETextures::Arch;
 		mTextureRegistry["bars"] = ETextures::Bars;
-		mTextureRegistry["begin"] = ETextures::Begin;
-		mTextureRegistry["exit"] = ETextures::Exit;
 		mTextureRegistry["bricksblood"] = ETextures::BricksBlood;
 		mTextureRegistry["brickscandles"] = ETextures::BricksCandles;
-		mTextureRegistry["stonegrassfar"] = ETextures::StoneGrassFar;
-		mTextureRegistry["grassstonefar"] = ETextures::GrassStoneFar;
-		mTextureRegistry["stonegrassnear"] = ETextures::StoneGrassNear;
-		mTextureRegistry["grassstonenear"] = ETextures::GrassStoneNear;
 		mTextureRegistry["ceiling"] = ETextures::Ceiling;
 		mTextureRegistry["ceilingdoor"] = ETextures::CeilingDoor;
 		mTextureRegistry["ceilingbegin"] = ETextures::CeilingBegin;
@@ -360,7 +354,6 @@ namespace odb {
         mTextureRegistry["rope"] = ETextures::Rope;
         mTextureRegistry["slot"] = ETextures::Slot;
         mTextureRegistry["magicseal"] = ETextures::MagicSeal;
-        mTextureRegistry["shutdoor"] = ETextures::ShutDoor;
 		mTextureRegistry["cobblestone"] = ETextures::Cobblestone;
 		mTextureRegistry["fence"] = ETextures::Fence;
 		createVBOs();
@@ -578,35 +571,48 @@ namespace odb {
         mElementMap[EActorsSnapshotElement::kRope] = ETextures::Rope;
         mElementMap[EActorsSnapshotElement::kMagicSeal] = ETextures::MagicSeal;
 		mElementMap[EActorsSnapshotElement::kStrongDemonAttacking0] = ETextures::StrongDemonAttack0;
-		mElementMap[EActorsSnapshotElement::kStrongDemonAttacking1] = ETextures::StrongDemonAttack1;
-		mElementMap[EActorsSnapshotElement::kStrongDemonStanding0] = ETextures::StrongDemonStanding0;
-		mElementMap[EActorsSnapshotElement::kStrongDemonStanding1] = ETextures::StrongDemonStanding1;
-		mElementMap[EActorsSnapshotElement::kHeroStanding0] = ETextures::CrusaderStanding0;
-		mElementMap[EActorsSnapshotElement::kHeroStanding1] = ETextures::CrusaderStanding1;
-		mElementMap[EActorsSnapshotElement::kHeroAttacking0] = ETextures::CrusaderAttack0;
-		mElementMap[EActorsSnapshotElement::kHeroAttacking1] = ETextures::CrusaderAttack1;
+		mElementMap[EActorsSnapshotElement::kStrongDemonAttacking1] =
+				ETextures::StrongDemonAttack0;
 		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking0] = ETextures::WeakDemonAttack0;
-		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking1] = ETextures::WeakDemonAttack1;
-		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding0] = ETextures::WeakDemonStanding0;
-		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding1] = ETextures::WeakDemonStanding1;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonAttacking1] =
+				ETextures::WeakDemonAttack0;
+
 		mElementMap[EActorsSnapshotElement::kCocoonStanding0] = ETextures::CocoonStanding0;
-		mElementMap[EActorsSnapshotElement::kCocoonStanding1] = ETextures::CocoonStanding1;
+		mElementMap[EActorsSnapshotElement::kCocoonStanding1] =
+				ETextures::CocoonStanding0;
 		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking0] = ETextures::EvilSpiritAttack0;
-		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking1] = ETextures::EvilSpiritAttack1;
-		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding0] = ETextures::EvilSpiritStanding0;
-		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding1] = ETextures::EvilSpiritStanding1;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritAttacking1] =
+				ETextures::EvilSpiritAttack0;
 		mElementMap[EActorsSnapshotElement::kWarthogAttacking0] = ETextures::WarthogAttack0;
-		mElementMap[EActorsSnapshotElement::kWarthogAttacking1] = ETextures::WarthogAttack1;
-		mElementMap[EActorsSnapshotElement::kWarthogStanding0] = ETextures::WarthogStanding0;
-		mElementMap[EActorsSnapshotElement::kWarthogStanding1] = ETextures::WarthogStanding1;
+		mElementMap[EActorsSnapshotElement::kWarthogAttacking1] =
+				ETextures::WarthogAttack0;
 		mElementMap[EActorsSnapshotElement::kMonkAttacking0] = ETextures::MonkAttack0;
-		mElementMap[EActorsSnapshotElement::kMonkAttacking1] = ETextures::MonkAttack1;
-		mElementMap[EActorsSnapshotElement::kMonkStanding0] = ETextures::MonkStanding0;
-		mElementMap[EActorsSnapshotElement::kMonkStanding1] = ETextures::MonkStanding1;
+		mElementMap[EActorsSnapshotElement::kMonkAttacking1] =
+				ETextures::MonkAttack0;
 		mElementMap[EActorsSnapshotElement::kFallenAttacking0] = ETextures::FallenAttack0;
-		mElementMap[EActorsSnapshotElement::kFallenAttacking1] = ETextures::FallenAttack1;
-		mElementMap[EActorsSnapshotElement::kFallenStanding0] = ETextures::FallenStanding0;
-		mElementMap[EActorsSnapshotElement::kFallenStanding1] = ETextures::FallenStanding1;
+		mElementMap[EActorsSnapshotElement::kFallenAttacking1] =
+				ETextures::FallenAttack0;
+
+		mElementMap[EActorsSnapshotElement::kStrongDemonStanding0] =
+				ETextures::StrongDemonAttack0;
+		mElementMap[EActorsSnapshotElement::kStrongDemonStanding1] =
+				ETextures::StrongDemonAttack0;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding0] = ETextures::WeakDemonAttack0;
+		mElementMap[EActorsSnapshotElement::kWeakenedDemonStanding1] =
+				ETextures::WeakDemonAttack0;
+
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding0] = ETextures::EvilSpiritAttack0;
+		mElementMap[EActorsSnapshotElement::kEvilSpiritStanding1] =
+				ETextures::EvilSpiritAttack0;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding0] = ETextures::WarthogAttack0;
+		mElementMap[EActorsSnapshotElement::kWarthogStanding1] =
+				ETextures::WarthogAttack0;
+		mElementMap[EActorsSnapshotElement::kMonkStanding0] = ETextures::MonkAttack0;
+		mElementMap[EActorsSnapshotElement::kMonkStanding1] =
+				ETextures::MonkAttack0;
+		mElementMap[EActorsSnapshotElement::kFallenStanding0] = ETextures::FallenAttack0;
+		mElementMap[EActorsSnapshotElement::kFallenStanding1] =
+				ETextures::FallenAttack0;
 	}
 
 	void DungeonGLES2Renderer::invalidateCachedBatches() {

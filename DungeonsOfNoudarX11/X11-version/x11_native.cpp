@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <math.h>
 #include <map>
-
+#include <functional>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -203,9 +203,9 @@ event_loop(Display *dpy, Window win,
                         moveUp();
                     } else if (code == XK_Down) {
                         moveDown();
-                    } else if (code == XK_braceleft || code == XK_bracketleft) {
+                    } else if (code == XK_a) {
                         pickupItem();
-                    } else if (code == XK_braceright || code == XK_bracketright ) {
+                    } else if (code == XK_s ) {
                         dropItem();
                     } else if (code == XK_z) {
                         moveLeft();

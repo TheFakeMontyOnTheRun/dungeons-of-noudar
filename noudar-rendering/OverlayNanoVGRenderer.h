@@ -10,7 +10,8 @@ namespace odb {
 
         float mWidth;
         float mHeight;
-        vector<char> mFontData;
+        uint8_t* mFontData;
+        size_t mFontDataSize;
         vector<std::string> mQueuedAnimations;
         std::map<std::string, std::shared_ptr<odb::NativeBitmap>> mBitmaps;
         std::map<std::string, int> mFrames;

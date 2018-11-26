@@ -41,7 +41,7 @@
 #include "nanovg_gl_utils.h"
 
 #include <memory>
-
+#include <functional>
 #include <iostream>
 #include <sstream>
 #include <unordered_set>
@@ -110,7 +110,7 @@ namespace odb {
     }
 
     void OverlayNanoVGRenderer::loadFonts(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate) {
-
+        mFontDataSize = fileLoaderDelegate->sizeOfFile("MedievalSharp.ttf");
         mFontData = fileLoaderDelegate->loadBinaryFileFromPath("MedievalSharp.ttf");
     }
 
@@ -637,7 +637,7 @@ namespace odb {
 
     void OverlayNanoVGRenderer::render(const odb::NoudarDungeonSnapshot &snapshot) {
 
-        if (mFontData.size() > 0) {
+        if (mFontDataSize > 0) {
 
 #ifdef NANOVG_GLES2_IMPLEMENTATION
             mContext = nvgCreateGLES2(NVG_STENCIL_STROKES);
@@ -649,10 +649,12 @@ namespace odb {
                 std::cout << "NVG context is faulty as salty" << std::endl;
             }
 
-            unsigned char *data = (unsigned char *) malloc(mFontData.size());
-            std::copy(mFontData.begin(), mFontData.end(), data);
-            nvgCreateFontMem(mContext, "font", data, mFontData.size(), 1);
-            mFontData.clear();
+            unsigned char *data = (unsigned char *) malloc(mFontDataSize);
+            std::copy(mFontData, mFontData + mFontDataSize, data);
+            nvgCreateFontMem(mContext, "font", data, mFontDataSize, 1);
+            free(mFontData);
+            mFontData = nullptr;
+            mFontDataSize = 0;
         }
 
         if (mFrames.empty()) {
