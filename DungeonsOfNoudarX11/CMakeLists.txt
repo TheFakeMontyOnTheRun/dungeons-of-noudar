@@ -101,13 +101,11 @@ set(SOURCE_FILES
         ../gles2-renderer/Camera.cpp
         ../gles2-renderer/Camera.h
         ../gles2-renderer/Logger.cpp
-        ../gles2-renderer/Trig.cpp
         ../gles2-renderer/Camera.cpp
         ../gles2-renderer/Camera.h
         ../gles2-renderer/TrigBatch.cpp
         ../gles2-renderer/VBORenderingJob.cpp
         ../gles2-renderer/NativeBitmap.cpp
-        ../gles2-renderer/Scene.cpp
         ../nanovg/src/nanovg.c
         ../NullSoundSystem/SoundClip.cpp
         ../NullSoundSystem/SoundEmitter.cpp
