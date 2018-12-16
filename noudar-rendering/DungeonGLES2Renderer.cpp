@@ -559,7 +559,7 @@ namespace odb {
 
 				pos = glm::vec3(fx * 2.0f, -4.0f + 2.0f * height, fz * 2.0f);
 
-				if (id == snapshot.mCameraId) {
+				if (id != 0 && id == snapshot.mCameraId) {
 					mCurrentCharacterPosition = pos;
 					return;
 				}
