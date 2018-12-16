@@ -167,7 +167,7 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_flush(JNIEnv *env, jclass type, jobject sink);
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserved,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, jclass type,
                                                       jobject assetManager);
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setYZAngle(JNIEnv *env, jclass type, jfloat yz);
@@ -212,7 +212,7 @@ JNIEXPORT jboolean JNICALL
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_forcePlayerDirection(JNIEnv *env, jclass type, jint direction);
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jobject obj);
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setActorIdPositions(JNIEnv *env, jclass type, jintArray ids_);
@@ -234,7 +234,7 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_fadeIn(JNIEnv *env, jclass type);
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jclass type,
                                                   jint width, jint height, jobject asset_manager);
 JNIEXPORT jboolean JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type);
 
@@ -250,7 +250,7 @@ JNIEXPORT jboolean JNICALL
 
 };
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserved,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, jclass type,
                                                       jobject assetManager) {
 
 	AAssetManager *asset_manager = AAssetManager_fromJava(env, assetManager);
@@ -267,7 +267,7 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 	readMap(std::make_shared<odb::AndroidFileLoaderDelegate>(asset_manager));
 }
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jclass type,
                                                   jint width, jint height, jobject assets) {
 
     AAssetManager *assetManager = AAssetManager_fromJava(env, assets);
@@ -282,7 +282,7 @@ JNIEXPORT jboolean JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type) 
 	return isPlaying();
 }
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jclass type) {
 	shutdown();
 }
 
