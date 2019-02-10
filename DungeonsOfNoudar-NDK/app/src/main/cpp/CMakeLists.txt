@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 # now build app's shared lib
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -g -fno-inline -DUSE_ITEMS_INSTANTLY -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -g -DEA_PLATFORM_SAMSUNG_TV -fno-inline -DUSE_ITEMS_INSTANTLY -Wall")
 
 include_directories("../../../../../noudar-core/noudar-core/include")
 include_directories("../../../../../gles2-renderer")
@@ -16,6 +16,7 @@ add_library(NdkGlue SHARED
             android_asset_operations.cpp
             AndroidFileLoaderDelegate.cpp
             NdkGlue.cpp
+
        ../../../../../noudar-core/noudar-core/include/commands/CPickItemCommand.h
         ../../../../../noudar-core/noudar-core/include/commands/CDropItemCommand.h
         ../../../../../noudar-core/noudar-core/include/commands/CUseCurrentItemCommand.h
