@@ -1,7 +1,6 @@
-CXXFLAGS = -O2 -g -DMESA_GLES2 -Wall -c -std=c++0x -ferror-limit=1 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -DUSE_ITEMS_INSTANTLY
+CXXFLAGS = -O2 -g -DMESA_GLES2 -Wall -c -std=c++14 -I../noudar-core/noudar-core/include -Iincludes -I../OpenALSoundSystem -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -DUSE_ITEMS_INSTANTLY
 LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng -lopenal
-CXX = clang++
-CC = clang
+
 OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/Vec2i.o \
     ../noudar-core/noudar-core/src/CActor.o \
@@ -29,6 +28,7 @@ OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
     ../noudar-core/noudar-core/src/commands/CPickItemCommand.o \
     ../noudar-core/noudar-core/src/commands/CDropItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CSuggestItemCommand.o \
     ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.o \
     ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.o \
     ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \

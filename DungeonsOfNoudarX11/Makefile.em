@@ -29,6 +29,7 @@ OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/commands/CEndTurnCommand.o \
         ../noudar-core/noudar-core/src/commands/CPickItemCommand.o \
         ../noudar-core/noudar-core/src/commands/CDropItemCommand.o \
+    ../noudar-core/noudar-core/src/commands/CSuggestItemCommand.o \
         ../noudar-core/noudar-core/src/commands/CUseCurrentItemCommand.o \
         ../noudar-core/noudar-core/src/commands/CCycleNextItemCommand.o \
         ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \

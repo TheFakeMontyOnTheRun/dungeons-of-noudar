@@ -54,7 +54,7 @@ struct AudioBuffer {
 
 
 static const char hello[] =
-#include "../DungeonsOfNoudar-NDK/app/src/main/jni/hello_clip.h"
+#include "../DungeonsOfNoudar-NDK/app/src/main/cpp/hello_clip.h"
 ;
 
 vector<AudioBuffer> buffers;

@@ -16,7 +16,7 @@ using eastl::array;
 #include <android/asset_manager.h>
 
 #include <string>
-
+#include <cstdint>
 #include "Common.h"
 
 #include "IFileLoaderDelegate.h"
@@ -30,7 +30,7 @@ namespace odb {
     AndroidFileLoaderDelegate::AndroidFileLoaderDelegate(AAssetManager *assetManager) : mAssetManager( assetManager ) {
     }
 
-    vector<char> AndroidFileLoaderDelegate::loadBinaryFileFromPath( const std::string& path ) {
+    uint8_t* AndroidFileLoaderDelegate::loadBinaryFileFromPath( const std::string& path ) {
         FILE *fd;
 
         fd = android_fopen(path.c_str(), "rb", mAssetManager);
@@ -52,5 +52,18 @@ namespace odb {
 
     std::string AndroidFileLoaderDelegate::getFilePathPrefix() {
         return "";
+    }
+
+
+    size_t AndroidFileLoaderDelegate::sizeOfFile(const std::string& path) {
+        FILE *fd;
+
+        fd = android_fopen(path.c_str(), "r", mAssetManager);
+
+        fseek(fd, 0, SEEK_END);
+        auto endPos = ftell( fd );
+        fclose(fd);
+
+        return endPos;
     }
 }

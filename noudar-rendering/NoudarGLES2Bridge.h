@@ -10,8 +10,10 @@ namespace odb {
         char mNextCmd = '.';
         bool mPerformVisibilityCheck = true;
     public:
+	NoudarGLES2Bridge();
         void drawMap( Knights::CMap &map, std::shared_ptr<Knights::CActor> current ) override;
         char getInput() override;
+        char peekInput() override;
         void setNextCommand( char cmd );
         void reset();
         void setVisibilityChecks( bool visibilityCheck );

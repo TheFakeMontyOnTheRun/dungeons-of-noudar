@@ -46,7 +46,6 @@ using eastl::array;
 
 using Knights::readToString;
 
-long currentDelta = 0;
 vector<std::shared_ptr<odb::NativeBitmap>> texturesToLoad;
 vector<std::shared_ptr<odb::SoundEmitter>> sounds;
 vector< std::string> meshes;
@@ -133,14 +132,6 @@ void loadSoundsFromFilenames(JNIEnv *env, jclass type, jobject asset_manager,
 }
 
 extern "C" {
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setHeadAngles(JNIEnv *env, jclass type, jfloat xz, jfloat yz);
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_enableVisibilityCheck(JNIEnv *env, jclass type, jboolean visibilityCheck);
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setHUDLessMode(JNIEnv *env, jclass type, jboolean shouldHideHUD);
 
 JNIEXPORT jboolean JNICALL
 Java_br_odb_GL2JNILib_isThereAnyObjectInFrontOfYou(JNIEnv *env, jclass type);
@@ -167,20 +158,8 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_flush(JNIEnv *env, jclass type, jobject sink);
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserved,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, jclass type,
                                                       jobject assetManager);
-JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setYZAngle(JNIEnv *env, jclass type, jfloat yz);
-
-JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setXZAngle(JNIEnv *env, jclass type, jfloat xz);
-
-JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setPerspectiveMatrix(JNIEnv *env, jclass type,
-		                                           jfloatArray perspectiveMatrix_);
-
-JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setEyeMatrix(JNIEnv *env, jclass type, jfloatArray eyeView_);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setTextures(JNIEnv *env, jclass type, jobjectArray bitmaps);
@@ -209,16 +188,11 @@ JNIEXPORT void JNICALL
 JNIEXPORT jboolean JNICALL
 		Java_br_odb_GL2JNILib_isAnimating(JNIEnv *env, jclass type);
 
-JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_forcePlayerDirection(JNIEnv *env, jclass type, jint direction);
-
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jobject obj);
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setActorIdPositions(JNIEnv *env, jclass type, jintArray ids_);
 
-JNIEXPORT void JNICALL
-		Java_br_odb_GL2JNILib_setMeshes(JNIEnv *env, jclass type, jobject assets, jobjectArray objFiles);
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_tick(JNIEnv *env, jclass type, jlong delta);
 
@@ -234,9 +208,8 @@ JNIEXPORT void JNICALL
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_fadeIn(JNIEnv *env, jclass type);
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jclass type,
                                                   jint width, jint height, jobject asset_manager);
-JNIEXPORT jboolean JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
 		Java_br_odb_GL2JNILib_setMapWithSplatsAndActors(JNIEnv *env, jclass type, jintArray map_,
@@ -250,7 +223,7 @@ JNIEXPORT jboolean JNICALL
 
 };
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserved,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, jclass type,
                                                       jobject assetManager) {
 
 	AAssetManager *asset_manager = AAssetManager_fromJava(env, assetManager);
@@ -267,7 +240,7 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, void *reserve
 	readMap(std::make_shared<odb::AndroidFileLoaderDelegate>(asset_manager));
 }
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jclass type,
                                                   jint width, jint height, jobject assets) {
 
     AAssetManager *assetManager = AAssetManager_fromJava(env, assets);
@@ -276,13 +249,7 @@ JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jobject obj,
     setupGraphics(width, height, gVertexShader, gFragmentShader, loader);
 }
 
-JNIEXPORT jboolean JNICALL Java_br_odb_GL2JNILib_step(JNIEnv *env, jclass type) {
-	renderFrame(currentDelta);
-
-	return isPlaying();
-}
-
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jobject obj) {
+JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jclass type) {
 	shutdown();
 }
 
@@ -326,41 +293,9 @@ Java_br_odb_GL2JNILib_onLongPressingMove(JNIEnv *env, jclass type) {
 }
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setEyeMatrix(JNIEnv *env, jclass type, jfloatArray eyeView_) {
-	jfloat *eyeView = env->GetFloatArrayElements(eyeView_, NULL);
-
-	setEyeViewMatrix(eyeView);
-
-	env->ReleaseFloatArrayElements(eyeView_, eyeView, 0);
-}
-
-JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_tick(JNIEnv *env, jclass type, jlong delta) {
-
-	updateAnimations(delta);
-	currentDelta = delta;
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setPerspectiveMatrix(JNIEnv *env, jclass type,
-                                           jfloatArray perspectiveMatrix_) {
-	jfloat *perspectiveMatrix = env->GetFloatArrayElements(perspectiveMatrix_, NULL);
-
-	setPerspectiveMatrix(perspectiveMatrix);
-
-	env->ReleaseFloatArrayElements(perspectiveMatrix_, perspectiveMatrix, 0);
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setXZAngle(JNIEnv *env, jclass type, jfloat xz) {
-
-	setAngleXZ(xz);
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setYZAngle(JNIEnv *env, jclass type, jfloat yz) {
-
-	setAngleYZ(yz);
+    gameLoopTick(20);
+    renderFrame(20);
 }
 
 JNIEXPORT void JNICALL
@@ -405,11 +340,6 @@ Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type, jobject asset_manager
 }
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_forcePlayerDirection(JNIEnv *env, jclass type, jint direction) {
-	forceDirection( direction );
-}
-
-JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_cyclePreviousItem(JNIEnv *env, jclass type) {
     cyclePrevItem();
 }
@@ -440,33 +370,8 @@ Java_br_odb_GL2JNILib_isThereAnyObjectInFrontOfYou(JNIEnv *env, jclass type) {
     return isThereAnyObjectInFrontOfYou();
 }
 
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setHUDLessMode(JNIEnv *env, jclass type, jboolean shouldHideHUD) {
-
-    shouldDrawHUD(!shouldHideHUD);
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_enableVisibilityCheck(JNIEnv *env, jclass type, jboolean visibilityCheck) {
-
-    performVisibilityChecks( visibilityCheck );
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_setHeadAngles(JNIEnv *env, jclass type, jfloat xz, jfloat yz) {
- 	setAngleXZ(xz);
-	setAngleYZ(yz);
-}
-
 JNIEXPORT jint JNICALL
 Java_br_odb_GL2JNILib_getLevel(JNIEnv *env, jclass type) {
 
     return getLevel();
-
-}
-
-JNIEXPORT jboolean JNICALL
-Java_br_odb_GL2JNILib_isPlaying(JNIEnv *env, jclass type) {
-
-    return isPlaying();
 }

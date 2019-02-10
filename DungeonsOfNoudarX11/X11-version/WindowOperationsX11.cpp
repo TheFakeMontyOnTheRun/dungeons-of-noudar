@@ -6,7 +6,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <functional>
 #include <sstream>
 #include <string.h>
 #include <memory>

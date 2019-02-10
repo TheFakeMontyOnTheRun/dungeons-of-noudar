@@ -74,6 +74,7 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/commands/CTurnActorCommand.cpp
         ../noudar-core/noudar-core/src/commands/CQuitCommand.cpp
         ../noudar-core/noudar-core/src/commands/CNullCommand.cpp
+        ../noudar-core/noudar-core/src/commands/CSuggestItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CEndTurnCommand.cpp
         ../noudar-core/noudar-core/src/commands/CPickItemCommand.cpp
         ../noudar-core/noudar-core/src/commands/CDropItemCommand.cpp
@@ -100,13 +101,11 @@ set(SOURCE_FILES
         ../gles2-renderer/Camera.cpp
         ../gles2-renderer/Camera.h
         ../gles2-renderer/Logger.cpp
-        ../gles2-renderer/Trig.cpp
         ../gles2-renderer/Camera.cpp
         ../gles2-renderer/Camera.h
         ../gles2-renderer/TrigBatch.cpp
         ../gles2-renderer/VBORenderingJob.cpp
         ../gles2-renderer/NativeBitmap.cpp
-        ../gles2-renderer/Scene.cpp
         ../nanovg/src/nanovg.c
         ../NullSoundSystem/SoundClip.cpp
         ../NullSoundSystem/SoundEmitter.cpp
