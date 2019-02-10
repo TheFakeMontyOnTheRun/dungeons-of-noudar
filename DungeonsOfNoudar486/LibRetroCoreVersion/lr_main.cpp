@@ -27,6 +27,7 @@ using sg14::fixed_point;
 #include "CItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
+#include "MapWithCharKey.h"
 #include "CMap.h"
 #include "IRenderer.h"
 #include "IFileLoaderDelegate.h"
@@ -37,6 +38,7 @@ using sg14::fixed_point;
 #include "CItem.h"
 #include "CActor.h"
 #include "CGameDelegate.h"
+#include "MapWithCharKey.h"
 #include "CMap.h"
 #include "IRenderer.h"
 #include "commands/IGameCommand.h"
@@ -51,6 +53,158 @@ using sg14::fixed_point;
 #endif
 
 #include "libretro.h"
+
+#define BUFSIZE 128
+#define AMP_MUL 64
+
+static retro_video_refresh_t video_cb;
+static retro_audio_sample_t audio_cb;
+static retro_audio_sample_batch_t audio_batch_cb;
+static retro_environment_t environ_cb;
+static retro_input_poll_t input_poll_cb;
+static retro_input_state_t input_state_cb;
+
+
+struct WAVhead
+{
+    char ChunkID[4];
+    uint32_t ChunkSize;
+    char Format[4];
+
+    char Subchunk1ID[4];
+    uint32_t Subchunk1Size;
+    uint16_t AudioFormat;
+    uint16_t NumChannels;
+    uint32_t SampleRate;
+    uint32_t ByteRate;
+    uint16_t BlockAlign;
+    uint16_t BitsPerSample;
+
+    char Subchunk2ID[4];
+    uint32_t Subchunk2Size;
+} head;
+
+void* rawsamples                 = NULL;
+unsigned int sample_pos          = 0;
+unsigned int samples_tot         = 0;
+
+unsigned int g_samples_to_play   = 0;
+unsigned int sample_rate         = 0;
+unsigned int bytes_per_sample    = 0;
+
+
+uint8_t* i114t1o8f;
+uint8_t* t200i101o3afo1a;
+uint8_t* t200i101o8ao4ao2ao1a;
+uint8_t* t200i52o4defg;
+uint8_t* t200i53o3fo1f;
+uint8_t* t200i98a;
+uint8_t* t200i9o1fa;
+
+uint32_t si114t1o8f;
+uint32_t st200i101o3afo1a;
+uint32_t st200i101o8ao4ao2ao1a;
+uint32_t st200i52o4defg;
+uint32_t st200i53o3fo1f;
+uint32_t st200i98a;
+uint32_t st200i9o1fa;
+
+
+enum
+{
+    ST_OFF = 0,
+    ST_ON,
+    ST_AUTO
+} state;
+
+static void emit_audio(void)
+{
+    unsigned int samples_to_play;
+    unsigned int samples_played  = 0;
+
+    if (state == ST_OFF)
+        return;
+
+    if (state == ST_ON)
+        samples_to_play=BUFSIZE;
+    if (state == ST_AUTO)
+        samples_to_play=g_samples_to_play;
+
+    /* no locking here, despite threading;
+     * if we touch this variable, threading is off. */
+
+    while (samples_to_play >= BUFSIZE)
+    {
+        unsigned int played;
+        int16_t samples[2*BUFSIZE];
+        unsigned int samples_to_read = samples_to_play;
+
+        if (samples_to_read > BUFSIZE)
+            samples_to_read = BUFSIZE;
+        if (sample_pos > samples_tot)
+            sample_pos = samples_tot;
+        if (sample_pos + samples_to_read > samples_tot)
+            samples_to_read = samples_tot-sample_pos;
+
+        if (samples_to_read != 0)
+        {
+            unsigned i;
+            uint8_t* rawsamples8  = (uint8_t*)rawsamples + bytes_per_sample * sample_pos;
+            int16_t* rawsamples16 = (int16_t*)rawsamples8;
+
+            for (i = 0; i < samples_to_read; i++)
+            {
+                int16_t left  = 0;
+                int16_t right = 0;
+
+                if (head.NumChannels == 1 && head.BitsPerSample==8)
+                {
+                    left  = rawsamples8[i] * AMP_MUL;
+                    right = rawsamples8[i] * AMP_MUL;
+                }
+                if (head.NumChannels == 2 && head.BitsPerSample==8)
+                {
+                    left  = rawsamples8[i*2] * AMP_MUL;
+                    right = rawsamples8[i*2+1]*AMP_MUL;
+                }
+                if (head.NumChannels==1 && head.BitsPerSample==16)
+                {
+                    left  = rawsamples16[i];
+                    right = rawsamples16[i];
+                }
+                if (head.NumChannels==2 && head.BitsPerSample==16)
+                {
+                    left  = rawsamples16[i*2];
+                    right = rawsamples16[i*2+1];
+                }
+
+                samples[i*2+0] = left;
+                samples[i*2+1] = right;
+            }
+        }
+
+        if (samples_to_read!=BUFSIZE)
+            memset(samples + samples_to_read * 2,
+                   0,
+                   sizeof(int16_t) * 2 * (BUFSIZE-samples_to_read));
+
+        played               = audio_batch_cb(samples, BUFSIZE);
+        sample_pos          += played;
+        samples_played      += played;
+
+        if (samples_to_play < played)
+            break;
+
+        samples_to_play -= played;
+
+        if (played != BUFSIZE)
+            break;
+    }
+
+    if (state == ST_AUTO)
+        g_samples_to_play-=samples_played;
+}
+
 
 enum class ESoundDriver {
     kNone, kPcSpeaker, kOpl2Lpt, kTandy, kCovox
@@ -121,17 +275,11 @@ void retro_get_system_info(struct retro_system_info *info)
     info->valid_extensions = NULL; // Anything is fine, we don't care.
 }
 
-static retro_video_refresh_t video_cb;
-static retro_audio_sample_t audio_cb;
-static retro_audio_sample_batch_t audio_batch_cb;
-static retro_environment_t environ_cb;
-static retro_input_poll_t input_poll_cb;
-static retro_input_state_t input_state_cb;
 
 void retro_get_system_av_info(struct retro_system_av_info *info)
 {
     float aspect = 1.6f;
-    float sampling_rate = 30000.0f;
+    float sampling_rate = 44100;
 
     info->timing = (struct retro_system_timing) {
             .fps = 20.0,
@@ -194,6 +342,7 @@ void retro_reset(void)
 {
     x_coord = 0;
     y_coord = 0;
+    sample_pos=0; g_samples_to_play=0;
 }
 
 bool up = false;
@@ -358,7 +507,11 @@ static void check_variables(void)
 
 static void audio_callback(void)
 {
-    audio_cb(0, 0);
+    if (state == ST_AUTO)
+    {
+        g_samples_to_play += head.SampleRate / 20.0;
+        emit_audio();
+    }
 }
 
 void retro_run(void)
@@ -371,13 +524,101 @@ void retro_run(void)
     odb::renderer->mNeedsToRedraw = true;
     loopTick(12);
 
+
+
     render_checkered();
     audio_callback();
 
 }
 
+void loadAudio( std::shared_ptr<odb::CPackedFileReader> fileLoader, const char* filename, uint8_t** buffer, uint32_t& size ) {
+
+}
+
+void playMusic(const std::string &music) {
+    auto musicName = music.c_str();
+
+    uint8_t *sampleData;
+    size_t sampleSize;
+
+    if ( !strcmp(musicName, "i114t1o8f" ) ) {
+        sampleData = i114t1o8f;
+        sampleSize = si114t1o8f;
+    } else if ( !strcmp(musicName, "t200i101o3afo1a" ) ) {
+        sampleData = t200i101o3afo1a;
+        sampleSize = st200i101o3afo1a;
+
+    } else if ( !strcmp(musicName, "t200i101o8ao4ao2ao1a" ) ) {
+        sampleData = t200i101o8ao4ao2ao1a;
+        sampleSize = st200i101o8ao4ao2ao1a;
+
+    } else if ( !strcmp(musicName, "t200i52o4defg" ) ) {
+        sampleData = t200i52o4defg;
+        sampleSize = st200i52o4defg;
+
+    } else if ( !strcmp(musicName, "t200i53o3fo1f" ) ) {
+        sampleData = t200i53o3fo1f;
+        sampleSize = st200i53o3fo1f;
+
+    } else if ( !strcmp(musicName, "t200i98a" ) ) {
+        sampleData = t200i98a;
+        sampleSize = st200i98a;
+
+    } else if ( !strcmp(musicName, "t200i9o1fa" ) ) {
+        sampleData = t200i9o1fa;
+        sampleSize = st200i9o1fa;
+    }
+
+    sample_pos=0;
+    g_samples_to_play=0;
+
+    if (sampleSize < 44)
+        return false;
+
+    memcpy(&head, sampleData, 44);
+
+    if (sampleSize != 44 + head.Subchunk2Size)
+        return false;
+    if (head.NumChannels   != 1 && head.NumChannels   != 2)
+        return false;
+    if (head.BitsPerSample != 8 && head.BitsPerSample != 16)
+        return false;
+
+    bytes_per_sample       = head.NumChannels   * head.BitsPerSample / 8;
+    samples_tot            = head.Subchunk2Size / bytes_per_sample;
+
+    rawsamples = sampleData + 44;
+
+    state      = ST_AUTO;
+}
+
+void playTune(const std::string &music) {
+    playMusic(music);
+}
+
 bool retro_load_game(const struct retro_game_info *info)
 {
+
+    auto fileLoader = std::make_shared<odb::CPackedFileReader>("audio.pfs");
+
+
+    i114t1o8f = fileLoader->loadBinaryFileFromPath("i114t1o8f");
+    t200i101o3afo1a = fileLoader->loadBinaryFileFromPath("t200i101o3afo1a");
+    t200i101o8ao4ao2ao1a = fileLoader->loadBinaryFileFromPath("t200i101o8ao4ao2ao1a");
+    t200i52o4defg = fileLoader->loadBinaryFileFromPath("t200i52o4defg");
+    t200i53o3fo1f = fileLoader->loadBinaryFileFromPath("t200i53o3fo1f");
+    t200i98a = fileLoader->loadBinaryFileFromPath("t200i98a");
+    t200i9o1fa = fileLoader->loadBinaryFileFromPath("t200i9o1fa");
+
+    si114t1o8f = fileLoader->sizeOfFile("i114t1o8f");
+    st200i101o3afo1a = fileLoader->sizeOfFile("t200i101o3afo1a");
+    st200i101o8ao4ao2ao1a = fileLoader->sizeOfFile("t200i101o8ao4ao2ao1a");
+    st200i52o4defg = fileLoader->sizeOfFile("t200i52o4defg");
+    st200i53o3fo1f = fileLoader->sizeOfFile("t200i53o3fo1f");
+    st200i98a = fileLoader->sizeOfFile("t200i98a");
+    st200i9o1fa = fileLoader->sizeOfFile("t200i9o1fa");
+
+    state = ST_OFF;
 
     enum retro_pixel_format fmt = RETRO_PIXEL_FORMAT_XRGB8888;
     if (!environ_cb(RETRO_ENVIRONMENT_SET_PIXEL_FORMAT, &fmt))
@@ -394,6 +635,13 @@ bool retro_load_game(const struct retro_game_info *info)
 
 void retro_unload_game(void)
 {
+    delete[] i114t1o8f; i114t1o8f = nullptr;
+    delete[] t200i101o3afo1a; t200i101o3afo1a = nullptr;
+    delete[] t200i101o8ao4ao2ao1a; t200i101o8ao4ao2ao1a = nullptr;
+    delete[] t200i52o4defg; t200i52o4defg = nullptr;
+    delete[] t200i53o3fo1f; t200i53o3fo1f = nullptr;
+    delete[] t200i98a; t200i98a = nullptr;
+    delete[] t200i9o1fa; t200i9o1fa = nullptr;
 }
 
 unsigned retro_get_region(void)
@@ -457,4 +705,19 @@ void retro_cheat_set(unsigned index, bool enabled, const char *code)
     (void)index;
     (void)enabled;
     (void)code;
+}
+
+
+void setupOPL2(int port) {
+}
+
+void stopSounds() {
+}
+
+void soundTick() {
+
+}
+
+void muteSound() {
+
 }

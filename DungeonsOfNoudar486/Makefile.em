@@ -8,6 +8,8 @@ CC = emcc
 
 OBJS = main.o \
         events.o \
+        src/CRenderer_Rasterization.o \
+        src/CRenderer_Tesselation.o \
         SDLVersion/CSDLRenderer.o \
 	    OPL2LPT/MusicSDL.o \
         src/CRenderer.o \
