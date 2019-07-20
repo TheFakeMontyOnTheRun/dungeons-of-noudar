@@ -28,7 +28,7 @@ public class GameActivity extends Activity {
 
 		setContentView(R.layout.game3d_layout);
 
-		view = (GameViewGLES2) findViewById(R.id.gameView1);
+		view = findViewById(R.id.gameView1);
 
 		view.init(this, 0, mHaveController);
 

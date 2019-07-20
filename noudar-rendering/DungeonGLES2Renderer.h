@@ -76,7 +76,6 @@ namespace odb {
 		glm::mat4 mViewMatrix = glm::mat4(1.0f);
 		std::unordered_map<ETextures, vector<odb::VBORenderingJob>> batches;
 		std::unordered_map<EActorsSnapshotElement, ETextures> mElementMap;
-		std::unordered_map<std::string, std::shared_ptr<odb::Scene>> mMeshes;
 		vector<vector<std::shared_ptr<NativeBitmap>>> mBitmaps;
 		vector<vector<unsigned int>> mTextures;
 		std::unordered_map<VBORegisterId, VBORegister> mVBORegisters;
@@ -126,8 +125,6 @@ namespace odb {
 		void render(const NoudarDungeonSnapshot &snapshot);
 
 		void shutdown();
-
-		void setMesh(std::shared_ptr<odb::Scene> mesh);
 
 		void invalidateCachedBatches();
 

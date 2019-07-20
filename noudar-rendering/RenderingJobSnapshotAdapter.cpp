@@ -19,12 +19,6 @@ using std::array;
 
 #include "VBORenderingJob.h"
 #include "NativeBitmap.h"
-#include "Material.h"
-#include "Trig.h"
-#include "TrigBatch.h"
-#include "MeshObject.h"
-#include "MaterialList.h"
-#include "Scene.h"
 #include "ETextures.h"
 #include "VBORenderingJob.h"
 #include "VBORegister.h"

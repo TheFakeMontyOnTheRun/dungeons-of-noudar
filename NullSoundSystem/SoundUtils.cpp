@@ -7,7 +7,7 @@
 #include "SoundUtils.h"
 
 namespace odb {
-    std::shared_ptr<SoundClip> makeSoundClipFrom(FILE* source) {
-        return std::make_shared<SoundClip>(nullptr, 0, 0, 0, 0, 0 );
+    std::shared_ptr<SoundClip> makeSoundClipFrom(FILE *source) {
+        return std::make_shared<SoundClip>(nullptr, 0, 0, 0, 0, 0);
     }
 }

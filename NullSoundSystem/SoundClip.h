@@ -9,7 +9,8 @@ namespace odb {
     public:
         unsigned int mBufferHandle;
 
-        SoundClip(unsigned char *bufferData, int size, int offset, int bits, int channels, int frequency);
+        SoundClip(unsigned char *bufferData, int size, int offset, int bits, int channels,
+                  int frequency);
     };
 }
 

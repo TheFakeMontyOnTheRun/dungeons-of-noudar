@@ -26,13 +26,6 @@ using std::array;
 #include "IFileLoaderDelegate.h"
 
 #include "NativeBitmap.h"
-#include "Material.h"
-#include "Trig.h"
-#include "TrigBatch.h"
-#include "MeshObject.h"
-#include "MaterialList.h"
-#include "Scene.h"
-#include "WavefrontOBJReader.h"
 #include "Logger.h"
 
 #include "SoundClip.h"
@@ -89,7 +82,6 @@ const int kMaxLevel = 7;
 
 vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::shared_ptr<odb::SoundListener> mainListener;
-vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 
 
 void playSound(int soundNum);
@@ -173,11 +165,6 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 
     gles2Renderer->setTileProperties( loadTileProperties( game != nullptr ? game->getLevelNumber() : 0, fileLoader ) );
-
-	for  ( const auto& mesh : loadedMeshes ) {
-		gles2Renderer->setMesh( mesh );
-    }
-    loadedMeshes.clear();
 
 	return toReturn;
 }

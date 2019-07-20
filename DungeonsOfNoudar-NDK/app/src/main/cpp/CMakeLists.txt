@@ -3,18 +3,16 @@ cmake_minimum_required(VERSION 3.4.1)
 # now build app's shared lib
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -g -fno-inline -DUSE_ITEMS_INSTANTLY -Wall")
 
-include_directories("../../../../../noudar-core/noudar-core/include")
-include_directories("../../../../../gles2-renderer")
 include_directories("../../../../../glm")
+include_directories("../../../../../stb")
+include_directories("../../../../../noudar-core/noudar-core/include")
 include_directories("../../../../../noudar-rendering")
 include_directories("../../../../../NullSoundSystem")
-include_directories("../../../../../stb")
 
 add_library(NdkGlue SHARED
             android_asset_operations.cpp
             AndroidFileLoaderDelegate.cpp
             NdkGlue.cpp
-
        ../../../../../noudar-core/noudar-core/include/commands/CPickItemCommand.h
         ../../../../../noudar-core/noudar-core/include/commands/CDropItemCommand.h
         ../../../../../noudar-core/noudar-core/include/commands/CUseCurrentItemCommand.h
@@ -79,26 +77,19 @@ add_library(NdkGlue SHARED
         ../../../../../noudar-rendering/SplatAnimation.cpp
         ../../../../../noudar-rendering/CTile3DProperties.cpp
         ../../../../../noudar-rendering/NoudarGLES2Bridge.cpp
-        ../../../../../gles2-renderer/LoadPNG.cpp
-        ../../../../../gles2-renderer/CLerp.cpp
-        ../../../../../gles2-renderer/CLerp.h
-        ../../../../../gles2-renderer/Camera.cpp
-        ../../../../../gles2-renderer/Camera.h
-        ../../../../../gles2-renderer/Logger.cpp
-        ../../../../../gles2-renderer/Trig.cpp
-        ../../../../../gles2-renderer/Camera.cpp
-        ../../../../../gles2-renderer/Camera.h
-        ../../../../../gles2-renderer/TrigBatch.cpp
-        ../../../../../gles2-renderer/VBORenderingJob.cpp
-        ../../../../../gles2-renderer/NativeBitmap.cpp
-        ../../../../../gles2-renderer/Scene.cpp
-        ../../../../../noudar-rendering/GraphicNode.cpp
+        ../../../../../noudar-rendering/LoadPNG.cpp
+        ../../../../../noudar-rendering/CLerp.cpp
+        ../../../../../noudar-rendering/CLerp.h
+        ../../../../../noudar-rendering/Camera.cpp
+        ../../../../../noudar-rendering/Camera.h
+        ../../../../../noudar-rendering/Logger.cpp
+		../../../../../noudar-rendering/Camera.cpp
+        ../../../../../noudar-rendering/Camera.h
+		../../../../../noudar-rendering/VBORenderingJob.cpp
+        ../../../../../noudar-rendering/NativeBitmap.cpp
+		../../../../../noudar-rendering/GraphicNode.cpp
         ../../../../../noudar-rendering/GraphicNode.h
-        ../../../../../noudar-rendering/Animation.cpp
-        ../../../../../noudar-rendering/Animation.h
-        ../../../../../noudar-rendering/AnimationStep.cpp
-        ../../../../../noudar-rendering/AnimationStep.h
-		../../../../../NullSoundSystem/SoundClip.cpp
+        ../../../../../NullSoundSystem/SoundClip.cpp
 		../../../../../NullSoundSystem/SoundEmitter.cpp
 		../../../../../NullSoundSystem/SoundListener.cpp
 		../../../../../NullSoundSystem/SoundUtils.cpp

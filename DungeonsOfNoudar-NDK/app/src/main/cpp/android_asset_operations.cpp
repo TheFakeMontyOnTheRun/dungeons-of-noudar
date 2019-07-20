@@ -27,10 +27,15 @@ int android_close(void *cookie) {
 
 
 FILE *android_fopen(const char *fname, const char *mode, AAssetManager *assetManager) {
-    if (mode[0] == 'w') return NULL;
+    if (mode[0] == 'w') {
+        return nullptr;
+    }
 
     AAsset *asset = AAssetManager_open(assetManager, fname, 0);
-    if (!asset) return NULL;
+
+    if (!asset) {
+        return nullptr;
+    }
 
     return funopen(asset, android_read, android_write, android_seek, android_close);
 }
