@@ -2,11 +2,11 @@
 // Created by monty on 09/12/16.
 //
 
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 
 #include <jni.h>

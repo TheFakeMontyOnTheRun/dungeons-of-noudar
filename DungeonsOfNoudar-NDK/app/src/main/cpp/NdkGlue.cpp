@@ -10,11 +10,11 @@
 #include <string>
 #include <memory>
 #include <functional>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 #include "Common.h"
 #include "Logger.h"
