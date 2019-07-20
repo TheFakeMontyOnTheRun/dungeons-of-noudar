@@ -396,45 +396,6 @@ namespace odb {
         uScale = glGetUniformLocation(gProgram, "uScale");
 	}
 
-	void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
-	                                        int vertexCount,
-	                                        const glm::mat4 &transform, float shade) {
-
-		glBindTexture(GL_TEXTURE_2D, textureId);
-		glEnable(GL_DEPTH_TEST);
-		glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, mFadeLerp.getCurrentValue() / 1000.0f);
-		glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
-		glUniform4f(uMod, shade, shade, shade, 1.0f);
-		glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
-
-        if (vertexVbo != mSkyboxVBOVertexId && vertexVbo != mBillboardVBOVertexId ) {
-            glUniformMatrix4fv(uScale, 1, false, &transform[0][0]);
-        } else {
-            glUniformMatrix4fv(uScale, 1, false, &identity[0][0]);
-        }
-
-		glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
-		glEnableVertexAttribArray(vertexAttributePosition);
-		glEnableVertexAttribArray(textureCoordinatesAttributePosition);
-
-		//0 is for texturing unit 0 (since we never changed it)
-		glUniform1i(samplerUniformPosition, 0);
-
-		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &transform[0][0]);
-		glVertexAttribPointer(vertexAttributePosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
-		glVertexAttribPointer(textureCoordinatesAttributePosition, 2, GL_FLOAT, GL_TRUE,
-		                      sizeof(float) * 5, (void *) (sizeof(float) * 3));
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVbo);
-		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_SHORT, 0);
-
-		glDisableVertexAttribArray(vertexAttributePosition);
-		glDisableVertexAttribArray(textureCoordinatesAttributePosition);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
 	void DungeonGLES2Renderer::deleteVBOs() {
 
 		mTextures.clear();
@@ -642,6 +603,13 @@ namespace odb {
 	}
 
 	void DungeonGLES2Renderer::consumeRenderingBatches(long animationTime) {
+		glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, mFadeLerp.getCurrentValue() / 1000.0f);
+
+		glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
+		glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
+
+		//0 is for texturing unit 0 (since we never changed it)
+		glUniform1i(samplerUniformPosition, 0);
 
 		for (const auto &batch : batches) {
 
@@ -663,6 +631,41 @@ namespace odb {
 				);
 			}
 		}
+	}
+
+	void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
+											int vertexCount,
+											const glm::mat4 &transform, float shade) {
+
+		glUniform4f(uMod, shade, shade, shade, 1.0f);
+
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		glEnable(GL_DEPTH_TEST);
+
+		if (vertexVbo != mSkyboxVBOVertexId && vertexVbo != mBillboardVBOVertexId ) {
+			glUniformMatrix4fv(uScale, 1, false, &transform[0][0]);
+		} else {
+			glUniformMatrix4fv(uScale, 1, false, &identity[0][0]);
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
+		glEnableVertexAttribArray(vertexAttributePosition);
+		glEnableVertexAttribArray(textureCoordinatesAttributePosition);
+
+
+		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &transform[0][0]);
+		glVertexAttribPointer(vertexAttributePosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
+		glVertexAttribPointer(textureCoordinatesAttributePosition, 2, GL_FLOAT, GL_TRUE,
+							  sizeof(float) * 5, (void *) (sizeof(float) * 3));
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexVbo);
+		glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_SHORT, 0);
+
+		glDisableVertexAttribArray(vertexAttributePosition);
+		glDisableVertexAttribArray(textureCoordinatesAttributePosition);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
 	void DungeonGLES2Renderer::rotateLeft() {
