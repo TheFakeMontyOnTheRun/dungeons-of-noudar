@@ -141,6 +141,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llactions"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
@@ -149,12 +150,39 @@
                 android:orientation="vertical"
                 android:paddingTop="10dp">
 
-
-                <TextView
-                    android:id="@+id/tvScore"
-                    android:layout_width="fill_parent"
+                <Button
+                    android:id="@+id/btnAttack"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone" />
+                    android:text="Attack" />
+
+
+
+                <Button
+                    android:id="@+id/btnPick"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Pick" />
+
+                <Button
+                    android:id="@+id/btnDrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Drop" />
+
+                <Button
+                    android:id="@+id/btnNextItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Next Item" />
+
+                <Button
+                    android:id="@+id/btnPrevItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Drop Item" />
+                
 
             </LinearLayout>
 
