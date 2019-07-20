@@ -10,11 +10,15 @@ namespace odb {
     class AndroidFileLoaderDelegate : public Knights::IFileLoaderDelegate {
         AAssetManager *mAssetManager;
     public:
-        AndroidFileLoaderDelegate( AAssetManager *assetManager );
+        AndroidFileLoaderDelegate(AAssetManager *assetManager);
+
         std::string getFilePathPrefix() override;
-        uint8_t* loadBinaryFileFromPath( const std::string& path ) override;
-        std::string loadFileFromPath( const std::string& path ) override;
-        size_t sizeOfFile(const std::string& path) override;
+
+        uint8_t *loadBinaryFileFromPath(const std::string &path) override;
+
+        std::string loadFileFromPath(const std::string &path) override;
+
+        size_t sizeOfFile(const std::string &path) override;
     };
 }
 

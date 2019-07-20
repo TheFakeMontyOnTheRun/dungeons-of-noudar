@@ -10,7 +10,7 @@ namespace odb {
 
     using CTileId = uint8_t;
 
-    using CTilePropertyMap = std::map< CTileId, CTile3DProperties >;
+    using CTilePropertyMap = std::map<CTileId, CTile3DProperties>;
 
     using TextureName = std::string;
 
@@ -28,7 +28,7 @@ namespace odb {
         float mCeilingHeight;
         float mFloorHeight;
 
-        static CTilePropertyMap parsePropertyList( std::string propertyFile );
+        static CTilePropertyMap parsePropertyList(std::string propertyFile);
     };
 }
 

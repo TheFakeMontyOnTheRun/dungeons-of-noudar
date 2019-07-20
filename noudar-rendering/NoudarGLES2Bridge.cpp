@@ -54,94 +54,121 @@ namespace odb {
 
     const bool kWillAttemptToMergeVisibilityToFillPotetialHoles = true;
 
-	Knights::EDirection previousDirection = Knights::EDirection::kNorth;
-	Knights::Vec2i previousPosition = {0,0};
-	VisMap previous;
+    Knights::EDirection previousDirection = Knights::EDirection::kNorth;
+    Knights::Vec2i previousPosition = {0, 0};
+    VisMap previous;
 
-  NoudarGLES2Bridge::NoudarGLES2Bridge() {
-  }
+    NoudarGLES2Bridge::NoudarGLES2Bridge() {
+    }
 
     void NoudarGLES2Bridge::drawMap(Knights::CMap &map, std::shared_ptr<Knights::CActor> current) {
 
         odb::NoudarDungeonSnapshot snapshot;
 
-        for ( int y = 0; y < Knights::kMapSize; ++y ) {
-            for ( int x = 0; x < Knights::kMapSize; ++x ) {
-                snapshot.mLightMap[ y ][ x ] = 192;
-                snapshot.map[ y ][ x ] = '.';
-                snapshot.snapshot[ y ][ x ] = EActorsSnapshotElement::kNothing;
-                snapshot.ids[ y ][ x ] = 0;
-                snapshot.splat[ y ][ x ] = -1;
-                snapshot.mVisibilityMap[ y ][ x ] = EVisibility::kVisible;
+        for (int y = 0; y < Knights::kMapSize; ++y) {
+            for (int x = 0; x < Knights::kMapSize; ++x) {
+                snapshot.mLightMap[y][x] = 192;
+                snapshot.map[y][x] = '.';
+                snapshot.snapshot[y][x] = EActorsSnapshotElement::kNothing;
+                snapshot.ids[y][x] = 0;
+                snapshot.splat[y][x] = -1;
+                snapshot.mVisibilityMap[y][x] = EVisibility::kVisible;
 
 
-                auto element = map.getElementAt( {x, y} );
+                auto element = map.getElementAt({x, y});
 
-                if ( element != '0' ) {
-                    snapshot.map[ y ][ x ] = element;
+                if (element != '0') {
+                    snapshot.map[y][x] = element;
                 }
 
-                if ( map.getItemAt( {x,y})) {
-                    snapshot.mItemMap[ y ][ x ] = map.getItemViewAt( {x,y} );
+                if (map.getItemAt({x, y})) {
+                    snapshot.mItemMap[y][x] = map.getItemViewAt({x, y});
                 } else {
-                    snapshot.mItemMap[ y ][ x ] = 0;
+                    snapshot.mItemMap[y][x] = 0;
                 }
 
-	            auto actor = map.getActorAt({ x, y } );
+                auto actor = map.getActorAt({x, y});
 
-	            if ( actor != nullptr && actor->isAlive()) {
+                if (actor != nullptr && actor->isAlive()) {
 
-                    snapshot.ids[ y ][ x ] = actor->getId();
+                    snapshot.ids[y][x] = actor->getId();
 
                     bool alternate = (actor->getMoves() % 2) == 0;
 
-                    switch ( actor->getView()) {
+                    switch (actor->getView()) {
                         case 'T':
-                            snapshot.snapshot[ y ][ x ] = EActorsSnapshotElement::kRope;
+                            snapshot.snapshot[y][x] = EActorsSnapshotElement::kRope;
                             continue;
                         case 'C':
-                            snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kCocoonStanding0 : EActorsSnapshotElement::kCocoonStanding1;
+                            snapshot.snapshot[y][x] = (alternate)
+                                                      ? EActorsSnapshotElement::kCocoonStanding0
+                                                      : EActorsSnapshotElement::kCocoonStanding1;
                             continue;
                         case '@':
-                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kMonkAttacking0 : EActorsSnapshotElement::kMonkAttacking1;
+                            if (actor->getStance() == Knights::EStance::kAttacking) {
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kMonkAttacking0
+                                                          : EActorsSnapshotElement::kMonkAttacking1;
                             } else {
-                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kMonkStanding0 : EActorsSnapshotElement::kMonkStanding1;
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kMonkStanding0
+                                                          : EActorsSnapshotElement::kMonkStanding1;
                             }
                             continue;
                         case '$':
-                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kFallenAttacking0 : EActorsSnapshotElement::kFallenAttacking1;
+                            if (actor->getStance() == Knights::EStance::kAttacking) {
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kFallenAttacking0
+                                                          : EActorsSnapshotElement::kFallenAttacking1;
                             } else {
-                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kFallenStanding0 : EActorsSnapshotElement::kFallenStanding1;
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kFallenStanding0
+                                                          : EActorsSnapshotElement::kFallenStanding1;
                             }
                             continue;
                         case 'w':
-                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kEvilSpiritAttacking0 : EActorsSnapshotElement::kEvilSpiritAttacking1;
+                            if (actor->getStance() == Knights::EStance::kAttacking) {
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kEvilSpiritAttacking0
+                                                          : EActorsSnapshotElement::kEvilSpiritAttacking1;
                             } else {
-                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kEvilSpiritStanding0 : EActorsSnapshotElement::kEvilSpiritStanding1;\
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kEvilSpiritStanding0
+                                                          : EActorsSnapshotElement::kEvilSpiritStanding1;\
+
                             }
                             continue;
                         case 'J':
-                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kWarthogAttacking0 : EActorsSnapshotElement::kWarthogAttacking1;
+                            if (actor->getStance() == Knights::EStance::kAttacking) {
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kWarthogAttacking0
+                                                          : EActorsSnapshotElement::kWarthogAttacking1;
                             } else {
-                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kWarthogStanding0: EActorsSnapshotElement::kWarthogStanding1;
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kWarthogStanding0
+                                                          : EActorsSnapshotElement::kWarthogStanding1;
                             }
                             continue;
                         case 'd':
-                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kWeakenedDemonAttacking0 : EActorsSnapshotElement::kWeakenedDemonAttacking1;
+                            if (actor->getStance() == Knights::EStance::kAttacking) {
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kWeakenedDemonAttacking0
+                                                          : EActorsSnapshotElement::kWeakenedDemonAttacking1;
                             } else {
-                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kWeakenedDemonStanding0 : EActorsSnapshotElement::kWeakenedDemonStanding1;
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kWeakenedDemonStanding0
+                                                          : EActorsSnapshotElement::kWeakenedDemonStanding1;
                             }
                             continue;
                         case 'D':
-                            if ( actor->getStance() == Knights::EStance::kAttacking ) {
-                                snapshot.snapshot[ y ][ x ] = ( alternate ) ? EActorsSnapshotElement::kStrongDemonAttacking0 : EActorsSnapshotElement::kStrongDemonAttacking1;
+                            if (actor->getStance() == Knights::EStance::kAttacking) {
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kStrongDemonAttacking0
+                                                          : EActorsSnapshotElement::kStrongDemonAttacking1;
                             } else {
-                                snapshot.snapshot[ y ][ x ] =  ( alternate ) ? EActorsSnapshotElement::kStrongDemonStanding0 : EActorsSnapshotElement::kStrongDemonStanding1;
+                                snapshot.snapshot[y][x] = (alternate)
+                                                          ? EActorsSnapshotElement::kStrongDemonStanding0
+                                                          : EActorsSnapshotElement::kStrongDemonStanding1;
                             }
                             continue;
 
@@ -149,39 +176,40 @@ namespace odb {
                 }
             }
         }
-        
-        for ( int y = 0; y < Knights::kMapSize; ++y ) {
+
+        for (int y = 0; y < Knights::kMapSize; ++y) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
-                auto actor = map.getActorAt({ x, y } );
+                auto actor = map.getActorAt({x, y});
 
 
-                if ( actor != nullptr && actor->isAlive()  ) {
+                if (actor != nullptr && actor->isAlive()) {
                     LightningStrategy::castPointLight(snapshot.mLightMap, 64, snapshot.map, x, y);
                 }
             }
         }
 
         auto cameraPosition = current->getPosition();
-	    VisMap currentVisMap;
+        VisMap currentVisMap;
 
-        if ( mPerformVisibilityCheck ) {
-            if ( kWillAttemptToMergeVisibilityToFillPotetialHoles  ) {
-                VisibilityStrategy::castVisibility( currentVisMap, snapshot.map,  cameraPosition, current->getDirection(), true );
-                VisibilityStrategy::castVisibility( previous, snapshot.map,  previousPosition, previousDirection, true );
-                VisibilityStrategy::mergeInto( currentVisMap, previous, snapshot.mVisibilityMap);
+        if (mPerformVisibilityCheck) {
+            if (kWillAttemptToMergeVisibilityToFillPotetialHoles) {
+                VisibilityStrategy::castVisibility(currentVisMap, snapshot.map, cameraPosition,
+                                                   current->getDirection(), true);
+                VisibilityStrategy::castVisibility(previous, snapshot.map, previousPosition,
+                                                   previousDirection, true);
+                VisibilityStrategy::mergeInto(currentVisMap, previous, snapshot.mVisibilityMap);
             } else {
-                VisibilityStrategy::castVisibility( snapshot.mVisibilityMap, snapshot.map,  cameraPosition, current->getDirection(), true );
+                VisibilityStrategy::castVisibility(snapshot.mVisibilityMap, snapshot.map,
+                                                   cameraPosition, current->getDirection(), true);
             }
         } else {
-            VisibilityStrategy::makeAllVisible( snapshot.mVisibilityMap );
+            VisibilityStrategy::makeAllVisible(snapshot.mVisibilityMap);
         }
-
-
 
 
         auto item = current->getSelectedItem();
 
-        if ( item != nullptr ) {
+        if (item != nullptr) {
             snapshot.mCurrentItem = item->to_string();
         } else {
             snapshot.mCurrentItem = "";
@@ -189,11 +217,11 @@ namespace odb {
 
         snapshot.mHP = current->getHP();
 
-        setSnapshot( snapshot );
+        setSnapshot(snapshot);
 
-	    previousPosition = cameraPosition;
-	    previousDirection = current->getDirection();
-	    previous = snapshot.mVisibilityMap;
+        previousPosition = cameraPosition;
+        previousDirection = current->getDirection();
+        previous = snapshot.mVisibilityMap;
     }
 
     void NoudarGLES2Bridge::reset() {
@@ -203,19 +231,19 @@ namespace odb {
     }
 
     char NoudarGLES2Bridge::peekInput() {
-      return mNextCmd;
+        return mNextCmd;
     }
 
     char NoudarGLES2Bridge::getInput() {
 
-	    char tmp = mNextCmd;
-	    mNextCmd = '.';
+        char tmp = mNextCmd;
+        mNextCmd = '.';
         return tmp;
     }
 
-	void NoudarGLES2Bridge::setNextCommand(char cmd) {
-		mNextCmd = cmd;
-	}
+    void NoudarGLES2Bridge::setNextCommand(char cmd) {
+        mNextCmd = cmd;
+    }
 
     void NoudarGLES2Bridge::setVisibilityChecks(bool visibilityCheck) {
         mPerformVisibilityCheck = visibilityCheck;

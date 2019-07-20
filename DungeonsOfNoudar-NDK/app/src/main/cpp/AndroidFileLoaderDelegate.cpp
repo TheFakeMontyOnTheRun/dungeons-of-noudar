@@ -27,10 +27,11 @@ using Knights::readToBuffer;
 using Knights::readToString;
 
 namespace odb {
-    AndroidFileLoaderDelegate::AndroidFileLoaderDelegate(AAssetManager *assetManager) : mAssetManager( assetManager ) {
+    AndroidFileLoaderDelegate::AndroidFileLoaderDelegate(AAssetManager *assetManager)
+            : mAssetManager(assetManager) {
     }
 
-    uint8_t* AndroidFileLoaderDelegate::loadBinaryFileFromPath( const std::string& path ) {
+    uint8_t *AndroidFileLoaderDelegate::loadBinaryFileFromPath(const std::string &path) {
         FILE *fd;
 
         fd = android_fopen(path.c_str(), "rb", mAssetManager);
@@ -40,7 +41,7 @@ namespace odb {
         return toReturn;
     }
 
-    std::string AndroidFileLoaderDelegate::loadFileFromPath( const std::string& path ) {
+    std::string AndroidFileLoaderDelegate::loadFileFromPath(const std::string &path) {
         FILE *fd;
 
         fd = android_fopen(path.c_str(), "r", mAssetManager);
@@ -55,13 +56,13 @@ namespace odb {
     }
 
 
-    size_t AndroidFileLoaderDelegate::sizeOfFile(const std::string& path) {
+    size_t AndroidFileLoaderDelegate::sizeOfFile(const std::string &path) {
         FILE *fd;
 
         fd = android_fopen(path.c_str(), "r", mAssetManager);
 
         fseek(fd, 0, SEEK_END);
-        auto endPos = ftell( fd );
+        auto endPos = ftell(fd);
         fclose(fd);
 
         return endPos;

@@ -4,35 +4,36 @@
 #include "CLerp.h"
 
 namespace odb {
-	CLerp::CLerp( long initialValue, long finalValue, long duration ) :
-			mDelta( std::abs(finalValue - initialValue) ), mDuration( duration ), mInitialValue( initialValue ),   mEllapsed( 0 ) {
-	}
-	
-	float CLerp::getValue( long ellapsed ) {
-		return mInitialValue + std::min( ( ( mDelta * ellapsed ) / mDuration ), mDelta ); 
-	}
+    CLerp::CLerp(long initialValue, long finalValue, long duration) :
+            mDelta(std::abs(finalValue - initialValue)), mDuration(duration),
+            mInitialValue(initialValue), mEllapsed(0) {
+    }
 
-	float CLerp::getFinalValue() {
-		return mInitialValue + mDelta;
-	}
+    float CLerp::getValue(long ellapsed) {
+        return mInitialValue + std::min(((mDelta * ellapsed) / mDuration), mDelta);
+    }
 
-	long CLerp::getEllapsed() {
-		return mEllapsed;
-	}
+    float CLerp::getFinalValue() {
+        return mInitialValue + mDelta;
+    }
 
-	float CLerp::getCurrentValue() {
-		return getValue( mEllapsed );
-	}
+    long CLerp::getEllapsed() {
+        return mEllapsed;
+    }
 
-	void CLerp::update( long ms ) {
-		mEllapsed += ms;
-	}
+    float CLerp::getCurrentValue() {
+        return getValue(mEllapsed);
+    }
 
-	long CLerp::getDuration() {
-		return mDuration;
-	}
+    void CLerp::update(long ms) {
+        mEllapsed += ms;
+    }
 
-	bool CLerp::isFinished() {
-		return mEllapsed >= mDuration;
-	}
+    long CLerp::getDuration() {
+        return mDuration;
+    }
+
+    bool CLerp::isFinished() {
+        return mEllapsed >= mDuration;
+    }
 }

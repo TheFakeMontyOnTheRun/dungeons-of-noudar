@@ -34,19 +34,20 @@ using std::array;
 #include "CMap.h"
 
 #include "NoudarDungeonSnapshot.h"
-namespace odb {
-    std::ostream &operator<<(std::ostream &os, const NoudarDungeonSnapshot& aSnapshot) {
 
-        for ( int y = 0; y < Knights::kMapSize; ++y ) {
-            for ( int x = 0; x < Knights::kMapSize; ++x ) {
+namespace odb {
+    std::ostream &operator<<(std::ostream &os, const NoudarDungeonSnapshot &aSnapshot) {
+
+        for (int y = 0; y < Knights::kMapSize; ++y) {
+            for (int x = 0; x < Knights::kMapSize; ++x) {
 
                 char element = '.';
 
-                if ( aSnapshot.mVisibilityMap[ y ][ x ] == EVisibility::kVisible ) {
-                    if ( aSnapshot.snapshot[ y ][ x ] != EActorsSnapshotElement::kNothing ) {
+                if (aSnapshot.mVisibilityMap[y][x] == EVisibility::kVisible) {
+                    if (aSnapshot.snapshot[y][x] != EActorsSnapshotElement::kNothing) {
                         element = '^';
                     } else {
-                        element = aSnapshot.map[ y ][ x ];
+                        element = aSnapshot.map[y][x];
                     }
                 }
 
@@ -58,7 +59,7 @@ namespace odb {
         return os;
     }
 
-    std::string to_string(const NoudarDungeonSnapshot& aSnapshot) {
+    std::string to_string(const NoudarDungeonSnapshot &aSnapshot) {
         std::stringstream ss;
         ss << aSnapshot;
         return ss.str();

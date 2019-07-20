@@ -55,13 +55,13 @@ void odb::Camera::update(long ms) {
 
 
         if (kUseQuarterAngles) {
-            mCameraRotation = std::min( mCameraRotation + 45, mRotationTarget );
+            mCameraRotation = std::min(mCameraRotation + 45, mRotationTarget);
         } else {
             mCameraRotation = std::min(mCameraRotation + 5, mRotationTarget);
         }
     } else if (mRotationTarget < mCameraRotation) {
         if (kUseQuarterAngles) {
-            mCameraRotation = std::max( mCameraRotation - 45, mRotationTarget );
+            mCameraRotation = std::max(mCameraRotation - 45, mRotationTarget);
         } else {
             mCameraRotation = std::max(mCameraRotation - 5, mRotationTarget);
         }
@@ -71,7 +71,7 @@ void odb::Camera::update(long ms) {
 void odb::Camera::incrementRotateTarget(int delta) {
     this->mRotationTarget += delta;
 
-    if ( kCompleteMovementInstantly ) {
+    if (kCompleteMovementInstantly) {
         mCameraRotation += delta;
     } else {
         if (kUseQuarterAngles) {
@@ -113,7 +113,8 @@ glm::mat4 odb::Camera::getViewMatrix(glm::vec3 position) {
         glm::vec3 pos = position;
         glm::vec4 pos_front4 = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
         glm::vec3 pos_front;
-        glm::mat4 eyeMatrixOriginal = mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
+        glm::mat4 eyeMatrixOriginal =
+                mEyeView != nullptr ? glm::make_mat4(mEyeView) : glm::mat4(1.0f);
         glm::mat4 eyeMatrix = glm::mat4(1.0f);
 
         eyeMatrix[3][0] = eyeMatrixOriginal[3][0];

@@ -10,10 +10,10 @@ include_directories("../../../../../noudar-rendering")
 include_directories("../../../../../NullSoundSystem")
 
 add_library(NdkGlue SHARED
-            android_asset_operations.cpp
-            AndroidFileLoaderDelegate.cpp
-            NdkGlue.cpp
-       ../../../../../noudar-core/noudar-core/include/commands/CPickItemCommand.h
+        android_asset_operations.cpp
+        AndroidFileLoaderDelegate.cpp
+        NdkGlue.cpp
+        ../../../../../noudar-core/noudar-core/include/commands/CPickItemCommand.h
         ../../../../../noudar-core/noudar-core/include/commands/CDropItemCommand.h
         ../../../../../noudar-core/noudar-core/include/commands/CUseCurrentItemCommand.h
         ../../../../../noudar-core/noudar-core/include/commands/CCycleNextItemCommand.h
@@ -83,24 +83,22 @@ add_library(NdkGlue SHARED
         ../../../../../noudar-rendering/Camera.cpp
         ../../../../../noudar-rendering/Camera.h
         ../../../../../noudar-rendering/Logger.cpp
-		../../../../../noudar-rendering/Camera.cpp
+        ../../../../../noudar-rendering/Camera.cpp
         ../../../../../noudar-rendering/Camera.h
-		../../../../../noudar-rendering/VBORenderingJob.cpp
+        ../../../../../noudar-rendering/VBORenderingJob.cpp
         ../../../../../noudar-rendering/NativeBitmap.cpp
-		../../../../../noudar-rendering/GraphicNode.cpp
-        ../../../../../noudar-rendering/GraphicNode.h
         ../../../../../NullSoundSystem/SoundClip.cpp
-		../../../../../NullSoundSystem/SoundEmitter.cpp
-		../../../../../NullSoundSystem/SoundListener.cpp
-		../../../../../NullSoundSystem/SoundUtils.cpp
-	    )
+        ../../../../../NullSoundSystem/SoundEmitter.cpp
+        ../../../../../NullSoundSystem/SoundListener.cpp
+        ../../../../../NullSoundSystem/SoundUtils.cpp
+        )
 
 # add lib dependencies
 target_link_libraries(NdkGlue
-                      android
-					  jnigraphics
-                      log 
-                      EGL
-					  OpenSLES
-                      GLESv2)
+        android
+        jnigraphics
+        log
+        EGL
+        OpenSLES
+        GLESv2)
 

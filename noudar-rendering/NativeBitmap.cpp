@@ -48,6 +48,6 @@ namespace odb {
             }
         }
 
-        return std::make_shared<NativeBitmap>( mId, newWidth, newHeight, rawData);
+        return std::make_shared<NativeBitmap>(mId, newWidth, newHeight, rawData);
     }
 }

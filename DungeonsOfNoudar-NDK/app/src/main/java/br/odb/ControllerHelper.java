@@ -13,38 +13,38 @@ import java.util.List;
 public class ControllerHelper {
 
 
-	private Context mContext;
+    private Context mContext;
 
-	public ControllerHelper(Context context) {
-		mContext = context;
-	}
+    public ControllerHelper(Context context) {
+        mContext = context;
+    }
 
-	public boolean hasGamepad() {
-		return getGameControllerIds().size() > 0;
-	}
+    public boolean hasGamepad() {
+        return getGameControllerIds().size() > 0;
+    }
 
-	public boolean hasPhysicalKeyboard() {
-		return mContext.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
-	}
+    public boolean hasPhysicalKeyboard() {
+        return mContext.getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
+    }
 
-	private List<Integer> getGameControllerIds() {
-		List<Integer> gameControllerDeviceIds = new ArrayList<>();
+    private List<Integer> getGameControllerIds() {
+        List<Integer> gameControllerDeviceIds = new ArrayList<>();
 
-		int[] deviceIds = InputDevice.getDeviceIds();
-		for (int deviceId : deviceIds) {
-			InputDevice dev = InputDevice.getDevice(deviceId);
-			int sources = dev.getSources();
+        int[] deviceIds = InputDevice.getDeviceIds();
+        for (int deviceId : deviceIds) {
+            InputDevice dev = InputDevice.getDevice(deviceId);
+            int sources = dev.getSources();
 
-			if (((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
-					|| ((sources & InputDevice.SOURCE_JOYSTICK)
-					== InputDevice.SOURCE_JOYSTICK)) {
+            if (((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD)
+                    || ((sources & InputDevice.SOURCE_JOYSTICK)
+                    == InputDevice.SOURCE_JOYSTICK)) {
 
-				if (!gameControllerDeviceIds.contains(deviceId)) {
-					gameControllerDeviceIds.add(deviceId);
-				}
-			}
-		}
+                if (!gameControllerDeviceIds.contains(deviceId)) {
+                    gameControllerDeviceIds.add(deviceId);
+                }
+            }
+        }
 
-		return gameControllerDeviceIds;
-	}
+        return gameControllerDeviceIds;
+    }
 }

@@ -11,4 +11,5 @@ static int android_close(void *cookie);
 
 
 FILE *android_fopen(const char *fname, const char *mode, AAssetManager *assetManager);
+
 #endif

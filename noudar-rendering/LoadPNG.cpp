@@ -3,7 +3,6 @@
 //
 #include <memory>
 #include <string>
-
 #include <cstdlib>
 #include <cstring>
 #include <vector>
@@ -20,10 +19,11 @@ using std::array;
 
 #include "stb_image.h"
 
-std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
+std::shared_ptr<odb::NativeBitmap>
+loadPNG(const std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
 
 
-    auto buffer = fileLoader->loadBinaryFileFromPath( filename );
+    auto buffer = fileLoader->loadBinaryFileFromPath(filename);
     auto bufferSize = fileLoader->sizeOfFile(filename);
     int xSize;
     int ySize;
@@ -31,10 +31,11 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename, std::shar
 #if defined(TARGET_IOS)
     stbi_convert_iphone_png_to_rgb(1);
 #endif
-    
-    auto image = stbi_load_from_memory((const stbi_uc *) buffer, bufferSize, &xSize, &ySize, &components, 0 );
-    auto rawData = new int[ xSize * ySize ];
-    std::memcpy( rawData, image, xSize * ySize * 4 );
+
+    auto image = stbi_load_from_memory((const stbi_uc *) buffer, bufferSize, &xSize, &ySize,
+                                       &components, 0);
+    auto rawData = new int[xSize * ySize];
+    std::memcpy(rawData, image, xSize * ySize * 4);
     stbi_image_free(image);
 
 #if defined(OSMESA) || defined(VGA)
@@ -62,5 +63,5 @@ std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename, std::shar
     delete[] buffer;
     buffer = nullptr;
 
-    return std::make_shared<odb::NativeBitmap>( filename, xSize, ySize, rawData );
+    return std::make_shared<odb::NativeBitmap>(filename, xSize, ySize, rawData);
 }

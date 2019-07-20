@@ -18,51 +18,10 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Renderer {
 
-    public static final boolean kShouldLoadSounds = false;
     public static final int TICK_INTERVAL = 20;
-    private AssetManager assets;
-    private Context mContext;
+    final private Object renderingLock = new Object();
     boolean playing = true;
-
-    @Override
-    public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl10, int width, int height) {
-        GL2JNILib.init(width, height, this.assets);
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl10) {
-        if (!playing) {
-            return;
-        }
-
-        synchronized (renderingLock) {
-            tick();
-            GL2JNILib.tick(TICK_INTERVAL);
-
-            if (mContext instanceof Activity) {
-                Activity activity = ((Activity) mContext);
-                int level = GL2JNILib.getLevel();
-                boolean win = (level == 7);
-                boolean loose = (level == 8);
-
-                if (win || loose) {
-                    activity.setResult(level);
-                    activity.finish();
-                    playing = false;
-                }
-            }
-        }
-    }
-
-
-    public enum KB {
-        UP, RIGHT, DOWN, LEFT, ROTATE_LEFT, ROTATE_RIGHT, CYCLE_PREV, CYCLE_NEXT, PICK, DROP, USE
-    }
-
+    GameViewGLES2.KB key = null;
     View.OnKeyListener keyListener = new OnKeyListener() {
         @Override
         public synchronized boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -127,12 +86,53 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
             return true;// key != null;
         }
     };
-
-    final private Object renderingLock = new Object();
+    boolean mHaveController;
+    private AssetManager assets;
+    private Context mContext;
     private long timeUntilTick;
     private long t0;
-    GameViewGLES2.KB key = null;
-    boolean mHaveController;
+    public GameViewGLES2(Context context) {
+        super(context);
+        init(context);
+    }
+    public GameViewGLES2(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context);
+    }
+
+    @Override
+    public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl10, int width, int height) {
+        GL2JNILib.init(width, height, this.assets);
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl10) {
+        if (!playing) {
+            return;
+        }
+
+        synchronized (renderingLock) {
+            tick();
+            GL2JNILib.tick(TICK_INTERVAL);
+
+            if (mContext instanceof Activity) {
+                Activity activity = ((Activity) mContext);
+                int level = GL2JNILib.getLevel();
+                boolean win = (level == 7);
+                boolean loose = (level == 8);
+
+                if (win || loose) {
+                    activity.setResult(level);
+                    activity.finish();
+                    playing = false;
+                }
+            }
+        }
+    }
 
     private long tick() {
 
@@ -161,17 +161,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
         setRenderer(this);
         setFocusable(true);
         t0 = System.currentTimeMillis();
-    }
-
-    public GameViewGLES2(Context context) {
-        super(context);
-        init(context);
-    }
-
-
-    public GameViewGLES2(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
     }
 
     public void init(final Context context, int level, boolean haveController) {
@@ -264,20 +253,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
         synchronized (renderingLock) {
             this.assets = assets;
             GL2JNILib.onCreate(assets);
-            final Activity activity = ((Activity) getContext());
-
-            if (kShouldLoadSounds) {
-                GL2JNILib.loadSounds(activity.getAssets(), new String[]{
-                        "grasssteps.wav", //0
-                        "stepsstones.wav", //1
-                        "bgnoise.wav", //2
-                        "monsterdamage.wav", //3
-                        "monsterdead.wav", //4
-                        "playerdamage.wav", //5
-                        "playerdead.wav", //6
-                        "swing.wav" //7
-                });
-            }
         }
     }
 
@@ -342,5 +317,9 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
                 }
             }
         }
+    }
+
+    public enum KB {
+        UP, RIGHT, DOWN, LEFT, ROTATE_LEFT, ROTATE_RIGHT, CYCLE_PREV, CYCLE_NEXT, PICK, DROP, USE
     }
 }

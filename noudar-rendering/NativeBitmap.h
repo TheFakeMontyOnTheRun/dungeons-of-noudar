@@ -5,29 +5,29 @@
 #ifndef LESSON10_NATIVEBITMAP_H
 #define LESSON10_NATIVEBITMAP_H
 namespace odb {
-	class NativeBitmap {
-		std::string mId;
-		int mWidth;
-		int mHeight;
-		int *mRawData;
+    class NativeBitmap {
+        std::string mId;
+        int mWidth;
+        int mHeight;
+        int *mRawData;
 
-	public:
-		NativeBitmap( std::string aId, int aWidth, int aHeight, int *aRawData);
+    public:
+        NativeBitmap(std::string aId, int aWidth, int aHeight, int *aRawData);
 
-		std::shared_ptr<NativeBitmap> makeBitmapWithHalfDimensions() const;
+        std::shared_ptr<NativeBitmap> makeBitmapWithHalfDimensions() const;
 
-		int getWidth() const;
+        int getWidth() const;
 
-		int getHeight() const;
+        int getHeight() const;
 
-		int *getPixelData() const;
+        int *getPixelData() const;
 
-		std::string getId() const;
+        std::string getId() const;
 
-		void releaseTextureData();
+        void releaseTextureData();
 
-		~NativeBitmap();
-	};
+        ~NativeBitmap();
+    };
 }
 
 #endif //LESSON10_NATIVEBITMAP_H

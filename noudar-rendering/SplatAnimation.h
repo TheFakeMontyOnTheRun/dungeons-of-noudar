@@ -7,27 +7,28 @@
 
 
 namespace odb {
-	class SplatAnimation {
+    class SplatAnimation {
 
-	public:
-		SplatAnimation( Knights::Vec2i position );
+    public:
+        SplatAnimation(Knights::Vec2i position);
 
-		void update(long ms);
+        void update(long ms);
 
-		void startSplatAnimation();
+        void startSplatAnimation();
 
-		int getSplatFrame();
+        int getSplatFrame();
 
-		bool isFinished();
+        bool isFinished();
 
-		Knights::Vec2i getPosition();
-	private:
-		const int TOTAL_ANIMATION_TIME = 500;
-		const int NUMBER_OF_FRAMES = 3;
-		Knights::Vec2i mPosition{ 0,0 };
+        Knights::Vec2i getPosition();
 
-		long showSplatTime = 0;
-	};
+    private:
+        const int TOTAL_ANIMATION_TIME = 500;
+        const int NUMBER_OF_FRAMES = 3;
+        Knights::Vec2i mPosition{0, 0};
+
+        long showSplatTime = 0;
+    };
 }
 
 #endif //DUNGEONSOFNOUDAR_NDK_SPLATANIMATION_H
