@@ -35,12 +35,7 @@ using std::array;
 
 namespace odb {
 
-    const bool kNarrowByDistance =
-#ifdef OSMESA
-    false;
-#else
-    false;
-#endif
+    const bool kNarrowByDistance = false;
 
 	bool VisibilityStrategy::isValid(Knights::Vec2i pos) {
 		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
@@ -145,12 +140,6 @@ namespace odb {
 
             int distance = ( currentPos.y - originalPos.y );
             int narrowing = 1;
-#ifdef OSMESA
-            if ( kNarrowByDistance && std::abs( distance ) >= 9 ) {
-                continue;
-            }
-            narrowing = (distance / 2) + 1;
-#endif
 
 			if ( ( !kNarrowByDistance || ( currentPos.x - originalPos.x ) >= -std::abs(narrowing) )&& ( currentPos.x - originalPos.x ) <= 0 && stackPos < positions.size() - 1) {
 				positions[stackPos] =  Knights::Vec2i{currentPos.x + leftOffset.x, currentPos.y + leftOffset.y};

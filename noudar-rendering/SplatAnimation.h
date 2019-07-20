@@ -22,11 +22,7 @@ namespace odb {
 
 		Knights::Vec2i getPosition();
 	private:
-#ifndef OSMESA
 		const int TOTAL_ANIMATION_TIME = 500;
-#else
-		const int TOTAL_ANIMATION_TIME = 1000;
-#endif
 		const int NUMBER_OF_FRAMES = 3;
 		Knights::Vec2i mPosition{ 0,0 };
 

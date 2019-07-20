@@ -38,33 +38,13 @@ namespace odb {
     const static glm::mat4 identity = glm::mat4(1.0f);
     int RenderingJobSnapshotAdapter::visibility = 8;
 
-	const static bool kRenderSky =
-#ifdef OSMESA
-            false;
-#else
-            true;
-#endif
+	const static bool kRenderSky = true;
 
-	const static bool kOnlyRenderAreaAroundPlayer =
-#ifdef OSMESA
-			false;
-#else
-			false;
-#endif
+	const static bool kOnlyRenderAreaAroundPlayer = false;
 
-	const static bool kUseRepeatedGeometryStances =
-#ifdef OSMESA
-	false;
-#else
-	false;
-#endif
+	const static bool kUseRepeatedGeometryStances = false;
 
-	const static bool kUseSmoothAnimationCurves =
-#ifdef OSMESA
-			false;
-#else
-			true;
-#endif
+	const static bool kUseSmoothAnimationCurves = true;
 
 	glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
 		long offset = animationTime;
@@ -182,11 +162,9 @@ namespace odb {
 				}
 
 				auto tile = snapshot.map[z][x];
-#ifndef OSMESA
+
                 Shade shade = ( snapshot.mLightMap[z][x] ) / 255.0f;
-#else
-                Shade shade = 1.0f;
-#endif
+
 				if (x == snapshot.mCursorPosition.x &&
 				    z == snapshot.mCursorPosition.y) {
 					shade = 1.5f;

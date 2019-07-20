@@ -67,9 +67,7 @@ namespace odb {
 
         for ( int y = 0; y < Knights::kMapSize; ++y ) {
             for ( int x = 0; x < Knights::kMapSize; ++x ) {
-#ifndef OSMESA
                 snapshot.mLightMap[ y ][ x ] = 192;
-#endif
                 snapshot.map[ y ][ x ] = '.';
                 snapshot.snapshot[ y ][ x ] = EActorsSnapshotElement::kNothing;
                 snapshot.ids[ y ][ x ] = 0;
@@ -152,7 +150,6 @@ namespace odb {
             }
         }
         
-#ifndef OSMESA
         for ( int y = 0; y < Knights::kMapSize; ++y ) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
                 auto actor = map.getActorAt({ x, y } );
@@ -163,7 +160,6 @@ namespace odb {
                 }
             }
         }
-#endif
 
         auto cameraPosition = current->getPosition();
 	    VisMap currentVisMap;

@@ -1,7 +1,10 @@
-CXXFLAGS = -O3 -Wall -DEA_PLATFORM_SAMSUNG_TV -g -c -std=c++14 -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -I../nanovg/src -s ALLOW_MEMORY_GROWTH=1 -DGLM_FORCE_RADIANS -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -DUSE_ITEMS_INSTANTLY
+CXXFLAGS = -O3 -Wall -g -c -std=c++14 -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -s ALLOW_MEMORY_GROWTH=1 -DGLM_FORCE_RADIANS -I../stb -DUSE_ITEMS_INSTANTLY
+
 LDFLAGS =  -O3 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins  -s ALLOW_MEMORY_GROWTH=1
+
 CXX = em++
 CC = emcc
+
 OBJS = X11-version/main.o \
     ../noudar-core/noudar-core/src/Vec2i.o \
     ../noudar-core/noudar-core/src/CActor.o \
@@ -35,28 +38,22 @@ OBJS = X11-version/main.o \
         ../noudar-core/noudar-core/src/commands/CCyclePreviousItemCommand.o \
     	       ../noudar-rendering/RenderingJobSnapshotAdapter.o \
                ../noudar-rendering/GameNativeAPI.o \
-               ../noudar-rendering/OverlayNanoVGRenderer.o \
+               ../noudar-rendering/Camera.o \
                ../noudar-rendering/DungeonGLES2Renderer.o \
                ../noudar-rendering/LightningStrategy.o \
                ../noudar-rendering/VisibilityStrategy.o \
                ../noudar-rendering/NoudarDungeonSnapshot.o \
                ../noudar-rendering/SplatAnimation.o \
-               ../noudar-rendering/Animation.o \
-               ../noudar-rendering/AnimationStep.o \
                ../noudar-rendering/GraphicNode.o \
                 ../noudar-rendering/CTile3DProperties.o \
                ../noudar-rendering/NoudarGLES2Bridge.o \
                X11-version/WindowOperationsX11.o \
                X11-version/x11_emscripten.o \
-               ../gles2-renderer/Logger.o \
-               ../gles2-renderer/CLerp.o \
-               ../gles2-renderer/Camera.o \
-               ../gles2-renderer/Trig.o \
-               ../gles2-renderer/TrigBatch.o \
-               ../gles2-renderer/NativeBitmap.o \
-               ../gles2-renderer/VBORenderingJob.o \
-               ../gles2-renderer/LoadPNG.o \
-                ../nanovg/src/nanovg.o \
+               ../noudar-rendering/Logger.o \
+               ../noudar-rendering/CLerp.o \
+               ../noudar-rendering/NativeBitmap.o \
+               ../noudar-rendering/VBORenderingJob.o \
+               ../noudar-rendering/LoadPNG.o \
                 ../OpenALSoundSystem/SoundClip.o \
                 ../OpenALSoundSystem/SoundEmitter.o \
                 ../OpenALSoundSystem/SoundListener.o \
