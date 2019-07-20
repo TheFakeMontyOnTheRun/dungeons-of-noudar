@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 # now build app's shared lib
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -g -DEA_PLATFORM_SAMSUNG_TV -fno-inline -DUSE_ITEMS_INSTANTLY -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++14 -g -fno-inline -DUSE_ITEMS_INSTANTLY -Wall")
 
 include_directories("../../../../../noudar-core/noudar-core/include")
 include_directories("../../../../../gles2-renderer")
 include_directories("../../../../../glm")
 include_directories("../../../../../noudar-rendering")
-include_directories("../../../../../nanovg/src")
-include_directories("../../../../../AndroidSoundSystem")
-include_directories("../../../../../noudar-core/EASTL/include")
-include_directories("../../../../../noudar-core/EASTL/test/packages/EABase/include/Common")
+include_directories("../../../../../NullSoundSystem")
+include_directories("../../../../../stb")
 
 add_library(NdkGlue SHARED
             android_asset_operations.cpp
@@ -73,7 +71,6 @@ add_library(NdkGlue SHARED
         ../../../../../noudar-rendering/RenderingJobSnapshotAdapter.h
         ../../../../../noudar-rendering/RenderingJobSnapshotAdapter.cpp
         ../../../../../noudar-rendering/GameNativeAPI.cpp
-        ../../../../../noudar-rendering/OverlayNanoVGRenderer.cpp
         ../../../../../noudar-rendering/DungeonGLES2Renderer.cpp
         ../../../../../noudar-rendering/LightningStrategy.cpp
         ../../../../../noudar-rendering/VisibilityStrategy.h
@@ -95,19 +92,16 @@ add_library(NdkGlue SHARED
         ../../../../../gles2-renderer/VBORenderingJob.cpp
         ../../../../../gles2-renderer/NativeBitmap.cpp
         ../../../../../gles2-renderer/Scene.cpp
-        ../../../../../nanovg/src/nanovg.c
         ../../../../../noudar-rendering/GraphicNode.cpp
         ../../../../../noudar-rendering/GraphicNode.h
         ../../../../../noudar-rendering/Animation.cpp
         ../../../../../noudar-rendering/Animation.h
         ../../../../../noudar-rendering/AnimationStep.cpp
         ../../../../../noudar-rendering/AnimationStep.h
-		../../../../../AndroidSoundSystem/AndroidAudioSink.cpp
-		../../../../../AndroidSoundSystem/JNIAudio.cpp
-		../../../../../AndroidSoundSystem/SoundClip.cpp
-		../../../../../AndroidSoundSystem/SoundEmitter.cpp
-		../../../../../AndroidSoundSystem/SoundListener.cpp
-		../../../../../AndroidSoundSystem/SoundUtils.cpp
+		../../../../../NullSoundSystem/SoundClip.cpp
+		../../../../../NullSoundSystem/SoundEmitter.cpp
+		../../../../../NullSoundSystem/SoundListener.cpp
+		../../../../../NullSoundSystem/SoundUtils.cpp
 	    )
 
 # add lib dependencies

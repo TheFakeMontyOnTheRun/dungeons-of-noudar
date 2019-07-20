@@ -39,32 +39,20 @@ using std::array;
 #include "CGame.h"
 #include "NoudarGLES2Bridge.h"
 
-
-#include "AudioSink.h"
 #include "SoundClip.h"
-#include "SoundUtils.h"
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
 #include "NoudarDungeonSnapshot.h"
-
 #include "GameNativeAPI.h"
-
 #include "Logger.h"
 #include "VisibilityStrategy.h"
 
-#ifndef OSMESA
 #include "LightningStrategy.h"
-#endif
 
 namespace odb {
 
-    const bool kWillAttemptToMergeVisibilityToFillPotetialHoles =
-#ifdef OSMESA
-            true;
-#else
-            true;
-#endif
+    const bool kWillAttemptToMergeVisibilityToFillPotetialHoles = true;
 
 	Knights::EDirection previousDirection = Knights::EDirection::kNorth;
 	Knights::Vec2i previousPosition = {0,0};

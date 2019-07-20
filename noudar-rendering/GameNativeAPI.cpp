@@ -35,9 +35,7 @@ using std::array;
 #include "WavefrontOBJReader.h"
 #include "Logger.h"
 
-#include "AudioSink.h"
 #include "SoundClip.h"
-#include "SoundUtils.h"
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
@@ -68,19 +66,9 @@ using std::array;
 #include "RenderingJobSnapshotAdapter.h"
 #include "CLerp.h"
 #include "DungeonGLES2Renderer.h"
-
-#ifndef OSMESA
 #include "LightningStrategy.h"
-#endif
-
 #include "VisibilityStrategy.h"
 #include "LoadPNG.h"
-
-
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS) || defined(TARGET_OSX)
-#include "OverlayNanoVGRenderer.h"
-std::shared_ptr<odb::OverlayNanoVGRenderer> overlayRenderer = nullptr;
-#endif
 
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 
@@ -99,15 +87,12 @@ bool drawOverlayHUD = true;
 const int DEFAULT_HEALTH = 999;
 const int kMaxLevel = 7;
 
-#ifndef OSMESA
 vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::shared_ptr<odb::SoundListener> mainListener;
 vector< std::shared_ptr<odb::Scene>> loadedMeshes;
 
 
 void playSound(int soundNum);
-
-#endif
 
 vector<std::shared_ptr<odb::NativeBitmap>> loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader ) {
 	auto data = fileLoader->loadFileFromPath( filename );
@@ -177,29 +162,6 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
 	gles2Renderer = std::make_shared<odb::DungeonGLES2Renderer>();
 
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-
-	if ( overlayRenderer == nullptr ) {
-		auto bitmaps = vector< std::shared_ptr<odb::NativeBitmap> > {
-                loadPNG( "dart0.png", fileLoader  ),
-				loadPNG( "hand0.png", fileLoader  ),
-				loadPNG( "hand1.png", fileLoader ),
-                loadPNG( "bow0.png", fileLoader ),
-                loadPNG( "bow1.png", fileLoader ),
-				loadPNG( "bow2.png", fileLoader ),
-				loadPNG( "mace.png", fileLoader ),
-				loadPNG( "shieldinhand.png", fileLoader ),
-				loadPNG( "token.png", fileLoader ),
-		};
-
-		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>(bitmaps);
-	}
-
-	overlayRenderer->setFrame( w, h );
-    overlayRenderer->playAnimation( animationTime, "mace-still" );
-    #endif
-
-
 	animationTime = 0;
 
 	auto toReturn = gles2Renderer->init(w, h, vertexShader.c_str(), fragmentShader.c_str());
@@ -212,12 +174,10 @@ bool setupGraphics(int w, int h, std::string vertexShader, std::string fragmentS
 
     gles2Renderer->setTileProperties( loadTileProperties( game != nullptr ? game->getLevelNumber() : 0, fileLoader ) );
 
-#ifndef OSMESA
 	for  ( const auto& mesh : loadedMeshes ) {
 		gles2Renderer->setMesh( mesh );
     }
     loadedMeshes.clear();
-#endif
 
 	return toReturn;
 }
@@ -235,14 +195,7 @@ void renderFrame(long delta) {
         snapshot.mCameraPosition = game->getMap()->getAvatar()->getPosition();
 		gles2Renderer->render(snapshot);
 		gles2Renderer->updateCamera(delta);
-}
-
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-
-	if ( overlayRenderer != nullptr && drawOverlayHUD ) {
-		overlayRenderer->render(snapshot);
 	}
-#endif
 }
 
 void shutdown() {
@@ -252,10 +205,6 @@ void shutdown() {
 	animationTime = 0;
 
 	gles2Renderer = nullptr;
-
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-	overlayRenderer = nullptr;
-#endif
 }
 
 void updateAnimations( long delta ) {
@@ -302,7 +251,6 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
 
 	animationList[id] = movement;
 
-#ifndef OSMESA
 	auto floorType = snapshot.map[ newPosition.y ][ newPosition.x ];
 
 	if ( floorType  == '.' || floorType == '-' ) {
@@ -314,7 +262,6 @@ void addCharacterMovement(int id, glm::vec2 previousPosition, glm::vec2 newPosit
             playSound(1);
 		}
 	}
-#endif
 }
 
 void updateCharacterMovements(const odb::IntMap& idsLocal) {
@@ -406,47 +353,19 @@ void setAngleYZ( float YZAngle ) {
 }
 
 void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate ) {
-
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-	if ( overlayRenderer == nullptr ) {
-
-		auto bitmaps = vector< std::shared_ptr<odb::NativeBitmap> > {
-                loadPNG( "dart0.png", fileLoaderDelegate ),
-				loadPNG( "hand0.png", fileLoaderDelegate ),
-				loadPNG( "hand1.png", fileLoaderDelegate ),
-                loadPNG( "bow0.png", fileLoaderDelegate ),
-                loadPNG( "bow1.png", fileLoaderDelegate ),
-				loadPNG( "bow2.png", fileLoaderDelegate ),
-                loadPNG( "mace.png", fileLoaderDelegate ),
-				loadPNG( "shieldinhand.png", fileLoaderDelegate ),
-				loadPNG( "token.png", fileLoaderDelegate ),
-		};
-
-		overlayRenderer = std::make_shared<odb::OverlayNanoVGRenderer>( bitmaps );
-	}
-
-	overlayRenderer->loadFonts( fileLoaderDelegate );
-#endif
-
 	render = std::make_shared<odb::NoudarGLES2Bridge>();
 
 	auto onMonsterDead = [&]( Knights::Vec2i pos ) {
-#ifndef OSMESA
         playSound(4);
-#endif
 	};
 
 	auto onPlayerDead = [&](Knights::Vec2i pos) {
-#ifndef OSMESA
         playSound(6);
-#endif
         game->playLevel(8);
 	};
 
 	auto onPlayerAttack = [&](Knights::Vec2i pos) {
-#ifndef OSMESA
         playSound(7);
-#endif
 	};
 
 	auto onMonsterAttack = [&](Knights::Vec2i pos) {
@@ -457,9 +376,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 		auto splat = std::make_shared<odb::SplatAnimation>( pos );
 		splatAnimation.push_back( splat );
 		splat->startSplatAnimation();
-#ifndef OSMESA
         playSound(3);
-#endif
 	};
 
 	auto onProjectileHit = [&](Knights::Vec2i pos) {
@@ -470,9 +387,7 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 
 
 	auto onPlayerDamaged = [&](Knights::Vec2i pos) {
-#ifndef OSMESA
         playSound(5);
-#endif
 	};
 
 
@@ -518,13 +433,11 @@ void readMap( std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate )
 	}
 }
 
-#ifndef OSMESA
 void playSound( int soundNum ) {
     if (!soundEmitters.empty() ) {
         soundEmitters[ soundNum ]->play(mainListener );
     }
 }
-#endif
 
 void moveUp() {
 
@@ -567,10 +480,8 @@ void gameLoopTick( long ms ) {
 }
 
 void setSoundEmitters( vector<std::shared_ptr<odb::SoundEmitter>> emitters, std::shared_ptr<odb::SoundListener> listener ) {
-#ifndef OSMESA
 	soundEmitters = emitters;
 	mainListener = listener;
-#endif
 }
 
 void forceDirection( int direction ) {
@@ -611,194 +522,40 @@ void interact() {
 		render->setNextCommand('\t');
 		game->tick();
 		render->setNextCommand('.');
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-
-        auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-        if ( item != nullptr && item->getView() == 't') {
-            overlayRenderer->playAnimation( animationTime, "mace-fire" );
-        } else if ( item != nullptr && item->getView() == 'y') {
-            overlayRenderer->playAnimation( animationTime, "crossbow-fire" );
-        } else if ( item != nullptr && item->getView() == 'v') {
-            overlayRenderer->playAnimation( animationTime, "shield-fire" );
-		} else if ( item != nullptr && item->getView() == '+') {
-			overlayRenderer->playAnimation( animationTime, "token-fire" );
-        }
-#endif
 	}
 }
 
 void pickupItem() {
     if (game != nullptr) {
-
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->playAnimation(animationTime, "mace-disarm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-disarm" );
-            } else {
-                overlayRenderer->playAnimation(animationTime, "hand-disarm");
-            }
-        }
-#endif
         render->setNextCommand('[');
         game->tick();
         render->setNextCommand('.');
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->enqueueAnimation(animationTime, "mace-arm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-arm" );
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-arm" );
-            } else {
-                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
-            }
-
-        }
-#endif
     }
 }
 
 void dropItem() {
     if (game != nullptr) {
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->playAnimation(animationTime, "mace-disarm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-disarm" );
-            } else {
-                overlayRenderer->playAnimation(animationTime, "hand-disarm");
-            }
-        }
-#endif
         render->setNextCommand(']');
         game->tick();
         render->setNextCommand('.');
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->enqueueAnimation( animationTime, "mace-arm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-arm");
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-arm" );
-            } else {
-                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
-            }
-
-        }
-#endif
     }
 }
 
 void cycleNextItem() {
     if (game != nullptr) {
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->playAnimation(animationTime, "mace-disarm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-disarm" );
-            } else {
-                overlayRenderer->playAnimation(animationTime, "hand-disarm");
-            }
-        }
-#endif
         render->setNextCommand('-');
         game->tick();
         render->setNextCommand('.');
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->enqueueAnimation( animationTime, "mace-arm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-arm" );
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-arm" );
-            } else {
-                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
-            }
-        }
-#endif
     }
 }
 
 void cyclePrevItem() {
     if (game != nullptr) {
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->playAnimation(animationTime, "mace-disarm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->playAnimation(animationTime, "crossbow-disarm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-disarm" );
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-disarm" );
-            } else {
-                overlayRenderer->playAnimation(animationTime, "hand-disarm");
-            }
-        }
-#endif
         render->setNextCommand('=');
         game->tick();
         render->setNextCommand('.');
 
         auto item = game->getMap()->getAvatar()->getSelectedItem();
-#if defined(__ANDROID__ ) || defined(__EMSCRIPTEN__) || defined(MESA_GLES2) || defined(TARGET_IOS)  || defined(TARGET_OSX)
-        {
-            auto item = game->getMap()->getAvatar()->getSelectedItem();
-
-            if (item != nullptr && item->getView() == 't') {
-                overlayRenderer->enqueueAnimation( animationTime,  "mace-arm");
-            } else if (item != nullptr && item->getView() == 'y') {
-                overlayRenderer->enqueueAnimation( animationTime,  "crossbow-arm");
-            } else if ( item != nullptr && item->getView() == 'v') {
-                overlayRenderer->playAnimation( animationTime, "shield-arm" );
-			} else if ( item != nullptr && item->getView() == '+') {
-				overlayRenderer->playAnimation( animationTime, "token-arm" );
-            } else {
-                overlayRenderer->enqueueAnimation(animationTime, "hand-arm");
-            }
-
-        }
-#endif
     }
 }
 

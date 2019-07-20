@@ -20,9 +20,8 @@ using std::array;
 #include "Logger.h"
 #include "NativeBitmap.h"
 #include "android_asset_operations.h"
-#include "AudioSink.h"
+
 #include "SoundClip.h"
-#include "SoundUtils.h"
 #include "SoundListener.h"
 #include "SoundEmitter.h"
 
@@ -42,7 +41,6 @@ using std::array;
 #include "NoudarDungeonSnapshot.h"
 
 #include "GameNativeAPI.h"
-#include "AndroidAudioSink.h"
 
 using Knights::readToString;
 
@@ -52,7 +50,6 @@ vector< std::string> meshes;
 std::string gVertexShader;
 std::string gFragmentShader;
 
-std::shared_ptr<AndroidAudioSink> audioSinkWrapper;
 std::shared_ptr<odb::SoundListener> soundListener;
 
 void* operator new[](size_t size, const char* pName, int flags, unsigned debugFlags,
@@ -65,6 +62,7 @@ void* operator new[](size_t size, size_t alignment, size_t alignmentOffset, cons
     return malloc( size );
 }
 
+/*
 std::shared_ptr<odb::SoundEmitter> makeSoundEmitterFromFilename(JNIEnv *env, jclass type,
                                                                 AAssetManager *assetManager,
                                                                 jstring filename) {
@@ -78,6 +76,7 @@ std::shared_ptr<odb::SoundEmitter> makeSoundEmitterFromFilename(JNIEnv *env, jcl
 
 	return std::make_shared<odb::SoundEmitter>(audioSinkWrapper, soundClip);
 }
+*/
 
 std::shared_ptr<odb::NativeBitmap> makeNativeBitmapFromJObject(JNIEnv *env, jobject bitmap) {
 
@@ -120,6 +119,7 @@ void loadTexturesFromBitmaps(JNIEnv *env, _jobjectArray *bitmaps, int length) {
 
 void loadSoundsFromFilenames(JNIEnv *env, jclass type, jobject asset_manager,
                              _jobjectArray *soundFiles, jsize length) {
+	/*
 	sounds.clear();
 	AAssetManager *assetManager = AAssetManager_fromJava(env, asset_manager);
 
@@ -129,6 +129,7 @@ void loadSoundsFromFilenames(JNIEnv *env, jclass type, jobject asset_manager,
 		                                              (jstring) (env->GetObjectArrayElement(
 				                                              soundFiles, c))));
 	}
+	 */
 }
 
 extern "C" {
@@ -329,7 +330,7 @@ Java_br_odb_GL2JNILib_flush(JNIEnv *env, jclass type, jobject sink) {
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type, jobject asset_manager,
                                  jobjectArray soundFiles) {
-
+/*
 	audioSinkWrapper = std::make_shared<AndroidAudioSink>();
 	soundListener = std::make_shared<odb::SoundListener>(audioSinkWrapper);
 
@@ -337,6 +338,7 @@ Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type, jobject asset_manager
 	                        env->GetArrayLength(soundFiles));
 
 	setSoundEmitters( sounds, soundListener );
+ */
 }
 
 JNIEXPORT void JNICALL
