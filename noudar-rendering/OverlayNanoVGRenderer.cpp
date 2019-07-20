@@ -50,11 +50,11 @@
 #include <tuple>
 
 #include <fstream>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 
 #include "Vec2i.h"
@@ -652,7 +652,7 @@ namespace odb {
             unsigned char *data = (unsigned char *) malloc(mFontDataSize);
             std::copy(mFontData, mFontData + mFontDataSize, data);
             nvgCreateFontMem(mContext, "font", data, mFontDataSize, 1);
-            free(mFontData);
+            delete[] mFontData;
             mFontData = nullptr;
             mFontDataSize = 0;
         }

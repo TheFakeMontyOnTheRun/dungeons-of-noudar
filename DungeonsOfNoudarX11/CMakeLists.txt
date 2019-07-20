@@ -10,8 +10,6 @@ include_directories(../gles2-renderer)
 include_directories(../X11-version)
 include_directories(../glm)
 include_directories(../nanovg/src)
-include_directories(../noudar-core/EASTL/include )
-include_directories(../noudar-core/EASTL/test/packages/EABase/include/Common)
 
 set(TEST_SOURCE_FILES
         ../tests/src/TestVisibilityStrategy.cpp

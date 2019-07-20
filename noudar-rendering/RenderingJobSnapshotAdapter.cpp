@@ -10,12 +10,12 @@
 #include <utility>
 #include <unordered_map>
 #include <map>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 #include <Camera.h>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 #include "VBORenderingJob.h"
 #include "NativeBitmap.h"

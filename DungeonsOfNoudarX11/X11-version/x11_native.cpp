@@ -18,11 +18,11 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <iostream>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 #include "SoundClip.h"
 #include "SoundUtils.h"

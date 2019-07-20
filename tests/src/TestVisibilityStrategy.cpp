@@ -5,11 +5,11 @@
 
 #include <memory>
 #include <iostream>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
