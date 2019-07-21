@@ -1,13 +1,14 @@
 package br.odb;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 
 /**
  * Created by monty on 23/06/16.
  */
 public class SoundManager {
     private final Context mContext;
-//	private MediaPlayer mMusic;
+    private MediaPlayer mMusic;
 
     public SoundManager(Context context) {
         this.mContext = context;
@@ -29,16 +30,16 @@ public class SoundManager {
 
     public void playMusic(int musicRes) {
         if (mayEnableSound()) {
-//			mMusic = MediaPlayer.create( mContext, musicRes );
-//			mMusic.start();
+            mMusic = MediaPlayer.create(mContext, musicRes);
+            mMusic.start();
         }
     }
 
     public void stop() {
-//		if ( mMusic != null ) {
-//			mMusic.stop();
-//			mMusic.release();
-//			mMusic = null;
-//		}
+        if (mMusic != null) {
+            mMusic.stop();
+            mMusic.release();
+            mMusic = null;
+        }
     }
 }
