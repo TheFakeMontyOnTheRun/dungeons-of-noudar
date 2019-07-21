@@ -1,6 +1,6 @@
-CXXFLAGS = -O3 -Wall -g -c -std=c++14 -ferror-limit=1  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -s ALLOW_MEMORY_GROWTH=1 -DGLM_FORCE_RADIANS -I../stb -DUSE_ITEMS_INSTANTLY
+CXXFLAGS = -O3 -Wall -Wextra -Wno-unused-parameter -Wno-gnu-zero-variadic-macro-arguments -g -c -std=c++14 -ferror-limit=1 --pedantic -Werror -Wall  -s USE_ZLIB=1 -s USE_LIBPNG=1 -I../OpenALSoundSystem -I../noudar-core/noudar-core/include -Iincludes -I../noudar-rendering -I../gles2-renderer/ -IX11-version -I../glm -DGLM_FORCE_RADIANS -I../stb -DUSE_ITEMS_INSTANTLY
 
-LDFLAGS =  -O3 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins  -s ALLOW_MEMORY_GROWTH=1
+LDFLAGS =  -O3 -s USE_ZLIB=1 -s USE_LIBPNG=1 -s --preload-file res --use-preload-plugins 
 
 CXX = em++
 CC = emcc
