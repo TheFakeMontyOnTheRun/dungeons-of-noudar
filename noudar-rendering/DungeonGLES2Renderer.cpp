@@ -606,8 +606,7 @@ namespace odb {
 
         glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
         glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
-        glEnable(GL_DEPTH_TEST);
-
+        glDepthFunc(GL_LEQUAL);
         glEnableVertexAttribArray(vertexAttributePosition);
         glEnableVertexAttribArray(textureCoordinatesAttributePosition);
 
@@ -623,6 +622,9 @@ namespace odb {
 
             for (const auto &element : batch.second) {
 
+                if (!element.mNeedsZBuffer) {
+                    continue;
+                }
 
                 const auto &transform = element.getTransform();
                 const auto &shade = element.getShade();
@@ -630,8 +632,7 @@ namespace odb {
                 const auto &vboId = element.getVBOId();
                 const auto &vboIndicesId = element.getVBOIndicesId();
 
-                drawGeometry(0,
-                             vboId,
+                drawGeometry(vboId,
                              vboIndicesId,
                              amount,
                              transform,
@@ -640,11 +641,38 @@ namespace odb {
             }
         }
 
+        glDepthFunc(GL_ALWAYS);
+
+        for (const auto &batch : batches) {
+
+            auto textureId = mTextures[batch.first];
+            glBindTexture(GL_TEXTURE_2D, textureId[(frame / 4) % textureId.size()]);
+
+            for (const auto &element : batch.second) {
+
+                if (element.mNeedsZBuffer) {
+                    continue;
+                }
+
+                const auto &transform = element.getTransform();
+                const auto &shade = element.getShade();
+                const auto &amount = element.getAmount();
+                const auto &vboId = element.getVBOId();
+                const auto &vboIndicesId = element.getVBOIndicesId();
+
+                drawGeometry(vboId,
+                             vboIndicesId,
+                             amount,
+                             transform,
+                             shade
+                );
+            }
+        }
         glDisableVertexAttribArray(vertexAttributePosition);
         glDisableVertexAttribArray(textureCoordinatesAttributePosition);
     }
 
-    void DungeonGLES2Renderer::drawGeometry(const unsigned int textureId, const int vertexVbo,
+    void DungeonGLES2Renderer::drawGeometry(const int vertexVbo,
                                             const int indexVbo,
                                             int vertexCount,
                                             const glm::mat4 &transform, float shade) {

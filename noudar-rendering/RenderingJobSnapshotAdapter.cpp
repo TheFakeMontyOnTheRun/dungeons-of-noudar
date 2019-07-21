@@ -406,7 +406,7 @@ namespace odb {
                             std::get<0>(billboardVBO),
                             std::get<1>(billboardVBO),
                             std::get<2>(billboardVBO),
-                            getBillboardTransform(camera, pos), shade, true);
+                            getBillboardTransform(camera, pos), shade, true, false);
                 }
             }
         }

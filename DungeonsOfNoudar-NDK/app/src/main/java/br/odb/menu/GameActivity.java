@@ -11,8 +11,6 @@ import br.odb.noudar.R;
 
 public class GameActivity extends Activity {
 
-    public static final String USE_VR = "use-vr";
-
     private ControllerHelper mControllerHelper;
     private GameViewGLES2 view;
     private boolean mHaveController;

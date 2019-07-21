@@ -34,7 +34,7 @@ namespace odb {
 
         void deleteVBOs();
 
-        void drawGeometry(const unsigned int textureId, const int vertexVbo, const int indexVbo,
+        void drawGeometry(const int vertexVbo, const int indexVbo,
                           int vertexCount,
                           const glm::mat4 &transform, float shade);
 
