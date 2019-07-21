@@ -50,8 +50,6 @@ void moveRight();
 
 void pickupItem();
 
-void dropItem();
-
 void cycleNextItem();
 
 void cyclePrevItem();

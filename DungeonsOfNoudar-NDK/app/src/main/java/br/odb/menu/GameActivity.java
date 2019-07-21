@@ -78,13 +78,6 @@ public class GameActivity extends Activity {
                 GL2JNILib.cycleNextItem();
             }
         });
-
-        findViewById(R.id.btnPrevItem).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GL2JNILib.cyclePreviousItem();
-            }
-        });
     }
 
     @Override

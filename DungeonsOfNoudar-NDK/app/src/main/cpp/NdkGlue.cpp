@@ -134,9 +134,6 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_cycleNextItem(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_dropItem(JNIEnv *env, jclass type);
-
-JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_pickItem(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
@@ -339,11 +336,6 @@ Java_br_odb_GL2JNILib_cyclePreviousItem(JNIEnv *env, jclass type) {
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_cycleNextItem(JNIEnv *env, jclass type) {
     cycleNextItem();
-}
-
-JNIEXPORT void JNICALL
-Java_br_odb_GL2JNILib_dropItem(JNIEnv *env, jclass type) {
-    dropItem();
 }
 
 JNIEXPORT void JNICALL

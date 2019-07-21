@@ -527,14 +527,6 @@ void pickupItem() {
     }
 }
 
-void dropItem() {
-    if (game != nullptr) {
-        render->setNextCommand(']');
-        game->tick();
-        render->setNextCommand('.');
-    }
-}
-
 void cycleNextItem() {
     if (game != nullptr) {
         render->setNextCommand('-');

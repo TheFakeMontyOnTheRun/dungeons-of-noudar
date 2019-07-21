@@ -11,12 +11,9 @@ import android.widget.TextView;
 import br.odb.SoundManager;
 import br.odb.noudar.R;
 
-import static br.odb.menu.GameActivity.USE_VR;
-
 public class RootActivity extends Activity {
 
     public static final String MAPKEY_SUCCESSFUL_LEVEL_OUTCOME = "outcome";
-    private static final int NUMBER_OF_LEVELS = 7;
     private SoundManager mSoundManager;
 
     @Override
@@ -34,12 +31,12 @@ public class RootActivity extends Activity {
                 playGame();
             }
         });
-//		findViewById(R.id.btnCredits).setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				showCredits();
-//			}
-//		});
+		findViewById(R.id.btnCredits).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showCredits();
+			}
+		});
         findViewById(R.id.btnHowToPlay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +45,7 @@ public class RootActivity extends Activity {
         });
 
         ((Button) findViewById(R.id.btStart)).setTypeface(font);
-//		((Button)findViewById(R.id.btnCredits)).setTypeface( font );
+		((Button)findViewById(R.id.btnCredits)).setTypeface( font );
         ((Button) findViewById(R.id.btnHowToPlay)).setTypeface(font);
 
         mSoundManager.playMusic(R.raw.canto_rg);
@@ -56,7 +53,6 @@ public class RootActivity extends Activity {
 
     private void playGame() {
         Intent intent = new Intent(getBaseContext(), GameActivity.class);
-        intent.putExtra(USE_VR, Boolean.FALSE);
         startActivityForResult(intent, 1);
         overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
     }

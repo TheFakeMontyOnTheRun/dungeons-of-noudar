@@ -48,14 +48,9 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
                     key = GameViewGLES2.KB.PICK;
                 }
 
-                if (keyCode == KeyEvent.KEYCODE_B || keyCode == KeyEvent.KEYCODE_BUTTON_B) {
-                    key = GameViewGLES2.KB.DROP;
-                }
-
                 if (keyCode == KeyEvent.KEYCODE_A || keyCode == KeyEvent.KEYCODE_BUTTON_A) {
                     key = GameViewGLES2.KB.USE;
                 }
-
 
                 if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
 
@@ -91,10 +86,12 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
     private Context mContext;
     private long timeUntilTick;
     private long t0;
+
     public GameViewGLES2(Context context) {
         super(context);
         init(context);
     }
+
     public GameViewGLES2(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
@@ -220,7 +217,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
                 if (GL2JNILib.isThereAnyObjectInFrontOfYou()) {
                     key = KB.PICK;
                 } else {
-                    key = KB.DROP;
+                    key = KB.CYCLE_NEXT;
                 }
             }
 
@@ -299,12 +296,9 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
                     case CYCLE_PREV:
                         GL2JNILib.cyclePreviousItem();
                         break;
+
                     case CYCLE_NEXT:
                         GL2JNILib.cycleNextItem();
-                        break;
-
-                    case DROP:
-                        GL2JNILib.dropItem();
                         break;
 
                     case PICK:
@@ -320,6 +314,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
     }
 
     public enum KB {
-        UP, RIGHT, DOWN, LEFT, ROTATE_LEFT, ROTATE_RIGHT, CYCLE_PREV, CYCLE_NEXT, PICK, DROP, USE
+        UP, RIGHT, DOWN, LEFT, ROTATE_LEFT, ROTATE_RIGHT, CYCLE_PREV, CYCLE_NEXT, PICK, USE
     }
 }

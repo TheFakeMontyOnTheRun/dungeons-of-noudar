@@ -156,8 +156,6 @@
                     android:layout_height="wrap_content"
                     android:text="Attack" />
 
-
-
                 <Button
                     android:id="@+id/btnPick"
                     android:layout_width="match_parent"
@@ -170,13 +168,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Next Item" />
-
-                <Button
-                    android:id="@+id/btnPrevItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Drop Item" />
-                
 
             </LinearLayout>
 
