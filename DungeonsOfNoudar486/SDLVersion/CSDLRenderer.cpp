@@ -20,11 +20,11 @@
 
 
 #include <sg14/fixed_point>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 using namespace std::chrono;
 using sg14::fixed_point;
 

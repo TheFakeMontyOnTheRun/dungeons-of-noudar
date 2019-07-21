@@ -11,12 +11,12 @@
 #include <map>
 #include <unordered_map>
 #include <sg14/fixed_point>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
 using sg14::fixed_point;
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 #include "Vec2i.h"
 #include "IMapElement.h"

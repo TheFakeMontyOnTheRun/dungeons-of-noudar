@@ -13,7 +13,7 @@ include_directories(../noudar-core/EASTL/include )
 include_directories(../noudar-core/EASTL/test/packages/EABase/include/Common)
 
 include_directories(../noudar-rendering)
-include_directories(../gles2-renderer)
+include_directories(../noudar-rendering)
 
 set(SOURCE_FILES
         SDLVersion/CSDLRenderer.cpp
@@ -84,8 +84,8 @@ set(SOURCE_FILES
         ../noudar-core/noudar-core/src/CStorageItem.cpp
         ../noudar-core/noudar-core/include/CStorageItem.h
         OPL2LPT/MusicSDL.cpp
-        ../gles2-renderer/Logger.cpp
-        ../gles2-renderer/LoadPNG.cpp
+        ../noudar-rendering/Logger.cpp
+        ../noudar-rendering/LoadPNG.cpp
         src/CPackedFileReader.cpp include/CPackedFileReader.h)
 
 find_package(OpenGL REQUIRED)

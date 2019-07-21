@@ -3,9 +3,9 @@
 //
 #include <string>
 #include <unordered_map>
-#include <EASTL/vector.h>
+#include <vector>
 
-using eastl::vector;
+using std::vector;
 
 #include "Common.h"
 #include "IFileLoaderDelegate.h"
@@ -106,4 +106,8 @@ std::string odb::CPackedFileReader::loadFileFromPath(const std::string &path) {
 
 std::string odb::CPackedFileReader::getFilePathPrefix() {
     return "";
+}
+
+odb::CPackedFileReader::~CPackedFileReader() {
+
 }

@@ -1,7 +1,7 @@
 CXX = i586-pc-msdosdjgpp-g++
 LD = i586-pc-msdosdjgpp-ld
 
-CXXFLAGS = -g -DVGA -DDONT_LOAD_LEVEL_UPON_START -DEA_PLATFORM_LINUX -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -mtune=i486 -march=i486 -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include  -I../noudar-core/EASTL/include -I../noudar-core/EASTL/test/packages/EABase/include/Common -I../noudar-rendering -I../gles2-renderer -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY
+CXXFLAGS = -g -DVGA -DDONT_LOAD_LEVEL_UPON_START -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -mtune=i486 -march=i486 -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include   -I../noudar-rendering -I../noudar-rendering -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY
 
 LDFLAGS = -lemu
 
@@ -17,8 +17,8 @@ OBJS = src/CRenderer.o \
      OPL2LPT/timer.o \
      OPL2LPT/controller.o \
      OPL2LPT/MusicDOS.o \
-     ../gles2-renderer/Logger.o \
-    ../gles2-renderer/LoadPNG.o \
+     ../noudar-rendering/Logger.o \
+    ../noudar-rendering/LoadPNG.o \
     ../noudar-core/noudar-core/src/Vec2i.o \
     ../noudar-core/noudar-core/src/CActor.o \
     ../noudar-core/noudar-core/src/CMonster.o \

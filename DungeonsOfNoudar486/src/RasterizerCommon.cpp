@@ -7,11 +7,11 @@
 #include <cmath>
 #include <algorithm>
 #include <sg14/fixed_point>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 using sg14::fixed_point;
 
 #include "RasterizerCommon.h"
