@@ -18,10 +18,6 @@ namespace odb {
     class DungeonGLES2Renderer {
 
     private:
-#if defined(__ANDROID__ )
-        bool mUseStereoBillboardBehavior = false;
-#endif
-
         void fetchShaderLocations();
 
         void setPerspective();
@@ -46,15 +42,12 @@ namespace odb {
 
         int loadShader(EShaderType shaderType, const char *pSource);
 
-        glm::mat4 getBillboardTransform(glm::vec3 translation);
-
         void consumeRenderingBatches(long animationTime);
 
         void produceRenderingBatches(const NoudarDungeonSnapshot &snapshot);
 
         void initTileProperties();
 
-        bool mPerformVisibilityChecks = true;
     private:
         int frame = 0;
         int vertexAttributePosition;
@@ -129,8 +122,6 @@ namespace odb {
 
         void setPerspectiveMatrix(float *perspectiveMatrix);
 
-        void setClearColour(float r, float g, float b);
-
         VBORegister
         submitVBO(float *data, int vertices, unsigned short *indexData, unsigned int indices);
 
@@ -159,10 +150,6 @@ namespace odb {
 
         //interactions
         void resetCamera();
-
-        void performVisibilityChecks(bool visibilityChecks);
-
-        static int visibility;
     };
 }
 #endif //NOUDARRENDERING_DUNGEONRENDERER_H

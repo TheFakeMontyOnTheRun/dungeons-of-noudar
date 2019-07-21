@@ -16,6 +16,18 @@ int odb::VBORenderingJob::getVBOId() const {
 
 odb::VBORenderingJob::VBORenderingJob(int aVBOId, int aVBOIndicesId, int aAmount,
                                       glm::mat4 aTransform, float aShade,
+                                      bool needsAlphaTest, bool needsZBuffer) :
+        mVBOInstanceTransform(aTransform),
+        mShade(aShade),
+        mVBOId(aVBOId),
+        mVBOIndicesId(aVBOIndicesId),
+        mAmount(aAmount),
+        mNeedsZBuffer(needsZBuffer),
+        mNeedsAlphaTest(needsAlphaTest) {
+}
+
+odb::VBORenderingJob::VBORenderingJob(int aVBOId, int aVBOIndicesId, int aAmount,
+                                      glm::mat4 aTransform, float aShade,
                                       bool needsAlphaTest = false) :
         mVBOInstanceTransform(aTransform),
         mShade(aShade),

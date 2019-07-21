@@ -489,13 +489,11 @@ namespace odb {
     DungeonGLES2Renderer::produceRenderingBatches(const NoudarDungeonSnapshot &snapshot) {
 
         glm::vec3 pos;
-        const auto &billboardVBO = mVBORegisters["billboard"];
 
         batches.clear();
 
         mSnapshotAdapter.readSnapshot(snapshot, batches, mTileProperties, mVBORegisters,
                                       mTextureRegistry, mCamera, mElementMap);
-
 
         for (int z = 0; z < Knights::kMapSize; ++z) {
             for (int x = 0; x < Knights::kMapSize; ++x) {
@@ -679,22 +677,6 @@ namespace odb {
         mCamera.incrementRotateTarget(90);
     }
 
-    glm::mat4 DungeonGLES2Renderer::getBillboardTransform(glm::vec3 translation) {
-        glm::mat4 translated = glm::translate(identity, translation);
-
-#if defined(__ANDROID__ )
-        if (mUseStereoBillboardBehavior) {
-            return glm::rotate(translated,
-                               (mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
-                               glm::vec3(0.0f, 1.0f, 0.0f));
-        }
-#endif
-
-        return glm::rotate(translated,
-                           (360 - mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
-                           glm::vec3(0.0f, 1.0f, 0.0f));
-    }
-
     bool DungeonGLES2Renderer::isAnimating() {
         return mCamera.isAnimating();
     }
@@ -708,9 +690,6 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::setAngleXZ(float xz) {
-#if defined(__ANDROID__ )
-        mUseStereoBillboardBehavior = true;
-#endif
         mCamera.setRotationXZ(xz);
     }
 
