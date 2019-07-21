@@ -75,8 +75,8 @@ namespace odb {
         float curve = 0.0f;
 
         if (kUseSmoothAnimationCurves) {
-            if (step < 0.5f) {
-                curve = ((2.0f * step) * (2.0f * step)) / 2.0f;
+            if (step <= 0.5f) {
+                curve = ((2.0f * step * step));
             } else {
                 curve = (sqrt((step * 2.0f) - 1.0f) / 2.0f) + 0.5f;
             }
@@ -93,14 +93,6 @@ namespace odb {
                                                                  glm::vec3 translation) {
         glm::mat4 identity = glm::mat4(1.0f);
         glm::mat4 translated = glm::translate(identity, translation);
-
-#if defined(__ANDROID__ )
-//		if (mUseStereoBillboardBehavior) {
-//            return glm::rotate(translated,
-//                               (mCamera.getCameraRotationXZ()) * (3.141592f / 180.0f),
-//                               glm::vec3(0.0f, 1.0f, 0.0f));
-//        }
-#endif
 
         return glm::rotate(translated,
                            (360 - camera.getCameraRotationXZ()) * (3.141592f / 180.0f),
