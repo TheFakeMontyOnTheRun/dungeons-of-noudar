@@ -78,7 +78,6 @@ odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
 bool drawOverlayHUD = true;
 const int DEFAULT_HEALTH = 999;
-const int kMaxLevel = 7;
 
 vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
 std::shared_ptr<odb::SoundListener> mainListener;
