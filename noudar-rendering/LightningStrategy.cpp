@@ -63,7 +63,7 @@ namespace odb {
 
         array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
         array<int, Knights::kMapSize + Knights::kMapSize> intensity;
-        int stackPos = 0;
+        size_t stackPos = 0;
         Knights::Vec2i currentPos;
 
         positions[stackPos] = originalPos;
