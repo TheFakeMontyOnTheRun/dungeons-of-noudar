@@ -166,12 +166,6 @@
                     android:text="Pick" />
 
                 <Button
-                    android:id="@+id/btnDrop"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Drop" />
-
-                <Button
                     android:id="@+id/btnNextItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

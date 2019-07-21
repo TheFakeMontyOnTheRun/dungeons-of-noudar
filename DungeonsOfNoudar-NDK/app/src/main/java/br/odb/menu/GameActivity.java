@@ -60,7 +60,6 @@ public class GameActivity extends Activity {
             }
         });
 
-
         findViewById(R.id.btnAttack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,13 +71,6 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 GL2JNILib.pickItem();
-            }
-        });
-
-        findViewById(R.id.btnDrop).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GL2JNILib.dropItem();
             }
         });
 
@@ -95,7 +87,6 @@ public class GameActivity extends Activity {
                 GL2JNILib.cyclePreviousItem();
             }
         });
-
     }
 
     @Override
