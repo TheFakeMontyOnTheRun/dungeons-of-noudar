@@ -52,16 +52,6 @@ std::string gFragmentShader;
 
 std::shared_ptr<odb::SoundListener> soundListener;
 
-void *operator new[](size_t size, const char *pName, int flags, unsigned debugFlags,
-                     const char *file, int line) {
-    return malloc(size);
-}
-
-void *operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char *pName,
-                     int flags, unsigned debugFlags, const char *file, int line) {
-    return malloc(size);
-}
-
 /*
 std::shared_ptr<odb::SoundEmitter> makeSoundEmitterFromFilename(JNIEnv *env, jclass type,
                                                                 AAssetManager *assetManager,
