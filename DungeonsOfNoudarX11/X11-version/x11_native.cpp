@@ -205,8 +205,6 @@ event_loop(Display *dpy, Window win,
                         moveDown();
                     } else if (code == XK_a) {
                         pickupItem();
-                    } else if (code == XK_s ) {
-                        dropItem();
                     } else if (code == XK_z) {
                         moveLeft();
                     } else if (code == XK_x) {

@@ -6,10 +6,10 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(../noudar-core/noudar-core/include)
 include_directories(../NullSoundSystem)
 include_directories(../noudar-rendering)
-include_directories(../gles2-renderer)
+include_directories(../noudar-rendering)
 include_directories(../X11-version)
 include_directories(../glm)
-include_directories(../nanovg/src)
+include_directories(../stb)
 
 set(TEST_SOURCE_FILES
         ../tests/src/TestVisibilityStrategy.cpp
@@ -82,7 +82,6 @@ set(SOURCE_FILES
         ../noudar-rendering/RenderingJobSnapshotAdapter.h
         ../noudar-rendering/RenderingJobSnapshotAdapter.cpp
         ../noudar-rendering/GameNativeAPI.cpp
-        ../noudar-rendering/OverlayNanoVGRenderer.cpp
         ../noudar-rendering/DungeonGLES2Renderer.cpp
         ../noudar-rendering/LightningStrategy.cpp
         ../noudar-rendering/VisibilityStrategy.h
@@ -93,31 +92,22 @@ set(SOURCE_FILES
         ../noudar-rendering/NoudarGLES2Bridge.cpp
         X11-version/WindowOperationsX11.cpp
         X11-version/x11_native.cpp
-        ../gles2-renderer/LoadPNG.cpp
-        ../gles2-renderer/CLerp.cpp
-        ../gles2-renderer/CLerp.h
-        ../gles2-renderer/Camera.cpp
-        ../gles2-renderer/Camera.h
-        ../gles2-renderer/Logger.cpp
-        ../gles2-renderer/Camera.cpp
-        ../gles2-renderer/Camera.h
-        ../gles2-renderer/TrigBatch.cpp
-        ../gles2-renderer/VBORenderingJob.cpp
-        ../gles2-renderer/NativeBitmap.cpp
-        ../nanovg/src/nanovg.c
+        ../noudar-rendering/LoadPNG.cpp
+        ../noudar-rendering/CLerp.cpp
+        ../noudar-rendering/CLerp.h
+        ../noudar-rendering/Camera.cpp
+        ../noudar-rendering/Camera.h
+        ../noudar-rendering/Logger.cpp
+        ../noudar-rendering/Camera.cpp
+        ../noudar-rendering/Camera.h
+        ../noudar-rendering/VBORenderingJob.cpp
+        ../noudar-rendering/NativeBitmap.cpp
         ../NullSoundSystem/SoundClip.cpp
         ../NullSoundSystem/SoundEmitter.cpp
         ../NullSoundSystem/SoundListener.cpp
         ../NullSoundSystem/SoundUtils.cpp
-        ../noudar-rendering/GraphicNode.cpp
-        ../noudar-rendering/GraphicNode.h
-        ../noudar-rendering/Animation.cpp
-        ../noudar-rendering/Animation.h
-        ../noudar-rendering/AnimationStep.cpp
-        ../noudar-rendering/AnimationStep.h
         )
 
-find_package(OpenGL REQUIRED)
 find_package(X11 REQUIRED)
 find_package(PNG REQUIRED)
 
