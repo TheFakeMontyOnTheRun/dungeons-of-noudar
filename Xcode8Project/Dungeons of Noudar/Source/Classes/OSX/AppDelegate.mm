@@ -15,11 +15,13 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	
-	
+	[[ NSApplication sharedApplication ].mainWindow makeKeyWindow ];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
 }
+
+
 
 @end

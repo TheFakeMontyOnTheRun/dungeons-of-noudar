@@ -38,6 +38,9 @@
 #include <array>
 #include <iostream>
 
+using std::vector;
+using std::array;
+
 #include "NativeBitmap.h"
 
 #include "SoundClip.h"
@@ -134,73 +137,6 @@
 
 - (void) keyDown:(NSEvent *)event {
 	
-	unichar c = [[event charactersIgnoringModifiers] characterAtIndex:0];
 	
-	switch (c) 	{
-			
-		case 27:
-			if(_fullscreenWindow != nil) {
-				[self goWindow];
-			}
-			
-			return;
-		case '1':
-			if(_fullscreenWindow == nil) {
-				[self goFullscreen];
-			} else {
-				[self goWindow];
-			}
-			return;
-			
-		case 'z':
-			moveLeft();
-			break;
-			
-		case 'x':
-			moveRight();
-			break;
-			
-		case 'q':
-			exit(0);
-			break;
-			
-		case 'w':
-			pickupItem();
-			break;
-		case 's':
-			dropItem();
-			break;
-
-		case 'e':
-			cycleNextItem();
-			break;
-		case 'd':
-			cyclePrevItem();
-			break;
-			
-		case 'h':
-			interact();
-			break;
-			
-			
-			
-		case NSRightArrowFunctionKey:
-			rotateCameraRight();
-			break;
-			
-		case NSLeftArrowFunctionKey:
-			rotateCameraLeft();
-			break;
-			
-		case NSUpArrowFunctionKey:
-			moveUp();
-			break;
-			
-		case NSDownArrowFunctionKey:
-			moveDown();
-			break;
-			
-			
-	}
 }
 @end

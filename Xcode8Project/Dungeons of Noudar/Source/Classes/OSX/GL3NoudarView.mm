@@ -65,6 +65,9 @@
 #include <array>
 #include <iostream>
 
+using std::vector;
+using std::array;
+
 #include "NativeBitmap.h"
 
 #include "SoundClip.h"
@@ -103,6 +106,7 @@
 
 #import "GL3NoudarView.h"
 
+bool ready = false;
 
 long timeSinceStart = 0;
 
@@ -253,8 +257,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 	
 	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>( path );
 
-	readMap( std::make_shared<Knights::CPlainFileLoader>( path ), "tiles.properties" );
-	setupGraphics(viewRectPixels.size.width, viewRectPixels.size.height, "", "", fileLoader);
+	readMap( std::make_shared<Knights::CPlainFileLoader>( path ) );
+	
+	auto vertex = fileLoader->loadFileFromPath("vertex.glsl");
+	auto fragment = fileLoader->loadFileFromPath("fragment.glsl");
+	
+	setupGraphics(viewRectPixels.size.width, viewRectPixels.size.height, vertex, fragment, fileLoader);
 	
 	auto soundListener = std::make_shared<odb::SoundListener>();
 	
@@ -287,6 +295,8 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 	
 	CGLUnlockContext([[self openGLContext] CGLContextObj]);
+	
+	ready = true;
 }
 
 
@@ -314,6 +324,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 - (void) drawView
 {
+	if (!ready) {
+		return;
+	}
+	
 	@synchronized (self) {
 		[[self openGLContext] makeCurrentContext];
 		{

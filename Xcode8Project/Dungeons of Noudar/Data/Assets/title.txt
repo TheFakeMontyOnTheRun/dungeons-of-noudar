@@ -1,0 +1,16 @@
+
+(c) 2014-2018
+
+A game by Daniel Monteiro.
+Art by Stone Soup project.
+
+Controls:
+- arrows to move and turn.
+- z and x to strafe left and right.
+- s (or 1 - 3) to cycle the inventory.
+- a to pick items.
+- space to use the current item.
+- esc to quit (but why?!).
+
+Many thanks to the folks at 
+Serdaco, Retromania.pt and DOSHaven.eu!

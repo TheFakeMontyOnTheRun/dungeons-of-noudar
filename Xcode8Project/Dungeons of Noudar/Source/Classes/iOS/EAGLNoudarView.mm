@@ -284,7 +284,6 @@ using std::array;
 
 	[self addGestureRecognizer:mLongTapRecognizer];
 	
-	
 	return self;
 }
 
