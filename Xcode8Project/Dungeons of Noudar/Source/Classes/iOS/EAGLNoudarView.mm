@@ -6,24 +6,13 @@
 //  Copyright © 2016 Ostrich Design Bureau. All rights reserved.
 //
 
-
-
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
 #ifdef __APPLE__
-#if TARGET_IOS
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
-#else
-#import <OpenGL/OpenGL.h>
-#import <OpenGL/gl3.h>
-#endif
-#else
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <EGL/egl.h>
 #endif
 
 #include <cstdio>
@@ -37,7 +26,11 @@
 #include <iostream>
 #include <map>
 #include <array>
-#include <iostream>
+#include <vector>
+#include <memory>
+
+using std::vector;
+using std::array;
 
 #include "NativeBitmap.h"
 
@@ -66,8 +59,6 @@
 #include "Common.h"
 
 
-#include <vector>
-#include <memory>
 
 
 
@@ -245,7 +236,7 @@
 	
 	auto fileLoader = std::make_shared<Knights::CPlainFileLoader>( path );
 	
-	readMap( fileLoader, "tiles.properties" );
+	readMap( fileLoader );
 	
 	setupGraphics( frameDimensions.size.width, frameDimensions.size.height, gVertexShader, gFragmentShader, fileLoader);
 	

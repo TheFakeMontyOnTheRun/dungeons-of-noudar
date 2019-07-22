@@ -2,45 +2,39 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
+	<key>Application requires iPhone environment</key>
+	<true/>
+	<key>Bundle OS Type code</key>
+	<string>APPL</string>
+	<key>Bundle name</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleDisplayName</key>
+	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>UILaunchStoryboardName</key>
+	<key>Executable file</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>InfoDictionary version</key>
+	<string>6.0</string>
+	<key>Launch screen interface file base name</key>
 	<string>LaunchScreen</string>
-	<key>UIMainStoryboardFile</key>
+	<key>Localization native development region</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>Main storyboard file base name</key>
 	<string>Main</string>
-	<key>UIRequiredDeviceCapabilities</key>
+	<key>Required device capabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
-	<key>UISupportedInterfaceOrientations</key>
+	<key>Supported interface orientations</key>
 	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>Portrait (bottom home button)</string>
+		<string>Landscape (left home button)</string>
+		<string>Landscape (right home button)</string>
 	</array>
 </dict>
 </plist>

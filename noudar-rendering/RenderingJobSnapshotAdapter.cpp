@@ -12,11 +12,11 @@
 #include <map>
 #include <vector>
 #include <array>
-#include <Camera.h>
 
 using std::vector;
 using std::array;
 
+#include "Camera.h"
 #include "VBORenderingJob.h"
 #include "NativeBitmap.h"
 #include "ETextures.h"

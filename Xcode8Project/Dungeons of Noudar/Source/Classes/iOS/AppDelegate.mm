@@ -38,17 +38,20 @@
 #include <map>
 #include <array>
 #include <iostream>
+#include <cstdio>
+#include <vector>
+#include <memory>
+
+using std::vector;
+using std::array;
 
 #include "NativeBitmap.h"
-
 #include "SoundClip.h"
 #include "SoundUtils.h"
 #include "SoundListener.h"
 #include "SoundEmitter.h"
-
 #include "IFileLoaderDelegate.h"
 #include "CPlainFileLoader.h"
-
 #include "Vec2i.h"
 #include "NativeBitmap.h"
 #include "IMapElement.h"
@@ -58,21 +61,10 @@
 #include "CGameDelegate.h"
 #include "CMap.h"
 #include "IRenderer.h"
-
-
 #include "NoudarDungeonSnapshot.h"
-
 #include "GameNativeAPI.h"
 #include "Common.h"
-
-
-#include <vector>
-#include <memory>
-
 #import "AppDelegate.h"
-
-#include <cstdio>
- 
 #import "AppDelegate.h"
 #import "EAGLNoudarView.h"
 
@@ -141,7 +133,7 @@
      See also applicationDidEnterBackground:.
      */
 	
-//	[(EAGLNoudarView*)self.window.rootViewController.view stopAnimation];
+	//[(EAGLNoudarView*)self.window.rootViewController.view stopAnimation];
 }
 
 
