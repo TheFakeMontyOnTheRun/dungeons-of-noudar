@@ -101,8 +101,6 @@ EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *
         cyclePrevItem();
     } else if (code == "BracketRight") {
         pickupItem();
-    } else if (code == "Backslash") {
-        dropItem();
     }
 
 
