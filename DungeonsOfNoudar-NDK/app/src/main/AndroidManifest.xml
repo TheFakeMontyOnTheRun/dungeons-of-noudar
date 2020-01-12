@@ -23,6 +23,7 @@
             android:name="br.odb.menu.GameActivity"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             android:parentActivityName="br.odb.menu.RootActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
