@@ -1,6 +1,7 @@
 package br.odb.menu;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
@@ -25,6 +26,15 @@ public class GameActivity extends Activity {
         configureUiForInputDevice();
 
         setContentView(R.layout.game3d_layout);
+
+        if (mHaveController ) {
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+                findViewById(R.id.rlLeftPanel).setVisibility(View.GONE);
+                findViewById(R.id.rlRightPanel).setVisibility(View.GONE);
+            } else {
+                findViewById(R.id.rlControllers).setVisibility(View.GONE);
+            }
+        }
 
         view = findViewById(R.id.gameView1);
 

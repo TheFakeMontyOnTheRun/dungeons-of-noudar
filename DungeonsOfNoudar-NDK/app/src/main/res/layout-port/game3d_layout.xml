@@ -11,6 +11,7 @@
         android:layout_weight="7" />
 
     <RelativeLayout
+        android:id="@+id/rlControllers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
