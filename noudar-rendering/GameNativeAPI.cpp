@@ -344,6 +344,7 @@ void setAngleYZ(float YZAngle) {
 }
 
 void readMap(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate) {
+    gles2Renderer->shutdown();
     render = std::make_shared<odb::NoudarGLES2Bridge>();
 
     auto onMonsterDead = [&](Knights::Vec2i pos) {
