@@ -207,7 +207,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
             public void onSwipeUp() {
                 super.onSwipeUp();
 
-                key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
+                key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
             }
 
             @Override
@@ -232,7 +232,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
             public void onSwipeDown() {
                 super.onSwipeDown();
 
-                key = transformMovementToCameraRotation(GameViewGLES2.KB.DOWN);
+                key = transformMovementToCameraRotation(GameViewGLES2.KB.UP);
             }
         });
 
