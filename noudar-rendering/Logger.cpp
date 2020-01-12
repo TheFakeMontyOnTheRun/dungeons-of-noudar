@@ -3,6 +3,7 @@
 //
 #include <string>
 #include <cstdarg>
+#include <cstring>
 
 #ifdef __ANDROID__
 
@@ -18,6 +19,8 @@ namespace odb {
 
     void doLog(const char *format, va_list args) {
         char buffer[255];
+        return;
+        memset(&buffer[0], 0, 255);
         std::vsnprintf(buffer, 255, format, args);
 
 #ifdef __ANDROID__
