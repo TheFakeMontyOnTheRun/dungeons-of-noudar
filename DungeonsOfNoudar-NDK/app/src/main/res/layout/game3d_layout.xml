@@ -150,11 +150,31 @@
     </RelativeLayout>
 
 
-    <br.odb.GameViewGLES2
-        android:id="@+id/gameView1"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="7" />
+        android:layout_weight="7"
+        android:orientation="vertical">
+
+        <br.odb.GameViewGLES2
+            android:id="@+id/gameView1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="8" />
+
+        <TextView
+            android:id="@+id/tvFaith"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Faith: 100" />
+
+        <Spinner
+            android:id="@+id/spnCurrentItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:spinnerMode="dialog" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rlRightPanel"
@@ -195,12 +215,6 @@
                     android:layout_height="wrap_content"
 
                     android:text="Pick" />
-
-                <Button
-                    android:id="@+id/btnNextItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Next Item" />
 
             </LinearLayout>
 

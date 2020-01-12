@@ -38,8 +38,6 @@ public class GL2JNILib {
 
     public static native void cycleNextItem();
 
-    public static native void dropItem();
-
     public static native void pickItem();
 
     public static native void useItem();
@@ -47,4 +45,16 @@ public class GL2JNILib {
     public static native boolean isThereAnyObjectInFrontOfYou();
 
     public static native int getLevel();
+
+    public static native int getFaith();
+
+    public static native int getTint();
+
+    public static native char getCurrentItem();
+
+    public static native int getAvailabilityForItem(char currentItem);
+
+    public static native boolean hasItem(char item);
+
+    public static native void setCurrentItem(char item);
 }

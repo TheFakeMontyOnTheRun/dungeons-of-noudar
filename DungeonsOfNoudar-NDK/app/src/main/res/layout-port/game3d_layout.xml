@@ -10,22 +10,28 @@
         android:layout_height="0dp"
         android:layout_weight="7" />
 
-    <RelativeLayout
-        android:id="@+id/rlControllers"
+    <LinearLayout
+        android:id="@+id/llHud"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
+        android:orientation="vertical"
         android:focusable="false">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bgrepeat"
-            android:tint="#B555" />
+        <TextView
+            android:id="@+id/tvFaith"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Faith: 100" />
+
+        <Spinner
+            android:id="@+id/spnCurrentItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dialog" />
 
         <LinearLayout
+            android:id="@+id/llControllers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -96,7 +102,7 @@
                         android:focusable="false"
                         android:scaleType="fitCenter"
                         android:src="@drawable/down"
-                        android:visibility="gone" />
+                        android:visibility="invisible" />
 
                     <ImageButton
                         android:id="@+id/btnRight"
@@ -164,16 +170,10 @@
 
                     android:text="Pick" />
 
-                <Button
-                    android:id="@+id/btnNextItem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Next Item" />
-
             </LinearLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

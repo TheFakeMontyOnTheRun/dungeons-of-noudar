@@ -1,67 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="#000"
+    android:orientation="vertical"
     android:weightSum="1">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/intro" />
+
+    <TextView
+        android:id="@+id/tvTitle"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.75">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#00F"
+        android:textSize="45sp"
+        android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:scaleType="centerCrop"
-            android:tint="#B555"
-            android:src="@drawable/knights" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/app_name"
-            android:id="@+id/tvTitle"
-            android:textColor="#F00"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentStart="false"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:textSize="45sp"/>
-
-    </RelativeLayout>
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_weight="0.25"
-        android:layout_height="0dp">
+        android:layout_height="wrap_content"
+        android:background="#AAF"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btStart"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:text="@string/start"
-            android:layout_weight="1"/>
+        <CheckBox
+            android:id="@+id/chkOnScreenControllers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show screen controllers" />
 
-        <Button
-            android:id="@+id/btnHowToPlay"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/how_to_play"
-            android:layout_weight="1"/>
+        <CheckBox
+            android:id="@+id/chkSound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sound" />
 
-        <Button
-            android:id="@+id/btnCredits"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:text="@string/credits"
-            android:layout_weight="1"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btStart"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/start" />
+
+            <Button
+                android:id="@+id/btnHowToPlay"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/how_to_play" />
+
+            <Button
+                android:id="@+id/btnCredits"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/credits" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

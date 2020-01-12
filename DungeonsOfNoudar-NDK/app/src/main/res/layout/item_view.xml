@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/bull0"
-        android:id="@+id/ivKnightIcon"/>
+        android:id="@+id/ivItemIcon"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -20,14 +20,14 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Large Text"
-            android:id="@+id/tvKnightName"/>
+            android:id="@+id/tvItemName"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/tvHealth"/>
+            android:id="@+id/tvCapacity"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -52,6 +52,15 @@ std::string gFragmentShader;
 
 std::shared_ptr<odb::SoundListener> soundListener;
 
+int getTint();
+
+char getCurrentItemSymbol();
+
+int getItemAvailability(char item );
+
+int hasItem(char item );
+
+void setCurrentItem( char item );
 /*
 std::shared_ptr<odb::SoundEmitter> makeSoundEmitterFromFilename(JNIEnv *env, jclass type,
                                                                 AAssetManager *assetManager,
@@ -358,4 +367,40 @@ JNIEXPORT jint JNICALL
 Java_br_odb_GL2JNILib_getLevel(JNIEnv *env, jclass type) {
 
     return getLevel();
+}
+
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_br_odb_GL2JNILib_getFaith(JNIEnv *env, jclass clazz) {
+    return getHP();
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_br_odb_GL2JNILib_getTint(JNIEnv *env, jclass clazz) {
+    return getTint();
+}
+
+extern "C"
+JNIEXPORT jchar JNICALL
+Java_br_odb_GL2JNILib_getCurrentItem(JNIEnv *env, jclass clazz) {
+	return getCurrentItemSymbol();
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_br_odb_GL2JNILib_getAvailabilityForItem(JNIEnv *env, jclass clazz, jchar current_item) {
+    return getItemAvailability(current_item);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_br_odb_GL2JNILib_hasItem(JNIEnv *env, jclass clazz, jchar item) {
+    return hasItem(item);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_setCurrentItem(JNIEnv *env, jclass clazz, jchar item) {
+    setCurrentItem(item);
 }

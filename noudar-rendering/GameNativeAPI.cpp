@@ -62,6 +62,7 @@ using std::array;
 #include "LightningStrategy.h"
 #include "VisibilityStrategy.h"
 #include "LoadPNG.h"
+#include "CStorageItem.h"
 
 std::shared_ptr<odb::DungeonGLES2Renderer> gles2Renderer = nullptr;
 
@@ -74,9 +75,7 @@ long animationTime = 0;
 
 std::shared_ptr<Knights::CGame> game;
 std::shared_ptr<odb::NoudarGLES2Bridge> render;
-odb::CTilePropertyMap tileProperties;
 odb::NoudarDungeonSnapshot snapshot;
-bool drawOverlayHUD = true;
 const int DEFAULT_HEALTH = 999;
 
 vector<std::shared_ptr<odb::SoundEmitter>> soundEmitters;
@@ -564,6 +563,8 @@ std::string getCurrentObjectName() {
     }
 }
 
+int lastHP = 100;
+
 int getHP() {
 
     if (game == nullptr) {
@@ -582,8 +583,26 @@ int getHP() {
         return DEFAULT_HEALTH;
     }
 
-    return actor->getHP();
+    lastHP = actor->getHP();
+
+    return lastHP;
 }
+
+//HAS TO BE CALLED BEFORE GET FAITH!
+int getTint() {
+    if (game == nullptr || game->getMap() == nullptr || game->getMap()->getAvatar() == nullptr ) {
+        return 0;
+    }
+
+    if (game->getMap()->getAvatar()->getHP() < lastHP ) {
+        return -1;
+    } else if (game->getMap()->getAvatar()->getHP() > lastHP ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 
 Knights::EDirection getCurrentDirection() {
     auto map = game->getMap();
@@ -592,15 +611,6 @@ Knights::EDirection getCurrentDirection() {
     return actor->getDirection();
 }
 
-void shouldDrawHUD(bool drawHUD) {
-    drawOverlayHUD = drawHUD;
-}
-
-void performVisibilityChecks(bool visibilityCheck) {
-    if (render != nullptr) {
-        render->setVisibilityChecks(visibilityCheck);
-    }
-}
 
 bool isPlaying() {
     return getHP() > 0;
@@ -612,4 +622,45 @@ int getLevel() {
     }
 
     return game->getLevelNumber();
+}
+
+char getCurrentItemSymbol() {
+	if (game == nullptr || game->getMap() == nullptr || game->getMap()->getAvatar() == nullptr ) {
+		return '.';
+	}
+
+	return game->getMap()->getAvatar()->getSelectedItem()->getView();
+}
+
+int hasItem(char item ) {
+    if (game == nullptr || game->getMap() == nullptr || game->getMap()->getAvatar() == nullptr ) {
+        return 0;
+    }
+
+    std::shared_ptr<Knights::CItem> itemPtr = game->getMap()->getAvatar()->getItemWithSymbol(item);
+
+    return !!itemPtr;
+}
+
+void setCurrentItem( char item ) {
+    if (game == nullptr || game->getMap() == nullptr || game->getMap()->getAvatar() == nullptr ) {
+        return;
+    }
+
+    game->getMap()->getAvatar()->suggestCurrentItem(item);
+}
+
+
+int getItemAvailability(char item ) {
+	if (game == nullptr || game->getMap() == nullptr || game->getMap()->getAvatar() == nullptr ) {
+		return 0;
+	}
+
+	std::shared_ptr<Knights::CItem> itemPtr = game->getMap()->getAvatar()->getItemWithSymbol(item);
+    auto storageItem = (Knights::CStorageItem*)itemPtr.get();
+	if (storageItem != nullptr) {
+		return storageItem->getAmount();
+	} else {
+		return -1;
+	}
 }
