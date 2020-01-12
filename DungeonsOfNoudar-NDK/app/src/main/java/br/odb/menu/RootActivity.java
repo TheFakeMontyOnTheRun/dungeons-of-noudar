@@ -47,8 +47,6 @@ public class RootActivity extends Activity {
         ((Button) findViewById(R.id.btStart)).setTypeface(font);
 		((Button)findViewById(R.id.btnCredits)).setTypeface( font );
         ((Button) findViewById(R.id.btnHowToPlay)).setTypeface(font);
-
-        mSoundManager.playMusic(R.raw.canto_rg);
     }
 
     private void playGame() {
