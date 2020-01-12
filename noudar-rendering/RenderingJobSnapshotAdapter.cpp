@@ -38,14 +38,14 @@ namespace odb {
     const static glm::mat4 identity = glm::mat4(1.0f);
     int RenderingJobSnapshotAdapter::visibility = 8;
 
-    const static bool kRenderSky = true;
+    const static bool kRenderSky = false;
 
     const static bool kOnlyRenderAreaAroundPlayer = false;
 
     const static bool kUseRepeatedGeometryStances = false;
-
+/*
     const static bool kUseSmoothAnimationCurves = true;
-
+*/
     glm::mat4 RenderingJobSnapshotAdapter::getSkyTransform(long animationTime) {
         long offset = animationTime;
         int integerPart = offset % ((kSkyTextureLength * 2) * 1000);
@@ -68,6 +68,7 @@ namespace odb {
                                                                     glm::vec2 destPosition,
                                                                     long animationTime,
                                                                     long timestamp) {
+        /*
         float step = (((float) ((timestamp - animationTime))) /
                       ((float) kAnimationLength));
 
@@ -86,6 +87,9 @@ namespace odb {
 
         return {(curve * (destPosition.x - prevPosition.x)) + prevPosition.x,
                 (curve * (destPosition.y - prevPosition.y)) + prevPosition.y};
+                */
+
+        return destPosition;
 
     }
 

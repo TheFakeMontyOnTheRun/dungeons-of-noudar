@@ -51,12 +51,10 @@ namespace odb {
     private:
         int frame = 0;
         int vertexAttributePosition;
-        int modelMatrixAttributePosition;
         int samplerUniformPosition;
         int textureCoordinatesAttributePosition;
-        int projectionMatrixAttributePosition;
+        int projectionViewMatrixAttributePosition;
         int gProgram;
-        int uView;
         int uMod;
         int uScale;
         int fadeUniform;

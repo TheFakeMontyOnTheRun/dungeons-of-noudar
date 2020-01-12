@@ -13,7 +13,7 @@
 
 #include "Camera.h"
 
-const static bool kUseQuarterAngles = false;
+const static bool kUseQuarterAngles = true;
 
 const static bool kCompleteMovementInstantly = false;
 

@@ -381,11 +381,10 @@ namespace odb {
     void DungeonGLES2Renderer::fetchShaderLocations() {
 
         vertexAttributePosition = glGetAttribLocation(gProgram, "aPosition");
-        modelMatrixAttributePosition = glGetUniformLocation(gProgram, "uModel");
-        projectionMatrixAttributePosition = glGetUniformLocation(gProgram, "uProjection");
+        projectionViewMatrixAttributePosition = glGetUniformLocation(gProgram, "uProjectionView");
         samplerUniformPosition = glGetUniformLocation(gProgram, "sTexture");
         textureCoordinatesAttributePosition = glGetAttribLocation(gProgram, "aTexCoord");
-        uView = glGetUniformLocation(gProgram, "uView");
+
         uMod = glGetUniformLocation(gProgram, "uMod");
         fadeUniform = glGetUniformLocation(gProgram, "uFade");
         uScale = glGetUniformLocation(gProgram, "uScale");
@@ -430,7 +429,7 @@ namespace odb {
 
     void DungeonGLES2Renderer::clearBuffers() {
         glEnable(GL_DEPTH_TEST);
-        glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         checkGlError("glClearColor");
         glClearDepthf(1.0f);
         checkGlError("glClearDepthf");
@@ -439,7 +438,7 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::setPerspective() {
-        glUniformMatrix4fv(projectionMatrixAttributePosition, 1, false, &projectionMatrix[0][0]);
+
     }
 
     void DungeonGLES2Renderer::prepareShaderProgram() {
@@ -451,8 +450,7 @@ namespace odb {
     DungeonGLES2Renderer::DungeonGLES2Renderer() {
         projectionMatrix = glm::mat4(1.0f);
         vertexAttributePosition = 0;
-        modelMatrixAttributePosition = 0;
-        projectionMatrixAttributePosition = 0;
+        projectionViewMatrixAttributePosition = 0;
         gProgram = 0;
     }
 
@@ -605,7 +603,9 @@ namespace odb {
         glm::vec4 mFadeColour = glm::vec4(0.0f, 0.0f, 0.0f, mFadeLerp.getCurrentValue() / 1000.0f);
 
         glUniform4fv(fadeUniform, 1, &mFadeColour[0]);
-        glUniformMatrix4fv(uView, 1, false, &mViewMatrix[0][0]);
+
+
+
         glDepthFunc(GL_LEQUAL);
         glEnableVertexAttribArray(vertexAttributePosition);
         glEnableVertexAttribArray(textureCoordinatesAttributePosition);
@@ -680,11 +680,18 @@ namespace odb {
         glUniform4f(uMod, shade, shade, shade, 1.0f);
 
         if (vertexVbo != mSkyboxVBOVertexId && vertexVbo != mBillboardVBOVertexId) {
-            glUniformMatrix4fv(uScale, 1, false, &transform[0][0]);
+            glm::mat2 scale(1.0f);
+            scale[0][0] = transform[0][0];
+            scale[1][1] = transform[1][1];
+            glUniformMatrix2fv(uScale, 1, false, &scale[0][0]);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, vertexVbo);
-        glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &transform[0][0]);
+
+        glm::mat4 projectionView =  projectionMatrix * mViewMatrix * transform;
+
+        glUniformMatrix4fv(projectionViewMatrixAttributePosition, 1, false, &projectionView[0][0]);
+
         glVertexAttribPointer(vertexAttributePosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
         glVertexAttribPointer(textureCoordinatesAttributePosition, 2, GL_FLOAT, GL_TRUE,
                               sizeof(float) * 5, (void *) (sizeof(float) * 3));
@@ -693,7 +700,8 @@ namespace odb {
         glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_SHORT, 0);
 
         if (vertexVbo != mSkyboxVBOVertexId && vertexVbo != mBillboardVBOVertexId) {
-            glUniformMatrix4fv(uScale, 1, false, &identity[0][0]);
+            glm::mat2 scale(1.0f);
+            glUniformMatrix2fv(uScale, 1, false, &scale[0][0]);
         }
     }
 
