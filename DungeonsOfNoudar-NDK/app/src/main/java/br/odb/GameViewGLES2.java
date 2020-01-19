@@ -103,7 +103,7 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
 
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
-        GL2JNILib.init(width, height, this.assets);
+        GL2JNILib.init(width, height);
     }
 
     @Override
@@ -243,13 +243,6 @@ public class GameViewGLES2 extends GLSurfaceView implements GLSurfaceView.Render
     public void onDestroy() {
         synchronized (renderingLock) {
             GL2JNILib.onDestroy();
-        }
-    }
-
-    public void onCreate(AssetManager assets) {
-        synchronized (renderingLock) {
-            this.assets = assets;
-            GL2JNILib.onCreate(assets);
         }
     }
 

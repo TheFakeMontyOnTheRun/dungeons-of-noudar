@@ -49,7 +49,7 @@ vector<std::shared_ptr<odb::SoundEmitter>> sounds;
 vector<std::string> meshes;
 std::string gVertexShader;
 std::string gFragmentShader;
-
+std::shared_ptr<odb::AndroidFileLoaderDelegate> fileServer = nullptr;
 std::shared_ptr<odb::SoundListener> soundListener;
 
 int getTint();
@@ -155,8 +155,6 @@ Java_br_odb_GL2JNILib_loadSounds(JNIEnv *env, jclass type,
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_flush(JNIEnv *env, jclass type, jobject sink);
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, jclass type,
-                                                      jobject assetManager);
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setTextures(JNIEnv *env, jclass type, jobjectArray bitmaps);
@@ -206,7 +204,7 @@ JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_fadeIn(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jclass type,
-                                                  jint width, jint height, jobject asset_manager);
+                                                  jint width, jint height);
 
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setMapWithSplatsAndActors(JNIEnv *env, jclass type, jintArray map_,
@@ -220,30 +218,10 @@ Java_br_odb_GL2JNILib_isPlaying(JNIEnv *env, jclass type);
 
 };
 
-JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onCreate(JNIEnv *env, jclass type,
-                                                      jobject assetManager) {
-
-    AAssetManager *asset_manager = AAssetManager_fromJava(env, assetManager);
-    FILE *fd;
-
-    fd = android_fopen("vertex.glsl", "r", asset_manager);
-    gVertexShader = readToString(fd);
-    fclose(fd);
-
-    fd = android_fopen("fragment.glsl", "r", asset_manager);
-    gFragmentShader = readToString(fd);
-    fclose(fd);
-
-    readMap(std::make_shared<odb::AndroidFileLoaderDelegate>(asset_manager));
-}
-
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_init(JNIEnv *env, jclass type,
-                                                  jint width, jint height, jobject assets) {
+                                                  jint width, jint height) {
 
-    AAssetManager *assetManager = AAssetManager_fromJava(env, assets);
-    auto loader = std::make_shared<odb::AndroidFileLoaderDelegate>(assetManager);
-
-    setupGraphics(width, height, gVertexShader, gFragmentShader, loader);
+    setupGraphics(width, height, gVertexShader, gFragmentShader, fileServer);
 }
 
 JNIEXPORT void JNICALL Java_br_odb_GL2JNILib_onDestroy(JNIEnv *env, jclass type) {
@@ -403,6 +381,26 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setCurrentItem(JNIEnv *env, jclass clazz, jchar item) {
     setCurrentItem(item);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_setAssets(JNIEnv *env, jclass clazz, jobject assetManager) {
+	AAssetManager *asset_manager = AAssetManager_fromJava(env, assetManager);
+	fileServer = std::make_shared<odb::AndroidFileLoaderDelegate>(asset_manager);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_br_odb_GL2JNILib_onCreate__(JNIEnv *env, jclass clazz) {
+
+
+	gVertexShader = fileServer->loadFileFromPath("vertex.glsl");
+	gFragmentShader = fileServer->loadFileFromPath("fragment.glsl");
+
+	readMap(fileServer);
+}
+
 extern int soundToPlay;
 
 extern "C"
