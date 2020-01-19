@@ -194,7 +194,12 @@ public class GameActivity extends Activity implements AdapterView.OnItemSelected
         }).start();
 
         GL2JNILib.setAssets(getAssets());
-        GL2JNILib.onCreate();
+
+        if ( savedInstanceState == null ) {
+            GL2JNILib.onCreate();
+        } else {
+            GL2JNILib.tick(1);
+        }
     }
 
     private void initAudio() {

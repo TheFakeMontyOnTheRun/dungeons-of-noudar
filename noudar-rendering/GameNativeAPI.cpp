@@ -182,6 +182,14 @@ void renderFrame(long delta) {
         snapshot.mCursorPosition = cursor;
         snapshot.mCameraId = game->getCurrentActorId();
         snapshot.mCameraPosition = game->getMap()->getAvatar()->getPosition();
+
+        gles2Renderer->resetCamera();
+
+        for ( int c = 0; c < static_cast<int>(game->getMap()->getAvatar()->getDirection()); ++c ) {
+			gles2Renderer->rotateRight();
+			gles2Renderer->updateCamera(1000);
+        }
+
         gles2Renderer->render(snapshot);
         gles2Renderer->updateCamera(delta);
     }
