@@ -104,7 +104,7 @@ loadBitmapList(std::string filename, std::shared_ptr<Knights::IFileLoaderDelegat
     return toReturn;
 }
 
-vector<vector<std::shared_ptr<odb::NativeBitmap>>>
+vector<std::shared_ptr<odb::NativeBitmap>>
 loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
 
     std::stringstream roomName("");
@@ -119,18 +119,14 @@ loadTexturesForLevel(int levelNumber, std::shared_ptr<Knights::IFileLoaderDelega
 
     std::string buffer;
 
-    vector<vector<std::shared_ptr<odb::NativeBitmap>>> tilesToLoad;
+    vector<std::shared_ptr<odb::NativeBitmap>> tilesToLoad;
 
     while (dataStream.good()) {
         std::getline(dataStream, buffer);
-        vector<std::shared_ptr<odb::NativeBitmap>> textures;
-
 
         if (!buffer.empty()) {
-            textures.push_back(loadPNG(buffer, fileLoader));
+			tilesToLoad.push_back(loadPNG(buffer, fileLoader));
         }
-
-        tilesToLoad.push_back(textures);
     }
 
     return tilesToLoad;

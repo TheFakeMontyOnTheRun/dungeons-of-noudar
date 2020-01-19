@@ -64,8 +64,8 @@ namespace odb {
         glm::mat4 mViewMatrix = glm::mat4(1.0f);
         std::unordered_map<ETextures, vector<odb::VBORenderingJob>> batches;
         std::unordered_map<EActorsSnapshotElement, ETextures> mElementMap;
-        vector<vector<std::shared_ptr<NativeBitmap>>> mBitmaps;
-        vector<vector<unsigned int>> mTextures;
+        vector<std::shared_ptr<NativeBitmap>> mBitmaps;
+        vector<unsigned int> mTextures;
         std::unordered_map<VBORegisterId, VBORegister> mVBORegisters;
         std::unordered_map<std::string, ETextures> mTextureRegistry;
         CTilePropertyMap mTileProperties;
@@ -108,7 +108,7 @@ namespace odb {
         bool init(float w, float h, const std::string &vertexShader,
                   const std::string &fragmentShader);
 
-        void setTexture(vector<vector<std::shared_ptr<NativeBitmap>>> textures);
+        void setTexture(vector<std::shared_ptr<NativeBitmap>> textures);
 
         void render(const NoudarDungeonSnapshot &snapshot);
 
