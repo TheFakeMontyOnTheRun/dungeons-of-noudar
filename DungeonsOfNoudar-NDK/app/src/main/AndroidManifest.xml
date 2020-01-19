@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.odb.noudar"
     android:versionCode="1"
+    android:installLocation="auto"
     android:versionName="1.0">
 
 
