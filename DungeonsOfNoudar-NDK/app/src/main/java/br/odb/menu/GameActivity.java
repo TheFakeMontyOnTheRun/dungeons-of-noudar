@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,10 @@ import br.odb.GL2JNILib;
 import br.odb.GameViewGLES2;
 import br.odb.ItemSelectionAdapter;
 import br.odb.noudar.R;
+
+import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
+import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+import static android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
 public class GameActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
@@ -66,6 +71,10 @@ public class GameActivity extends Activity implements AdapterView.OnItemSelected
         view = findViewById(R.id.gameView1);
 
         view.init(this, 0, mHaveController);
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            enterStickyImmersiveMode();
+        }
 
         findViewById(R.id.btnUp).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +217,10 @@ public class GameActivity extends Activity implements AdapterView.OnItemSelected
         sounds[5] = soundPool.load(this, R.raw.swing, 1);
         sounds[6] = soundPool.load(this, R.raw.monsterdead, 1);
         sounds[7] = soundPool.load(this, R.raw.playerdead, 1);
+    }
+
+    private void enterStickyImmersiveMode() {
+        getWindow().getDecorView().setSystemUiVisibility(SYSTEM_UI_FLAG_IMMERSIVE_STICKY | SYSTEM_UI_FLAG_FULLSCREEN | SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
     @Override
