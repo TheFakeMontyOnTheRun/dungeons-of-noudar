@@ -18,8 +18,7 @@ OBJS = main.o \
         src/CTile3DProperties.o \
 	src/CPackedFileReader.o \
 	src/VisibilityStrategy.o \
-	../gles2-renderer/Logger.o \
-        ../gles2-renderer/LoadPNG.o \
+        ../noudar-rendering/LoadPNG.o \
         ../noudar-core/noudar-core/src/Vec2i.o \
         ../noudar-core/noudar-core/src/CActor.o \
         ../noudar-core/noudar-core/src/CMonster.o \
