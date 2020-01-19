@@ -347,16 +347,16 @@ void readMap(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate) {
     render = std::make_shared<odb::NoudarGLES2Bridge>();
 
     auto onMonsterDead = [&](Knights::Vec2i pos) {
-        playSound(4);
+        playSound(6);
     };
 
     auto onPlayerDead = [&](Knights::Vec2i pos) {
-        playSound(6);
+        playSound(7);
         game->playLevel(8);
     };
 
     auto onPlayerAttack = [&](Knights::Vec2i pos) {
-        playSound(7);
+        playSound(5);
     };
 
     auto onMonsterAttack = [&](Knights::Vec2i pos) {
@@ -378,7 +378,7 @@ void readMap(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate) {
 
 
     auto onPlayerDamaged = [&](Knights::Vec2i pos) {
-        playSound(5);
+        playSound(4);
     };
 
 
@@ -426,10 +426,18 @@ void readMap(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoaderDelegate) {
     }
 }
 
+int soundToPlay = -1;
+
 void playSound(int soundNum) {
+#ifndef ANDROID
     if (!soundEmitters.empty()) {
         soundEmitters[soundNum]->play(mainListener);
     }
+#else
+	if ( soundToPlay < soundNum ) {
+    	soundToPlay = soundNum;
+    }
+#endif
 }
 
 void moveUp() {

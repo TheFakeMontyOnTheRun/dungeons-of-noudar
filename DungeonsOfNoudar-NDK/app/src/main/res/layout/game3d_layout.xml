@@ -53,6 +53,7 @@
                         android:focusable="false"
                         android:scaleType="fitCenter"
                         android:src="@drawable/down"
+                        android:soundEffectsEnabled="false"
                         android:text="" />
 
                     <ImageView
@@ -76,6 +77,7 @@
                         android:layout_weight="1"
                         android:background="#000000FF"
                         android:focusable="false"
+                        android:soundEffectsEnabled="false"
                         android:scaleType="fitCenter"
                         android:src="@drawable/right"
                         android:text="" />
@@ -87,6 +89,7 @@
                         android:layout_weight="1"
                         android:background="#000000FF"
                         android:focusable="false"
+                        android:soundEffectsEnabled="false"
                         android:scaleType="fitCenter"
                         android:src="@drawable/down"
                         android:visibility="gone" />
@@ -99,6 +102,7 @@
                         android:background="#000000FF"
                         android:focusable="false"
                         android:scaleType="fitCenter"
+                        android:soundEffectsEnabled="false"
                         android:src="@drawable/left"
                         android:text="" />
 
@@ -120,6 +124,7 @@
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
+                        android:soundEffectsEnabled="false"
                         android:background="#000000FF"
                         android:focusable="false"
                         android:scaleType="fitCenter"
@@ -205,12 +210,14 @@
 
                 <Button
                     android:id="@+id/btnAttack"
+                    android:soundEffectsEnabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Attack" />
 
                 <Button
                     android:id="@+id/btnPick"
+                    android:soundEffectsEnabled="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 

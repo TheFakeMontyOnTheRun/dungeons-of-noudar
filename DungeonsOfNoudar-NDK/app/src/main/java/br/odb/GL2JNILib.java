@@ -57,4 +57,7 @@ public class GL2JNILib {
     public static native boolean hasItem(char item);
 
     public static native void setCurrentItem(char item);
+
+    public static native int getSoundToPlay();
+
 }

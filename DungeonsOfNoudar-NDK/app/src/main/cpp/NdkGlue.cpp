@@ -403,4 +403,12 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_br_odb_GL2JNILib_setCurrentItem(JNIEnv *env, jclass clazz, jchar item) {
     setCurrentItem(item);
+extern int soundToPlay;
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_br_odb_GL2JNILib_getSoundToPlay(JNIEnv *env, jclass clazz) {
+	int toReturn = soundToPlay;
+	soundToPlay = -1;
+    return toReturn;
 }

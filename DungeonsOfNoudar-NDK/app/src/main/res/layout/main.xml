@@ -32,17 +32,17 @@
         android:background="#AAF"
         android:orientation="vertical">
 
+        <Switch
+            android:id="@+id/swEnableSound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enable sound" />
+
         <CheckBox
             android:id="@+id/chkOnScreenControllers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show screen controllers" />
-
-        <CheckBox
-            android:id="@+id/chkSound"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sound" />
 
         <LinearLayout
             android:layout_width="match_parent"

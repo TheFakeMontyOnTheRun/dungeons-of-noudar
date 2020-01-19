@@ -3,7 +3,11 @@ package br.odb.menu;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -26,12 +30,19 @@ public class GameActivity extends Activity implements AdapterView.OnItemSelected
     private TextView tvFaith;
     private Spinner spnItemSelector;
     ItemSelectionAdapter adapter;
+    private SoundPool soundPool;
+
     String[] pickedItems = new String[]{"t"};
     Typeface font;
+    private int[] sounds = new int[8];
+    boolean shouldInitAudio = true;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        shouldInitAudio = getIntent().getExtras().getString("hasSound").equals("y");
 
         mControllerHelper = new ControllerHelper(this);
 
@@ -174,19 +185,67 @@ public class GameActivity extends Activity implements AdapterView.OnItemSelected
         }).start();
     }
 
+    private void initAudio() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        soundPool =
+            new SoundPool.Builder().setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()).build();
+        } else {
+            soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0 );
+        }
+
+        sounds[0] = soundPool.load(this, R.raw.grasssteps, 1);
+        sounds[1] = soundPool.load(this, R.raw.stepsstones, 1);
+        sounds[2] = soundPool.load(this, R.raw.stepsstones, 1);
+        sounds[3] = soundPool.load(this, R.raw.monsterdamage, 1);
+        sounds[4] = soundPool.load(this, R.raw.playerdamage, 1);
+        sounds[5] = soundPool.load(this, R.raw.swing, 1);
+        sounds[6] = soundPool.load(this, R.raw.monsterdead, 1);
+        sounds[7] = soundPool.load(this, R.raw.playerdead, 1);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
 
         view.onPause();
         view.onDestroy();
+
+        if (soundPool != null ) {
+            soundPool.release();
+        }
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        view.onCreate(getAssets());
+        if (shouldInitAudio) {
+            initAudio();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        int sound = GL2JNILib.getSoundToPlay();
+                        if ( sound >= 0 && sound <= 8 ) {
+                            Log.d("Noudar", "Sound to play: " + sound );
+                            soundPool.play(sounds[sound], 1f, 1f, 0, 0, 1f);
+                        }
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+        }
+
         view.onResume();
 
     }

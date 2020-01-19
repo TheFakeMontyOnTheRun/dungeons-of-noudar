@@ -6,15 +6,19 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import br.odb.SoundManager;
 import br.odb.noudar.R;
 
-public class RootActivity extends Activity {
+public class RootActivity extends Activity implements CompoundButton.OnCheckedChangeListener {
 
     public static final String MAPKEY_SUCCESSFUL_LEVEL_OUTCOME = "outcome";
     private SoundManager mSoundManager;
+    private Switch chkSound;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,13 +48,20 @@ public class RootActivity extends Activity {
             }
         });
 
+        this.chkSound = findViewById (R.id.swEnableSound);
+        chkSound.setChecked(( (NoudarApplication) getApplication()).mayEnableSound());
+        chkSound.setOnCheckedChangeListener(this);
+
         ((Button) findViewById(R.id.btStart)).setTypeface(font);
 		((Button)findViewById(R.id.btnCredits)).setTypeface( font );
         ((Button) findViewById(R.id.btnHowToPlay)).setTypeface(font);
     }
 
     private void playGame() {
+        Bundle bundle = new Bundle();
+        bundle.putString("hasSound", chkSound.isChecked() ? "y" : "n");
         Intent intent = new Intent(getBaseContext(), GameActivity.class);
+        intent.putExtras(bundle);
         startActivityForResult(intent, 1);
         overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
     }
@@ -100,6 +111,10 @@ public class RootActivity extends Activity {
     protected void onPause() {
         mSoundManager.stop();
         super.onPause();
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
     }
 
     public enum GameOutcome {UNDEFINED, VICTORY, DEFEAT}
