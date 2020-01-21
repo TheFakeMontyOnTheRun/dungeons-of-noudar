@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bgrepeat"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7"
+        android:contentDescription="TODO"
+        android:scaleType="fitCenter" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:focusable="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llScreenControllers"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:minHeight="50dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    >
+
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:focusable="false" />
+
+                    <ImageButton
+                        android:id="@+id/btnUp"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:focusable="false"
+                        android:scaleType="fitEnd"
+                        android:src="@drawable/down"
+                        android:text="" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:focusable="false" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <ImageButton
+                        android:id="@+id/btnLeft"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:focusable="false"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/right"
+                        android:text="" />
+
+                    <ImageButton
+                        android:id="@+id/btnCenter"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:focusable="false"
+                        android:scaleType="fitCenter" />
+
+                    <ImageButton
+                        android:id="@+id/btnRight"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:focusable="false"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/left"
+                        android:text="" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:focusable="false" />
+
+                    <ImageButton
+                        android:id="@+id/btnDown"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:focusable="false"
+                        android:scaleType="fitStart"
+                        android:src="@drawable/up"
+                        android:text="" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:focusable="false" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llactions"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
+
+
+                <Button
+                    android:id="@+id/btnFire"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Fire" />
+
+
+                <Button
+                    android:id="@+id/btnAim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Aim" />
+
+                <Button
+                    android:id="@+id/btnPick"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pick" />
+
+                <Button
+                    android:id="@+id/btnStart"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Start" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
