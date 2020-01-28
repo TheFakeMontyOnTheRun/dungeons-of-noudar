@@ -5,6 +5,7 @@
 
     <application
         android:icon="@drawable/icon"
+        android:name=".NoudarApplication"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         <activity android:name=".MainActivity">

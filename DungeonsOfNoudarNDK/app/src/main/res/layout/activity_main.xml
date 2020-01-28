@@ -7,13 +7,13 @@
 
 
     <LinearLayout
+        android:id="@+id/llDirections"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/llScreenControllers"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="10dp"
@@ -38,6 +38,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
+                    android:soundEffectsEnabled="false"
                     android:background="#000000FF"
                     android:focusable="false"
                     android:scaleType="fitCenter"
@@ -65,6 +66,7 @@
                     android:layout_weight="1"
                     android:background="#000000FF"
                     android:focusable="false"
+                    android:soundEffectsEnabled="false"
                     android:scaleType="fitCenter"
                     android:src="@drawable/right"
                     android:text="" />
@@ -76,6 +78,7 @@
                     android:layout_weight="1"
                     android:background="#000000FF"
                     android:focusable="false"
+                    android:soundEffectsEnabled="false"
                     android:scaleType="fitCenter" />
 
                 <ImageButton
@@ -85,6 +88,7 @@
                     android:layout_weight="1"
                     android:background="#000000FF"
                     android:focusable="false"
+                    android:soundEffectsEnabled="false"
                     android:scaleType="fitCenter"
                     android:src="@drawable/left"
                     android:text="" />
@@ -107,6 +111,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
+                    android:soundEffectsEnabled="false"
                     android:background="#000000FF"
                     android:focusable="false"
                     android:scaleType="fitCenter"
@@ -144,13 +149,13 @@
 
 
     <LinearLayout
+        android:id="@+id/llActions"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/llActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -161,6 +166,7 @@
                 android:id="@+id/btnFire"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:soundEffectsEnabled="false"
                 android:text="Fire" />
 
 
@@ -168,17 +174,20 @@
                 android:id="@+id/btnAim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:soundEffectsEnabled="false"
                 android:text="Aim" />
 
             <Button
                 android:id="@+id/btnPick"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:soundEffectsEnabled="false"
                 android:text="Pick" />
 
             <Button
                 android:id="@+id/btnStart"
                 android:layout_width="match_parent"
+                android:soundEffectsEnabled="false"
                 android:layout_height="wrap_content"
                 android:text="Start" />
 
