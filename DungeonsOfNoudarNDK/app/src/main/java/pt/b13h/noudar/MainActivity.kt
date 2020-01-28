@@ -95,24 +95,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             KeyEvent.KEYCODE_BUTTON_R1, KeyEvent.KEYCODE_D -> toSend = 'd'
 
             KeyEvent.KEYCODE_BUTTON_A, KeyEvent.KEYCODE_Z -> toSend = 'z'
-            KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_X-> toSend = 'x'
-            KeyEvent.KEYCODE_BUTTON_C, KeyEvent.KEYCODE_BUTTON_Y, KeyEvent.KEYCODE_C-> toSend = 'c'
-            KeyEvent.KEYCODE_BUTTON_START, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_ENTER -> toSend = '\n'
-            else -> return super.onKeyUp(keyCode, event )
+            KeyEvent.KEYCODE_BUTTON_B, KeyEvent.KEYCODE_X -> toSend = 'x'
+            KeyEvent.KEYCODE_BUTTON_C, KeyEvent.KEYCODE_BUTTON_Y, KeyEvent.KEYCODE_C -> toSend = 'c'
+            KeyEvent.KEYCODE_BUTTON_START, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_ENTER -> toSend =
+                '\n'
+            else -> return super.onKeyUp(keyCode, event)
         }
         NoudarJNI.sendCommand(toSend)
         return true
     }
 
 
-    override fun onResume() {
-        super.onResume()
+    override fun onPostResume() {
+        super.onPostResume()
+
+        useBestRouteForGameplayPresentation()
+
         running = true
 
-        Thread( Runnable {
+        Thread(Runnable {
             while (running) {
                 runOnUiThread {
-                    if  ( !(application as NoudarApplication).hasPhysicalController() ) {
+                    if (!(application as NoudarApplication).hasPhysicalController()) {
 
                         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             llActions.visibility = View.VISIBLE

@@ -15,11 +15,12 @@
         android:contentDescription="TODO"
         android:scaleType="fitCenter" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/llScreenControllers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
+        android:orientation="horizontal"
         android:focusable="false">
 
         <LinearLayout
@@ -184,6 +185,6 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
