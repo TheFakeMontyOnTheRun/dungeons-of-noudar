@@ -1,28 +1,31 @@
 package pt.b13h.noudar
 
+import android.app.Presentation
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.media.AudioAttributes
 import android.media.AudioManager
+import android.media.MediaRouter
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
+import android.view.Display
 import android.view.KeyEvent
 import android.view.View
-import android.widget.ImageView
+import android.view.ViewManager
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
+    var presentation: Presentation? = null
     private var soundPool: SoundPool? = null
     private var sounds = IntArray(7)
     private var pixels = ByteArray(320 * 240 * 4)
     val bitmap: Bitmap = Bitmap.createBitmap(320, 240, Bitmap.Config.ARGB_8888)
     private var running = false
-
 
     private fun initAudio() {
         soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -52,6 +55,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,7 +67,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         setContentView(R.layout.activity_main)
 
-        if (savedInstanceState == null ) {
+        if (savedInstanceState == null) {
             NoudarJNI.initAssets(resources.assets)
         }
 
@@ -143,6 +147,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
 
+                val route = findSecundaryDisplayRouter()
+                if ((this@MainActivity).presentation != null && (route == null || route.presentationDisplay == null)) {
+                    presentation = null
+                    runOnUiThread { (this@MainActivity).recreate() }
+                }
+
                 Thread.sleep(1000);
             }
         }).start()
@@ -178,6 +188,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onPause() {
         super.onPause()
         running = false
+        presentation?.hide()
+        presentation?.dismiss()
+        presentation?.cancel()
+
     }
 
     private fun redraw() {
@@ -199,5 +213,30 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.btnStart -> toSend = '\n'
         }
         NoudarJNI.sendCommand(toSend)
+    }
+
+    private fun findSecundaryDisplayRouter(): MediaRouter.RouteInfo? {
+        val mMediaRouter =
+            getSystemService(Context.MEDIA_ROUTER_SERVICE) as MediaRouter
+        return mMediaRouter.getSelectedRoute(MediaRouter.ROUTE_TYPE_LIVE_VIDEO)
+    }
+
+    private fun useBestRouteForGameplayPresentation() {
+        val mRouteInfo = findSecundaryDisplayRouter()
+        if (mRouteInfo != null) {
+            val presentationDisplay = mRouteInfo.presentationDisplay
+            if (presentationDisplay != null) {
+                useSecundaryDisplayForGameplayPresentation(presentationDisplay)
+                Thread.sleep(1000)
+            }
+        }
+    }
+
+
+    private fun useSecundaryDisplayForGameplayPresentation(presentationDisplay: Display) {
+        (imageView.parent as ViewManager).removeView(imageView)
+        presentation =
+            GamePresentation(this, presentationDisplay, imageView)
+        presentation?.show()
     }
 }
