@@ -257,7 +257,22 @@ void playSound(const int action) {
     soundToPlay = action;
 }
 
-void playTune(const std::string &) {
+void playTune(const std::string &sound) {
+    if ( sound == "i114t1o8f") {
+        soundToPlay = 0;
+    } else if ( sound == "t200i101o3afo1a") {
+        soundToPlay = 1;
+    } else if ( sound == "t200i101o8ao4ao2ao1a") {
+        soundToPlay = 2;
+    } else if ( sound == "t200i52o4defg") {
+        soundToPlay = 3;
+    } else if ( sound == "t200i53o3fo1f") {
+        soundToPlay = 4;
+    } else if ( sound == "t200i98a") {
+        soundToPlay = 5;
+    } else if ( sound == "t200i9o1fa") {
+        soundToPlay = 6;
+    }
 }
 
 void soundTick() {}

@@ -17,8 +17,8 @@ import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var soundPool : SoundPool? = null
-    private var sounds = IntArray(8)
+    private var soundPool: SoundPool? = null
+    private var sounds = IntArray(7)
     private var pixels = ByteArray(320 * 240 * 4)
     val bitmap: Bitmap = Bitmap.createBitmap(320, 240, Bitmap.Config.ARGB_8888)
     private var running = false
@@ -26,23 +26,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun initAudio() {
         soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            SoundPool.Builder().setAudioAttributes(AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_GAME)
-                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                .build()).build()
+            SoundPool.Builder().setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_GAME)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+            ).build()
         } else {
-            SoundPool(5, AudioManager.STREAM_MUSIC, 0 )
+            SoundPool(7, AudioManager.STREAM_MUSIC, 0)
         }
 
 
-        sounds[0] = soundPool!!.load(this, R.raw.menu_move, 1)
-        sounds[1] = soundPool!!.load(this, R.raw.menu_select, 1)
-        sounds[2] = soundPool!!.load(this, R.raw.gotclue, 1)
-        sounds[3] = soundPool!!.load(this, R.raw.detected, 1)
-        sounds[4] = soundPool!!.load(this, R.raw.detected2, 1)
-        sounds[5] = soundPool!!.load(this, R.raw.menu_select, 1)
-        sounds[6] = soundPool!!.load(this, R.raw.menu_select, 1)
-        sounds[7] = soundPool!!.load(this, R.raw.hurt, 1)
+        sounds[0] = soundPool!!.load(this, R.raw.i114t1o8f, 1)
+        sounds[1] = soundPool!!.load(this, R.raw.t200i101o3afo1a, 1)
+        sounds[2] = soundPool!!.load(this, R.raw.t200i101o8ao4ao2ao1a, 1)
+        sounds[3] = soundPool!!.load(this, R.raw.t200i52o4defg, 1)
+        sounds[4] = soundPool!!.load(this, R.raw.t200i53o3fo1f, 1)
+        sounds[5] = soundPool!!.load(this, R.raw.t200i98a, 1)
+        sounds[6] = soundPool!!.load(this, R.raw.t200i9o1fa, 1)
     }
 
 
@@ -66,7 +67,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             NoudarJNI.initAssets(resources.assets)
         }
 
-        if  ( (application as NoudarApplication).mayEnableSound() ) {
+        if ((application as NoudarApplication).mayEnableSound()) {
             initAudio()
         } else {
             soundPool = null
@@ -150,11 +151,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
         ).start()
 
-        if (soundPool != null ) {
+        if (soundPool != null) {
             Thread(Runnable {
                 while (running) {
                     when (val sound = NoudarJNI.getSoundToPlay()) {
-                        0, 1, 2, 3, 4, 5, 6, 7, 8 -> soundPool!!.play(sounds[sound], 1f, 1f, 0, 0, 1f)
+                        0, 1, 2, 3, 4, 5, 6, 7, 8 -> soundPool!!.play(
+                            sounds[sound],
+                            1f,
+                            1f,
+                            0,
+                            0,
+                            1f
+                        )
                     }
                     Thread.sleep(10)
                 }
