@@ -47,7 +47,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         setContentView(R.layout.activity_main)
 
-        NoudarJNI.ping();
 
         if (savedInstanceState == null ) {
             NoudarJNI.initAssets(resources.assets)

@@ -7,10 +7,6 @@ public class NoudarJNI {
         System.loadLibrary("native-lib");
     }
 
-    public static void ping() {
-        System.out.println("PING");
-    }
-
     public static native void initAssets(AssetManager assetManager);
     public static native void getPixelsFromNative(byte[] javaSide);
     public static native void sendCommand(char cmd);
