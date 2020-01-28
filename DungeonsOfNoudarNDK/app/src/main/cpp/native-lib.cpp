@@ -276,7 +276,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_pt_b13h_noudar_NoudarJNI_getPixelsFromNative(JNIEnv *env, jclass clazz,
                                                             jbyteArray java_side) {
-    loopTick(50);
+    loopTick(75);
     jbyte *narr = (env)->GetByteArrayElements(java_side, NULL);
     memcpy(narr, &framebufferFinal[0], 320 * 240 * 4);
 }
