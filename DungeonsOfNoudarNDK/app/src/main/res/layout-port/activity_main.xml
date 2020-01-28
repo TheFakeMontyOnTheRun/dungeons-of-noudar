@@ -157,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:soundEffectsEnabled="false"
-                    android:text="Fire" />
+                    android:text="Pick" />
 
 
                 <Button
@@ -165,14 +165,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:soundEffectsEnabled="false"
-                    android:text="Aim" />
+                    android:text="Next item" />
 
                 <Button
                     android:id="@+id/btnPick"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:soundEffectsEnabled="false"
-                    android:text="Pick" />
+                    android:text="Hit" />
 
                 <Button
                     android:id="@+id/btnStart"
