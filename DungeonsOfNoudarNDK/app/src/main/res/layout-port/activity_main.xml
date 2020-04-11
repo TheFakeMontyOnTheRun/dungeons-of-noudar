@@ -7,13 +7,43 @@
     android:orientation="vertical">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Play ad-free on your DOS machine!" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@drawable/border_top_repeat"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="7"
+        android:background="#000"
         android:contentDescription="TODO"
         android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@drawable/border_bottom_repeat"
+        android:orientation="horizontal">
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llScreenControllers"
@@ -31,7 +61,6 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:minHeight="50dp"
                 android:orientation="vertical">
@@ -39,8 +68,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    >
+                    android:layout_weight="1">
 
 
                     <ImageView
@@ -55,10 +83,10 @@
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:background="#00000000"
-                        android:soundEffectsEnabled="false"
                         android:focusable="false"
                         android:scaleType="fitEnd"
-                        android:src="@drawable/down"
+                        android:soundEffectsEnabled="false"
+                        android:src="@drawable/up"
                         android:text="" />
 
                     <ImageView
@@ -81,10 +109,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="#00000000"
-                        android:soundEffectsEnabled="false"
                         android:focusable="false"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/right"
+                        android:soundEffectsEnabled="false"
+                        android:src="@drawable/left"
                         android:text="" />
 
                     <ImageButton
@@ -94,8 +122,8 @@
                         android:layout_weight="1"
                         android:background="#00000000"
                         android:focusable="false"
-                        android:soundEffectsEnabled="false"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="fitCenter"
+                        android:soundEffectsEnabled="false" />
 
                     <ImageButton
                         android:id="@+id/btnRight"
@@ -103,10 +131,10 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="#00000000"
-                        android:soundEffectsEnabled="false"
                         android:focusable="false"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/left"
+                        android:soundEffectsEnabled="false"
+                        android:src="@drawable/right"
                         android:text="" />
 
                 </LinearLayout>
@@ -130,8 +158,8 @@
                         android:background="#00000000"
                         android:focusable="false"
                         android:scaleType="fitStart"
-                        android:src="@drawable/up"
                         android:soundEffectsEnabled="false"
+                        android:src="@drawable/down"
                         android:text="" />
 
                     <ImageView
@@ -140,45 +168,97 @@
                         android:layout_weight="1"
                         android:focusable="false" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llStrafe"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+
+                    <ImageButton
+                        android:id="@+id/btnStrafeLeft"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:focusable="false"
+                        android:scaleType="fitStart"
+                        android:soundEffectsEnabled="false"
+                        android:src="@drawable/strafe_left"
+                        android:text="" />
+
+                    <ImageButton
+                        android:id="@+id/btnStrafeRight"
+                        android:layout_width="0dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:background="#00000000"
+                        android:focusable="false"
+                        android:scaleType="fitStart"
+                        android:soundEffectsEnabled="false"
+                        android:src="@drawable/strafe_right"
+                        android:text="" />
+
+                </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="16dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="10dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingTop="10dp">
+                android:orientation="vertical">
 
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnFire"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="#000000FF"
+                    android:scaleType="fitStart"
                     android:soundEffectsEnabled="false"
+                    android:src="@drawable/action_pick"
                     android:text="Pick" />
 
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnAim"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="#000000FF"
+                    android:scaleType="fitEnd"
                     android:soundEffectsEnabled="false"
+                    android:src="@drawable/action_next_item"
                     android:text="Next item" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnPick"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="#000000FF"
+                    android:scaleType="fitStart"
                     android:soundEffectsEnabled="false"
+                    android:src="@drawable/action_hit"
                     android:text="Hit" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/btnStart"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="#000000FF"
+                    android:scaleType="fitEnd"
                     android:soundEffectsEnabled="false"
+                    android:src="@drawable/action_enter"
                     android:text="Start" />
 
             </LinearLayout>

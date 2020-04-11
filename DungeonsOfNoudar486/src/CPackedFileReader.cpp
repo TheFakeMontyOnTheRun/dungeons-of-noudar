@@ -1,8 +1,10 @@
 //
 // Created by monty on 06-12-2017.
 //
+#include <stdio.h>
 #include <string>
 #include <unordered_map>
+#include <errno.h>
 #include <vector>
 
 using std::vector;
@@ -53,7 +55,7 @@ FILE *android_fopen(const char* filename) {
 
 odb::CPackedFileReader::CPackedFileReader(std::string dataFilePath) : mPackPath(dataFilePath) {
 #ifndef ANDROID
-    FILE *mDataPack = fopen(mPackPath, "rb");
+  FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
 #else
     FILE *mDataPack = android_fopen(&mPackPath[0]);
 #endif
@@ -85,7 +87,7 @@ odb::CPackedFileReader::CPackedFileReader(std::string dataFilePath) : mPackPath(
 
 size_t odb::CPackedFileReader::sizeOfFile(const std::string& path) {
 #ifndef ANDROID
-    FILE *mDataPack = fopen(mPackPath, "rb");
+  FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
 #else
     FILE *mDataPack = android_fopen(&mPackPath[0]);
 #endif
@@ -108,7 +110,7 @@ size_t odb::CPackedFileReader::sizeOfFile(const std::string& path) {
 uint8_t* odb::CPackedFileReader::loadBinaryFileFromPath(const std::string &path) {
     uint8_t* toReturn;
 #ifndef ANDROID
-    FILE *mDataPack = fopen(mPackPath, "rb");
+    FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
 #else
     FILE *mDataPack = android_fopen(&mPackPath[0]);
 #endif
@@ -139,7 +141,7 @@ uint8_t* odb::CPackedFileReader::loadBinaryFileFromPath(const std::string &path)
 std::string odb::CPackedFileReader::loadFileFromPath(const std::string &path) {
     std::string toReturn;
 #ifndef ANDROID
-    FILE *mDataPack = fopen(mPackPath, "rb");
+    FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
 #else
     FILE *mDataPack = android_fopen(&mPackPath[0]);
 #endif

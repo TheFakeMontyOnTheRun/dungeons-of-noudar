@@ -356,8 +356,8 @@ void init() {
 
     auto onLevelLoaded = [&]() {
 
-
-        if (game->getLevelNumber() >= LEVEL_LIMIT) {
+        int levelNumber = game->getLevelNumber();
+        if (levelNumber >= LEVEL_LIMIT) {
                 setScreenState(EScreenState::kVictory, game);
         } else  {
             auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);

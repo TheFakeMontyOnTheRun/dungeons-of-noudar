@@ -272,6 +272,8 @@ void playTune(const std::string &sound) {
         soundToPlay = 5;
     } else if ( sound == "t200i9o1fa") {
         soundToPlay = 6;
+    } else if ( sound == "AD") {
+        soundToPlay = 7;
     }
 }
 

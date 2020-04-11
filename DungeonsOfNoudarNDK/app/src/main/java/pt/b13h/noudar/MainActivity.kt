@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     .build()
             ).build()
         } else {
-            SoundPool(7, AudioManager.STREAM_MUSIC, 0)
+            SoundPool(5, AudioManager.STREAM_MUSIC, 0)
         }
 
 
@@ -137,6 +137,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                         btnLeft.setOnClickListener(this)
                         btnRight.setOnClickListener(this)
                         btnStart.setOnClickListener(this)
+
+                        btnStrafeLeft.setOnClickListener(this)
+                        btnStrafeRight.setOnClickListener(this)
+
                     } else {
                         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             llActions.visibility = View.GONE
@@ -169,14 +173,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Thread(Runnable {
                 while (running) {
                     when (val sound = NoudarJNI.getSoundToPlay()) {
-                        0, 1, 2, 3, 4, 5, 6, 7, 8 -> soundPool!!.play(
-                            sounds[sound],
-                            1f,
-                            1f,
-                            0,
-                            0,
-                            1f
-                        )
+                        0, 1, 2, 3, 4, 5, 6 -> soundPool!!.play(sounds[sound], 1f, 1f, 0, 0, 1f)
                     }
                     Thread.sleep(10)
                 }
@@ -203,6 +200,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         var toSend = '.'
         when (v.id) {
+            R.id.btnStrafeLeft -> toSend = 'a'
+            R.id.btnStrafeRight -> toSend = 'd'
             R.id.btnUp -> toSend = 'w'
             R.id.btnDown -> toSend = 's'
             R.id.btnLeft -> toSend = 'q'

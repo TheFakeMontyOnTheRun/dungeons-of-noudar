@@ -29,8 +29,6 @@ class NoudarApplication : Application() {
 
 
     private fun hasGamepad(): Boolean {
-        val gameControllerDeviceIds: MutableList<Int> =
-            ArrayList()
         val deviceIds = InputDevice.getDeviceIds()
         for (deviceId in deviceIds) {
             val dev = InputDevice.getDevice(deviceId)

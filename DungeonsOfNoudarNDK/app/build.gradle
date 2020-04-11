@@ -9,8 +9,8 @@ android {
         applicationId "pt.b13h.noudar"
         minSdkVersion 17
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_STL=c++_static'
@@ -31,7 +31,7 @@ android {
 }
 
 task copyAssets(type: Copy) {
-    from file('../../base.pfs')
+    from file('../../data.pfs')
     into file('src/main/assets')
 }
 
@@ -43,7 +43,4 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
