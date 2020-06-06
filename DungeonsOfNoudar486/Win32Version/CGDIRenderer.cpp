@@ -52,6 +52,77 @@ long uclock() {
 
 namespace odb {
 
+    static HBITMAP Create8bppBitmap(HDC hdc, int width, int height, LPVOID pBits = NULL)
+    {
+        BITMAPINFO *bmi = (BITMAPINFO *)malloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * 256);
+        BITMAPINFOHEADER &bih(bmi->bmiHeader);
+        bih.biSize = sizeof (BITMAPINFOHEADER);
+        bih.biWidth         = width;
+        bih.biHeight        = -height;
+        bih.biPlanes        = 1;
+        bih.biBitCount      = 8;
+        bih.biCompression   = BI_RGB;
+        bih.biSizeImage     = 0;
+        bih.biXPelsPerMeter = 14173;
+        bih.biYPelsPerMeter = 14173;
+        bih.biClrUsed       = 0;
+        bih.biClrImportant  = 0;
+        for (int I = 0; I <= 255; I++)
+        {
+            bmi->bmiColors[I].rgbBlue = bmi->bmiColors[I].rgbGreen = bmi->bmiColors[I].rgbRed = (BYTE)I;
+            bmi->bmiColors[I].rgbReserved = 0;
+        }
+
+        void *Pixels = NULL;
+        HBITMAP hbmp = CreateDIBSection(hdc, bmi, DIB_RGB_COLORS, &Pixels, NULL, 0);
+
+        if(pBits != NULL)
+        {
+            //fill the bitmap
+            BYTE* pbBits = (BYTE*)pBits;
+            BYTE *Pix = (BYTE *)Pixels;
+            memcpy(Pix, pbBits, width * height);
+        }
+
+        free(bmi);
+
+        return hbmp;
+    }
+
+    static HBITMAP CreateBitmapFromPixels( HDC hDC, UINT uWidth, UINT uHeight, UINT uBitsPerPixel, LPVOID pBits)
+    {
+        if(uBitsPerPixel < 8) // NOT IMPLEMENTED YET
+            return NULL;
+
+        if(uBitsPerPixel == 8)
+            return Create8bppBitmap(hDC, uWidth, uHeight, pBits);
+
+        HBITMAP hBitmap = 0;
+        if ( !uWidth || !uHeight || !uBitsPerPixel )
+            return hBitmap;
+        LONG lBmpSize = uWidth * uHeight * (uBitsPerPixel/8) ;
+        BITMAPINFO bmpInfo = { 0 };
+        bmpInfo.bmiHeader.biBitCount = uBitsPerPixel;
+        bmpInfo.bmiHeader.biHeight = uHeight;
+        bmpInfo.bmiHeader.biWidth = uWidth;
+        bmpInfo.bmiHeader.biPlanes = 1;
+        bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+        // Pointer to access the pixels of bitmap
+        UINT * pPixels = 0;
+        hBitmap = CreateDIBSection( hDC, (BITMAPINFO *)&
+                                         bmpInfo, DIB_RGB_COLORS, (void **)&
+                pPixels , NULL, 0);
+
+        if ( !hBitmap )
+            return hBitmap; // return if invalid bitmaps
+
+        //SetBitmapBits( hBitmap, lBmpSize, pBits);
+        // Directly Write
+        memcpy(pPixels, pBits, lBmpSize );
+
+        return hBitmap;
+    }
+
     int readKeyboard(std::shared_ptr<CRenderer> renderer) {
         needsRedraw = true;
         while (renderer->mBufferedCommand != 13) {
@@ -71,7 +142,6 @@ namespace odb {
 
 
     CRenderer::CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
-
 
         for (int r = 0; r < 256; r += 16) {
             for (int g = 0; g < 256; g += 8) {
@@ -239,68 +309,27 @@ namespace odb {
 
                 break;
             case
-                WM_PAINT:
+                WM_PAINT: {
+                    HBITMAP hBitmap = CreateBitmapFromPixels(hDC,320, 200, 8, renderer->getBufferData());
+                    PAINTSTRUCT     ps;
+                    HDC             hdc;
+                    BITMAP          bitmap;
+                    HDC             hdcMem;
+                    HGDIOBJ         oldBitmap;
 
-                hDC = BeginPaint(hWnd, &Ps);
+                    hdc = BeginPaint(hWnd, &ps);
 
+                    hdcMem = CreateCompatibleDC(hdc);
+                    oldBitmap = SelectObject(hdcMem, hBitmap);
 
-                if (renderer != nullptr) {
-                    uint8_t* bufferPtr = renderer->getBufferData();
-                    auto palettePtr = &renderer->mPalette[0];
+                    GetObject(hBitmap, sizeof(bitmap), &bitmap);
+                    BitBlt(hdc, 0, 0, bitmap.bmWidth, bitmap.bmHeight, hdcMem, 0, 0, SRCCOPY);
 
-                    if ( !havePalette ) {
-                        havePalette = true;
-                        auto pixel = CRenderer::mTransparency;
-                        auto r = (((pixel & 0x000000FF)      )) - 0x38;
-                        auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
-                        auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
-                        transparencyRef = RGB(r, g, b);
+                    SelectObject(hdcMem, oldBitmap);
+                    DeleteDC(hdcMem);
 
-                        int c = 0;
-                        for ( const auto& pixel : renderer->mPalette ) {
-                            auto r = (((pixel & 0x000000FF)      )) - 0x38;
-                            auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
-                            auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
-
-                            paletteRef[c++] = transparencyRef;
-                        }
-                    }
-
-                    RECT rect;
-                    HBRUSH brush;
-                    for (int c = 0;c < 200; ++c) {
-                        uint8_t* line = &bufferPtr[ 320 * c ];
-                        for (int d = 0;d < 320; ++d) {
-                            uint8_t index = *line;
-                            COLORREF ref = paletteRef[index];
-
-                            if ( ref == transparencyRef ) {
-                                auto pixel = palettePtr[index];
-                                auto r = (((pixel & 0x000000FF)      )) - 0x38;
-                                auto g = (((pixel & 0x0000FF00) >>  8)) - 0x18;
-                                auto b = (((pixel & 0x00FF0000) >> 16)) - 0x10;
-                                ref = RGB(r, g, b);
-                                paletteRef[index] = ref;
-                            }
-
-                            SetPixel( hDC, d, c, ref);
-                            ++line;
-                        }
-                    }
-                    brush = CreateSolidBrush(RGB(0, 0, 0 ));
-
-                    rect.left = 0;
-                    rect.top = 200;
-                    rect.right = 320;
-                    rect.bottom = 240;
-
-                    FillRect(Ps.hdc, &rect, brush);
-
-                    DeleteObject(brush);
+                    EndPaint(hWnd, &ps);
                 }
-
-                EndPaint(hWnd, &Ps);
-
                 break;
             default:
                 return
