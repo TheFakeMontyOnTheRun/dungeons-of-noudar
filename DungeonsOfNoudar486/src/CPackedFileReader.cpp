@@ -1,8 +1,10 @@
 //
 // Created by monty on 06-12-2017.
 //
+#include <stdio.h>
 #include <string>
 #include <unordered_map>
+#include <errno.h>
 #include <vector>
 
 using std::vector;
@@ -11,8 +13,53 @@ using std::vector;
 #include "IFileLoaderDelegate.h"
 #include "CPackedFileReader.h"
 
+
+#ifdef ANDROID
+#include <jni.h>
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+#include <android/bitmap.h>
+#include <android/asset_manager.h>
+
+extern AAssetManager *defaultAssetManager;
+
+int android_read(void *cookie, char *buf, int size) {
+    return AAsset_read((AAsset *) cookie, buf, size);
+}
+
+int android_write(void *cookie, const char *buf, int size) {
+    return EACCES;
+}
+
+fpos_t android_seek(void *cookie, fpos_t offset, int whence) {
+    return AAsset_seek((AAsset *) cookie, offset, whence);
+}
+
+int android_close(void *cookie) {
+    AAsset_close((AAsset *) cookie);
+    return 0;
+}
+
+
+FILE *android_fopen(const char* filename) {
+
+    AAsset *asset = AAssetManager_open(defaultAssetManager, "data.pfs", 0);
+    if (!asset) {
+        return NULL;
+    }
+
+    return funopen(asset, android_read, android_write, android_seek, android_close);
+
+}
+#endif
+
 odb::CPackedFileReader::CPackedFileReader(std::string dataFilePath) : mPackPath(dataFilePath) {
-    mDataPack = fopen(dataFilePath.c_str(), "rb");
+#ifndef ANDROID
+  FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
+#else
+    FILE *mDataPack = android_fopen(&mPackPath[0]);
+#endif
+
     uint16_t entries = 0;
     fread(&entries, 2, 1, mDataPack);
 
@@ -39,7 +86,12 @@ odb::CPackedFileReader::CPackedFileReader(std::string dataFilePath) : mPackPath(
 }
 
 size_t odb::CPackedFileReader::sizeOfFile(const std::string& path) {
-    mDataPack = fopen(mPackPath.c_str(), "rb");
+#ifndef ANDROID
+  FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
+#else
+    FILE *mDataPack = android_fopen(&mPackPath[0]);
+#endif
+
     uint32_t offset = mOffsets[ path ];
     if ( offset == 0 ) {
         printf("failed to load %s", path.c_str());
@@ -57,7 +109,12 @@ size_t odb::CPackedFileReader::sizeOfFile(const std::string& path) {
 
 uint8_t* odb::CPackedFileReader::loadBinaryFileFromPath(const std::string &path) {
     uint8_t* toReturn;
-    mDataPack = fopen(mPackPath.c_str(), "rb");
+#ifndef ANDROID
+    FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
+#else
+    FILE *mDataPack = android_fopen(&mPackPath[0]);
+#endif
+
     uint32_t offset = mOffsets[ path ];
     if ( offset == 0 ) {
         printf("failed to load %s", path.c_str());
@@ -83,7 +140,12 @@ uint8_t* odb::CPackedFileReader::loadBinaryFileFromPath(const std::string &path)
 
 std::string odb::CPackedFileReader::loadFileFromPath(const std::string &path) {
     std::string toReturn;
-    mDataPack = fopen(mPackPath.c_str(), "r");
+#ifndef ANDROID
+    FILE *mDataPack = fopen(mPackPath.c_str(), "rb");
+#else
+    FILE *mDataPack = android_fopen(&mPackPath[0]);
+#endif
+
     uint32_t offset = mOffsets[ path ];
     if ( offset == 0 ) {
         printf("failed to load %s", path.c_str());

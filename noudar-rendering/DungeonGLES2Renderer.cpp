@@ -302,13 +302,8 @@ namespace odb {
         mTextures.clear();
 #endif
 
-
-        for (auto &bitmapList : mBitmaps) {
-            vector<unsigned int> tex;
-            for (auto &bitmap : bitmapList) {
-                tex.push_back(uploadTextureData(bitmap));
-            }
-            mTextures.push_back(tex);
+        for (auto &bitmap : mBitmaps) {
+            mTextures.push_back(uploadTextureData(bitmap));
         }
 
         mBitmaps.clear();
@@ -361,10 +356,8 @@ namespace odb {
     }
 
     void DungeonGLES2Renderer::unloadTextures() {
-        for (auto &texture : mTextures) {
-            for (auto &textureId : texture) {
-                glDeleteTextures(1, &textureId);
-            }
+        for (auto &textureId : mTextures) {
+            glDeleteTextures(1, &textureId);
         }
     }
 
@@ -458,7 +451,7 @@ namespace odb {
         mFadeLerp.update(ms);
     }
 
-    void DungeonGLES2Renderer::setTexture(vector<vector<std::shared_ptr<NativeBitmap>>> textures) {
+    void DungeonGLES2Renderer::setTexture(vector<std::shared_ptr<NativeBitmap>> textures) {
         mBitmaps.clear();
         mBitmaps.insert(mBitmaps.end(), std::begin(textures), std::end(textures));
     }
@@ -618,7 +611,7 @@ namespace odb {
         for (const auto &batch : batches) {
 
             auto textureId = mTextures[batch.first];
-            glBindTexture(GL_TEXTURE_2D, textureId[(frame / 4) % textureId.size()]);
+            glBindTexture(GL_TEXTURE_2D, textureId);
 
             for (const auto &element : batch.second) {
 
@@ -646,7 +639,7 @@ namespace odb {
         for (const auto &batch : batches) {
 
             auto textureId = mTextures[batch.first];
-            glBindTexture(GL_TEXTURE_2D, textureId[(frame / 4) % textureId.size()]);
+            glBindTexture(GL_TEXTURE_2D, textureId);
 
             for (const auto &element : batch.second) {
 

@@ -64,6 +64,8 @@ uint8_t bgColour;
 uint8_t textStartingLine;
 std::shared_ptr<odb::CPackedFileReader> fileLoader = nullptr;
 
+void init();
+
 void setScreenState( EScreenState newState, std::shared_ptr<Knights::CGame> game ) {
 
     switch( newState ) {
@@ -128,10 +130,18 @@ void onContinuePressed( std::shared_ptr<Knights::CGame> game) {
         case EScreenState::kGame:
             break;
         case EScreenState::kVictory:
+#ifdef ANDROID
+            init();
+#else
             setScreenState( EScreenState::kExit, game);
+#endif
             break;
         case EScreenState::kGameOver:
+#ifdef ANDROID
+            init();
+#else
             setScreenState( EScreenState::kExit, game);
+#endif
             break;
         case EScreenState::kExit:
 #ifdef __EMSCRIPTEN__
@@ -165,17 +175,6 @@ namespace odb {
 void initOPL2(int port = -1) {
     setupOPL2(port);
 }
-
-void *operator new[](size_t size, const char *pName, int flags, unsigned debugFlags,
-                     const char *file, int line) {
-    return new uint8_t[size];
-}
-
-void *operator new[](size_t size, size_t alignment, size_t alignmentOffset, const char *pName,
-                     int flags, unsigned debugFlags, const char *file, int line) {
-    return new uint8_t[size];;
-}
-
 
 
 void showText(std::shared_ptr<odb::NativeBitmap> bg, const std::string &mainText, const std::string &bottom,
@@ -336,9 +335,16 @@ void loopTick(long diff) {
 void init() {
     const auto LEVEL_LIMIT = 7;
 
+
+    if (fileLoader == nullptr) {
+        fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
+    }
+
+    if (odb::renderer == nullptr ) {
+        odb::renderer = std::make_shared<odb::CRenderer>(fileLoader);
+    }
+
     auto delegate = std::make_shared<Knights::CGameDelegate>();
-    fileLoader = std::make_shared<odb::CPackedFileReader>("data.pfs");
-    odb::renderer = std::make_shared<odb::CRenderer>(fileLoader);
     game = std::make_shared<Knights::CGame>(fileLoader, odb::renderer, delegate);
 
     auto onLevelWillLoad = [&]() {
@@ -350,8 +356,8 @@ void init() {
 
     auto onLevelLoaded = [&]() {
 
-
-        if (game->getLevelNumber() >= LEVEL_LIMIT) {
+        int levelNumber = game->getLevelNumber();
+        if (levelNumber >= LEVEL_LIMIT) {
                 setScreenState(EScreenState::kVictory, game);
         } else  {
             auto tileProperties = odb::loadTileProperties(game->getLevelNumber(), fileLoader);

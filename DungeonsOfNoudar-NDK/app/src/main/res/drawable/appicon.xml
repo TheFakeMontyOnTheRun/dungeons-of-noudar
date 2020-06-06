@@ -1,9 +1,0 @@
-<vector android:height="480dp" android:viewportHeight="480.0"
-    android:viewportWidth="480.0" android:width="480dp" xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-
-    <!-- Order of Christ cross -->
-    <path android:fillColor="#d62c26" android:pathData="m180,60v360l-60,60h240l-60,-60v-360l60,-60h-240l360,360v-240l-60,60h-360l-60,-60v240l60,-60h360"/>
-    <path android:fillColor="#fff" android:pathData="m60,270v-60h360v60zM270,420h-60v-360h60z"/>
-</vector>
