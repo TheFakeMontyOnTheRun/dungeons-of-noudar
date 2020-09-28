@@ -154,14 +154,7 @@
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:minHeight="50dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Play ad-free on your DOS machine!" />
-        </LinearLayout>
+            android:orientation="vertical"/>
 
     </LinearLayout>
 
