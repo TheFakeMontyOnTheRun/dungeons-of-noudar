@@ -1,17 +1,22 @@
 cmake_minimum_required(VERSION 3.8)
 project(DungeonsOfNoudar486)
 
-find_package(SDL REQUIRED)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake_find")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDONT_LOAD_LEVEL_UPON_START -DUSE_ITEMS_INSTANTLY -DVGA -DSDLSW")
-set(CMAKE_CXX_STANDARD 14)
+
+
+find_package(SDL2 REQUIRED)
+
 include_directories(include)
 include_directories(../stb)
 include_directories(../fixed_point/include)
 include_directories(../noudar-core/noudar-core/include)
 include_directories(../noudar-core/EASTL/include )
 include_directories(../noudar-core/EASTL/test/packages/EABase/include/Common)
-
+include_directories(${SDL2_INCLUDE_DIR})
 include_directories(../noudar-rendering)
 include_directories(../noudar-rendering)
 
@@ -86,12 +91,14 @@ set(SOURCE_FILES
         OPL2LPT/MusicSDL.cpp
         ../noudar-rendering/Logger.cpp
         ../noudar-rendering/LoadPNG.cpp
-        src/CPackedFileReader.cpp include/CPackedFileReader.h)
-
-find_package(OpenGL REQUIRED)
+        src/CPackedFileReader.cpp
+        include/CPackedFileReader.h
+        src/CPackedFileReader.cpp
+        include/CPackedFileReader.h)
 
 include (FindPkgConfig)
 
-add_executable(DungeonsOfNoudar486 ${SOURCE_FILES} src/CPackedFileReader.cpp include/CPackedFileReader.h)
+add_executable(DungeonsOfNoudar486 ${SOURCE_FILES} )
 
-target_link_libraries(DungeonsOfNoudar486 ${OPENGL_LIBRARIES} ${SDL_LIBRARY}   )
+target_include_directories(DungeonsOfNoudar486 PUBLIC ${SDL2_INCLUDE_DIR})
+target_link_libraries(DungeonsOfNoudar486 ${SDL2_LIBRARY}  m )

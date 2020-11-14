@@ -49,7 +49,7 @@ void emscriptenLoopTick() {
 #endif
 
 #ifdef __APPLE__
-extern "C" int SDL_main(int argc, char **argv) {
+int main(int argc, char **argv) {
 #else
 
 #if defined(WINVER)
