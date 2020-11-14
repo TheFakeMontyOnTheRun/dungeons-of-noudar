@@ -9,8 +9,8 @@ android {
         applicationId "pt.b13h.noudar"
         minSdkVersion 17
         targetSdkVersion 29
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "2.1"
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_STL=c++_static'
