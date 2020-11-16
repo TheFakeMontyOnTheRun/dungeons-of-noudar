@@ -42,6 +42,7 @@ using sg14::fixed_point;
 #include "IRenderer.h"
 #include "commands/IGameCommand.h"
 #include "RasterizerCommon.h"
+#include "CTile3DProperties.h"
 #include "CRenderer.h"
 #include "CPackedFileReader.h"
 #include "LoadPNG.h"

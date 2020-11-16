@@ -46,6 +46,7 @@ using sg14::fixed_point;
 #include "CGame.h"
 #include "NativeBitmap.h"
 #include "RasterizerCommon.h"
+#include "CTile3DProperties.h"
 #include "CRenderer.h"
 #include "LoadPNG.h"
 

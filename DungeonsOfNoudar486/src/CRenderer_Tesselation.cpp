@@ -39,6 +39,7 @@ using namespace std::chrono;
 #include "IFileLoaderDelegate.h"
 #include "CGame.h"
 
+#include "CTile3DProperties.h"
 #include "CRenderer.h"
 #include "LoadPNG.h"
 #include "VisibilityStrategy.h"

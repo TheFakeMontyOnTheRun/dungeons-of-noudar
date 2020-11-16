@@ -1,8 +1,6 @@
 #ifndef IRENDERER_H
 #define IRENDERER_H
 
-#include <CTile3DProperties.h>
-
 namespace odb {
     constexpr const static auto NATIVE_TEXTURE_SIZE = 32;
     constexpr const static auto XRES = 256;

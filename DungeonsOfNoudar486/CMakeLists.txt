@@ -10,14 +10,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDONT_LOAD_LEVEL_UPON_START -DUSE_ITEMS
 
 find_package(SDL2 REQUIRED)
 
+include_directories(${SDL2_INCLUDE_DIR})
+
 include_directories(include)
-include_directories(../stb)
 include_directories(../fixed_point/include)
 include_directories(../noudar-core/noudar-core/include)
-include_directories(../noudar-core/EASTL/include )
-include_directories(../noudar-core/EASTL/test/packages/EABase/include/Common)
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(../noudar-rendering)
+include_directories(../stb)
 include_directories(../noudar-rendering)
 
 set(SOURCE_FILES
