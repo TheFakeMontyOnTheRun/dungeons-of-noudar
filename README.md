@@ -46,6 +46,8 @@ The game has been successfully tested on a 486 SX-33Mhz, with 8MB RAM. There are
 
 The core stil is a valid text-mode dungeon crawler with almost the game geometry and rules as this version. In fact, when I was developing that one, I was already preparing the levels to be 3D (hence the somewhat gratuitous tiles variety). Go to `noudar-core` for building it.
 
+The core also contains more detailed game design docs.
+
 ## Other versions
 
 This game began its life as an Android VR game (Cardboard) and for a while it run just file like that. Eventually, the allure of building something for REAL DOS got me and those versions fell on the wayside. You can still build those from the ***V2*** branch.
