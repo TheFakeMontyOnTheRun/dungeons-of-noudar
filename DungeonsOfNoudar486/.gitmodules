@@ -1,6 +1,0 @@
-[submodule "noudar-core"]
-	path = noudar-core
-	url = https://github.com/TheFakeMontyOnTheRun/noudar-core.git
-[submodule "fixed_point"]
-	path = fixed_point
-	url = https://github.com/johnmcfarlane/fixed_point.git
