@@ -1,5 +1,5 @@
-CXX = i586-pc-msdosdjgpp-g++
-LD = i586-pc-msdosdjgpp-ld
+CXX = i386-pc-msdosdjgpp-g++
+LD = i386-pc-msdosdjgpp-ld
 
 CXXFLAGS = -g -DVGA -DDONT_LOAD_LEVEL_UPON_START -Iinclude -c -Istb -fpermissive -c -O6 -Ofast  -funroll-loops -funroll-all-loops -fomit-frame-pointer -fno-exceptions -ffast-math -mtune=i486 -march=i486 -I../fixed_point/include -IDOS-version -Iinclude -I../stb -I../noudar-core/noudar-core/include   -I../noudar-rendering -I../noudar-rendering -fpermissive -Wno-narrowing -DUSE_ITEMS_INSTANTLY
 
@@ -57,7 +57,7 @@ DATA = data.pfs
 
 $(TARGET):	$(OBJS)  $(DATA)
 	$(CXX) -o $(TARGET) $(OBJS) $(LIBS) $(LDFLAGS)
-	i586-pc-msdosdjgpp-strip $(TARGET)
+	i386-pc-msdosdjgpp-strip $(TARGET)
 
 all:   $(TARGET)
 
