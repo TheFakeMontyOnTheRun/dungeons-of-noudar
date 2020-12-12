@@ -10,7 +10,19 @@ Sound options include:
 ![ ](screenshot1.png?raw=true)
 ![ ](screenshot2.png?raw=true)
 
+## Cloning
+
+Make sure to close recursively, with all submodules:
+
+```
+git clone --recursive https://github.com/TheFakeMontyOnTheRun/dungeons-of-noudar
+```
+
+Check your favorite Git book for more info.
+
 ## Building
+
+Building the game requires a modern version of DJGPP. It was originally written using https://github.com/andrewwutw/build-djgpp, but later changed to use https://github.com/jwt27/build-gcc. It is known to build from either Linux and Mac just fine. ARM Linux also works well, but I could not test on Apple Silicon yet.
 
 From inside `DungeonsOfNoudar486`, run:
 
