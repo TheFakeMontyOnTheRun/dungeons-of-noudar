@@ -7,11 +7,11 @@
 #include <memory>
 #include <functional>
 #include <iostream>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -19,12 +19,6 @@ using eastl::array;
 #include <map>
 
 #include "NativeBitmap.h"
-#include "Material.h"
-#include "Trig.h"
-#include "TrigBatch.h"
-#include "MeshObject.h"
-#include "MaterialList.h"
-#include "Scene.h"
 #include "VBORenderingJob.h"
 
 #include "Vec2i.h"
@@ -41,93 +35,93 @@ using eastl::array;
 
 namespace odb {
 
-	bool LightningStrategy::isValid(Knights::Vec2i pos) {
-		return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
-	}
+    bool LightningStrategy::isValid(Knights::Vec2i pos) {
+        return 0 <= pos.x && pos.x < Knights::kMapSize && 0 <= pos.y && pos.y < Knights::kMapSize;
+    }
 
-	void LightningStrategy::castPointLight(LightMap &lightMap, int emission, IntMap occluders,
-	                                       int x, int y) {
-		castLight(Direction::TOP, lightMap, emission, occluders, Knights::Vec2i{x, y});
-	}
+    void LightningStrategy::castPointLight(LightMap &lightMap, int emission, IntMap occluders,
+                                           int x, int y) {
+        castLight(Direction::TOP, lightMap, emission, occluders, Knights::Vec2i{x, y});
+    }
 
-	bool isBlock(IntMap occluders, int x, int y) {
+    bool isBlock(IntMap occluders, int x, int y) {
 
-		auto tile = occluders[y][x];
+        auto tile = occluders[y][x];
 
-		for (auto candidate : { '1', 'Y', 'X', '9', '*'}) {
-			if (candidate == tile) {
-				return true;
-			}
-		}
+        for (auto candidate : {'1', 'Y', 'X', '9', '*'}) {
+            if (candidate == tile) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
 
-	void LightningStrategy::castLight(Direction from, LightMap &lightMap, int emission,
-	                                  IntMap occluders, Knights::Vec2i originalPos) {
+    void LightningStrategy::castLight(Direction from, LightMap &lightMap, int emission,
+                                      IntMap occluders, Knights::Vec2i originalPos) {
 
-		array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
-		array<int, Knights::kMapSize + Knights::kMapSize> intensity;
-		int stackPos = 0;
-		Knights::Vec2i currentPos;
+        array<Knights::Vec2i, Knights::kMapSize + Knights::kMapSize> positions;
+        array<int, Knights::kMapSize + Knights::kMapSize> intensity;
+        size_t stackPos = 0;
+        Knights::Vec2i currentPos;
 
-		positions[stackPos] = originalPos;
-		intensity[stackPos] = emission;
-		++stackPos;
+        positions[stackPos] = originalPos;
+        intensity[stackPos] = emission;
+        ++stackPos;
 
-		while (stackPos > 0) {
-			--stackPos;
+        while (stackPos > 0) {
+            --stackPos;
 
-			currentPos = positions[ stackPos ];
-			emission = intensity[ stackPos ];
+            currentPos = positions[stackPos];
+            emission = intensity[stackPos];
 
-			if (emission <= 2) {
-				continue;
-			}
+            if (emission <= 2) {
+                continue;
+            }
 
-			int x = currentPos.x;
-			int y = currentPos.y;
+            int x = currentPos.x;
+            int y = currentPos.y;
 
-			if (!isValid(currentPos)) {
-				continue;
-			}
+            if (!isValid(currentPos)) {
+                continue;
+            }
 
-			if ( isBlock( occluders, x, y ) ) {
-				continue;
-			}
+            if (isBlock(occluders, x, y)) {
+                continue;
+            }
 
-			if ( (lightMap[y][x] + emission) <= 255 && (lightMap[y][x] + emission) >= 0 ) {
-				lightMap[y][x] += emission;
-			} else {
-				lightMap[y][x] = 255;
-			}
+            if ((lightMap[y][x] + emission) <= 255 && (lightMap[y][x] + emission) >= 0) {
+                lightMap[y][x] += emission;
+            } else {
+                lightMap[y][x] = 255;
+            }
 
-			//The -1 is due to the fact I will add a new element.
+            //The -1 is due to the fact I will add a new element.
 
-			if ( stackPos < positions.size() - 1) {
-				positions[stackPos] =  Knights::Vec2i{currentPos.x + 1, currentPos.y};
-				intensity[stackPos] = emission / 2;
-				++stackPos;
-			}
+            if (stackPos < positions.size() - 1) {
+                positions[stackPos] = Knights::Vec2i{currentPos.x + 1, currentPos.y};
+                intensity[stackPos] = emission / 2;
+                ++stackPos;
+            }
 
-			if ( stackPos < positions.size() - 1) {
-				positions[stackPos] =  Knights::Vec2i{currentPos.x, currentPos.y + 1};
-				intensity[stackPos] = emission / 2;
-				++stackPos;
-			}
+            if (stackPos < positions.size() - 1) {
+                positions[stackPos] = Knights::Vec2i{currentPos.x, currentPos.y + 1};
+                intensity[stackPos] = emission / 2;
+                ++stackPos;
+            }
 
-			if ( stackPos < positions.size() - 1) {
-				positions[stackPos] =  Knights::Vec2i{currentPos.x - 1, currentPos.y};
-				intensity[stackPos] = emission / 2;
-				++stackPos;
-			}
+            if (stackPos < positions.size() - 1) {
+                positions[stackPos] = Knights::Vec2i{currentPos.x - 1, currentPos.y};
+                intensity[stackPos] = emission / 2;
+                ++stackPos;
+            }
 
-			if ( stackPos < positions.size() - 1) {
-				positions[stackPos] =  Knights::Vec2i{currentPos.x, currentPos.y - 1};
-				intensity[stackPos] = emission / 2;
-				++stackPos;
-			}
-		}
-	}
+            if (stackPos < positions.size() - 1) {
+                positions[stackPos] = Knights::Vec2i{currentPos.x, currentPos.y - 1};
+                intensity[stackPos] = emission / 2;
+                ++stackPos;
+            }
+        }
+    }
 }

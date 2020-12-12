@@ -22,11 +22,11 @@
 #include <chrono>
 
 #include <sg14/fixed_point>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 using namespace std::chrono;
 using sg14::fixed_point;
 
@@ -45,6 +45,7 @@ using sg14::fixed_point;
 #include "CGame.h"
 #include "NativeBitmap.h"
 #include "RasterizerCommon.h"
+#include "CTile3DProperties.h"
 #include "CRenderer.h"
 #include "LoadPNG.h"
 

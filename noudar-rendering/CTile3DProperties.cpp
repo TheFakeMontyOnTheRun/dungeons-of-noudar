@@ -25,11 +25,11 @@
 #include <iterator>
 #include <unordered_set>
 #include <map>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 
 #include "Vec2i.h"
 #include "IMapElement.h"
@@ -49,7 +49,7 @@ using eastl::array;
 
 namespace odb {
 
-    CTile3DProperties readPropertiesLine(vector<std::string>::iterator& pos) {
+    CTile3DProperties readPropertiesLine(vector<std::string>::iterator &pos) {
 
         CTile3DProperties properties;
 
@@ -68,17 +68,16 @@ namespace odb {
         pos = std::next(pos);
         properties.mFloorRepeatedWallTexture = *pos;
         pos = std::next(pos);
-        properties.mCeilingRepetitions = std::atoi( pos->c_str() );
+        properties.mCeilingRepetitions = std::atoi(pos->c_str());
         pos = std::next(pos);
-        properties.mFloorRepetitions = std::atoi( pos->c_str() );
+        properties.mFloorRepetitions = std::atoi(pos->c_str());
         pos = std::next(pos);
-        properties.mCeilingHeight = atof( pos->c_str() );
+        properties.mCeilingHeight = atof(pos->c_str());
         pos = std::next(pos);
-        properties.mFloorHeight = atof( pos->c_str() );
+        properties.mFloorHeight = atof(pos->c_str());
 
         return properties;
     }
-
 
 
     CTilePropertyMap CTile3DProperties::parsePropertyList(std::string propertyFile) {
@@ -90,7 +89,7 @@ namespace odb {
 
         vector<std::string> tokens;
         std::string tmp;
-        while ( ss.good() ) {
+        while (ss.good()) {
             ss >> tmp;
             tokens.push_back(tmp);
         }
@@ -105,7 +104,7 @@ namespace odb {
             line++;
             CTileId id = pos->c_str()[0];
             auto props = readPropertiesLine(pos);
-	        map[id] = props;
+            map[id] = props;
             pos = std::next(pos);
         }
 

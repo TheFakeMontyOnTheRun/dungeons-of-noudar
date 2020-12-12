@@ -8,17 +8,16 @@
 #include "SoundEmitter.h"
 
 namespace odb {
-    void playSource(void* arg) {
- 
+    void playSource(void *arg) {
+
     }
 
 
-    SoundEmitter::SoundEmitter( std::shared_ptr<SoundClip> aSample ) : mSample(aSample) {
-       
+    SoundEmitter::SoundEmitter(std::shared_ptr<SoundClip> aSample) : mSample(aSample) {
+
     }
 
     void SoundEmitter::play(std::shared_ptr<SoundListener> listener) {
-      
 
 
     }

@@ -49,7 +49,7 @@ void emscriptenLoopTick() {
 #endif
 
 #ifdef __APPLE__
-extern "C" int SDL_main(int argc, char **argv) {
+int main(int argc, char **argv) {
 #else
 
 #if defined(WINVER)
@@ -101,7 +101,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 #else
 
 int main(int argc, char **argv) {
-    puts("Dungeons of Noudar 3D startup. Gonna load some stuff...");
+    puts("Dungeons of Noudar 3D startup.\nCopyright 2016-2020 Brotherhood of 13h.");
 
     if (argc >= 2) {
         if (!std::strcmp(argv[1], "opl2lpt")) {
@@ -116,7 +116,6 @@ int main(int argc, char **argv) {
             soundDriver = ESoundDriver::kPcSpeaker;
         }
     }
-
 #endif
 
 #endif

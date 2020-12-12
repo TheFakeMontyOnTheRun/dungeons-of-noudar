@@ -9,6 +9,7 @@ namespace odb {
     class SoundListener {
     public:
         glm::vec3 mPosition{0, 0, 0};
+
         SoundListener();
     };
 }

@@ -17,7 +17,7 @@ namespace odb {
         uint8_t* loadBinaryFileFromPath( const std::string& path ) override;
         std::string loadFileFromPath( const std::string& path ) override ;
         std::string getFilePathPrefix() override;
-
+        virtual ~CPackedFileReader();
 
     };
 }

@@ -13,18 +13,21 @@
 #include <chrono>
 
 #ifdef __APPLE__
-#include <SDL.h>
+#include "SDL.h"
 #else
 #include <SDL/SDL.h>
 #endif
 
+SDL_Window *window;
+SDL_Renderer *SDLrenderer;
+SDL_AudioDeviceID deviceId;
 
 #include <sg14/fixed_point>
-#include <EASTL/vector.h>
-#include <EASTL/array.h>
+#include <vector>
+#include <array>
 
-using eastl::vector;
-using eastl::array;
+using std::vector;
+using std::array;
 using namespace std::chrono;
 using sg14::fixed_point;
 
@@ -43,6 +46,7 @@ using sg14::fixed_point;
 #include "CGame.h"
 #include "NativeBitmap.h"
 #include "RasterizerCommon.h"
+#include "CTile3DProperties.h"
 #include "CRenderer.h"
 #include "LoadPNG.h"
 
@@ -98,8 +102,6 @@ namespace odb {
     }
 
 
-    SDL_Surface *video;
-
 #ifdef __EMSCRIPTEN__
     void enterFullScreenMode() {
     EmscriptenFullscreenStrategy s;
@@ -114,7 +116,16 @@ namespace odb {
 
     CRenderer::CRenderer(std::shared_ptr<Knights::IFileLoaderDelegate> fileLoader) {
         SDL_Init(SDL_INIT_EVERYTHING);
-        video = SDL_SetVideoMode(640, 400, 32, 0);
+
+        SDL_Init(SDL_INIT_EVERYTHING);
+        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+
+        window =
+                SDL_CreateWindow("The Mistral Report", SDL_WINDOWPOS_CENTERED,
+                                 SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+
+        SDLrenderer = SDL_CreateRenderer(window, -1, 0);
+
 
         for (int r = 0; r < 256; r += 16) {
             for (int g = 0; g < 256; g += 8) {
@@ -247,33 +258,40 @@ namespace odb {
     }
 
     void CRenderer::flip() {
-            for (int y = 0; y < 200; ++y) {
-                for (int x = 0; x < 320; ++x) {
-                    SDL_Rect rect;
-                    rect.x = 2 * x;
-                    rect.y = 2 * y;
-                    rect.w = 2;
-                    rect.h = 2;
 
-                    auto pixel = mPalette[mBuffer[(320 * y) + x]];
+        SDL_Rect rect;
+        uint32_t pixel;
+        int x, y;
 
-                    SDL_FillRect(video, &rect,
-                                 SDL_MapRGB(video->format,
-                                            (((pixel & 0x000000FF)      )) - 0x38,
-                                            (((pixel & 0x0000FF00) >>  8)) - 0x18,
-                                            (((pixel & 0x00FF0000) >> 16)) - 0x10
-                                 ));
+        for (y = 0; y < 200; ++y) {
+            for (x = 0; x < 320; ++x) {
 
-                }
+                rect.x = 2 * x;
+                rect.y = (24 * y) / 10;
+                rect.w = 2;
+                rect.h = 3;
+
+                pixel = mPalette[mBuffer[(320 * y) + x]];
+
+                SDL_SetRenderDrawColor(SDLrenderer, (pixel & 0x000000FF) - 0x38,
+                                       ((pixel & 0x0000FF00) >> 8) - 0x18,
+                                       ((pixel & 0x00FF0000) >> 16) - 0x10, 255);
+                SDL_RenderFillRect(SDLrenderer, &rect);
             }
+        }
 
-        SDL_Flip(video);
+        SDL_RenderPresent(SDLrenderer);
+
 #ifndef __EMSCRIPTEN__
-        SDL_Delay(1000/60);
+        SDL_Delay(1000 / 60);
 #endif
     }
 
     void CRenderer::clear() {
-        SDL_FillRect(video, nullptr, 0);
+        SDL_SetRenderDrawColor(SDLrenderer, 0,
+                               0,
+                               0, 255);
+        SDL_RenderFillRect(SDLrenderer, NULL);
+
     }
 }

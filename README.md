@@ -1,37 +1,43 @@
 # Dungeons of Noudar
-A first person dungeon-crawler with a taste of DOS-gaming, written in C++14(ish), using either OpenGL 1.1 or OpenGL ES 2.0.
+A first person 2.5D dungeon-crawler for (MS/Free)DOS for *Protected-Mode*, written in C++14(ish), fixed point math and test coverage (for its core). As the 1990s tradition dictates!
 
-It is known to build for the following targets:
+Sound options include:
 
-- MS-DOS Software Renderer
+* Adlib
+* PC-Speaker
+* OPL2LPT
 
-![ ](/screenshot_486.png?raw=true)
+![ ](screenshot1.png?raw=true)
+![ ](screenshot2.png?raw=true)
 
-- SDL Software Renderer
+## Building
 
-![ ](/screenshot_SWSDL.png?raw=true)
+From inside `DungeonsOfNoudar486`, run:
 
-- MS-DOS (GL 1.1), using Mesa Offscreen renderer (only for faster machines)
+```
+make
+```
 
-![ ](/screenshot_586.png?raw=true)
+This will build both the DOS executable and the data package. If you want just the data package, run:
 
-- Linux X11 (GLES 2.0) and SDL (GL 1.1)
+```
+make data
+```
 
-![ ](/screenshot_x11.png?raw=true)
+There is also an internal SDL2 version, meant for testing and development, available thru *CMake* or `Makefile.SDL`. This version will *NOT* assemble the data package.
 
-- OSX (GL1.1)
+## System Requirements
 
-![ ](/screenshot_osx.jpg?raw=true)
+The game has been successfully tested on a 486 SX-33Mhz, with 8MB RAM. There are reports of it running on a 386, but I can't guarantee it's smooth enough.
 
-- iOS (GLES 2.0)
+## Core (Curses version)
 
-![ ](/screenshot_ios.png?raw=true)
+The core stil is a valid text-mode dungeon crawler with almost the game geometry and rules as this version. In fact, when I was developing that one, I was already preparing the levels to be 3D (hence the somewhat gratuitous tiles variety). Go to `noudar-core` for building it.
 
-- Android, with optional suppor for Cardboard VR (GLES 2.0)
+## Other versions
 
-![ ](/screenshot_android.png?raw=true)
+This game began its life as an Android VR game (Cardboard) and for a while it run just file like that. Eventually, the allure of building something for REAL DOS got me and those versions fell on the wayside. You can still build those from the ***V2*** branch.
 
-- Windows 10 (GL 1.1)
+That branch also contains ports for other platforms, like iOS, OSX, LibRetro (as a core) and a botched Win32 version. Historically, there was also a OpenGL (software rendered) version for DOS, but it required too much CPU power and didn't look that pretty.
 
-![ ](/screenshot_win32.png?raw=true)
 
