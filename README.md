@@ -12,7 +12,7 @@ Sound options include:
 
 ## Cloning
 
-Make sure to close recursively, with all submodules:
+Make sure to clone recursively, with all submodules:
 
 ```
 git clone --recursive https://github.com/TheFakeMontyOnTheRun/dungeons-of-noudar
