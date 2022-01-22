@@ -3,6 +3,11 @@
 #endif
 
 #ifdef __DJGPP__
+#include <conio.h>
+#include <dpmi.h>
+#include <go32.h>
+#include <pc.h>
+#include <bios.h>
 #else
 const long UCLOCKS_PER_SEC = 1000;
 
@@ -101,7 +106,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 #else
 
 int main(int argc, char **argv) {
-    puts("Dungeons of Noudar 3D startup.\nCopyright 2016-2020 Brotherhood of 13h.");
+    puts("\n\nDungeons of Noudar 3D startup.\nCopyright 2016-2022 Brotherhood of 13h.");
 
     if (argc >= 2) {
         if (!std::strcmp(argv[1], "opl2lpt")) {
@@ -114,6 +119,39 @@ int main(int argc, char **argv) {
             playTune("t200i101o1a");
         } else if (!std::strcmp(argv[1], "pcspeaker")) {
             soundDriver = ESoundDriver::kPcSpeaker;
+        }
+    } else {
+        puts("\n\nPlease select a sound driver:");
+        puts("1 - PC Speaker");
+        puts("2 - Adlib");
+        puts("3 - OPL2LPT on LPT1");
+        puts("4 - No sound");
+        puts("5 - Quit");
+
+        uint8_t selection = getch();
+
+        switch( selection ) {
+            case '1':
+                soundDriver = ESoundDriver::kPcSpeaker;
+                break;
+
+            case '2':
+                soundDriver = ESoundDriver::kAdlib;
+                initOPL2(0x0388);
+                playTune("t200i101o1a");
+                break;
+
+            case '3':
+                soundDriver = ESoundDriver::kOpl2Lpt;
+                initOPL2(-1);
+                playTune("t200i101o1a");
+                break;
+
+            case '4':
+                break;
+            case '5':
+                exit(0);
+                return 0;
         }
     }
 #endif
