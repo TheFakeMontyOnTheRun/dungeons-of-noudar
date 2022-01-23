@@ -106,7 +106,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 #else
 
 int main(int argc, char **argv) {
-    puts("\n\nDungeons of Noudar 3D startup.\nCopyright 2016-2022 Brotherhood of 13h.");
+    puts("\n\nDungeons of Noudar 3D 1.2 startup.\nCopyright 2016-2022 Brotherhood of 13h.");
 
     if (argc >= 2) {
         if (!std::strcmp(argv[1], "opl2lpt")) {
