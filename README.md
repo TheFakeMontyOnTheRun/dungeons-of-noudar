@@ -36,7 +36,7 @@ This will build both the DOS executable and the data package. If you want just t
 make data
 ```
 
-There is also an internal SDL2 version, meant for testing and development, available thru *CMake* or `Makefile.SDL`. This version will *NOT* assemble the data package.
+There is also an internal SDL2 version, meant for testing and development, available thru *CMake* or `Makefile.SDL`. This version will *NOT* assemble the data package. Build the DOS version first!
 
 ## System Requirements
 
@@ -44,7 +44,7 @@ The game has been successfully tested on a 486 SX-33Mhz, with 8MB RAM. There are
 
 ## Core (Curses version)
 
-The core stil is a valid text-mode dungeon crawler with almost the game geometry and rules as this version. In fact, when I was developing that one, I was already preparing the levels to be 3D (hence the somewhat gratuitous tiles variety). Go to `noudar-core` for building it.
+The core stil is a valid text-mode dungeon crawler with almost the same geometry and rules as this version. In fact, when I was developing that one, I was already preparing the levels to be 3D (hence the somewhat gratuitous tiles variety). Go to `noudar-core` for building it.
 
 The core also contains more detailed game design docs.
 
