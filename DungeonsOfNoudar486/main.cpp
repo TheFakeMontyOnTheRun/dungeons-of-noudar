@@ -120,7 +120,9 @@ int main(int argc, char **argv) {
         } else if (!std::strcmp(argv[1], "pcspeaker")) {
             soundDriver = ESoundDriver::kPcSpeaker;
         }
-    } else {
+    }
+#ifdef __DJGPP__
+    else {
         puts("\n\nPlease select a sound driver:");
         puts("1 - PC Speaker");
         puts("2 - Adlib");
@@ -154,6 +156,8 @@ int main(int argc, char **argv) {
                 return 0;
         }
     }
+#endif
+    
 #endif
 
 #endif
