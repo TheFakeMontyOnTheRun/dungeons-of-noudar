@@ -13,19 +13,17 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Display
 import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.View
-import android.view.ViewConfiguration
 import android.view.ViewManager
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import java.nio.ByteBuffer
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    var presentation: Presentation? = null
+    private var presentation: Presentation? = null
     private var soundPool: SoundPool? = null
     private var sounds = IntArray(7)
     private var pixels = ByteArray(320 * 240 * 4)
@@ -33,16 +31,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private var running = false
 
     private fun initAudio() {
-        soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        soundPool =
             SoundPool.Builder().setAudioAttributes(
                 AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build()
             ).build()
-        } else {
-            SoundPool(5, AudioManager.STREAM_MUSIC, 0)
-        }
 
 
         sounds[0] = soundPool!!.load(this, R.raw.i114t1o8f, 1)
@@ -108,6 +103,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             KeyEvent.KEYCODE_BUTTON_C, KeyEvent.KEYCODE_BUTTON_Y, KeyEvent.KEYCODE_C -> toSend = 'c'
             KeyEvent.KEYCODE_BUTTON_START, KeyEvent.KEYCODE_BUTTON_X, KeyEvent.KEYCODE_ENTER -> toSend =
                 '\n'
+
             else -> return super.onKeyUp(keyCode, event)
         }
         NoudarJNI.sendCommand(toSend)
@@ -122,13 +118,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         running = true
 
-        Thread(Runnable {
+        Thread {
             while (running) {
                 runOnUiThread {
                     if (!(application as NoudarApplication).hasPhysicalController()) {
                         val llActions = findViewById<LinearLayout>(R.id.llActions)
                         val llDirections = findViewById<LinearLayout>(R.id.llDirections)
-                        val llScreenControllers = findViewById<LinearLayout>(R.id.llScreenControllers)
+                        val llScreenControllers =
+                            findViewById<LinearLayout>(R.id.llScreenControllers)
                         val btnUp = findViewById<ImageButton>(R.id.btnUp)
                         val btnDown = findViewById<ImageButton>(R.id.btnDown)
                         val btnFire = findViewById<ImageButton>(R.id.btnFire)
@@ -162,7 +159,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         val llActions = findViewById<LinearLayout>(R.id.llActions)
                         val llDirections = findViewById<LinearLayout>(R.id.llDirections)
-                        val llScreenControllers = findViewById<LinearLayout>(R.id.llScreenControllers)
+                        val llScreenControllers =
+                            findViewById<LinearLayout>(R.id.llScreenControllers)
 
                         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             llActions.visibility = View.GONE
@@ -179,28 +177,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                     runOnUiThread { (this@MainActivity).recreate() }
                 }
 
-                Thread.sleep(1000);
+                Thread.sleep(1000)
             }
-        }).start()
+        }.start()
 
-        Thread(Runnable {
+        Thread {
             while (running) {
                 runOnUiThread { redraw() }
                 Thread.sleep(75)
             }
-        }
-        ).start()
+        }.start()
 
         if (soundPool != null) {
-            Thread(Runnable {
+            Thread {
                 while (running) {
                     when (val sound = NoudarJNI.getSoundToPlay()) {
                         0, 1, 2, 3, 4, 5, 6 -> soundPool!!.play(sounds[sound], 1f, 1f, 0, 0, 1f)
                     }
                     Thread.sleep(10)
                 }
-            }
-            ).start()
+            }.start()
         }
     }
 

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.media.AudioManager
 import android.view.InputDevice
-import java.util.*
 
 class NoudarApplication : Application() {
 
@@ -41,7 +40,7 @@ class NoudarApplication : Application() {
         return false
     }
 
-    fun hasPhysicalController() : Boolean {
+    fun hasPhysicalController(): Boolean {
         return hasPhysicalKeyboard() || hasGamepad() || !hasTouchscreen()
     }
 }
