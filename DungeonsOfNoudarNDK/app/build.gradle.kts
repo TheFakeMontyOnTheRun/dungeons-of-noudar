@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "pt.b13h.noudar"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "pt.b13h.noudar"
         minSdk = 22
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 8
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
