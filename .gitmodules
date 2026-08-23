@@ -9,7 +9,7 @@
 	url = https://github.com/TheFakeMontyOnTheRun/stb.git
 [submodule "noudar-core"]
 	path = noudar-core
-	url = https://github.com/TheFakeMontyOnTheRun/noudar-core
+	url = git@github.com:TheFakeMontyOnTheRun/noudar-core.git
 [submodule "DungeonsOfNoudar486/uGLy"]
 	path = DungeonsOfNoudar486/uGLy
 	url = https://github.com/TheFakeMontyOnTheRun/uGLy.git
