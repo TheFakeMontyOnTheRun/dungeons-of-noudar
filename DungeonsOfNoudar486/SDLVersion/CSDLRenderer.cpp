@@ -12,11 +12,7 @@
 #include <unordered_map>
 #include <chrono>
 
-#ifdef __APPLE__
 #include "SDL.h"
-#else
-#include <SDL/SDL.h>
-#endif
 
 SDL_Window *window;
 SDL_Renderer *SDLrenderer;
